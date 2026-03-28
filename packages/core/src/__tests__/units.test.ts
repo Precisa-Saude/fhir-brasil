@@ -5,6 +5,7 @@ import {
   BIOMARKER_UNITS,
   getCanonicalUnit,
   getDefaultUnit,
+  getSIUnit,
   UNIT_TO_UCUM,
   unitToUCUM,
 } from '../units';
@@ -163,5 +164,16 @@ describe('getCanonicalUnit', () => {
 
   it('returns null for unknown biomarker', () => {
     expect(getCanonicalUnit('Unknown')).toBeNull();
+  });
+});
+
+describe('getSIUnit', () => {
+  it('returns SI unit for known biomarker', () => {
+    expect(getSIUnit('Glucose')).toBe('mmol/L');
+    expect(getSIUnit('Albumin')).toBe('g/L');
+  });
+
+  it('returns null for unknown biomarker', () => {
+    expect(getSIUnit('Unknown')).toBeNull();
   });
 });

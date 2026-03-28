@@ -94,6 +94,9 @@
     "url": "https://github.com/precisa-saude/fhir-brasil.git",
     "directory": "packages/core"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "tsup": "^8.3.5",
     "typescript": "~5.7.3",

@@ -5,7 +5,7 @@ title: '[BUG] '
 labels: bug
 ---
 
-## Descricao
+## Descrição
 
 Descreva o problema de forma clara e concisa.
 
@@ -29,11 +29,11 @@ O que deveria acontecer.
 
 O que realmente acontece.
 
-## Versao
+## Versão
 
 - Pacote: `@fhir-brasil/core@x.x.x`
 - Node: `vX.X.X`
 
 ## Contexto adicional
 
-Se o bug envolve dados clinicos, inclua a referencia bibliografica relevante.
+Se o bug envolve dados clínicos, inclua a referência bibliográfica relevante.

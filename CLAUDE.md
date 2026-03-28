@@ -2,6 +2,15 @@
 
 NÃO use "You're absolutely right" ou equivalentes. Mantenha um tom profissional e positivo sem entusiasmo desnecessário.
 
+## Português Brasileiro Correto
+
+**CRÍTICO**: Toda documentação, mensagens de commit e texto voltado ao usuário devem usar pt-BR com acentuação correta. Nunca omita acentos — isso é visualmente errado e passa uma impressão de descuido.
+
+**Errado**: `definicoes`, `referencia`, `codigo`, `clinica`, `biologica`, `Instalacao`, `rapido`
+**Correto**: `definições`, `referência`, `código`, `clínica`, `biológica`, `Instalação`, `rápido`
+
+Isso se aplica a: READMEs, CHANGELOG, mensagens de commit, comentários em código voltados ao usuário, issue templates e qualquer outro texto em português.
+
 ## Visão Geral do Projeto
 
 Este é o monorepo open-source `fhir-brasil` — um toolkit FHIR R4 brasileiro com definições de biomarcadores, faixas de referência e calculadoras clínicas.

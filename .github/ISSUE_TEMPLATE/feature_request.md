@@ -5,7 +5,7 @@ title: '[FEATURE] '
 labels: enhancement
 ---
 
-## Descricao
+## Descrição
 
 Descreva a funcionalidade desejada.
 
@@ -15,13 +15,13 @@ Descreva a funcionalidade desejada.
 - [ ] `@fhir-brasil/calculators`
 - [ ] `@fhir-brasil/ocr-utils`
 
-## Motivacao
+## Motivação
 
-Por que essa funcionalidade seria util?
+Por que essa funcionalidade seria útil?
 
-## Referencias
+## Referências
 
-Para novos biomarcadores ou faixas de referencia, inclua:
-- Codigo LOINC (se aplicavel)
-- Referencia bibliografica (PubMed, SBPC/ML, SBC, etc.)
-- Faixas de referencia com fonte
+Para novos biomarcadores ou faixas de referência, inclua:
+- Código LOINC (se aplicável)
+- Referência bibliográfica (PubMed, SBPC/ML, SBC, etc.)
+- Faixas de referência com fonte

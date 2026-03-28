@@ -1,8 +1,8 @@
 # @fhir-brasil/ocr-utils
 
-Utilitarios de ancoragem OCR para extracao de biomarcadores de PDFs de resultados laboratoriais.
+Utilitários de ancoragem OCR para extração de biomarcadores de PDFs de resultados laboratoriais.
 
-## Instalacao
+## Instalação
 
 ```bash
 npm install @fhir-brasil/ocr-utils
@@ -10,7 +10,7 @@ npm install @fhir-brasil/ocr-utils
 
 > **Nota:** Requer `@fhir-brasil/core` como peer dependency.
 
-## Uso rapido
+## Uso rápido
 
 ### Encontrar biomarcadores em texto OCR
 
@@ -23,42 +23,42 @@ const ocrText = `
   Glicose Jejum: 95 mg/dL
   Colesterol Total: 195 mg/dL
   HDL: 55 mg/dL
-  Triglicerides: 120 mg/dL
+  Triglicerídeos: 120 mg/dL
 `;
 
 const result = findBiomarkersInText(ocrText);
 
 console.log(result.matches);
 // [
-//   { code: 'hemoglobina', loinc: '718-7', matchedName: 'Hemoglobina', ... },
-//   { code: 'glicose-jejum', loinc: '1558-6', matchedName: 'Glicose Jejum', ... },
-//   { code: 'colesterol-total', loinc: '2093-3', matchedName: 'Colesterol Total', ... },
+//   { code: 'Hgb', loinc: '718-7', matchedName: 'Hemoglobina', ... },
+//   { code: 'Glucose', loinc: '2345-7', matchedName: 'Glicose', ... },
+//   { code: 'Cholesterol', loinc: '2093-3', matchedName: 'Colesterol Total', ... },
 //   ...
 // ]
 
 const codes = getMatchedCodes(result);
-// ['hemoglobina', 'glicose-jejum', 'colesterol-total', 'hdl', 'triglicerides']
+// ['Hgb', 'Glucose', 'Cholesterol', 'HDL', 'Triglycerides']
 
 console.log(result.filteredReference);
-// Referencia LLM filtrada apenas com os biomarcadores encontrados
+// Referência LLM filtrada apenas com os biomarcadores encontrados
 ```
 
-## Padrao anti-alucinacao
+## Padrão anti-alucinação
 
-Este pacote implementa um padrao de **ancoragem antes do LLM** para prevenir alucinacoes na extracao de dados laboratoriais:
+Este pacote implementa um padrão de **ancoragem antes do LLM** para prevenir alucinações na extração de dados laboratoriais:
 
-1. **Ancoragem (este pacote):** Escaneia o texto OCR bruto procurando nomes de biomarcadores conhecidos usando correspondencia exata de strings contra as 183+ definicoes de `@fhir-brasil/core`.
+1. **Ancoragem (este pacote):** Escaneia o texto OCR bruto procurando nomes de biomarcadores conhecidos usando correspondência exata de strings contra as 183+ definições de `@fhir-brasil/core`.
 
-2. **Filtragem:** Gera uma referencia LLM filtrada (`filteredReference`) contendo apenas os biomarcadores que foram realmente encontrados no texto. O LLM so pode extrair valores para biomarcadores presentes nesta lista.
+2. **Filtragem:** Gera uma referência LLM filtrada (`filteredReference`) contendo apenas os biomarcadores que foram realmente encontrados no texto. O LLM só pode extrair valores para biomarcadores presentes nesta lista.
 
-3. **Extracao (LLM):** O modelo de linguagem recebe o texto OCR junto com a referencia filtrada, restringindo sua saida apenas aos biomarcadores ancorados.
+3. **Extração (LLM):** O modelo de linguagem recebe o texto OCR junto com a referência filtrada, restringindo sua saída apenas aos biomarcadores ancorados.
 
-Este fluxo em dois estagios garante que o LLM nao invente biomarcadores que nao estao presentes no documento original.
+Este fluxo em dois estágios garante que o LLM não invente biomarcadores que não estão presentes no documento original.
 
 ```
-PDF -> OCR -> findBiomarkersInText() -> filteredReference -> LLM -> valores extraidos
+PDF → OCR → findBiomarkersInText() → filteredReference → LLM → valores extraídos
                     |                                                      |
-                    +-- restringe quais biomarcadores ------>---------------+
+                    +── restringe quais biomarcadores ─────────────────────+
                         o LLM pode extrair
 ```
 
@@ -68,18 +68,18 @@ PDF -> OCR -> findBiomarkersInText() -> filteredReference -> LLM -> valores extr
 
 Escaneia texto OCR e retorna todos os biomarcadores encontrados.
 
-- `result.matches` -- Lista de biomarcadores encontrados com codigo, LOINC, nome e posicao
-- `result.filteredReference` -- Referencia formatada para enviar ao LLM
-- `result.stats` -- Estatisticas de execucao (total de padroes, encontrados, tempo)
+- `result.matches` — Lista de biomarcadores encontrados com código, LOINC, nome e posição
+- `result.filteredReference` — Referência formatada para enviar ao LLM
+- `result.stats` — Estatísticas de execução (total de padrões, encontrados, tempo)
 
 ### `getMatchedCodes(result: AnchorResult): string[]`
 
-Extrai a lista de codigos de biomarcadores de um resultado de ancoragem.
+Extrai a lista de códigos de biomarcadores de um resultado de ancoragem.
 
-## Aviso medico
+## Aviso médico
 
-Este pacote fornece utilitarios de processamento de texto para extracao de dados laboratoriais. **Nao substitui orientacao medica profissional.** Consulte o [DISCLAIMER.md](../../DISCLAIMER.md) na raiz do repositorio para detalhes completos.
+Este pacote fornece utilitários de processamento de texto para extração de dados laboratoriais. **Não substitui orientação médica profissional.** Consulte o [DISCLAIMER.md](../../DISCLAIMER.md) na raiz do repositório para detalhes completos.
 
-## Licenca
+## Licença
 
 [Apache-2.0](../../LICENSE)

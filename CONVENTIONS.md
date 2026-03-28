@@ -1,37 +1,41 @@
-# Conventions
+# Convenções
 
-## Naming
+## Nomenclatura
 
-- **Files**: `kebab-case.ts` (e.g., `reference-ranges.ts`, `unit-converter.ts`)
-- **Types/Interfaces**: `PascalCase` (e.g., `BiomarkerDefinition`, `FHIRObservation`)
-- **Functions**: `camelCase` (e.g., `getReferenceRange`, `codeToLoinc`)
-- **Constants**: `UPPER_SNAKE_CASE` for data maps (e.g., `BIOMARKER_DEFINITIONS`, `UNIT_TO_UCUM`)
-- **Biomarker codes**: `PascalCase` with underscores for compound names (e.g., `HbA1c`, `LDL_Peak_Size`, `BodyFatPct`)
+- **Arquivos**: `kebab-case.ts` (ex: `reference-ranges.ts`, `unit-converter.ts`)
+- **Tipos/Interfaces**: `PascalCase` (ex: `BiomarkerDefinition`, `FHIRObservation`)
+- **Funções**: `camelCase` (ex: `getReferenceRange`, `codeToLoinc`)
+- **Constantes**: `UPPER_SNAKE_CASE` para mapas de dados (ex: `BIOMARKER_DEFINITIONS`, `UNIT_TO_UCUM`)
+- **Códigos de biomarcadores**: `PascalCase` com underscores para nomes compostos (ex: `HbA1c`, `LDL_Peak_Size`, `BodyFatPct`)
 
 ## Imports
 
-- Use relative imports within a package (`./biomarkers`)
-- Use package imports across packages (`@fhir-brasil/core`)
-- Barrel exports in `index.ts` — re-export everything public
-- Sub-path exports for tree-shaking (e.g., `@fhir-brasil/core/biomarkers`)
+- Use imports relativos dentro de um pacote (`./biomarkers`)
+- Use imports de pacote entre pacotes (`@fhir-brasil/core`)
+- Barrel exports em `index.ts` — re-exporte tudo que é público
+- Sub-path exports para tree-shaking (ex: `@fhir-brasil/core/biomarkers`)
 
-## Errors
+## Erros
 
-- Throw `Error` with descriptive messages for programming errors
-- Return `null`/`undefined` for expected "not found" cases
-- Validation functions return `{ valid: boolean; errors: string[] }`
+- Lance `Error` com mensagens descritivas para erros de programação
+- Retorne `null`/`undefined` para casos esperados de "não encontrado"
+- Funções de validação retornam `{ valid: boolean; errors: string[] }`
 
-## Tests
+## Testes
 
-- Co-located in `src/__tests__/` directory
-- File naming: `<module>.test.ts`
-- Use `describe` blocks matching the function/module name
-- Test edge cases: unknown codes, missing fields, boundary values
-- Coverage threshold: 80% (statements, branches, functions, lines)
+- Co-localizados no diretório `src/__tests__/`
+- Nomenclatura de arquivos: `<módulo>.test.ts`
+- Use blocos `describe` correspondendo ao nome da função/módulo
+- Teste edge cases: códigos desconhecidos, campos ausentes, valores limítrofes
+- Limiar de cobertura: 80% (statements, branches, functions, lines)
 
 ## Commits
 
-- Format: `type(scope): description`
-- Types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `ci`
-- Scopes: `core`, `calculators`, `ocr-utils`, `docs`, `ci`
-- Keep messages concise, imperative mood
+- Formato: `tipo(escopo): descrição em pt-BR`
+- Tipos: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `ci`
+- Escopos: `core`, `calculators`, `ocr-utils`, `docs`, `ci`
+- Mensagens concisas, modo imperativo, em português brasileiro
+- Exemplos:
+  - `feat(core): adicionar definição do biomarcador Cistatina C`
+  - `fix(calculators): corrigir conversão de unidade para creatinina`
+  - `docs: atualizar README com novos exemplos de uso`

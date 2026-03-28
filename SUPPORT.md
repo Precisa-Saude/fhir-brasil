@@ -1,14 +1,14 @@
-# Support
+# Suporte
 
-## Getting Help
+## Obtendo Ajuda
 
-- **Bug reports**: [GitHub Issues](https://github.com/precisa-saude/fhir-brasil/issues)
-- **Feature requests**: [GitHub Issues](https://github.com/precisa-saude/fhir-brasil/issues)
-- **Questions & discussions**: [GitHub Discussions](https://github.com/precisa-saude/fhir-brasil/discussions)
+- **Reportar bugs**: [GitHub Issues](https://github.com/precisa-saude/fhir-brasil/issues)
+- **Solicitar funcionalidades**: [GitHub Issues](https://github.com/precisa-saude/fhir-brasil/issues)
+- **Perguntas e discussões**: [GitHub Discussions](https://github.com/precisa-saude/fhir-brasil/discussions)
 
-## Before Opening an Issue
+## Antes de Abrir uma Issue
 
-1. Search existing issues to avoid duplicates
-2. Include a minimal reproducible example
-3. Specify the package and version (`@fhir-brasil/core@0.1.0`)
-4. For medical data concerns, include the relevant clinical source/guideline
+1. Pesquise issues existentes para evitar duplicatas
+2. Inclua um exemplo mínimo reproduzível
+3. Especifique o pacote e versão (`@fhir-brasil/core@0.1.0`)
+4. Para questões sobre dados médicos, inclua a referência clínica/diretriz relevante

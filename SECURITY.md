@@ -1,24 +1,24 @@
-# Security Policy
+# Política de Segurança
 
-## Reporting a Vulnerability
+## Reportar uma Vulnerabilidade
 
-If you discover a security vulnerability in this project, please report it responsibly.
+Se você descobrir uma vulnerabilidade de segurança neste projeto, por favor reporte de forma responsável.
 
-**Do not open a public GitHub issue.**
+**Não abra uma issue pública no GitHub.**
 
-Instead, send an email to: **security@precisa-saude.com.br**
+Envie um e-mail para: **security@precisa-saude.com.br**
 
-Include:
-- Description of the vulnerability
-- Steps to reproduce
-- Potential impact
-- Suggested fix (if any)
+Inclua:
+- Descrição da vulnerabilidade
+- Passos para reproduzir
+- Impacto potencial
+- Correção sugerida (se houver)
 
-We will acknowledge receipt within 48 hours and provide a timeline for resolution.
+Confirmaremos o recebimento em até 48 horas e forneceremos um cronograma para resolução.
 
-## Scope
+## Escopo
 
-This project contains biomarker definitions, reference ranges, and clinical calculators. Security concerns may include:
-- Incorrect medical data that could lead to misinterpretation
-- Logic errors in clinical calculators
-- Dependency vulnerabilities
+Este projeto contém definições de biomarcadores, faixas de referência e calculadoras clínicas. Preocupações de segurança podem incluir:
+- Dados médicos incorretos que possam levar a interpretações errôneas
+- Erros lógicos em calculadoras clínicas
+- Vulnerabilidades em dependências

@@ -1,0 +1,284 @@
+import { describe, expect, it } from 'vitest';
+
+import type { FHIRBundle, FHIRObservation } from '../fhir-types';
+import {
+  extractObservationsFromBundle,
+  mapFHIRObservationToInternal,
+  processImportBundle,
+} from '../importer';
+import { validateFHIRImportBundle } from '../validators';
+
+const validObservation: FHIRObservation = {
+  code: {
+    coding: [
+      {
+        code: '2345-7',
+        display: 'Glucose',
+        system: 'http://loinc.org',
+      },
+    ],
+    text: 'Glucose',
+  },
+  effectiveDateTime: '2024-06-15T08:00:00.000Z',
+  interpretation: [
+    {
+      coding: [
+        {
+          code: 'N',
+          display: 'Normal',
+          system: 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation',
+        },
+      ],
+    },
+  ],
+  referenceRange: [
+    {
+      high: { unit: 'mg/dL', value: 100 },
+      low: { unit: 'mg/dL', value: 70 },
+    },
+  ],
+  resourceType: 'Observation',
+  status: 'final',
+  subject: { reference: 'Patient/user-123' },
+  valueQuantity: {
+    code: 'mg/dL',
+    system: 'http://unitsofmeasure.org',
+    unit: 'mg/dL',
+    value: 85,
+  },
+};
+
+const validBundle: FHIRBundle = {
+  entry: [
+    {
+      fullUrl: 'urn:uuid:patient-1',
+      resource: { id: 'user-123', name: [{ text: 'Test User' }], resourceType: 'Patient' },
+    },
+    { fullUrl: 'urn:uuid:obs-1', resource: validObservation },
+  ],
+  resourceType: 'Bundle',
+  type: 'collection',
+};
+
+describe('validateFHIRImportBundle', () => {
+  it('should accept a valid Bundle', () => {
+    const errors = validateFHIRImportBundle(validBundle);
+    expect(errors).toEqual([]);
+  });
+
+  it('should reject null input', () => {
+    const errors = validateFHIRImportBundle(null);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].field).toBe('root');
+  });
+
+  it('should reject non-Bundle resourceType', () => {
+    const errors = validateFHIRImportBundle({ entry: [], resourceType: 'Patient' });
+    expect(errors.some((e) => e.field === 'resourceType')).toBe(true);
+  });
+
+  it('should reject missing entry array', () => {
+    const errors = validateFHIRImportBundle({ resourceType: 'Bundle' });
+    expect(errors.some((e) => e.field === 'entry')).toBe(true);
+  });
+
+  it('should reject empty entry array', () => {
+    const errors = validateFHIRImportBundle({ entry: [], resourceType: 'Bundle' });
+    expect(errors.some((e) => e.field === 'entry')).toBe(true);
+  });
+});
+
+describe('extractObservationsFromBundle', () => {
+  it('should extract Observation resources', () => {
+    const { observations, skipped } = extractObservationsFromBundle(validBundle);
+    expect(observations).toHaveLength(1);
+    expect(observations[0].resourceType).toBe('Observation');
+    expect(skipped).toHaveLength(0);
+  });
+
+  it('should skip non-Observation resources silently', () => {
+    const bundle: FHIRBundle = {
+      entry: [
+        {
+          resource: { id: 'user-1', resourceType: 'Patient' },
+        },
+        { resource: validObservation },
+      ],
+      resourceType: 'Bundle',
+      type: 'collection',
+    };
+
+    const { observations } = extractObservationsFromBundle(bundle);
+    expect(observations).toHaveLength(1);
+  });
+
+  it('should skip entries with no resource', () => {
+    const bundle: FHIRBundle = {
+      entry: [
+        { resource: undefined as unknown as FHIRObservation },
+        { resource: validObservation },
+      ],
+      resourceType: 'Bundle',
+      type: 'collection',
+    };
+
+    const { observations, skipped } = extractObservationsFromBundle(bundle);
+    expect(observations).toHaveLength(1);
+    expect(skipped).toHaveLength(1);
+    expect(skipped[0].reason).toContain('no resource');
+  });
+});
+
+describe('mapFHIRObservationToInternal', () => {
+  it('should map observation with known LOINC code', () => {
+    const result = mapFHIRObservationToInternal(validObservation, 0);
+    expect('observation' in result).toBe(true);
+    if ('observation' in result) {
+      expect(result.observation.biomarkerCode).toBe('Glucose');
+      expect(result.observation.value).toBe(85);
+      expect(result.observation.unit).toBe('mg/dL');
+      expect(result.observation.loincCode).toBe('2345-7');
+      expect(result.observation.collectionDate).toBe('2024-06-15T08:00:00.000Z');
+      expect(result.observation.flag).toBe('');
+      expect(result.observation.isQualitative).toBe(false);
+    }
+  });
+
+  it('should extract reference ranges', () => {
+    const result = mapFHIRObservationToInternal(validObservation, 0);
+    expect('observation' in result).toBe(true);
+    if ('observation' in result) {
+      expect(result.observation.referenceMin).toBe(70);
+      expect(result.observation.referenceMax).toBe(100);
+    }
+  });
+
+  it('should extract high flag', () => {
+    const highObs: FHIRObservation = {
+      ...validObservation,
+      interpretation: [{ coding: [{ code: 'H' }] }],
+    };
+    const result = mapFHIRObservationToInternal(highObs, 0);
+    expect('observation' in result).toBe(true);
+    if ('observation' in result) {
+      expect(result.observation.flag).toBe('H');
+    }
+  });
+
+  it('should extract low flag', () => {
+    const lowObs: FHIRObservation = {
+      ...validObservation,
+      interpretation: [{ coding: [{ code: 'L' }] }],
+    };
+    const result = mapFHIRObservationToInternal(lowObs, 0);
+    expect('observation' in result).toBe(true);
+    if ('observation' in result) {
+      expect(result.observation.flag).toBe('L');
+    }
+  });
+
+  it('should handle qualitative (string) values', () => {
+    const qualObs: FHIRObservation = {
+      ...validObservation,
+      valueQuantity: undefined,
+      valueString: 'Positive',
+    };
+    const result = mapFHIRObservationToInternal(qualObs, 0);
+    expect('observation' in result).toBe(true);
+    if ('observation' in result) {
+      expect(result.observation.value).toBe('Positive');
+      expect(result.observation.isQualitative).toBe(true);
+    }
+  });
+
+  it('should skip observations without LOINC code', () => {
+    const noLoincObs: FHIRObservation = {
+      ...validObservation,
+      code: { coding: [{ code: 'custom-code', system: 'http://custom.org' }] },
+    };
+    const result = mapFHIRObservationToInternal(noLoincObs, 0);
+    expect('skipped' in result).toBe(true);
+    if ('skipped' in result) {
+      expect(result.skipped.reason).toContain('No LOINC code');
+    }
+  });
+
+  it('should skip observations with unknown LOINC code', () => {
+    const unknownLoincObs: FHIRObservation = {
+      ...validObservation,
+      code: { coding: [{ code: '99999-0', system: 'http://loinc.org' }] },
+    };
+    const result = mapFHIRObservationToInternal(unknownLoincObs, 0);
+    expect('skipped' in result).toBe(true);
+    if ('skipped' in result) {
+      expect(result.skipped.reason).toContain('Unknown LOINC');
+    }
+  });
+
+  it('should skip observations without value', () => {
+    const noValueObs: FHIRObservation = {
+      ...validObservation,
+      valueQuantity: undefined,
+      valueString: undefined,
+    };
+    const result = mapFHIRObservationToInternal(noValueObs, 0);
+    expect('skipped' in result).toBe(true);
+  });
+
+  it('should skip observations without effectiveDateTime', () => {
+    const noDateObs: FHIRObservation = {
+      ...validObservation,
+      effectiveDateTime: undefined,
+    };
+    const result = mapFHIRObservationToInternal(noDateObs, 0);
+    expect('skipped' in result).toBe(true);
+  });
+});
+
+describe('processImportBundle', () => {
+  it('should process a valid bundle end-to-end', () => {
+    const result = processImportBundle(validBundle);
+    expect(result.errors).toHaveLength(0);
+    expect(result.imported).toHaveLength(1);
+    expect(result.imported[0].biomarkerCode).toBe('Glucose');
+    expect(result.totalProcessed).toBe(1);
+  });
+
+  it('should return validation errors for invalid input', () => {
+    const result = processImportBundle('not json');
+    expect(result.errors.length).toBeGreaterThan(0);
+    expect(result.imported).toHaveLength(0);
+  });
+
+  it('should handle bundle with mixed known and unknown LOINC codes', () => {
+    const bundle: FHIRBundle = {
+      entry: [
+        { resource: validObservation },
+        {
+          resource: {
+            ...validObservation,
+            code: { coding: [{ code: '99999-0', system: 'http://loinc.org' }] },
+          },
+        },
+      ],
+      resourceType: 'Bundle',
+      type: 'collection',
+    };
+
+    const result = processImportBundle(bundle);
+    expect(result.imported).toHaveLength(1);
+    expect(result.skipped).toHaveLength(1);
+  });
+
+  it('should handle empty Bundle with only non-Observation resources', () => {
+    const bundle: FHIRBundle = {
+      entry: [{ resource: { id: 'user-1', resourceType: 'Patient' } }],
+      resourceType: 'Bundle',
+      type: 'collection',
+    };
+
+    const result = processImportBundle(bundle);
+    expect(result.imported).toHaveLength(0);
+    expect(result.totalProcessed).toBe(0);
+  });
+});

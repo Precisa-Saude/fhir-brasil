@@ -1,0 +1,102 @@
+{
+  "name": "@fhir-brasil/core",
+  "version": "0.1.0",
+  "description": "Brazilian FHIR R4 types, biomarker definitions, reference ranges, and converters",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./biomarkers": {
+      "import": {
+        "types": "./dist/biomarkers.d.ts",
+        "default": "./dist/biomarkers.js"
+      },
+      "require": {
+        "types": "./dist/biomarkers.d.cts",
+        "default": "./dist/biomarkers.cjs"
+      }
+    },
+    "./reference-ranges": {
+      "import": {
+        "types": "./dist/reference-ranges.d.ts",
+        "default": "./dist/reference-ranges.js"
+      },
+      "require": {
+        "types": "./dist/reference-ranges.d.cts",
+        "default": "./dist/reference-ranges.cjs"
+      }
+    },
+    "./converter": {
+      "import": {
+        "types": "./dist/converter.d.ts",
+        "default": "./dist/converter.js"
+      },
+      "require": {
+        "types": "./dist/converter.d.cts",
+        "default": "./dist/converter.cjs"
+      }
+    },
+    "./importer": {
+      "import": {
+        "types": "./dist/importer.d.ts",
+        "default": "./dist/importer.js"
+      },
+      "require": {
+        "types": "./dist/importer.d.cts",
+        "default": "./dist/importer.cjs"
+      }
+    },
+    "./units": {
+      "import": {
+        "types": "./dist/units.d.ts",
+        "default": "./dist/units.js"
+      },
+      "require": {
+        "types": "./dist/units.d.cts",
+        "default": "./dist/units.cjs"
+      }
+    },
+    "./validators": {
+      "import": {
+        "types": "./dist/validators.d.ts",
+        "default": "./dist/validators.js"
+      },
+      "require": {
+        "types": "./dist/validators.d.cts",
+        "default": "./dist/validators.cjs"
+      }
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "clean": "rm -rf dist .turbo"
+  },
+  "keywords": ["fhir", "r4", "brazil", "biomarker", "loinc", "sbpc-ml", "health"],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/precisa-saude/fhir-brasil.git",
+    "directory": "packages/core"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.5",
+    "typescript": "~5.7.3",
+    "vitest": "^2.1.8"
+  }
+}

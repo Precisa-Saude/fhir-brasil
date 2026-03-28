@@ -1,5 +1,5 @@
 /**
- * @fhir-brasil/core
+ * @precisa-saude/fhir
  *
  * Brazilian FHIR R4 toolkit — biomarker definitions, reference ranges, and converters.
  */

@@ -1,5 +1,5 @@
 {
-  "name": "@fhir-brasil/calculators",
+  "name": "@precisa-saude/fhir-calculators",
   "version": "0.1.0",
   "description": "Clinical calculators — PhenoAge, BrDMrisc, derived biomarkers (HOMA-IR, VLDL, BMI)",
   "type": "module",
@@ -38,7 +38,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@fhir-brasil/core": "workspace:*"
+    "@precisa-saude/fhir": "workspace:*"
   },
   "devDependencies": {
     "tsup": "^8.3.5",

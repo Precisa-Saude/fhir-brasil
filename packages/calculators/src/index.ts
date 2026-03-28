@@ -1,5 +1,5 @@
 /**
- * @fhir-brasil/calculators
+ * @precisa-saude/fhir-calculators
  *
  * Clinical calculators — PhenoAge, BrDMrisc, derived biomarkers.
  */

@@ -1,11 +1,11 @@
-# @fhir-brasil/core
+# @precisa-saude/fhir
 
 Tipos FHIR R4, 183+ definições de biomarcadores com códigos LOINC, faixas de referência (SBPC/ML, SBC, SBD), conversores e importadores para o contexto clínico brasileiro.
 
 ## Instalação
 
 ```bash
-npm install @fhir-brasil/core
+npm install @precisa-saude/fhir
 ```
 
 ## Uso rápido
@@ -13,7 +13,7 @@ npm install @fhir-brasil/core
 ### Faixas de referência
 
 ```ts
-import { getReferenceRange } from '@fhir-brasil/core';
+import { getReferenceRange } from '@precisa-saude/fhir';
 
 const range = getReferenceRange('Cholesterol');
 // { min: 0, max: 190, optimalMax: 190, unit: 'mg/dL', ... }
@@ -25,7 +25,7 @@ const rangeForUser = getReferenceRange('HDL', { sex: 'F', age: 35 });
 ### Converter resultados laboratoriais para FHIR R4
 
 ```ts
-import { labResultToFHIRBundle } from '@fhir-brasil/core';
+import { labResultToFHIRBundle } from '@precisa-saude/fhir';
 
 const bundle = labResultToFHIRBundle(report, observations, userProfile);
 // Retorna um FHIR Bundle com DiagnosticReport, Observations e Patient
@@ -34,7 +34,7 @@ const bundle = labResultToFHIRBundle(report, observations, userProfile);
 ### Normalizar códigos de biomarcadores
 
 ```ts
-import { normalizeCode, codeToLoinc, loincToCode } from '@fhir-brasil/core';
+import { normalizeCode, codeToLoinc, loincToCode } from '@precisa-saude/fhir';
 
 normalizeCode('CholHDL_Ratio');  // 'Cholesterol_HDL_Ratio'
 codeToLoinc('HDL');              // '2085-9'
@@ -44,7 +44,7 @@ loincToCode('2085-9');           // 'HDL'
 ### Consultar definições de biomarcadores
 
 ```ts
-import { getDefinitionByCode, getAllDefinitions } from '@fhir-brasil/core';
+import { getDefinitionByCode, getAllDefinitions } from '@precisa-saude/fhir';
 
 const def = getDefinitionByCode('HDL');
 // { code: 'HDL', loinc: '2085-9', names: { pt: [...], en: [...] }, ... }
@@ -57,12 +57,12 @@ const all = getAllDefinitions(); // 183+ definições
 Para tree-shaking otimizado, cada módulo pode ser importado individualmente:
 
 ```ts
-import { BIOMARKER_DEFINITIONS } from '@fhir-brasil/core/biomarkers';
-import { getReferenceRange } from '@fhir-brasil/core/reference-ranges';
-import { labResultToFHIRBundle } from '@fhir-brasil/core/converter';
-import { processImportBundle } from '@fhir-brasil/core/importer';
-import { getCanonicalUnit, unitToUCUM } from '@fhir-brasil/core/units';
-import { validateFHIRObservation } from '@fhir-brasil/core/validators';
+import { BIOMARKER_DEFINITIONS } from '@precisa-saude/fhir/biomarkers';
+import { getReferenceRange } from '@precisa-saude/fhir/reference-ranges';
+import { labResultToFHIRBundle } from '@precisa-saude/fhir/converter';
+import { processImportBundle } from '@precisa-saude/fhir/importer';
+import { getCanonicalUnit, unitToUCUM } from '@precisa-saude/fhir/units';
+import { validateFHIRObservation } from '@precisa-saude/fhir/validators';
 ```
 
 ## Módulos

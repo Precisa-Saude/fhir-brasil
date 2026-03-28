@@ -40,7 +40,7 @@ pnpm turbo run test:coverage    # Rodar testes com cobertura
 - **TypeScript strict mode** com `noUncheckedIndexedAccess`
 - **ESM + CJS** via tsup
 - **Vitest** para testes, limiar de 80% de cobertura
-- **Zero dependências runtime** em `@fhir-brasil/core`
+- **Zero dependências runtime** em `@precisa-saude/fhir`
 - Mensagens de commit: `tipo(escopo): descrição` — escopos: `core`, `calculators`, `ocr-utils`, `docs`, `ci`
 
 ## Adicionar Novas Dependências
@@ -53,9 +53,9 @@ pnpm turbo run test:coverage    # Rodar testes com cobertura
 
 **Regras de dependência:**
 
-- `@fhir-brasil/core` deve ter **zero dependências runtime**
-- `@fhir-brasil/calculators` depende apenas de `@fhir-brasil/core`
-- `@fhir-brasil/ocr-utils` depende apenas de `@fhir-brasil/core`
+- `@precisa-saude/fhir` deve ter **zero dependências runtime**
+- `@precisa-saude/fhir-calculators` depende apenas de `@precisa-saude/fhir`
+- `@precisa-saude/fhir-ocr-utils` depende apenas de `@precisa-saude/fhir`
 - Pergunte antes de adicionar qualquer dependência runtime externa
 
 ## Seguir Planos Acordados — Sem Desvios Silenciosos

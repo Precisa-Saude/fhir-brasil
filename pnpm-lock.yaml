@@ -32,7 +32,7 @@ importers:
 
   packages/calculators:
     dependencies:
-      '@fhir-brasil/core':
+      '@precisa-saude/fhir':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -60,7 +60,7 @@ importers:
 
   packages/ocr-utils:
     dependencies:
-      '@fhir-brasil/core':
+      '@precisa-saude/fhir':
         specifier: workspace:*
         version: link:../core
     devDependencies:

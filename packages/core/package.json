@@ -1,5 +1,5 @@
 {
-  "name": "@fhir-brasil/core",
+  "name": "@precisa-saude/fhir",
   "version": "0.1.0",
   "description": "Brazilian FHIR R4 types, biomarker definitions, reference ranges, and converters",
   "type": "module",

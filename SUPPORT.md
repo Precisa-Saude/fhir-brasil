@@ -10,5 +10,5 @@
 
 1. Pesquise issues existentes para evitar duplicatas
 2. Inclua um exemplo mínimo reproduzível
-3. Especifique o pacote e versão (`@fhir-brasil/core@0.1.0`)
+3. Especifique o pacote e versão (`@precisa-saude/fhir@0.1.0`)
 4. Para questões sobre dados médicos, inclua a referência clínica/diretriz relevante

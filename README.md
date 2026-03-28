@@ -33,13 +33,13 @@ Brazilian FHIR R4 toolkit — biomarker definitions, reference ranges, and clini
 
 ```bash
 # Core — tipos, biomarcadores, faixas de referência, conversores
-npm install @fhir-brasil/core
+npm install @precisa-saude/fhir
 
 # Calculadoras clínicas (PhenoAge, BrDMrisc, derivados)
-npm install @fhir-brasil/calculators
+npm install @precisa-saude/fhir-calculators
 
 # Utilitários OCR
-npm install @fhir-brasil/ocr-utils
+npm install @precisa-saude/fhir-ocr-utils
 ```
 
 ---
@@ -49,7 +49,7 @@ npm install @fhir-brasil/ocr-utils
 ### Converter resultado de laboratório para FHIR
 
 ```typescript
-import { labResultToFHIRBundle } from '@fhir-brasil/core';
+import { labResultToFHIRBundle } from '@precisa-saude/fhir';
 
 const bundle = labResultToFHIRBundle(report, observations, userProfile);
 // → FHIR R4 Bundle com Patient + DiagnosticReport + Observations
@@ -58,7 +58,7 @@ const bundle = labResultToFHIRBundle(report, observations, userProfile);
 ### Consultar faixas de referência
 
 ```typescript
-import { getReferenceRange } from '@fhir-brasil/core';
+import { getReferenceRange } from '@precisa-saude/fhir';
 
 const range = getReferenceRange('Cholesterol');
 // → { min: 0, max: 190, optimalMax: 190, unit: 'mg/dL', ... }
@@ -70,7 +70,7 @@ const rangeForUser = getReferenceRange('HDL', { sex: 'F', age: 45 });
 ### Calcular PhenoAge
 
 ```typescript
-import { phenoage } from '@fhir-brasil/calculators';
+import { phenoage } from '@precisa-saude/fhir-calculators';
 
 const result = phenoage.calculatePhenoAge({
   chronologicalAge: 45,
@@ -93,9 +93,9 @@ const result = phenoage.calculatePhenoAge({
 
 | Pacote | Descrição | Deps |
 |--------|-----------|------|
-| `@fhir-brasil/core` | Tipos FHIR R4, 183+ biomarcadores, faixas de referência, conversores | 0 runtime deps |
-| `@fhir-brasil/calculators` | PhenoAge, BrDMrisc, HOMA-IR, VLDL, IMC | `@fhir-brasil/core` |
-| `@fhir-brasil/ocr-utils` | Ancoragem OCR para extração de biomarcadores | `@fhir-brasil/core` |
+| `@precisa-saude/fhir` | Tipos FHIR R4, 183+ biomarcadores, faixas de referência, conversores | 0 runtime deps |
+| `@precisa-saude/fhir-calculators` | PhenoAge, BrDMrisc, HOMA-IR, VLDL, IMC | `@precisa-saude/fhir` |
+| `@precisa-saude/fhir-ocr-utils` | Ancoragem OCR para extração de biomarcadores | `@precisa-saude/fhir` |
 
 ---
 

@@ -10,7 +10,7 @@ import {
   type BiomarkerSearchPattern,
   generateFilteredLLMReference,
   getAllSearchPatterns,
-} from '@fhir-brasil/core';
+} from '@precisa-saude/fhir';
 
 export interface AnchorMatch {
   code: string;

@@ -11,9 +11,9 @@
 ## Imports
 
 - Use imports relativos dentro de um pacote (`./biomarkers`)
-- Use imports de pacote entre pacotes (`@fhir-brasil/core`)
+- Use imports de pacote entre pacotes (`@precisa-saude/fhir`)
 - Barrel exports em `index.ts` — re-exporte tudo que é público
-- Sub-path exports para tree-shaking (ex: `@fhir-brasil/core/biomarkers`)
+- Sub-path exports para tree-shaking (ex: `@precisa-saude/fhir/biomarkers`)
 
 ## Erros
 

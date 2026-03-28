@@ -1,14 +1,14 @@
-# @fhir-brasil/calculators
+# @precisa-saude/fhir-calculators
 
 Calculadoras clínicas — PhenoAge (Levine 2018), BrDMrisc (Bracco 2023), biomarcadores derivados (HOMA-IR, VLDL, IMC).
 
 ## Instalação
 
 ```bash
-npm install @fhir-brasil/calculators
+npm install @precisa-saude/fhir-calculators
 ```
 
-> **Nota:** Requer `@fhir-brasil/core` como peer dependency.
+> **Nota:** Requer `@precisa-saude/fhir` como peer dependency.
 
 ## Uso rápido
 
@@ -17,7 +17,7 @@ npm install @fhir-brasil/calculators
 Implementação do algoritmo de Levine et al. (2018) para cálculo de idade biológica a partir de 9 biomarcadores sanguíneos.
 
 ```ts
-import { phenoage } from '@fhir-brasil/calculators';
+import { phenoage } from '@precisa-saude/fhir-calculators';
 
 const result = phenoage.calculatePhenoAge({
   chronologicalAge: 45,
@@ -41,7 +41,7 @@ console.log(result.ageDifference);  // -2.7 (anos mais jovem)
 Implementação do modelo BrDMrisc (Bracco et al. 2023) para estimativa de risco de diabetes tipo 2 em 10 anos, validado para a população brasileira. Seleciona automaticamente o melhor modelo disponível com base nos biomarcadores presentes.
 
 ```ts
-import { brdmrisc } from '@fhir-brasil/calculators';
+import { brdmrisc } from '@precisa-saude/fhir-calculators';
 
 const result = brdmrisc.calculateBrDMrisc({
   fpg: 105,           // mg/dL — glicemia de jejum
@@ -60,7 +60,7 @@ console.log(result.modelUsed.name); // 'FPG + HbA1c + Lipids'
 Calcula biomarcadores derivados a partir de valores laboratoriais existentes.
 
 ```ts
-import { computeDerivedBiomarkers } from '@fhir-brasil/calculators';
+import { computeDerivedBiomarkers } from '@precisa-saude/fhir-calculators';
 
 const derived = computeDerivedBiomarkers([
   { code: 'Glucose', value: 95 },

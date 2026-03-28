@@ -10,7 +10,7 @@
  * - BMI = weight_kg / (height_m)² (requires UserContext with height)
  */
 
-import { codeToLoinc } from '@fhir-brasil/core';
+import { codeToLoinc } from '@precisa-saude/fhir';
 
 export interface BiomarkerInput {
   code: string;

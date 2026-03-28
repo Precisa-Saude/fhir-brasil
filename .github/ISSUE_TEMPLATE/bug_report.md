@@ -11,9 +11,9 @@ Descreva o problema de forma clara e concisa.
 
 ## Pacote afetado
 
-- [ ] `@fhir-brasil/core`
-- [ ] `@fhir-brasil/calculators`
-- [ ] `@fhir-brasil/ocr-utils`
+- [ ] `@precisa-saude/fhir`
+- [ ] `@precisa-saude/fhir-calculators`
+- [ ] `@precisa-saude/fhir-ocr-utils`
 
 ## Passos para reproduzir
 
@@ -31,7 +31,7 @@ O que realmente acontece.
 
 ## Versão
 
-- Pacote: `@fhir-brasil/core@x.x.x`
+- Pacote: `@precisa-saude/fhir@x.x.x`
 - Node: `vX.X.X`
 
 ## Contexto adicional

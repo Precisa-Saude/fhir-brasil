@@ -1,5 +1,5 @@
 {
-  "name": "@fhir-brasil/ocr-utils",
+  "name": "@precisa-saude/fhir-ocr-utils",
   "version": "0.1.0",
   "description": "OCR text anchoring utilities for biomarker extraction from lab result PDFs",
   "type": "module",
@@ -38,7 +38,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@fhir-brasil/core": "workspace:*"
+    "@precisa-saude/fhir": "workspace:*"
   },
   "devDependencies": {
     "tsup": "^8.3.5",

@@ -1,21 +1,21 @@
-# @fhir-brasil/ocr-utils
+# @precisa-saude/fhir-ocr-utils
 
 Utilitários de ancoragem OCR para extração de biomarcadores de PDFs de resultados laboratoriais.
 
 ## Instalação
 
 ```bash
-npm install @fhir-brasil/ocr-utils
+npm install @precisa-saude/fhir-ocr-utils
 ```
 
-> **Nota:** Requer `@fhir-brasil/core` como peer dependency.
+> **Nota:** Requer `@precisa-saude/fhir` como peer dependency.
 
 ## Uso rápido
 
 ### Encontrar biomarcadores em texto OCR
 
 ```ts
-import { findBiomarkersInText, getMatchedCodes } from '@fhir-brasil/ocr-utils';
+import { findBiomarkersInText, getMatchedCodes } from '@precisa-saude/fhir-ocr-utils';
 
 const ocrText = `
   HEMOGRAMA COMPLETO
@@ -47,7 +47,7 @@ console.log(result.filteredReference);
 
 Este pacote implementa um padrão de **ancoragem antes do LLM** para prevenir alucinações na extração de dados laboratoriais:
 
-1. **Ancoragem (este pacote):** Escaneia o texto OCR bruto procurando nomes de biomarcadores conhecidos usando correspondência exata de strings contra as 183+ definições de `@fhir-brasil/core`.
+1. **Ancoragem (este pacote):** Escaneia o texto OCR bruto procurando nomes de biomarcadores conhecidos usando correspondência exata de strings contra as 183+ definições de `@precisa-saude/fhir`.
 
 2. **Filtragem:** Gera uma referência LLM filtrada (`filteredReference`) contendo apenas os biomarcadores que foram realmente encontrados no texto. O LLM só pode extrair valores para biomarcadores presentes nesta lista.
 

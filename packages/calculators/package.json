@@ -1,7 +1,10 @@
 {
   "name": "@precisa-saude/fhir-calculators",
-  "version": "0.1.0",
-  "description": "Clinical calculators — PhenoAge, BrDMrisc, derived biomarkers (HOMA-IR, VLDL, BMI)",
+  "version": "0.1.8",
+  "sideEffects": false,
+  "homepage": "https://github.com/Precisa-Saude/fhir-brasil/tree/main/packages/calculators#readme",
+  "bugs": "https://github.com/Precisa-Saude/fhir-brasil/issues",
+  "description": "Calculadoras clínicas — PhenoAge, BrDMrisc, biomarcadores derivados (HOMA-IR, VLDL, IMC)",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -31,7 +34,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/precisa-saude/fhir-brasil.git",
+    "url": "https://github.com/Precisa-Saude/fhir-brasil.git",
     "directory": "packages/calculators"
   },
   "publishConfig": {

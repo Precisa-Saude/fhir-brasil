@@ -218,3 +218,23 @@ Ao criar planos de implementação durante conversas:
    - Contexto: Decisões técnicas relevantes
 4. **Atualize regularmente**: Mantenha o arquivo de plano atualizado conforme o trabalho progride
 5. **Arquive planos concluídos**: Mova para `docs/development/completed/YYYY-MM-DD-nome-plano.md`
+
+## Publicação no npm
+
+Os pacotes são publicados automaticamente via GitHub Actions ao criar uma tag `v*`.
+
+**Fluxo de release:**
+
+1. Atualizar versões nos `package.json` de cada pacote alterado
+2. Commitar: `chore: bump versão para X.Y.Z`
+3. Criar tag: `git tag vX.Y.Z`
+4. Push com tag: `git push origin main --tags`
+5. O workflow `.github/workflows/publish.yml` roda build, testes e publica no npm
+
+**Pacotes publicados:**
+
+- `@precisa-saude/fhir` — pacote core
+- `@precisa-saude/fhir-calculators` — calculadoras clínicas
+- `@precisa-saude/fhir-ocr-utils` — utilitários OCR
+
+**Regras de versionamento:** Seguir semver. Bump minor para novas funcionalidades, patch para correções, major para breaking changes.

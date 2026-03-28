@@ -1,7 +1,10 @@
 {
   "name": "@precisa-saude/fhir",
-  "version": "0.1.0",
-  "description": "Brazilian FHIR R4 types, biomarker definitions, reference ranges, and converters",
+  "version": "0.1.8",
+  "sideEffects": false,
+  "homepage": "https://github.com/Precisa-Saude/fhir-brasil/tree/main/packages/core#readme",
+  "bugs": "https://github.com/Precisa-Saude/fhir-brasil/issues",
+  "description": "Tipos FHIR R4, definições de biomarcadores, faixas de referência e conversores para o ecossistema de saúde brasileiro",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -91,7 +94,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/precisa-saude/fhir-brasil.git",
+    "url": "https://github.com/Precisa-Saude/fhir-brasil.git",
     "directory": "packages/core"
   },
   "publishConfig": {

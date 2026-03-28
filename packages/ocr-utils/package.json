@@ -1,7 +1,10 @@
 {
   "name": "@precisa-saude/fhir-ocr-utils",
-  "version": "0.1.0",
-  "description": "OCR text anchoring utilities for biomarker extraction from lab result PDFs",
+  "version": "0.1.8",
+  "sideEffects": false,
+  "homepage": "https://github.com/Precisa-Saude/fhir-brasil/tree/main/packages/ocr-utils#readme",
+  "bugs": "https://github.com/Precisa-Saude/fhir-brasil/issues",
+  "description": "Utilitários de ancoragem OCR para extração de biomarcadores de PDFs de resultados laboratoriais",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -31,7 +34,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/precisa-saude/fhir-brasil.git",
+    "url": "https://github.com/Precisa-Saude/fhir-brasil.git",
     "directory": "packages/ocr-utils"
   },
   "publishConfig": {

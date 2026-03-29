@@ -57,6 +57,19 @@ export type RangeDirection = 'range' | 'higher-better' | 'lower-better';
 export interface BiomarkerRangeDefinition {
   default: BiomarkerReferenceRange;
   direction?: RangeDirection;
+  /**
+   * Chave de fonte bibliográfica, opcionalmente com localizador.
+   *
+   * Formato: `'chave'` ou `'chave:localizador'`
+   *
+   * Exemplos:
+   * - `'sbc-lipids-2017'` — fonte sem localização específica
+   * - `'sbc-lipids-2017:p15'` — página 15
+   * - `'sbpc-ml-2021:t4.1'` — tabela 4.1
+   *
+   * As chaves devem corresponder a entradas em `SOURCE_REGISTRY` (sources.ts).
+   * Consulte `docs/fontes-referencia.md` para a bibliografia completa em formato ABNT.
+   */
   source?: string;
   variants?: RangeVariant[];
 }

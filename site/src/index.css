@@ -1,0 +1,69 @@
+@import 'tailwindcss';
+@config '../tailwind.config.js';
+
+/* ─── Grid System ─── */
+
+@layer base {
+  :root {
+    --grid-cols: 14;
+    --grid-gaps: calc(var(--grid-cols) - 1);
+    --grid-max-w: calc(var(--grid-cols) * 6rem - 1rem);
+    --col-w: calc(
+      (min(100vw, var(--grid-max-w)) - var(--grid-gaps) * 1rem) / var(--grid-cols)
+    );
+  }
+}
+
+/* ─── Base ─── */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    @apply bg-ps-neutral text-ps-violet-dark antialiased;
+    font-family: 'Roboto Serif', Georgia, serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Roboto', system-ui, sans-serif;
+  }
+
+  button,
+  [role='button'],
+  a,
+  label[for] {
+    cursor: pointer;
+  }
+}
+
+/* ─── Utilities ─── */
+
+@layer utilities {
+  .font-margem {
+    font-family: 'Roboto', system-ui, sans-serif;
+  }
+
+  .font-pausa {
+    font-family: 'Roboto Serif', Georgia, serif;
+  }
+}
+
+/* ─── Accessibility ─── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

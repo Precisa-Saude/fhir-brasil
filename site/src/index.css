@@ -1,38 +1,6 @@
 @import 'tailwindcss';
 @config '../tailwind.config.js';
 
-/* ─── Font Faces ─── */
-
-@font-face {
-  font-family: 'Margem';
-  src: url('/fonts/MargemVariable.woff2') format('woff2');
-  font-weight: 100 900;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Margem Rounded';
-  src: url('/fonts/MargemRoundedVariable.woff2') format('woff2');
-  font-weight: 100 900;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Pausa';
-  src: url('/fonts/PausaVariable-Roman.woff2') format('woff2');
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Pausa';
-  src: url('/fonts/PausaVariable-Italic.woff2') format('woff2');
-  font-weight: 100 900;
-  font-style: italic;
-  font-display: swap;
-}
-
 /* ─── Grid System ─── */
 
 @layer base {
@@ -56,7 +24,7 @@
 
   body {
     @apply bg-ps-neutral text-ps-violet-dark antialiased;
-    font-family: 'Pausa', Georgia, serif;
+    font-family: 'Roboto Serif', Georgia, serif;
   }
 
   h1,
@@ -65,7 +33,7 @@
   h4,
   h5,
   h6 {
-    font-family: 'Margem', system-ui, sans-serif;
+    font-family: 'Roboto', system-ui, sans-serif;
   }
 
   button,
@@ -80,11 +48,11 @@
 
 @layer utilities {
   .font-margem {
-    font-family: 'Margem', system-ui, sans-serif;
+    font-family: 'Roboto', system-ui, sans-serif;
   }
 
   .font-pausa {
-    font-family: 'Pausa', Georgia, serif;
+    font-family: 'Roboto Serif', Georgia, serif;
   }
 }
 

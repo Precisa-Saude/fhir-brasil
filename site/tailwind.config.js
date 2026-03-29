@@ -11,8 +11,8 @@ export default {
         'ps-neutral': 'oklch(0.94 0.008 61)',
       },
       fontFamily: {
-        sans: ['Margem', 'system-ui', 'sans-serif'],
-        serif: ['Pausa', 'Georgia', 'serif'],
+        sans: ['Roboto', 'system-ui', 'sans-serif'],
+        serif: ['Roboto Serif', 'Georgia', 'serif'],
       },
       borderRadius: {
         lg: '0.625rem',

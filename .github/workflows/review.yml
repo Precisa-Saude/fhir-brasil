@@ -52,8 +52,8 @@ jobs:
               issue_number: prNumber,
             });
 
-            const round1Marker = comments.data.some(c => c.body.includes('<!-- CLAUDE_REVIEW_ROUND_1 -->'));
-            const round2Marker = comments.data.some(c => c.body.includes('<!-- CLAUDE_REVIEW_ROUND_2_COMPLETE -->'));
+            const round1Marker = comments.data.some(c => c.body?.includes('<!-- CLAUDE_REVIEW_ROUND_1 -->'));
+            const round2Marker = comments.data.some(c => c.body?.includes('<!-- CLAUDE_REVIEW_ROUND_2_COMPLETE -->'));
 
             if (round2Marker) {
               console.log('Round 2 review already completed. Skipping further reviews.');

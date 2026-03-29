@@ -22,7 +22,22 @@ Acesso também em: <https://www.sbpc.org.br/pt/especializacao/publicacoes-tecnic
 
 > **Nota**: Título e dados bibliográficos completos pendentes de verificação contra a publicação original.
 
-### sbc-lipids-2017
+### sbc-lipids-2025
+
+RACHED, F. H. et al. Diretriz Brasileira de Dislipidemias e Prevenção da Aterosclerose – 2025. **Arquivos Brasileiros de Cardiologia**, São Paulo, v. 122, n. 9, e20250640, out. 2025. DOI: [10.36660/abc.20250640](https://doi.org/10.36660/abc.20250640).
+
+Disponível em: <https://pmc.ncbi.nlm.nih.gov/articles/PMC12674852/>.
+
+**Valores utilizados:**
+- Colesterol Total: desejável <200 mg/dL
+- HDL-c: desejável ≥40 mg/dL (H), ≥50 mg/dL (M)
+- Triglicérides (jejum): desejável <150 mg/dL
+- LDL-c: risco intermediário <100, alto <70, muito alto <50 mg/dL
+- Colesterol não-HDL: risco intermediário <130, alto <100 mg/dL
+- ApoB: risco intermediário <90, alto <70 mg/dL
+- Lp(a): alterado ≥75 nmol/L ou ≥30 mg/dL
+
+### sbc-lipids-2017 (superseded by 2025)
 
 FALUDI, A. A. et al. Atualização da Diretriz Brasileira de Dislipidemias e Prevenção da Aterosclerose – 2017. **Arquivos Brasileiros de Cardiologia**, São Paulo, v. 109, n. 2, supl. 1, p. 1-76, ago. 2017. DOI: [10.5935/abc.20170121](https://doi.org/10.5935/abc.20170121).
 
@@ -36,6 +51,15 @@ Disponível em: <https://www.scielo.br/j/abc/a/whBsCyzTDzGYJcsBY7YVkWn/?lang=pt>
 - **Tabela 3**: Metas terapêuticas de LDL-c e colesterol não-HDL por categoria de risco
   - LDL-c: risco intermediário <100 mg/dL, alto risco <70 mg/dL
   - Colesterol não-HDL: risco intermediário <130 mg/dL, alto risco <100 mg/dL
+
+### sbc-ic-2018
+
+ROHDE, L. E. P. et al. Diretriz Brasileira de Insuficiência Cardíaca Crônica e Aguda. **Arquivos Brasileiros de Cardiologia**, São Paulo, v. 111, n. 3, p. 436-539, set. 2018. DOI: [10.5935/abc.20180190](https://doi.org/10.5935/abc.20180190).
+
+Disponível em: <https://pubmed.ncbi.nlm.nih.gov/30379264/>.
+
+**Valores utilizados:**
+- NT-proBNP: corte diagnóstico 125 pg/mL para triagem de insuficiência cardíaca
 
 ### sbd-diabetes-2024
 

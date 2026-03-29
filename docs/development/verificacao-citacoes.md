@@ -7,7 +7,7 @@
 - `[ ]` — Não verificado (sem fonte ou fonte não conferida)
 - `[x]` — Verificado (valor conferido contra documento-fonte com página/tabela)
 
-**Estatísticas**: 6/202 verificados (3.0%)
+**Estatísticas**: 9/202 verificados (4.5%)
 
 ---
 
@@ -15,18 +15,18 @@
 
 ### Perfil Lipídico
 
-- [x] Cholesterol — `sbc-lipids-2017:t2` ✓ Desejável <200 mg/dL confere
-- [x] HDL — `sbc-lipids-2017:t2` ✓ H≥40, M≥50 mg/dL confere
-- [x] LDL — `sbc-lipids-2017:t3` ✓ Risco intermediário <100, alto <70 confere
-- [x] Triglycerides — `sbc-lipids-2017:t2` ✓ Desejável <150 mg/dL confere
-- [x] NonHDL_Cholesterol — `sbc-lipids-2017:t3` ✓ Risco intermediário <130, alto <100 confere
-- [ ] Cholesterol_HDL_Ratio — derivado, sem tabela específica na SBC 2017
+- [x] Cholesterol — `sbc-lipids-2025` ✓ Desejável <200 mg/dL confere
+- [x] HDL — `sbc-lipids-2025` ✓ H≥40, M≥50 mg/dL confere
+- [x] LDL — `sbc-lipids-2025` ✓ Risco intermediário <100, alto <70 confere
+- [x] Triglycerides — `sbc-lipids-2025` ✓ Desejável <150 mg/dL (jejum) confere
+- [x] NonHDL_Cholesterol — `sbc-lipids-2025` ✓ Risco intermediário <130, alto <100 confere
+- [ ] Cholesterol_HDL_Ratio — derivado, sem tabela específica na SBC
 - [ ] VLDL — sem fonte brasileira específica (estimado via fórmula de Friedewald)
-- [ ] ApoA1 — sem tabela de referência na SBC 2017 (mencionado sem classificação)
-- [ ] ApoB — sem tabela de referência na SBC 2017 (apenas equivalências com não-HDL)
+- [ ] ApoA1 — sem tabela de referência na SBC 2025
+- [x] ApoB — `sbc-lipids-2025` ✓ Risco intermediário <90, alto <70 confere
 - [ ] ApoCIII — sem fonte brasileira
 - [ ] ApoCIII_ApoA1_Ratio — sem fonte brasileira
-- [x] Lipoprotein_a — SBC 2017 diz elevado >50 mg/dL (>125 nmol/L). **ATENÇÃO**: código usa max: 75 nmol/L (limiar EAS 2022 para risco moderado, não SBC)
+- [x] Lipoprotein_a — `sbc-lipids-2025` ✓ Alterado ≥75 nmol/L ou ≥30 mg/dL confere
 
 ### Subfrações Lipídicas (Avançado)
 
@@ -38,10 +38,10 @@
 
 ### Marcadores Cardíacos
 
-- [ ] BNP — sem fonte
-- [ ] NTproBNP — sem fonte
-- [ ] TroponinI — sem fonte
-- [ ] TroponinT — sem fonte
+- [ ] BNP — código usa max: 100 pg/mL (referência laboratorial geral). SBC IC 2018 usa corte diagnóstico 35 pg/mL para triagem de IC — contextos diferentes
+- [x] NTproBNP — `sbc-ic-2018` ✓ Corte 125 pg/mL confere
+- [ ] TroponinI — sem fonte brasileira (valores dependem do ensaio/fabricante)
+- [ ] TroponinT — sem fonte brasileira (valores dependem do ensaio/fabricante)
 - [ ] CK — sem fonte
 - [ ] Myeloperoxidase — sem fonte
 

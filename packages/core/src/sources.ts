@@ -51,6 +51,20 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     url: 'https://www.scielo.br/j/abc/a/whBsCyzTDzGYJcsBY7YVkWn/?lang=pt',
   },
 
+  'sbc-lipids-2025': {
+    key: 'sbc-lipids-2025',
+    abnt: 'RACHED, F. H. et al. Diretriz Brasileira de Dislipidemias e Prevenção da Aterosclerose – 2025. Arquivos Brasileiros de Cardiologia, São Paulo, v. 122, n. 9, e20250640, out. 2025.',
+    doi: '10.36660/abc.20250640',
+    url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC12674852/',
+  },
+
+  'sbc-ic-2018': {
+    key: 'sbc-ic-2018',
+    abnt: 'ROHDE, L. E. P. et al. Diretriz Brasileira de Insuficiência Cardíaca Crônica e Aguda. Arquivos Brasileiros de Cardiologia, São Paulo, v. 111, n. 3, p. 436-539, set. 2018.',
+    doi: '10.5935/abc.20180190',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/30379264/',
+  },
+
   // ---------------------------------------------------------------------------
   // Sociedade Brasileira de Diabetes
   // ---------------------------------------------------------------------------

@@ -215,6 +215,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   ApoB: {
     default: { max: 90, min: 0, optimalMax: 70, optimalMin: 0, unit: 'mg/dL' },
     direction: 'lower-better',
+    source: 'sbc-lipids-2025',
   },
 
   ApoCIII: {
@@ -361,7 +362,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Cholesterol: {
     default: { max: 200, min: 0, optimalMax: 180, optimalMin: 0, unit: 'mg/dL' },
-    source: 'sbc-lipids-2017:t2',
+    source: 'sbc-lipids-2025',
   },
 
   // Derivado de CT e HDL-c (SBC 2017, Tabela 2)
@@ -667,7 +668,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   HDL: {
     default: { max: 60, min: 40, optimalMax: 60, optimalMin: 50, unit: 'mg/dL' },
     direction: 'higher-better',
-    source: 'sbc-lipids-2017:t2',
+    source: 'sbc-lipids-2025',
     variants: [
       {
         ageMin: 18,
@@ -759,7 +760,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   LDL: {
     default: { max: 100, min: 0, optimalMax: 70, optimalMin: 0, unit: 'mg/dL' },
     direction: 'lower-better',
-    source: 'sbc-lipids-2017:t3',
+    source: 'sbc-lipids-2025',
   },
 
   LDL_Medium: {
@@ -848,6 +849,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   Lipoprotein_a: {
     default: { max: 75, min: 0, optimalMax: 30, optimalMin: 0, unit: 'nmol/L' },
     direction: 'lower-better',
+    source: 'sbc-lipids-2025',
   },
 
   Lymphocytes: {
@@ -923,7 +925,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   NonHDL_Cholesterol: {
     default: { max: 130, min: 0, optimalMax: 100, optimalMin: 0, unit: 'mg/dL' },
     direction: 'lower-better',
-    source: 'sbc-lipids-2017:t3',
+    source: 'sbc-lipids-2025',
   },
 
   NRBC: {
@@ -932,6 +934,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   NTproBNP: {
     default: { max: 125, min: 0, optimalMax: 75, optimalMin: 0, unit: 'pg/mL' },
+    source: 'sbc-ic-2018',
   },
 
   Oleic_Acid: {
@@ -1209,7 +1212,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   Triglycerides: {
     default: { max: 150, min: 0, optimalMax: 100, optimalMin: 0, unit: 'mg/dL' },
     direction: 'lower-better',
-    source: 'sbc-lipids-2017:t2',
+    source: 'sbc-lipids-2025',
   },
 
   TroponinI: {

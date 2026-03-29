@@ -8,8 +8,15 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+  issues: read
+  pull-requests: write
+  deployments: write
+
 jobs:
   build-and-test:
+    name: Build & Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -35,3 +42,133 @@ jobs:
 
       - name: Test
         run: pnpm turbo run test
+
+  # ── PR only: Claude code review after CI passes ──
+  review:
+    name: Code Review
+    needs: build-and-test
+    if: github.event_name == 'pull_request'
+    uses: ./.github/workflows/review.yml
+    with:
+      pr_number: ${{ github.event.pull_request.number }}
+    secrets: inherit
+
+  # ── Push to main only: deploy site after CI passes ──
+  deploy-site:
+    name: Deploy Site
+    needs: build-and-test
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for site changes
+        id: changes
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const { data: commit } = await github.rest.repos.getCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.sha,
+            });
+            const siteChanged = commit.files?.some(f => f.filename.startsWith('site/'));
+            core.setOutput('site_changed', siteChanged ? 'true' : 'false');
+
+      - uses: actions/checkout@v4
+        if: steps.changes.outputs.site_changed == 'true'
+
+      - uses: pnpm/action-setup@v4
+        if: steps.changes.outputs.site_changed == 'true'
+
+      - uses: actions/setup-node@v4
+        if: steps.changes.outputs.site_changed == 'true'
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        if: steps.changes.outputs.site_changed == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Build site
+        if: steps.changes.outputs.site_changed == 'true'
+        run: cd site && pnpm build
+
+      - name: Deploy to Cloudflare Pages
+        if: steps.changes.outputs.site_changed == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy site/dist --project-name=fhir-brasil --branch=main --commit-hash=${{ github.sha }} --commit-message="${{ github.sha }}"
+
+      - name: Purge Cloudflare cache
+        if: steps.changes.outputs.site_changed == 'true'
+        run: |
+          curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"purge_everything":true}'
+
+  # ── Slack notification after deploy ──
+  notify:
+    name: Notify
+    needs: [build-and-test, deploy-site]
+    if: always() && github.event_name == 'push' && needs.deploy-site.result != 'skipped'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build notification
+        id: notify
+        run: |
+          SHORT_SHA="${{ github.sha }}"
+          SHORT_SHA="${SHORT_SHA:0:7}"
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          DEPLOY_RESULT="${{ needs.deploy-site.result }}"
+
+          if [ "$DEPLOY_RESULT" = "success" ]; then
+            HEADER=":rocket: fhir-brasil site deployed"
+            RESULT_LINE=":white_check_mark: *Site* — deployed to Cloudflare Pages"
+            TEXT="Deploy successful"
+          else
+            HEADER=":rotating_light: fhir-brasil site deploy failed"
+            RESULT_LINE=":x: *Site* — deploy failed"
+            TEXT="Deploy failed"
+          fi
+
+          cat > /tmp/slack-payload.json << PAYLOAD
+          {
+            "text": "${TEXT}",
+            "blocks": [
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": "${HEADER}",
+                  "emoji": true
+                }
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "${RESULT_LINE}"
+                }
+              },
+              {
+                "type": "context",
+                "elements": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Commit:* <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${SHORT_SHA}> | *Run:* <${RUN_URL}|View logs>"
+                  }
+                ]
+              }
+            ]
+          }
+          PAYLOAD
+
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v2.1.0
+        with:
+          webhook: ${{ secrets.SLACK_DEPLOY_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload-file-path: /tmp/slack-payload.json

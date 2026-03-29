@@ -20,13 +20,13 @@ jobs:
     name: Build & Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - uses: pnpm/action-setup@v4
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 22
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -54,16 +54,18 @@ jobs:
       pr_number: ${{ github.event.pull_request.number }}
     secrets: inherit
 
-  # ── Push to main / manual dispatch: deploy site after CI passes ──
-  deploy-site:
-    name: Deploy Site
+  # ── Build site (upload artifact for deploy) ──
+  build-site:
+    name: Build Site
     needs: build-and-test
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    outputs:
+      site_changed: ${{ steps.changes.outputs.site_changed }}
     steps:
       - name: Check for site changes
         id: changes
-        uses: actions/github-script@v8
+        uses: actions/github-script@v7
         with:
           script: |
             // workflow_dispatch always deploys (manual trigger)
@@ -79,16 +81,16 @@ jobs:
             const siteChanged = commit.files?.some(f => f.filename.startsWith('site/'));
             core.setOutput('site_changed', siteChanged ? 'true' : 'false');
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         if: steps.changes.outputs.site_changed == 'true'
 
       - uses: pnpm/action-setup@v4
         if: steps.changes.outputs.site_changed == 'true'
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         if: steps.changes.outputs.site_changed == 'true'
         with:
-          node-version: 20
+          node-version: 22
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -99,15 +101,38 @@ jobs:
         if: steps.changes.outputs.site_changed == 'true'
         run: cd site && pnpm build
 
-      - name: Deploy to Cloudflare Pages
+      - uses: actions/upload-artifact@v6
         if: steps.changes.outputs.site_changed == 'true'
-        run: npx wrangler@3 pages deploy site/dist --project-name=fhir-brasil --branch=main --commit-hash=${{ github.sha }} --commit-message="${{ github.sha }}"
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        with:
+          name: site-dist
+          path: site/dist
+          retention-days: 1
+
+  # ── Deploy site to Cloudflare Pages ──
+  deploy-site:
+    name: Deploy Site
+    needs: build-site
+    if: always() && !cancelled() && needs.build-site.outputs.site_changed == 'true' && needs.build-site.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v7
+        with:
+          name: site-dist
+          path: site/dist
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          packageManager: npm
+          command: pages deploy site/dist --project-name=fhir-brasil --branch=main --commit-hash=${{ github.sha }} --commit-message="${{ github.sha }}"
 
       - name: Purge Cloudflare cache
-        if: steps.changes.outputs.site_changed == 'true'
         run: |
           curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
             -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
@@ -117,7 +142,7 @@ jobs:
   # ── Slack notification after deploy ──
   notify:
     name: Notify
-    needs: [build-and-test, deploy-site]
+    needs: [build-and-test, build-site, deploy-site]
     if: always() && github.event_name != 'pull_request' && needs.deploy-site.result != 'skipped'
     runs-on: ubuntu-latest
     steps:

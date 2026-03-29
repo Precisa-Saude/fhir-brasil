@@ -105,7 +105,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          packageManager: npx
+          packageManager: pnpm
           command: pages deploy site/dist --project-name=fhir-brasil --branch=main --commit-hash=${{ github.sha }} --commit-message="${{ github.sha }}"
 
       - name: Purge Cloudflare cache

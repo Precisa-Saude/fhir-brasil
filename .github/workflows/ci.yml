@@ -7,6 +7,7 @@ on:
       - 'v*'
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -53,11 +54,11 @@ jobs:
       pr_number: ${{ github.event.pull_request.number }}
     secrets: inherit
 
-  # ── Push to main only: deploy site after CI passes ──
+  # ── Push to main / manual dispatch: deploy site after CI passes ──
   deploy-site:
     name: Deploy Site
     needs: build-and-test
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Check for site changes
@@ -65,6 +66,11 @@ jobs:
         uses: actions/github-script@v8
         with:
           script: |
+            // workflow_dispatch always deploys (manual trigger)
+            if (context.eventName === 'workflow_dispatch') {
+              core.setOutput('site_changed', 'true');
+              return;
+            }
             const { data: commit } = await github.rest.repos.getCommit({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -114,7 +120,7 @@ jobs:
   notify:
     name: Notify
     needs: [build-and-test, deploy-site]
-    if: always() && github.event_name == 'push' && needs.deploy-site.result != 'skipped'
+    if: always() && github.event_name != 'pull_request' && needs.deploy-site.result != 'skipped'
     runs-on: ubuntu-latest
     steps:
       - name: Build notification

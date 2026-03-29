@@ -7,7 +7,7 @@
 - `[ ]` — Não verificado (sem fonte ou fonte não conferida)
 - `[x]` — Verificado (valor conferido contra documento-fonte com página/tabela)
 
-**Estatísticas**: 0/202 verificados (0%)
+**Estatísticas**: 6/202 verificados (3.0%)
 
 ---
 
@@ -15,18 +15,18 @@
 
 ### Perfil Lipídico
 
-- [ ] Cholesterol — fonte atual: `sbc-lipids-2017` (falta localização)
-- [ ] HDL — fonte atual: `sbc-lipids-2017` (falta localização)
-- [ ] LDL — fonte atual: `sbc-lipids-2017` (falta localização)
-- [ ] Triglycerides — fonte atual: `sbc-lipids-2017` (falta localização)
-- [ ] NonHDL_Cholesterol — sem fonte
-- [ ] Cholesterol_HDL_Ratio — sem fonte
-- [ ] VLDL — sem fonte
-- [ ] ApoA1 — sem fonte
-- [ ] ApoB — sem fonte
-- [ ] ApoCIII — sem fonte
-- [ ] ApoCIII_ApoA1_Ratio — sem fonte
-- [ ] Lipoprotein_a — sem fonte
+- [x] Cholesterol — `sbc-lipids-2017:t2` ✓ Desejável <200 mg/dL confere
+- [x] HDL — `sbc-lipids-2017:t2` ✓ H≥40, M≥50 mg/dL confere
+- [x] LDL — `sbc-lipids-2017:t3` ✓ Risco intermediário <100, alto <70 confere
+- [x] Triglycerides — `sbc-lipids-2017:t2` ✓ Desejável <150 mg/dL confere
+- [x] NonHDL_Cholesterol — `sbc-lipids-2017:t3` ✓ Risco intermediário <130, alto <100 confere
+- [ ] Cholesterol_HDL_Ratio — derivado, sem tabela específica na SBC 2017
+- [ ] VLDL — sem fonte brasileira específica (estimado via fórmula de Friedewald)
+- [ ] ApoA1 — sem tabela de referência na SBC 2017 (mencionado sem classificação)
+- [ ] ApoB — sem tabela de referência na SBC 2017 (apenas equivalências com não-HDL)
+- [ ] ApoCIII — sem fonte brasileira
+- [ ] ApoCIII_ApoA1_Ratio — sem fonte brasileira
+- [x] Lipoprotein_a — SBC 2017 diz elevado >50 mg/dL (>125 nmol/L). **ATENÇÃO**: código usa max: 75 nmol/L (limiar EAS 2022 para risco moderado, não SBC)
 
 ### Subfrações Lipídicas (Avançado)
 

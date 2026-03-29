@@ -26,7 +26,16 @@ Acesso também em: <https://www.sbpc.org.br/pt/especializacao/publicacoes-tecnic
 
 FALUDI, A. A. et al. Atualização da Diretriz Brasileira de Dislipidemias e Prevenção da Aterosclerose – 2017. **Arquivos Brasileiros de Cardiologia**, São Paulo, v. 109, n. 2, supl. 1, p. 1-76, ago. 2017. DOI: [10.5935/abc.20170121](https://doi.org/10.5935/abc.20170121).
 
-Disponível em: <http://publicacoes.cardiol.br/2014/diretrizes/2017/02_DIRETRIZ_DE_DISLIPIDEMIAS.pdf>.
+Disponível em: <https://www.scielo.br/j/abc/a/whBsCyzTDzGYJcsBY7YVkWn/?lang=pt>.
+
+**Tabelas utilizadas:**
+- **Tabela 2**: Valores referenciais e de alvo terapêutico do perfil lipídico (com e sem jejum)
+  - Colesterol Total: desejável <200 mg/dL
+  - HDL-c: desejável ≥40 mg/dL (H), ≥50 mg/dL (M)
+  - Triglicérides (jejum): desejável <150 mg/dL
+- **Tabela 3**: Metas terapêuticas de LDL-c e colesterol não-HDL por categoria de risco
+  - LDL-c: risco intermediário <100 mg/dL, alto risco <70 mg/dL
+  - Colesterol não-HDL: risco intermediário <130 mg/dL, alto risco <100 mg/dL
 
 ### sbd-diabetes-2024
 

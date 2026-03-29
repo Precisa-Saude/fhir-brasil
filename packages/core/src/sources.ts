@@ -48,7 +48,7 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     key: 'sbc-lipids-2017',
     abnt: 'FALUDI, A. A. et al. Atualização da Diretriz Brasileira de Dislipidemias e Prevenção da Aterosclerose – 2017. Arquivos Brasileiros de Cardiologia, São Paulo, v. 109, n. 2, supl. 1, p. 1-76, ago. 2017.',
     doi: '10.5935/abc.20170121',
-    url: 'http://publicacoes.cardiol.br/2014/diretrizes/2017/02_DIRETRIZ_DE_DISLIPIDEMIAS.pdf',
+    url: 'https://www.scielo.br/j/abc/a/whBsCyzTDzGYJcsBY7YVkWn/?lang=pt',
   },
 
   // ---------------------------------------------------------------------------

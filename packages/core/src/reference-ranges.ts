@@ -361,9 +361,10 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Cholesterol: {
     default: { max: 200, min: 0, optimalMax: 180, optimalMin: 0, unit: 'mg/dL' },
-    source: 'sbc-lipids-2017',
+    source: 'sbc-lipids-2017:t2',
   },
 
+  // Derivado de CT e HDL-c (SBC 2017, Tabela 2)
   Cholesterol_HDL_Ratio: {
     // Lower is better - Function Health reference: <= 3.5
     default: { max: 5.0, min: 0, optimalMax: 3.5, optimalMin: 0, unit: '' },
@@ -666,7 +667,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   HDL: {
     default: { max: 60, min: 40, optimalMax: 60, optimalMin: 50, unit: 'mg/dL' },
     direction: 'higher-better',
-    source: 'sbc-lipids-2017',
+    source: 'sbc-lipids-2017:t2',
     variants: [
       {
         ageMin: 18,
@@ -758,7 +759,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   LDL: {
     default: { max: 100, min: 0, optimalMax: 70, optimalMin: 0, unit: 'mg/dL' },
     direction: 'lower-better',
-    source: 'sbc-lipids-2017',
+    source: 'sbc-lipids-2017:t3',
   },
 
   LDL_Medium: {
@@ -922,6 +923,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   NonHDL_Cholesterol: {
     default: { max: 130, min: 0, optimalMax: 100, optimalMin: 0, unit: 'mg/dL' },
     direction: 'lower-better',
+    source: 'sbc-lipids-2017:t3',
   },
 
   NRBC: {
@@ -1207,7 +1209,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   Triglycerides: {
     default: { max: 150, min: 0, optimalMax: 100, optimalMin: 0, unit: 'mg/dL' },
     direction: 'lower-better',
-    source: 'sbc-lipids-2017',
+    source: 'sbc-lipids-2017:t2',
   },
 
   TroponinI: {

@@ -101,12 +101,10 @@ jobs:
 
       - name: Deploy to Cloudflare Pages
         if: steps.changes.outputs.site_changed == 'true'
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          packageManager: npm
-          command: pages deploy site/dist --project-name=fhir-brasil --branch=main --commit-hash=${{ github.sha }} --commit-message="${{ github.sha }}"
+        run: npx wrangler@3 pages deploy site/dist --project-name=fhir-brasil --branch=main --commit-hash=${{ github.sha }} --commit-message="${{ github.sha }}"
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
       - name: Purge Cloudflare cache
         if: steps.changes.outputs.site_changed == 'true'

@@ -32,17 +32,23 @@ const gridStyle = {
   width: '100%',
 } as const;
 
-// Map each card to its grid column start position
+// Map each card to its grid column start position (desktop only)
 // Row 1: cols 2-5, 6-9, 10-13 (three cards, 4 cols each)
 // Row 2: cols 4-7, 8-11 (two cards, centered)
-const COL_STARTS = [2, 6, 10, 4, 8];
+const COL_START_CLASSES = [
+  'md:[grid-column-start:2]',
+  'md:[grid-column-start:6]',
+  'md:[grid-column-start:10]',
+  'md:[grid-column-start:4]',
+  'md:[grid-column-start:8]',
+] as const;
 
 export function Standards() {
   return (
     <section className="bg-white/30 py-20 sm:py-28">
-      <div className="mx-auto grid gap-4 px-4 md:px-0" style={gridStyle}>
+      <div className="mx-auto flex flex-col gap-4 px-4 md:grid md:px-0" style={gridStyle}>
         {/* Header spans cols 2-13 */}
-        <div className="col-span-full text-center md:col-span-12 md:col-start-2">
+        <div className="text-center md:col-span-12 md:col-start-2">
           <h2 className="font-margem text-2xl font-bold tracking-tight text-ps-violet-dark sm:text-3xl">
             Padrões & Conformidade
           </h2>
@@ -59,8 +65,7 @@ export function Standards() {
             href={standard.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="col-span-full flex h-32 flex-col items-center justify-center gap-2 rounded-xl border border-ps-violet-dark/8 bg-white/60 px-4 text-center outline outline-1 outline-ps-violet-dark/5 backdrop-blur-sm transition-colors hover:border-ps-violet-dark/15 md:col-span-4"
-            style={{ gridColumnStart: COL_STARTS[i] }}
+            className={`flex h-32 flex-col items-center justify-center gap-2 rounded-xl border border-ps-violet-dark/8 bg-white/60 px-4 text-center outline outline-1 outline-ps-violet-dark/5 backdrop-blur-sm transition-colors hover:border-ps-violet-dark/15 md:col-span-4 ${COL_START_CLASSES[i]}`}
           >
             <span className="font-margem text-base font-bold text-ps-violet-dark">
               {standard.label}

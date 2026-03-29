@@ -34,15 +34,20 @@ const gridStyle = {
   width: '100%',
 } as const;
 
+const COL_STARTS = [
+  'md:[grid-column-start:2]',
+  'md:[grid-column-start:6]',
+  'md:[grid-column-start:10]',
+] as const;
+
 export function Features() {
   return (
     <section className="py-20 sm:py-28">
-      <div className="mx-auto grid gap-4 px-4 md:px-0" style={gridStyle}>
+      <div className="mx-auto flex flex-col gap-4 px-4 md:grid md:px-0" style={gridStyle}>
         {FEATURES.map((feature, i) => (
           <div
             key={feature.title}
-            className="col-span-full rounded-2xl border border-ps-violet-dark/8 bg-white/50 p-8 outline outline-1 outline-ps-violet-dark/5 backdrop-blur-sm transition-colors hover:border-ps-violet-dark/15 md:col-span-4"
-            style={{ gridColumnStart: i * 4 + 2 }}
+            className={`rounded-2xl border border-ps-violet-dark/8 bg-white/50 p-8 outline outline-1 outline-ps-violet-dark/5 backdrop-blur-sm transition-colors hover:border-ps-violet-dark/15 md:col-span-4 ${COL_STARTS[i]}`}
           >
             <div className="mb-4 inline-flex rounded-full bg-ps-sand p-3 text-ps-violet-dark">
               {feature.icon}

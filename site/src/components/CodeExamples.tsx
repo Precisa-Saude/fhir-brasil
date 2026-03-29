@@ -163,9 +163,9 @@ export function CodeExamples() {
         </p>
 
         {/* Tabs */}
-        <div className="mt-8 mb-4 flex justify-center">
+        <div className="mt-8 mb-4 flex justify-start overflow-x-auto md:justify-center">
         <div
-          className="relative inline-grid overflow-x-auto rounded-full border border-ps-violet-dark/10 bg-ps-sand/50 p-1"
+          className="relative inline-grid min-w-max rounded-full border border-ps-violet-dark/10 bg-ps-sand/50 p-1"
           role="tablist"
           style={{ gridTemplateColumns: `repeat(${TABS.length}, 1fr)` }}
         >

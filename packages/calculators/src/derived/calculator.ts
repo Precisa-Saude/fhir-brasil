@@ -14,8 +14,8 @@ import { codeToLoinc } from '@precisa-saude/fhir';
 
 export interface BiomarkerInput {
   code: string;
-  value: number | string;
   unit?: string;
+  value: number | string;
 }
 
 export interface DerivedBiomarker {

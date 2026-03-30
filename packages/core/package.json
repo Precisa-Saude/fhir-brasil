@@ -1,14 +1,26 @@
 {
   "name": "@precisa-saude/fhir",
   "version": "0.1.8",
-  "sideEffects": false,
+  "description": "Tipos FHIR R4, definições de biomarcadores, faixas de referência e conversores para o ecossistema de saúde brasileiro",
+  "keywords": [
+    "fhir",
+    "r4",
+    "brazil",
+    "biomarker",
+    "loinc",
+    "sbpc-ml",
+    "health"
+  ],
   "homepage": "https://github.com/Precisa-Saude/fhir-brasil/tree/main/packages/core#readme",
   "bugs": "https://github.com/Precisa-Saude/fhir-brasil/issues",
-  "description": "Tipos FHIR R4, definições de biomarcadores, faixas de referência e conversores para o ecossistema de saúde brasileiro",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Precisa-Saude/fhir-brasil.git",
+    "directory": "packages/core"
+  },
+  "license": "Apache-2.0",
+  "sideEffects": false,
   "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": {
@@ -81,28 +93,26 @@
       }
     }
   },
-  "files": ["dist"],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
-    "lint": "tsc --noEmit",
-    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo",
+    "lint": "eslint src/ --max-warnings 0",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "clean": "rm -rf dist .turbo"
-  },
-  "keywords": ["fhir", "r4", "brazil", "biomarker", "loinc", "sbpc-ml", "health"],
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Precisa-Saude/fhir-brasil.git",
-    "directory": "packages/core"
-  },
-  "publishConfig": {
-    "access": "public"
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "tsup": "^8.3.5",
     "typescript": "~5.7.3",
     "vitest": "^2.1.8"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

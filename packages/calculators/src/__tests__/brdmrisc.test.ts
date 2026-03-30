@@ -7,24 +7,24 @@ import {
   validateBiomarkers,
 } from '../brdmrisc/calculator';
 import {
-  BRDMRISC_MODELS,
-  LAB_ONLY_MODELS,
-  LAB_MODEL_PRIORITY,
-  FOLLOW_UP_YEARS,
-  FHIR_CODE_TO_BRDMRISC,
-  BRDMRISC_BIOMARKER_CODES,
   BIOMARKER_NAMES_PT,
-  BIOMARKER_UNITS,
   BIOMARKER_RANGES,
+  BIOMARKER_UNITS,
+  BRDMRISC_BIOMARKER_CODES,
+  BRDMRISC_MODELS,
+  FHIR_CODE_TO_BRDMRISC,
+  FOLLOW_UP_YEARS,
+  LAB_MODEL_PRIORITY,
+  LAB_ONLY_MODELS,
   RISK_THRESHOLDS,
 } from '../brdmrisc/constants';
+import type { BrDMriscInput } from '../brdmrisc/types';
 import {
-  convertToTargetUnit,
   autoConvertToTarget,
   CONVERSION_FACTORS,
+  convertToTargetUnit,
   TARGET_UNITS,
 } from '../brdmrisc/unit-converters';
-import type { BrDMriscInput } from '../brdmrisc/types';
 
 describe('selectModel', () => {
   it('should select model 6 when all 4 biomarkers are present', () => {

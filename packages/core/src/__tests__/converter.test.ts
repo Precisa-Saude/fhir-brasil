@@ -6,22 +6,19 @@ import {
   labResultToFHIRBundle,
   userProfileToFHIR,
 } from '../converter';
-import {
-  validateFHIRDiagnosticReport,
-  validateFHIRObservation,
-} from '../validators';
+import type { FHIRDiagnosticReport, FHIRObservation } from '../fhir-types';
 import {
   interventionsToFHIRBundle,
   interventionToFHIRMedicationStatement,
   interventionToFHIRObservation,
 } from '../intervention-converter';
-import type { FHIRDiagnosticReport, FHIRMedicationStatement, FHIRObservation } from '../fhir-types';
 import type {
   InterventionData,
   LabObservationData,
   LabReportData,
   UserProfileData,
 } from '../types';
+import { validateFHIRDiagnosticReport, validateFHIRObservation } from '../validators';
 
 const sampleLabObservation: LabObservationData = {
   biomarkerCode: 'Glucose',

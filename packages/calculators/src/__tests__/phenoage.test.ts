@@ -1,26 +1,23 @@
 import { describe, expect, it } from 'vitest';
 
+import { calculatePhenoAge, validateBiomarkers } from '../phenoage/calculator';
 import {
-  calculatePhenoAge,
-  validateBiomarkers,
-} from '../phenoage/calculator';
-import {
-  PHENOAGE_COEFFICIENTS,
-  GOMPERTZ_PARAMS,
+  BIOMARKER_LAB_INFO,
+  BIOMARKER_NAMES_PT,
   BIOMARKER_RANGES,
   FHIR_CODE_TO_PHENOAGE,
+  GOMPERTZ_PARAMS,
+  PHENOAGE_COEFFICIENTS,
   REQUIRED_BIOMARKERS,
-  BIOMARKER_NAMES_PT,
-  BIOMARKER_LAB_INFO,
 } from '../phenoage/constants';
+import type { PhenoAgeInput } from '../phenoage/types';
 import {
-  convertToSI,
-  needsConversion,
   autoConvertToSI,
   CONVERSION_FACTORS,
+  convertToSI,
+  needsConversion,
   TARGET_UNITS,
 } from '../phenoage/unit-converters';
-import type { PhenoAgeInput } from '../phenoage/types';
 
 // Typical healthy 40-year-old values in SI units
 const healthyInput: PhenoAgeInput = {
@@ -78,9 +75,9 @@ describe('calculatePhenoAge', () => {
   });
 
   it('should throw for NaN input', () => {
-    expect(() =>
-      calculatePhenoAge({ ...healthyInput, albumin: NaN }),
-    ).toThrow('Invalid input value');
+    expect(() => calculatePhenoAge({ ...healthyInput, albumin: NaN })).toThrow(
+      'Invalid input value',
+    );
   });
 });
 

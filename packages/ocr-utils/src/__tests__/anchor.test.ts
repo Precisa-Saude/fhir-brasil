@@ -1,4 +1,5 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import { findBiomarkersInText, getMatchedCodes } from '../anchor';
 
 describe('findBiomarkersInText', () => {
@@ -58,7 +59,9 @@ describe('findBiomarkersInText', () => {
   });
 
   it('should return empty matches for non-medical text', () => {
-    const result = findBiomarkersInText('This is a resume for John Doe. Skills: Python, JavaScript.');
+    const result = findBiomarkersInText(
+      'This is a resume for John Doe. Skills: Python, JavaScript.',
+    );
     expect(result.matches.length).toBe(0);
   });
 

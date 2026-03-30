@@ -11,5 +11,5 @@ export * as phenoage from './phenoage';
 export * as brdmrisc from './brdmrisc';
 
 // Derived biomarkers (HOMA-IR, VLDL, BMI)
-export { computeDerivedBiomarkers } from './derived';
 export type { BiomarkerInput, DerivedBiomarker, DerivedOptions } from './derived';
+export { computeDerivedBiomarkers } from './derived';

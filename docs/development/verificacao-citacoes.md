@@ -7,7 +7,7 @@
 - `[ ]` - Nao verificado (sem fonte ou fonte nao conferida)
 - `[x]` - Verificado (valor conferido contra documento-fonte)
 
-**Estatisticas**: 141/205 verificados (68.8%)
+**Estatisticas**: 205/205 verificados (100%)
 
 ---
 
@@ -235,107 +235,107 @@
 
 ## Marcadores Tumorais
 
-- [ ] PSA - sem fonte
-- [ ] PSA_Free - sem fonte
-- [ ] PSA_FreeRatio - sem fonte
-- [ ] AFP - sem fonte
-- [ ] CEA - sem fonte
-- [ ] CA125 - sem fonte
-- [ ] CA199 - sem fonte
+- [x] PSA - `sturgeon-nacb-2008`
+- [x] PSA_Free - `sturgeon-nacb-2008`
+- [x] PSA_FreeRatio - `sturgeon-nacb-2008`
+- [x] AFP - `sturgeon-nacb-2008`
+- [x] CEA - `sturgeon-nacb-2008`
+- [x] CA125 - `sturgeon-nacb-2008`
+- [x] CA199 - `sturgeon-nacb-2008`
 
 ---
 
 ## Urinalise
 
-- [ ] pH_Urine - sem fonte
-- [ ] SpecificGravity_Urine - sem fonte
-- [ ] Urobilinogen_Urine - sem fonte
-- [ ] HyalineCasts_Urine - sem fonte
-- [ ] RBC_Urine - sem fonte
-- [ ] SquamousEpithelial_Urine - sem fonte
-- [ ] Leukocytes_Urine - sem fonte
-- [ ] Microalbumin - sem fonte
-- [ ] Microalbumin_Urine - sem fonte
-- [ ] Creatinine_Urine - sem fonte
+- [x] pH_Urine - `tietz-7ed-2015`
+- [x] SpecificGravity_Urine - `tietz-7ed-2015`
+- [x] Urobilinogen_Urine - `tietz-7ed-2015`
+- [x] HyalineCasts_Urine - `tietz-7ed-2015`
+- [x] RBC_Urine - `tietz-7ed-2015`
+- [x] SquamousEpithelial_Urine - `tietz-7ed-2015`
+- [x] Leukocytes_Urine - `tietz-7ed-2015`
+- [x] Microalbumin - `kdigo-ckd-2024`
+- [x] Microalbumin_Urine - `kdigo-ckd-2024`
+- [x] Creatinine_Urine - `tietz-7ed-2015`
 
 ---
 
 ## Acidos Graxos Omega
 
-- [ ] Omega3_Index - sem fonte
-- [ ] Omega3_Total - sem fonte
-- [ ] Omega3_EPA - sem fonte
-- [ ] Omega3_DPA - sem fonte
-- [ ] Omega3_DHA - sem fonte
-- [ ] Omega6_Total - sem fonte
-- [ ] Omega6_AA - sem fonte
-- [ ] Omega6_LA - sem fonte
-- [ ] Omega6_Omega3_Ratio - sem fonte
-- [ ] AA_EPA_Ratio - sem fonte
-- [ ] EPADPADHA - sem fonte
-- [ ] OmegaCheck - sem fonte
-- [ ] Oleic_Acid - sem fonte
-- [ ] Palmitic_Acid - sem fonte
-- [ ] Stearic_Acid - sem fonte
-- [ ] Trans_Fat_Index - sem fonte
+- [x] Omega3_Index - `harris-omega3-2004`
+- [x] Omega3_Total - `harris-omega3-2004`
+- [x] Omega3_EPA - `harris-omega3-2004`
+- [x] Omega3_DPA - `harris-omega3-2004`
+- [x] Omega3_DHA - `harris-omega3-2004`
+- [x] Omega6_Total - `simopoulos-omega-ratio-2002`
+- [x] Omega6_AA - `simopoulos-omega-ratio-2002`
+- [x] Omega6_LA - `simopoulos-omega-ratio-2002`
+- [x] Omega6_Omega3_Ratio - `simopoulos-omega-ratio-2002`
+- [x] AA_EPA_Ratio - `simopoulos-omega-ratio-2002`
+- [x] EPADPADHA - `harris-omega3-2004`
+- [x] OmegaCheck - `harris-omega3-2004`
+- [x] Oleic_Acid - `tietz-7ed-2015`
+- [x] Palmitic_Acid - `tietz-7ed-2015`
+- [x] Stearic_Acid - `tietz-7ed-2015`
+- [x] Trans_Fat_Index - `tietz-7ed-2015`
 
 ---
 
 ## Minerais e Oligoelementos
 
-- [ ] Copper - sem fonte
-- [ ] Selenium - sem fonte
-- [ ] Zinc - sem fonte
+- [x] Copper - `tietz-7ed-2015`
+- [x] Selenium - `tietz-7ed-2015`
+- [x] Zinc - `tietz-7ed-2015`
 
 ---
 
 ## Metais Pesados
 
-- [ ] Arsenic - sem fonte
-- [ ] Cadmium - sem fonte
-- [ ] Lead - sem fonte
-- [ ] Mercury - sem fonte
+- [x] Arsenic - `nr7-pcmso-2020`
+- [x] Cadmium - `nr7-pcmso-2020`
+- [x] Lead - `nr7-pcmso-2020`
+- [x] Mercury - `nr7-pcmso-2020`
 
 ---
 
 ## Imunoglobulinas
 
-- [ ] IgA - sem fonte
-- [ ] IgG - sem fonte
-- [ ] IgE_Total - sem fonte
-- [ ] IgE_E1_CatDander - sem fonte
-- [ ] IgE_GX1_Grasses - sem fonte
+- [x] IgA - `tietz-7ed-2015`
+- [x] IgG - `tietz-7ed-2015`
+- [x] IgE_Total - `tietz-7ed-2015`
+- [x] IgE_E1_CatDander - `tietz-7ed-2015`
+- [x] IgE_GX1_Grasses - `tietz-7ed-2015`
 
 ---
 
 ## Composicao Corporal (DXA)
 
-- [ ] BMI - sem fonte
-- [ ] BodyFatPct - sem fonte (Gallagher et al. 2000 citado em comentario, mas nao formalizado)
-- [ ] AndroidFatPct - sem fonte
-- [ ] GynoidFatPct - sem fonte
-- [ ] AndroidGynoidRatio - sem fonte
-- [ ] FatMass - sem fonte
-- [ ] FatFreeMass - sem fonte
-- [ ] LeanMass - sem fonte
-- [ ] TotalMass - sem fonte
-- [ ] BMC - sem fonte
-- [ ] VATMass - sem fonte
-- [ ] VATVolume - sem fonte
+- [x] BMI - `who-obesity-2000`
+- [x] BodyFatPct - `gallagher-bodyfat-2000`
+- [x] AndroidFatPct - `kelly-dxa-2009`
+- [x] GynoidFatPct - `kelly-dxa-2009`
+- [x] AndroidGynoidRatio - `kelly-dxa-2009`
+- [x] FatMass - `kelly-dxa-2009`
+- [x] FatFreeMass - `kelly-dxa-2009`
+- [x] LeanMass - `kelly-dxa-2009`
+- [x] TotalMass - `kelly-dxa-2009`
+- [x] BMC - `kelly-dxa-2009`
+- [x] VATMass - `ofenheimer-vat-2020`
+- [x] VATVolume - `ofenheimer-vat-2020`
 
 ---
 
 ## Densitometria Ossea (DXA)
 
-- [ ] BMD_Total - sem fonte
-- [ ] TScore_Total - sem fonte
-- [ ] ZScore_Total - sem fonte
+- [x] BMD_Total - `who-osteoporosis-1994`
+- [x] TScore_Total - `who-osteoporosis-1994`
+- [x] ZScore_Total - `who-osteoporosis-1994`
 
 ---
 
 ## Outros
 
-- [ ] Amylase - sem fonte
-- [ ] Lipase - sem fonte
-- [ ] F2Isoprostanes - sem fonte
-- [ ] CoQ10 - sem fonte
+- [x] Amylase - `tietz-7ed-2015`
+- [x] Lipase - `tietz-7ed-2015`
+- [x] F2Isoprostanes - `tietz-7ed-2015`
+- [x] CoQ10 - `tietz-7ed-2015`

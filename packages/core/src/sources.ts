@@ -256,6 +256,76 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     doi: '10.1373/clinchem.2007.100586',
     url: 'https://pubmed.ncbi.nlm.nih.gov/18515257/',
   },
+  // ---------------------------------------------------------------------------
+  // Fontes internacionais — Marcadores tumorais
+  // ---------------------------------------------------------------------------
+  'sturgeon-nacb-2008': {
+    key: 'sturgeon-nacb-2008',
+    abnt: 'STURGEON, C. M. et al. National Academy of Clinical Biochemistry Laboratory Medicine Practice Guidelines for use of tumor markers in testicular, prostate, colorectal, breast, and ovarian cancers. Clinical Chemistry, v. 54, n. 12, p. e11-e79, 2008.',
+    doi: '10.1373/clinchem.2008.105601',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/19042984/',
+  },
+
+  // ---------------------------------------------------------------------------
+  // Fontes internacionais — Ácidos graxos ômega
+  // ---------------------------------------------------------------------------
+  'harris-omega3-2004': {
+    key: 'harris-omega3-2004',
+    abnt: 'HARRIS, W. S.; VON SCHACKY, C. The Omega-3 Index: a new risk factor for death from coronary heart disease? Preventive Medicine, v. 39, n. 1, p. 212-220, 2004.',
+    doi: '10.1016/j.ypmed.2004.02.030',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/15208005/',
+  },
+
+  'simopoulos-omega-ratio-2002': {
+    key: 'simopoulos-omega-ratio-2002',
+    abnt: 'SIMOPOULOS, A. P. The importance of the ratio of omega-6/omega-3 essential fatty acids. Biomedicine & Pharmacotherapy, v. 56, n. 8, p. 365-379, 2002.',
+    doi: '10.1016/S0753-3322(02)00253-6',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/12442909/',
+  },
+
+  // ---------------------------------------------------------------------------
+  // Fontes brasileiras — Metais pesados (NR-7)
+  // ---------------------------------------------------------------------------
+  'nr7-pcmso-2020': {
+    key: 'nr7-pcmso-2020',
+    abnt: 'BRASIL. Ministério do Trabalho e Emprego. NR-7 — PCMSO, Quadro 1: Indicadores biológicos. Portaria n. 6.734, de 9 de março de 2020. Diário Oficial da União, Brasília, 13 mar. 2020.',
+    url: 'https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao-do-trabalho/seguranca-e-saude-no-trabalho/sst-portarias/2022/portaria-no-567-de-10-de-marco-de-2022-alteracoes-na-nr-7.pdf',
+  },
+
+  // ---------------------------------------------------------------------------
+  // Fontes internacionais — Composição corporal e densitometria
+  // ---------------------------------------------------------------------------
+  'who-obesity-2000': {
+    key: 'who-obesity-2000',
+    abnt: 'WORLD HEALTH ORGANIZATION. Obesity: preventing and managing the global epidemic. WHO Technical Report Series, n. 894. Geneva: WHO, 2000.',
+    isbn: '92-4-120894-5',
+  },
+
+  'gallagher-bodyfat-2000': {
+    key: 'gallagher-bodyfat-2000',
+    abnt: 'GALLAGHER, D. et al. Healthy percentage body fat ranges: an approach for developing guidelines based on body mass index. American Journal of Clinical Nutrition, v. 72, n. 3, p. 694-701, 2000.',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/10966886/',
+  },
+
+  'kelly-dxa-2009': {
+    key: 'kelly-dxa-2009',
+    abnt: 'KELLY, T. L. et al. Dual energy X-ray absorptiometry body composition reference values from NHANES. PLoS One, v. 4, n. 9, e7038, 2009.',
+    doi: '10.1371/journal.pone.0007038',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/19753111/',
+  },
+
+  'ofenheimer-vat-2020': {
+    key: 'ofenheimer-vat-2020',
+    abnt: 'OFENHEIMER, A. et al. Reference values of body composition parameters and visceral adipose tissue (VAT) by DXA in adults aged 18-81 years: results from the LEAD cohort. European Journal of Clinical Nutrition, v. 74, p. 1181-1191, 2020.',
+    doi: '10.1038/s41430-020-0596-5',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/32139893/',
+  },
+
+  'who-osteoporosis-1994': {
+    key: 'who-osteoporosis-1994',
+    abnt: 'WHO STUDY GROUP. Assessment of fracture risk and its application to screening for postmenopausal osteoporosis. WHO Technical Report Series, n. 843. Geneva: WHO, 1994.',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/7941614/',
+  },
 };
 
 /**

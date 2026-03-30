@@ -58,7 +58,8 @@ describe('validação de fontes em biomarkerRangeDefinitions', () => {
     console.log(`   Com fonte: ${withSource} (${coverage}%)`);
     console.log(`   Sem fonte: ${withoutSource}`);
 
-    // Garante que não regredimos abaixo do nível atual
-    expect(withSource).toBeGreaterThanOrEqual(200);
+    // Garante que ao menos 95% dos biomarcadores têm fonte
+    const coveragePct = (withSource / total) * 100;
+    expect(coveragePct).toBeGreaterThanOrEqual(95);
   });
 });

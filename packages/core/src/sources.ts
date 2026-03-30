@@ -293,10 +293,10 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
   // ---------------------------------------------------------------------------
   // Referência laboratorial geral
   // ---------------------------------------------------------------------------
-  'tietz-7ed-2014': {
-    abnt: 'BURTIS, C. A.; BRUNS, D. E. Tietz Fundamentals of Clinical Chemistry and Molecular Diagnostics. 7. ed. St. Louis: Elsevier Saunders, 2014.',
+  'tietz-7ed-2015': {
+    abnt: 'BURTIS, C. A.; BRUNS, D. E. Tietz Fundamentals of Clinical Chemistry and Molecular Diagnostics. 7. ed. St. Louis: Elsevier Saunders, 2015.',
     isbn: '978-1-4557-4165-6',
-    key: 'tietz-7ed-2014',
+    key: 'tietz-7ed-2015',
   },
 
   // ---------------------------------------------------------------------------

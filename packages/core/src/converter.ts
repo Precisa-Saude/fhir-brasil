@@ -7,8 +7,8 @@
 
 import { codeToLoinc } from './biomarkers';
 import type { FHIRBundle, FHIRDiagnosticReport, FHIRObservation, FHIRPatient } from './fhir-types';
-import { getDefaultUnit, unitToUCUM } from './units';
 import type { Flag, LabObservationData, LabReportData, UserProfileData } from './types';
+import { getDefaultUnit, unitToUCUM } from './units';
 
 // Re-export all types and functions
 export * from './fhir-types';

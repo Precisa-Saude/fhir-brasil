@@ -1,14 +1,24 @@
 {
   "name": "@precisa-saude/fhir-ocr-utils",
   "version": "0.1.8",
-  "sideEffects": false,
+  "description": "Utilitários de ancoragem OCR para extração de biomarcadores de PDFs de resultados laboratoriais",
+  "keywords": [
+    "fhir",
+    "ocr",
+    "biomarker",
+    "lab-results",
+    "text-anchoring"
+  ],
   "homepage": "https://github.com/Precisa-Saude/fhir-brasil/tree/main/packages/ocr-utils#readme",
   "bugs": "https://github.com/Precisa-Saude/fhir-brasil/issues",
-  "description": "Utilitários de ancoragem OCR para extração de biomarcadores de PDFs de resultados laboratoriais",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Precisa-Saude/fhir-brasil.git",
+    "directory": "packages/ocr-utils"
+  },
+  "license": "Apache-2.0",
+  "sideEffects": false,
   "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": {
@@ -21,24 +31,19 @@
       }
     }
   },
-  "files": ["dist"],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
-    "lint": "tsc --noEmit",
-    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo",
+    "lint": "eslint src/ --max-warnings 0",
     "test": "vitest run --passWithNoTests",
     "test:coverage": "vitest run --coverage",
-    "clean": "rm -rf dist .turbo"
-  },
-  "keywords": ["fhir", "ocr", "biomarker", "lab-results", "text-anchoring"],
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Precisa-Saude/fhir-brasil.git",
-    "directory": "packages/ocr-utils"
-  },
-  "publishConfig": {
-    "access": "public"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@precisa-saude/fhir": "workspace:*"
@@ -47,5 +52,8 @@
     "tsup": "^8.3.5",
     "typescript": "~5.7.3",
     "vitest": "^2.1.8"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

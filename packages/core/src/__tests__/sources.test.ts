@@ -35,7 +35,9 @@ describe('validação de fontes em biomarkerRangeDefinitions', () => {
       if (def.source) {
         const key = extractSourceKey(def.source);
         if (!SOURCE_REGISTRY[key]) {
-          missing.push(`${code}: source '${def.source}' → chave '${key}' não encontrada no registry`);
+          missing.push(
+            `${code}: source '${def.source}' → chave '${key}' não encontrada no registry`,
+          );
         }
       }
     }
@@ -56,6 +58,6 @@ describe('validação de fontes em biomarkerRangeDefinitions', () => {
     console.log(`   Sem fonte: ${withoutSource}`);
 
     // Garante que não regredimos abaixo do nível atual
-    expect(withSource).toBeGreaterThanOrEqual(16);
+    expect(withSource).toBeGreaterThanOrEqual(200);
   });
 });

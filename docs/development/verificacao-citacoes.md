@@ -4,6 +4,7 @@
 > Biomarcadores organizados por categoria clinica real.
 
 **Legenda**:
+
 - `[ ]` - Nao verificado (sem fonte ou fonte nao conferida)
 - `[x]` - Verificado (valor conferido contra documento-fonte)
 
@@ -25,7 +26,7 @@
 - [x] ApoA1 - `contois-apoa1-1996` Framingham: H ~134+/-23, M ~154+/-28 mg/dL. Codigo 100-200 eh faixa ampla
 - [x] ApoB - `sbc-lipids-2025` Risco intermediario <90, alto <70 confere
 - [x] ApoCIII - `khetarpal-apociii-2016` Normolipidemicos ~8-10 mg/dL confere
-- [x] ApoCIII_ApoA1_Ratio - `khetarpal-apociii-2016` (derivado). **NOTA**: corte 0.15 sem fonte publicada especifica
+- [ ] ApoCIII_ApoA1_Ratio - **SEM FONTE**: corte 0.15 sem publicacao. Source removido intencionalmente. Ver issue #3
 - [x] Lipoprotein_a - `sbc-lipids-2025` Alterado >=75 nmol/L ou >=30 mg/dL confere
 
 ### Subfracoes Lipidicas (Avancado)
@@ -38,7 +39,7 @@
 
 ### Marcadores Cardiacos
 
-- [x] BNP - `maisel-bnp-2002` 100 pg/mL eh corte diagnostico HF (nao referencia lab saudavel)
+- [x] BNP - `sbc-ic-2018` 35 pg/mL corte nao-agudo para triagem de IC
 - [x] NTproBNP - `sbc-ic-2018` Corte 125 pg/mL confere
 - [x] TroponinI - `schnabel-tni-2012` 0.04 ng/mL = percentil 99 (ensaio Siemens TnI-Ultra)
 - [x] TroponinT - `giannitsis-hstnt-2010` 14 ng/L = percentil 99 hs-cTnT (Roche Elecsys)
@@ -169,7 +170,7 @@
 ## Estudos de Ferro
 
 - [x] Iron - `sbpc-ml-2021` M 65-175, F 50-170 mcg/dL
-- [x] Ferritin - `sbpc-ml-2021` M 30-400, F 15-150/30-300 ng/mL
+- [x] Ferritin - `tietz-7ed-2015` M 20-250, F 10-120/20-200 ng/mL
 - [x] TIBC - `tietz-7ed-2015` 250-400 mcg/dL
 - [x] Transferrin - `tietz-7ed-2015` 200-360 mg/dL
 - [x] TransferrinSaturation - `tietz-7ed-2015` M 20-55%, F 15-50%

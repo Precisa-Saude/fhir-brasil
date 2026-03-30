@@ -296,7 +296,7 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
   },
 
   // ---------------------------------------------------------------------------
-  // Fontes internacionais — Subfrações lipídicas (Ion Mobility)
+  // Fontes internacionais — Coagulação
   // ---------------------------------------------------------------------------
   'wells-ddimer-2003': {
     abnt: 'WELLS, P. S. et al. Evaluation of D-dimer in the diagnosis of suspected deep-vein thrombosis. New England Journal of Medicine, v. 349, p. 1227-1235, 2003.',
@@ -305,16 +305,15 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     url: 'https://pubmed.ncbi.nlm.nih.gov/14507948/',
   },
 
+  // ---------------------------------------------------------------------------
+  // Fontes internacionais — OMS
+  // ---------------------------------------------------------------------------
   'who-iron-2020': {
     abnt: 'WORLD HEALTH ORGANIZATION. WHO guideline on use of ferritin concentrations to assess iron status in individuals and populations. Geneva: WHO, 2020.',
     isbn: '978-92-4-000012-8',
     key: 'who-iron-2020',
     url: 'https://www.who.int/publications/i/item/9789240000124',
   },
-
-  // ---------------------------------------------------------------------------
-  // Fontes internacionais — Composição corporal e densitometria
-  // ---------------------------------------------------------------------------
   'who-obesity-2000': {
     abnt: 'WORLD HEALTH ORGANIZATION. Obesity: preventing and managing the global epidemic. WHO Technical Report Series, n. 894. Geneva: WHO, 2000.',
     isbn: '92-4-120894-5',
@@ -336,5 +335,5 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
  * extractSourceKey('sbpc-ml-2021')        // 'sbpc-ml-2021'
  */
 export function extractSourceKey(source: string): string {
-  return source.split(':')[0]!;
+  return source.split(':')[0] ?? source;
 }

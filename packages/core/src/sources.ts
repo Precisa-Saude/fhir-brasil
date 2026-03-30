@@ -74,13 +74,19 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     url: 'https://pubmed.ncbi.nlm.nih.gov/10966886/',
   },
 
+  'george-ck-2016': {
+    abnt: 'GEORGE, M. D.; MCGILL, N. K.; BAKER, J. F. Creatine kinase in the U.S. population: impact of demographics, comorbidities, and body composition on the normal range. Medicine, v. 95, n. 33, e4344, 2016.',
+    doi: '10.1097/MD.0000000000004344',
+    key: 'george-ck-2016',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/27537560/',
+  },
+
   'giannitsis-hstnt-2010': {
     abnt: 'GIANNITSIS, E. et al. Analytical validation of a high-sensitivity cardiac troponin T assay. Clinical Chemistry, v. 56, n. 2, p. 254-261, 2010.',
     doi: '10.1373/clinchem.2009.132654',
     key: 'giannitsis-hstnt-2010',
     url: 'https://pubmed.ncbi.nlm.nih.gov/19959623/',
   },
-
   // ---------------------------------------------------------------------------
   // Fontes internacionais — Ácidos graxos ômega
   // ---------------------------------------------------------------------------
@@ -90,6 +96,7 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     key: 'harris-omega3-2004',
     url: 'https://pubmed.ncbi.nlm.nih.gov/15208005/',
   },
+
   // ---------------------------------------------------------------------------
   // Fontes internacionais — Nefrologia
   // ---------------------------------------------------------------------------
@@ -98,6 +105,13 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     doi: '10.1016/j.kint.2023.10.018',
     key: 'kdigo-ckd-2024',
     url: 'https://pubmed.ncbi.nlm.nih.gov/38490803/',
+  },
+
+  'keller-tni-2013': {
+    abnt: 'KELLER, T. et al. Defining a reference population to determine the 99th percentile of a contemporary sensitive cardiac troponin I assay. International Journal of Cardiology, v. 167, n. 4, p. 1423-1429, 2013.',
+    doi: '10.1016/j.ijcard.2012.04.063',
+    key: 'keller-tni-2013',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/22560907/',
   },
 
   'kelly-dxa-2009': {
@@ -120,17 +134,21 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     url: 'https://pubmed.ncbi.nlm.nih.gov/12124404/',
   },
 
-  'mcleod-ck-2016': {
-    abnt: 'MCLEOD, J. F. et al. Creatine kinase in the U.S. population: impact of demographics, comorbidities, and body composition on the normal range. Medicine, v. 95, n. 33, e4344, 2016.',
-    key: 'mcleod-ck-2016',
-    url: 'https://pubmed.ncbi.nlm.nih.gov/27537560/',
-  },
-
   'meuwese-mpo-2007': {
     abnt: 'MEUWESE, M. C. et al. Serum myeloperoxidase levels are associated with the future risk of coronary artery disease in apparently healthy individuals: the EPIC-Norfolk Prospective Population Study. Journal of the American College of Cardiology, v. 50, n. 2, p. 159-165, 2007.',
     doi: '10.1016/j.jacc.2007.03.033',
     key: 'meuwese-mpo-2007',
     url: 'https://pubmed.ncbi.nlm.nih.gov/17616301/',
+  },
+
+  // ---------------------------------------------------------------------------
+  // Fontes internacionais — Marcadores metabólicos e inflamatórios
+  // ---------------------------------------------------------------------------
+  'nemeth-adma-2017': {
+    abnt: 'NEMETH, B. et al. The issue of plasma asymmetric dimethylarginine reference range: a systematic review and meta-analysis. PLoS One, v. 12, n. 5, e0177493, 2017.',
+    doi: '10.1371/journal.pone.0177493',
+    key: 'nemeth-adma-2017',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/28494019/',
   },
 
   // ---------------------------------------------------------------------------
@@ -146,7 +164,7 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     abnt: 'OFENHEIMER, A. et al. Reference values of body composition parameters and visceral adipose tissue (VAT) by DXA in adults aged 18-81 years: results from the LEAD cohort. European Journal of Clinical Nutrition, v. 74, p. 1181-1191, 2020.',
     doi: '10.1038/s41430-020-0596-5',
     key: 'ofenheimer-vat-2020',
-    url: 'https://pubmed.ncbi.nlm.nih.gov/32139893/',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/32123345/',
   },
 
   'pns-bioquimica-2019': {
@@ -221,7 +239,7 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     abnt: 'SGARBI, J. A. et al. Consenso brasileiro para a abordagem clínica e tratamento do hipotireoidismo subclínico em adultos. Arquivos Brasileiros de Endocrinologia & Metabologia, v. 57, n. 3, p. 166-183, 2013.',
     doi: '10.1590/S0004-27302013000300003',
     key: 'sbem-thyroid-2013',
-    url: 'https://pubmed.ncbi.nlm.nih.gov/23681266/',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/23681263/',
   },
 
   'sbem-vitamind-2014': {
@@ -241,23 +259,6 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     key: 'sbpc-ml-2021',
     url: 'https://www.bibliotecasbpc.org.br/index.php?P=4&C=0.2',
   },
-
-  // ---------------------------------------------------------------------------
-  // Fontes internacionais — Marcadores metabólicos e inflamatórios
-  // ---------------------------------------------------------------------------
-  'schlesinger-adma-2017': {
-    abnt: 'SCHLESINGER, S. et al. The issue of plasma asymmetric dimethylarginine reference range: a systematic review and meta-analysis. PLoS One, v. 12, n. 5, e0177493, 2017.',
-    doi: '10.1371/journal.pone.0177493',
-    key: 'schlesinger-adma-2017',
-    url: 'https://pubmed.ncbi.nlm.nih.gov/28494019/',
-  },
-
-  'schnabel-tni-2012': {
-    abnt: 'SCHNABEL, R. B. et al. Defining a reference population to determine the 99th percentile of a contemporary sensitive cardiac troponin I assay. Clinica Chimica Acta, v. 413, n. 15-16, p. 1259-1262, 2012.',
-    doi: '10.1016/j.cca.2012.04.010',
-    key: 'schnabel-tni-2012',
-    url: 'https://pubmed.ncbi.nlm.nih.gov/22560907/',
-  },
   'schwedhelm-sdma-2011': {
     abnt: 'SCHWEDHELM, E. et al. Plasma symmetric dimethylarginine reference limits from the Framingham Offspring Cohort. Clinical Chemistry and Laboratory Medicine, v. 49, n. 11, p. 1907-1910, 2011.',
     doi: '10.1515/CCLM.2011.679',
@@ -266,9 +267,10 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
   },
 
   'selhub-homocysteine-1999': {
-    abnt: 'SELHUB, J. et al. Serum total homocysteine concentrations in the third National Health and Nutrition Examination Survey (1991-1994). American Journal of Clinical Nutrition, v. 69, n. 5, p. 1015-1020, 1999.',
+    abnt: 'SELHUB, J. et al. Serum total homocysteine concentrations in the third National Health and Nutrition Examination Survey (1991-1994): population reference ranges and contribution of vitamin status to high serum concentrations. Annals of Internal Medicine, v. 131, n. 5, p. 331-339, 1999.',
+    doi: '10.7326/0003-4819-131-5-199909070-00003',
     key: 'selhub-homocysteine-1999',
-    url: 'https://pubmed.ncbi.nlm.nih.gov/10232643/',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/10475885/',
   },
 
   'simopoulos-omega-ratio-2002': {
@@ -291,10 +293,10 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
   // ---------------------------------------------------------------------------
   // Referência laboratorial geral
   // ---------------------------------------------------------------------------
-  'tietz-7ed-2015': {
-    abnt: 'BURTIS, C. A.; BRUNS, D. E. Tietz Fundamentals of Clinical Chemistry and Molecular Diagnostics. 7. ed. St. Louis: Elsevier Saunders, 2015.',
+  'tietz-7ed-2014': {
+    abnt: 'BURTIS, C. A.; BRUNS, D. E. Tietz Fundamentals of Clinical Chemistry and Molecular Diagnostics. 7. ed. St. Louis: Elsevier Saunders, 2014.',
     isbn: '978-1-4557-4165-6',
-    key: 'tietz-7ed-2015',
+    key: 'tietz-7ed-2014',
   },
 
   // ---------------------------------------------------------------------------
@@ -312,7 +314,7 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
   // ---------------------------------------------------------------------------
   'who-iron-2020': {
     abnt: 'WORLD HEALTH ORGANIZATION. WHO guideline on use of ferritin concentrations to assess iron status in individuals and populations. Geneva: WHO, 2020.',
-    isbn: '978-92-4-000012-8',
+    isbn: '978-92-4-000012-4',
     key: 'who-iron-2020',
     url: 'https://www.who.int/publications/i/item/9789240000124',
   },

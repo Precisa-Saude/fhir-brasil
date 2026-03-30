@@ -99,17 +99,17 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Albumin_Creatinine_Ratio: {
     default: { max: 30, min: 0, optimalMax: 20, optimalMin: 0, unit: 'mg/g' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Adiponectin: {
     default: { max: 26, min: 4, optimalMax: 20, optimalMin: 8, unit: 'mcg/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   ADMA: {
     default: { max: 0.7, min: 0.3, optimalMax: 0.55, optimalMin: 0.3, unit: 'umol/L' },
-    source: 'schlesinger-adma-2017',
+    source: 'nemeth-adma-2017',
   },
 
   AFP: {
@@ -119,7 +119,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Albumin_Globulin_Ratio: {
     default: { max: 2.5, min: 1.0, optimalMax: 2.2, optimalMin: 1.2, unit: '' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Albumin: {
@@ -129,7 +129,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   AlkalinePhosphatase: {
     default: { max: 147, min: 44, optimalMax: 120, optimalMin: 50, unit: 'U/L' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
     variants: [
       {
         ageMin: 18,
@@ -146,7 +146,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   ALT: {
     default: { max: 35, min: 0, optimalMax: 25, optimalMin: 0, unit: 'U/L' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
     variants: [
       {
         ageMin: 18,
@@ -163,7 +163,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   AMH: {
     default: { max: 10.0, min: 1.0, optimalMax: 6.9, optimalMin: 2.0, unit: 'ng/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
     variants: [
       {
         ageMax: 24,
@@ -199,17 +199,17 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Ammonia: {
     default: { max: 45, min: 15, optimalMax: 40, optimalMin: 20, unit: 'umol/L' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   AntiThyroglobulin: {
     default: { max: 115, min: 0, optimalMax: 40, optimalMin: 0, unit: 'IU/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   AntiTPO: {
     default: { max: 34, min: 0, optimalMax: 9, optimalMin: 0, unit: 'IU/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   // Aortic valve calcium — no standardized clinical threshold; use mild cutoff
@@ -264,7 +264,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   AST: {
     default: { max: 35, min: 0, optimalMax: 25, optimalMin: 0, unit: 'U/L' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
     variants: [
       {
         ageMin: 18,
@@ -295,22 +295,22 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Bicarbonate: {
     default: { max: 29, min: 23, optimalMax: 28, optimalMin: 24, unit: 'mEq/L' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   BilirubinDirect: {
     default: { max: 0.3, min: 0, optimalMax: 0.2, optimalMin: 0, unit: 'mg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   BilirubinIndirect: {
     default: { max: 0.8, min: 0, optimalMax: 0.6, optimalMin: 0, unit: 'mg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   BilirubinTotal: {
     default: { max: 1.2, min: 0.1, optimalMax: 0.9, optimalMin: 0.2, unit: 'mg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   // BNP: 35 pg/mL = corte não-agudo para triagem de IC (SBC IC 2018)
@@ -321,7 +321,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   BUN_Creatinine_Ratio: {
     default: { max: 20, min: 10, optimalMax: 18, optimalMin: 12, unit: '' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   CA125: {
@@ -380,7 +380,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Calcium: {
     default: { max: 10.5, min: 8.5, optimalMax: 10.0, optimalMin: 9.0, unit: 'mg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   CEA: {
@@ -391,7 +391,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   // CK: valores conservadores baseados em faixas laboratoriais típicas
   CK: {
     default: { max: 190, min: 30, optimalMax: 170, optimalMin: 40, unit: 'U/L' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
     variants: [
       { sex: 'F', range: { max: 170, min: 30, optimalMax: 150, optimalMin: 40, unit: 'U/L' } },
     ],
@@ -399,7 +399,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Chloride: {
     default: { max: 106, min: 98, optimalMax: 105, optimalMin: 100, unit: 'mEq/L' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Cholesterol: {
@@ -429,32 +429,32 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   CO2: {
     default: { max: 29, min: 23, optimalMax: 28, optimalMin: 24, unit: 'mEq/L' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Copper: {
     default: { max: 175, min: 70, optimalMax: 150, optimalMin: 85, unit: 'mcg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   CoQ10: {
     default: { max: 1.5, min: 0.5, optimalMax: 1.3, optimalMin: 0.7, unit: 'mg/L' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Cortisol: {
     default: { max: 25, min: 5, optimalMax: 20, optimalMin: 10, unit: 'mcg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   CortisolFree: {
     default: { max: 2.5, min: 0.5, optimalMax: 2.0, optimalMin: 0.8, unit: 'mcg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   CPeptide: {
     default: { max: 3.9, min: 0.8, optimalMax: 3.0, optimalMin: 1.0, unit: 'ng/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Creatinine: {
@@ -477,12 +477,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   CRP: {
     default: { max: 3.0, min: 0, optimalMax: 1.0, optimalMin: 0, unit: 'mg/L' },
     direction: 'lower-better',
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   CystatinC: {
     default: { max: 1.0, min: 0.5, optimalMax: 0.9, optimalMin: 0.6, unit: 'mg/L' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   // D-Dímero: 500 ng/mL é o corte clínico padrão para exclusão de TEV
@@ -502,7 +502,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   DHEAS: {
     default: { max: 500, min: 100, optimalMax: 400, optimalMin: 150, unit: 'mcg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
     variants: [
       {
         ageMax: 39,
@@ -581,12 +581,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   ESR: {
     default: { max: 20, min: 0, optimalMax: 10, optimalMin: 0, unit: 'mm/hr' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Estradiol: {
     default: { max: 40, min: 10, optimalMax: 35, optimalMin: 15, unit: 'pg/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
     variants: [
       {
         ageMin: 18,
@@ -609,12 +609,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   F2Isoprostanes: {
     default: { max: 86, min: 0, optimalMax: 60, optimalMin: 0, unit: 'pg/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Ferritin: {
     default: { max: 150, min: 12, optimalMax: 120, optimalMin: 30, unit: 'ng/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
     variants: [
       {
         ageMin: 18,
@@ -638,12 +638,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   // Fibrinogênio: 200-400 mg/dL — faixa de referência padrão (método de Clauss)
   Fibrinogen: {
     default: { max: 400, min: 200, optimalMax: 350, optimalMin: 250, unit: 'mg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   FolicAcid: {
     default: { max: 20, min: 3, optimalMax: 15, optimalMin: 5, unit: 'ng/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   // =============================================================================
@@ -652,7 +652,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   FSH: {
     default: { max: 12.4, min: 1.5, optimalMax: 10.0, optimalMin: 3.0, unit: 'mIU/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
     variants: [
       {
         ageMin: 18,
@@ -676,7 +676,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   GGT: {
     default: { max: 55, min: 0, optimalMax: 30, optimalMin: 0, unit: 'U/L' },
     direction: 'lower-better',
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
     variants: [
       {
         ageMin: 18,
@@ -693,12 +693,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Ghrelin: {
     default: { max: 1000, min: 300, optimalMax: 800, optimalMin: 400, unit: 'pg/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Globulin: {
     default: { max: 3.5, min: 2.0, optimalMax: 3.2, optimalMin: 2.3, unit: 'g/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Glucose: {
@@ -708,12 +708,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   GlycoMark: {
     default: { max: 40, min: 10, optimalMax: 35, optimalMin: 15, unit: 'mcg/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   GrowthHormone: {
     default: { max: 5, min: 0, optimalMax: 3, optimalMin: 0, unit: 'ng/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   HbA1c: {
@@ -788,7 +788,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   HOMA_IR: {
     default: { max: 2.5, min: 0, optimalMax: 1.5, optimalMin: 0, unit: '' },
     direction: 'lower-better',
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Homocysteine: {
@@ -799,7 +799,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   IGF1: {
     default: { max: 350, min: 100, optimalMax: 300, optimalMin: 150, unit: 'ng/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   // =============================================================================
@@ -808,12 +808,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   ImmatureGranulocytes: {
     default: { max: 1.0, min: 0, optimalMax: 0.5, optimalMin: 0, unit: '%' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Insulin: {
     default: { max: 25, min: 2, optimalMax: 8, optimalMin: 3, unit: 'µIU/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Iron: {
@@ -835,7 +835,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Lactate: {
     default: { max: 2.2, min: 0.5, optimalMax: 1.8, optimalMin: 0.7, unit: 'mmol/L' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   LDL: {
@@ -888,7 +888,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   Leptin: {
     default: { max: 15, min: 2, optimalMax: 12, optimalMin: 3, unit: 'ng/mL' },
     direction: 'lower-better',
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
     variants: [
       {
         ageMin: 18,
@@ -905,7 +905,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   LH: {
     default: { max: 8.6, min: 1.7, optimalMax: 8.0, optimalMin: 2.0, unit: 'mIU/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
     variants: [
       {
         ageMin: 18,
@@ -953,12 +953,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Magnesium: {
     default: { max: 2.2, min: 1.7, optimalMax: 2.1, optimalMin: 1.9, unit: 'mg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Magnesium_RBC: {
     default: { max: 6.8, min: 4.0, optimalMax: 6.0, optimalMin: 4.5, unit: 'mg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   MCH: {
@@ -992,7 +992,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   MMA: {
     default: { max: 378, min: 0, optimalMax: 270, optimalMin: 0, unit: 'nmol/L' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Monocytes: {
@@ -1036,7 +1036,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   NRBC: {
     default: { max: 0, min: 0, optimalMax: 0, optimalMin: 0, unit: '/100WBC' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   NTproBNP: {
@@ -1046,7 +1046,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Oleic_Acid: {
     default: { max: 25.0, min: 15.0, optimalMax: 22.0, optimalMin: 18.0, unit: '%' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Omega3_Index: {
@@ -1081,12 +1081,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Palmitic_Acid: {
     default: { max: 30.0, min: 20.0, optimalMax: 27.0, optimalMin: 22.0, unit: '%' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Phosphorus: {
     default: { max: 4.5, min: 2.5, optimalMax: 4.0, optimalMin: 3.0, unit: 'mg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Platelets: {
@@ -1096,7 +1096,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Potassium: {
     default: { max: 5.0, min: 3.5, optimalMax: 4.6, optimalMin: 3.8, unit: 'mEq/L' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   // =============================================================================
@@ -1105,17 +1105,17 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Prealbumin: {
     default: { max: 38, min: 18, optimalMax: 35, optimalMin: 20, unit: 'mg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Progesterone: {
     default: { max: 0.9, min: 0.1, optimalMax: 0.7, optimalMin: 0.2, unit: 'ng/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Prolactin: {
     default: { max: 18, min: 2, optimalMax: 15, optimalMin: 4, unit: 'ng/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
     variants: [
       {
         ageMin: 18,
@@ -1198,12 +1198,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Selenium: {
     default: { max: 150, min: 70, optimalMax: 125, optimalMin: 85, unit: 'mcg/L' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   SHBG: {
     default: { max: 54, min: 18, optimalMax: 50, optimalMin: 20, unit: 'nmol/L' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
     variants: [
       {
         ageMin: 18,
@@ -1220,7 +1220,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Sodium: {
     default: { max: 145, min: 136, optimalMax: 143, optimalMin: 138, unit: 'mEq/L' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   // =============================================================================
@@ -1229,17 +1229,17 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   SpecificGravity_Urine: {
     default: { max: 1.03, min: 1.005, optimalMax: 1.025, optimalMin: 1.01, unit: 'SG' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Stearic_Acid: {
     default: { max: 14.0, min: 8.0, optimalMax: 12.0, optimalMin: 10.0, unit: '%' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   T3Free: {
     default: { max: 4.2, min: 2.3, optimalMax: 3.8, optimalMin: 2.8, unit: 'pg/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   // =============================================================================
@@ -1248,22 +1248,22 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   T3Reverse: {
     default: { max: 24, min: 10, optimalMax: 20, optimalMin: 12, unit: 'ng/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   T4Free: {
     default: { max: 1.8, min: 0.8, optimalMax: 1.5, optimalMin: 1.0, unit: 'ng/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   T4Total: {
     default: { max: 12.0, min: 4.5, optimalMax: 10.0, optimalMin: 6.0, unit: 'ug/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Testosterone: {
     default: { max: 1000, min: 300, optimalMax: 800, optimalMin: 500, unit: 'ng/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
     variants: [
       {
         ageMax: 49,
@@ -1286,14 +1286,14 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   TestosteroneBioavailable: {
     default: { max: 200, min: 50, optimalMax: 150, optimalMin: 80, unit: 'ng/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   // TestosteroneFree - using direct immunoassay ranges (Quest/LabCorp standard)
   // Previous values (9.3-26.5 pg/mL) were based on equilibrium dialysis method
   TestosteroneFree: {
     default: { max: 155, min: 35, optimalMax: 120, optimalMin: 50, unit: 'pg/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
     variants: [
       {
         ageMax: 49,
@@ -1316,27 +1316,27 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   TIBC: {
     default: { max: 370, min: 250, optimalMax: 350, optimalMin: 280, unit: 'mcg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   TotalProtein: {
     default: { max: 8.3, min: 6.0, optimalMax: 7.8, optimalMin: 6.5, unit: 'g/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Trans_Fat_Index: {
     default: { max: 1.0, min: 0, optimalMax: 0.5, optimalMin: 0, unit: '%' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Transferrin: {
     default: { max: 360, min: 200, optimalMax: 340, optimalMin: 220, unit: 'mg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   TransferrinSaturation: {
     default: { max: 50, min: 20, optimalMax: 45, optimalMin: 25, unit: '%' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
     variants: [
       {
         ageMin: 18,
@@ -1360,7 +1360,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   // TroponinI: 0.04 ng/mL = percentil 99 (ensaio Siemens TnI-Ultra)
   TroponinI: {
     default: { max: 0.04, min: 0, optimalMax: 0.02, optimalMin: 0, unit: 'ng/mL' },
-    source: 'schnabel-tni-2012',
+    source: 'keller-tni-2013',
   },
 
   // TroponinT: 14 ng/L = percentil 99 hs-cTnT (ensaio Roche Elecsys 5ª geração)
@@ -1383,12 +1383,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Urea: {
     default: { max: 20, min: 7, optimalMax: 16, optimalMin: 10, unit: 'mg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   UricAcid: {
     default: { max: 7.0, min: 2.5, optimalMax: 5.5, optimalMin: 3.0, unit: 'mg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
     variants: [
       {
         ageMin: 18,
@@ -1405,7 +1405,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Urobilinogen_Urine: {
     default: { max: 1.0, min: 0.1, optimalMax: 1.0, optimalMin: 0.1, unit: 'mg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   // =============================================================================
@@ -1414,37 +1414,37 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   pH_Urine: {
     default: { max: 8.0, min: 4.5, optimalMax: 7.0, optimalMin: 5.5, unit: 'pH' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   HyalineCasts_Urine: {
     default: { max: 2, min: 0, optimalMax: 1, optimalMin: 0, unit: '/LPF' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   RBC_Urine: {
     default: { max: 3, min: 0, optimalMax: 1, optimalMin: 0, unit: '/HPF' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   SquamousEpithelial_Urine: {
     default: { max: 15, min: 0, optimalMax: 5, optimalMin: 0, unit: '/HPF' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Leukocytes_Urine: {
     default: { max: 5, min: 0, optimalMax: 2, optimalMin: 0, unit: '/HPF' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Folate: {
     default: { max: 20, min: 3.9, optimalMax: 17, optimalMin: 5, unit: 'ng/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   VitaminA: {
     default: { max: 100, min: 20, optimalMax: 80, optimalMin: 30, unit: 'mcg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   // =============================================================================
@@ -1453,22 +1453,22 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   VitaminB1: {
     default: { max: 180, min: 70, optimalMax: 150, optimalMin: 80, unit: 'nmol/L' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   VitaminB12: {
     default: { max: 900, min: 200, optimalMax: 800, optimalMin: 400, unit: 'pg/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   VitaminB6: {
     default: { max: 50, min: 5, optimalMax: 40, optimalMin: 10, unit: 'ng/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   VitaminC: {
     default: { max: 2.0, min: 0.4, optimalMax: 1.5, optimalMin: 0.6, unit: 'mg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   // =============================================================================
@@ -1482,12 +1482,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   VitaminD_1_25: {
     default: { max: 72, min: 18, optimalMax: 60, optimalMin: 25, unit: 'pg/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   VitaminE: {
     default: { max: 17, min: 5.5, optimalMax: 14, optimalMin: 7, unit: 'mg/L' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   // VLDL: estimado via fórmula de Friedewald (TG/5)
@@ -1507,7 +1507,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Zinc: {
     default: { max: 120, min: 60, optimalMax: 100, optimalMin: 70, unit: 'mcg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   // =============================================================================
@@ -1791,12 +1791,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Amylase: {
     default: { max: 100, min: 28, optimalMax: 90, optimalMin: 35, unit: 'U/L' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Creatinine_Urine: {
     default: { max: 300, min: 20, optimalMax: 250, optimalMin: 40, unit: 'mg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
     variants: [
       {
         ageMin: 18,
@@ -1813,12 +1813,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   IgA: {
     default: { max: 400, min: 70, optimalMax: 350, optimalMin: 100, unit: 'mg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Lipase: {
     default: { max: 60, min: 0, optimalMax: 50, optimalMin: 10, unit: 'U/L' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   Microalbumin_Urine: {
@@ -1845,25 +1845,25 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   // eAG - Estimated Average Glucose, derived from HbA1c (ADAG study)
   eAG: {
     default: { max: 154, min: 70, optimalMax: 126, optimalMin: 70, unit: 'mg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   // INR - International Normalized Ratio (non-anticoagulated patients)
   INR: {
     default: { max: 1.2, min: 0.8, optimalMax: 1.1, optimalMin: 0.9, unit: 'ratio' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   // Prothrombin Time
   ProthrombinTime: {
     default: { max: 13.5, min: 11, optimalMax: 13, optimalMin: 11, unit: 'seconds' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   // DHT - Dihydrotestosterone (adult male reference; female values are much lower)
   DHT: {
     default: { max: 85, min: 30, optimalMax: 85, optimalMin: 30, unit: 'ng/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
     variants: [
       {
         ageMin: 18,
@@ -1882,27 +1882,27 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   IgE_Total: {
     default: { max: 100, min: 0, optimalMax: 100, optimalMin: 0, unit: 'IU/mL' },
     direction: 'lower-better',
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   // IgG - Immunoglobulin G
   IgG: {
     default: { max: 1600, min: 700, optimalMax: 1600, optimalMin: 700, unit: 'mg/dL' },
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   // IgE E1 Cat Dander - Class 0 (≤0.35 kU/L) = negative
   IgE_E1_CatDander: {
     default: { max: 0.35, min: 0, optimalMax: 0.35, optimalMin: 0, unit: 'kU/L' },
     direction: 'lower-better',
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 
   // IgE GX1 Grasses - Class 0 (≤0.35 kU/L) = negative
   IgE_GX1_Grasses: {
     default: { max: 0.35, min: 0, optimalMax: 0.35, optimalMin: 0, unit: 'kU/L' },
     direction: 'lower-better',
-    source: 'tietz-7ed-2015',
+    source: 'tietz-7ed-2014',
   },
 };
 

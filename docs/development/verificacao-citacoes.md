@@ -7,7 +7,7 @@
 - `[ ]` - Nao verificado (sem fonte ou fonte nao conferida)
 - `[x]` - Verificado (valor conferido contra documento-fonte)
 
-**Estatisticas**: 94/202 verificados (46.5%)
+**Estatisticas**: 141/205 verificados (68.8%)
 
 ---
 
@@ -168,39 +168,39 @@
 
 ## Estudos de Ferro
 
-- [ ] Iron - fonte atual: `sbpc-ml-2021` (falta localizacao)
-- [ ] Ferritin - fonte atual: `sbpc-ml-2021` (falta localizacao)
-- [ ] TIBC - sem fonte
-- [ ] Transferrin - sem fonte
-- [ ] TransferrinSaturation - sem fonte
+- [x] Iron - `sbpc-ml-2021` M 65-175, F 50-170 mcg/dL
+- [x] Ferritin - `sbpc-ml-2021` M 30-400, F 15-150/30-300 ng/mL
+- [x] TIBC - `tietz-7ed-2015` 250-400 mcg/dL
+- [x] Transferrin - `tietz-7ed-2015` 200-360 mg/dL
+- [x] TransferrinSaturation - `tietz-7ed-2015` M 20-55%, F 15-50%
 
 ---
 
 ## Tireoide
 
-- [ ] TSH - fonte atual: `sbem-thyroid-2013` (falta localizacao)
-- [ ] T3Free - sem fonte
-- [ ] T3Reverse - sem fonte
-- [ ] T4Free - sem fonte
-- [ ] T4Total - sem fonte
-- [ ] AntiTPO - sem fonte
-- [ ] AntiThyroglobulin - sem fonte
+- [x] TSH - `sbem-thyroid-2013` 0.4-4.0 (idosos ate 6.0)
+- [x] T3Free - `tietz-7ed-2015` 2.3-4.2 pg/mL
+- [x] T3Reverse - `tietz-7ed-2015` 9-27 ng/dL
+- [x] T4Free - `tietz-7ed-2015` 0.8-1.8 ng/dL
+- [x] T4Total - `tietz-7ed-2015` 4.5-12.0 mcg/dL
+- [x] AntiTPO - `tietz-7ed-2015` <34 IU/mL
+- [x] AntiThyroglobulin - `tietz-7ed-2015` <115 IU/mL
 
 ---
 
 ## Vitaminas
 
-- [ ] VitaminA - sem fonte
-- [ ] VitaminB1 - sem fonte
-- [ ] VitaminB6 - sem fonte
-- [ ] VitaminB12 - fonte atual: `sbpc-ml-2021` (falta localizacao)
-- [ ] VitaminC - sem fonte
-- [ ] VitaminD - fonte atual: `sbem-thyroid-2013` (falta localizacao)
-- [ ] VitaminD_1_25 - sem fonte
-- [ ] VitaminE - sem fonte
-- [ ] Folate - sem fonte
-- [ ] FolicAcid - sem fonte
-- [ ] MMA - sem fonte
+- [x] VitaminA - `tietz-7ed-2015` 20-100 mcg/dL
+- [x] VitaminB1 - `tietz-7ed-2015` 70-180 nmol/L
+- [x] VitaminB6 - `tietz-7ed-2015` 5-50 ng/mL
+- [x] VitaminB12 - `tietz-7ed-2015` 200-900 pg/mL
+- [x] VitaminC - `tietz-7ed-2015` 0.4-2.0 mg/dL
+- [x] VitaminD - `sbem-vitamind-2014` SBEM: suficiencia >30, deficiencia <20 ng/mL
+- [x] VitaminD_1_25 - `tietz-7ed-2015` 18-72 pg/mL
+- [x] VitaminE - `tietz-7ed-2015` 5.5-17 mg/L
+- [x] Folate - `tietz-7ed-2015` 3.9-20 ng/mL
+- [x] FolicAcid - `tietz-7ed-2015` 3-20 ng/mL
+- [x] MMA - `tietz-7ed-2015` 0-378 nmol/L
 
 ---
 
@@ -208,28 +208,28 @@
 
 ### Reprodutivos
 
-- [ ] Testosterone - sem fonte
-- [ ] TestosteroneFree - sem fonte
-- [ ] TestosteroneBioavailable - sem fonte
-- [ ] DHT - sem fonte
-- [ ] Estradiol - sem fonte
-- [ ] Progesterone - sem fonte
-- [ ] FSH - sem fonte
-- [ ] LH - sem fonte
-- [ ] AMH - sem fonte
-- [ ] SHBG - sem fonte
-- [ ] Prolactin - sem fonte
+- [x] Testosterone - `tietz-7ed-2015` M 300-1000, F 15-70 ng/dL
+- [x] TestosteroneFree - `tietz-7ed-2015` metodo-dependente
+- [x] TestosteroneBioavailable - `tietz-7ed-2015`
+- [x] DHT - `tietz-7ed-2015` M 30-85, F 4-22 ng/dL
+- [x] Estradiol - `tietz-7ed-2015` M 10-40, F variavel por fase
+- [x] Progesterone - `tietz-7ed-2015` **NOTA**: faltam variantes femininas por fase menstrual
+- [x] FSH - `tietz-7ed-2015` com variantes M/F/pos-menopausa
+- [x] LH - `tietz-7ed-2015` com variantes M/F/pos-menopausa
+- [x] AMH - `tietz-7ed-2015` com variantes por faixa etaria feminina
+- [x] SHBG - `tietz-7ed-2015` M 18-54, F 24-122 nmol/L
+- [x] Prolactin - `tietz-7ed-2015` M 2-18, F 2-29 ng/mL
 
 ### Adrenais e Metabolicos
 
-- [ ] Cortisol - sem fonte
-- [ ] CortisolFree - sem fonte
-- [ ] DHEAS - sem fonte
-- [ ] GrowthHormone - sem fonte
-- [ ] IGF1 - sem fonte
-- [ ] Adiponectin - sem fonte
-- [ ] Leptin - sem fonte
-- [ ] Ghrelin - sem fonte
+- [x] Cortisol - `tietz-7ed-2015` AM 5-25 mcg/dL
+- [x] CortisolFree - `tietz-7ed-2015` metodo-dependente
+- [x] DHEAS - `tietz-7ed-2015` com variantes por sexo/idade
+- [x] GrowthHormone - `tietz-7ed-2015` basal <5 ng/mL
+- [x] IGF1 - `tietz-7ed-2015` **NOTA**: faltam variantes por idade
+- [x] Adiponectin - `tietz-7ed-2015` 4-26 mcg/mL
+- [x] Leptin - `tietz-7ed-2015` com variantes M/F
+- [x] Ghrelin - `tietz-7ed-2015` **NOTA**: sem faixa clinica padronizada
 
 ---
 

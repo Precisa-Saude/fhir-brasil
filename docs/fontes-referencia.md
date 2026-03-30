@@ -97,9 +97,25 @@ Disponível em: <https://diretriz.diabetes.org.br>.
 
 ### sbem-thyroid-2013
 
-SOCIEDADE BRASILEIRA DE ENDOCRINOLOGIA E METABOLOGIA (SBEM). Consenso Brasileiro para a Abordagem Clínica e Tratamento do Hipotireoidismo Subclínico em Adultos. **Arquivos Brasileiros de Endocrinologia & Metabologia**, v. 57, n. 3, 2013.
+SGARBI, J. A. et al. Consenso brasileiro para a abordagem clínica e tratamento do hipotireoidismo subclínico em adultos. **Arquivos Brasileiros de Endocrinologia & Metabologia**, v. 57, n. 3, p. 166-183, 2013. DOI: [10.1590/S0004-27302013000300003](https://doi.org/10.1590/S0004-27302013000300003).
 
-> **Nota**: Referência exata do consenso pendente de verificação.
+Disponível em: <https://pubmed.ncbi.nlm.nih.gov/23681266/>.
+
+**Valores utilizados:** TSH 0.4-4.0 mIU/L (idosos até 6.0).
+
+### sbem-vitamind-2014
+
+MAEDA, S. S. et al. Recomendações da Sociedade Brasileira de Endocrinologia e Metabologia (SBEM) para o diagnóstico e tratamento da hipovitaminose D. **Arquivos Brasileiros de Endocrinologia & Metabologia**, v. 58, n. 5, p. 411-433, 2014. DOI: [10.1590/0004-2730000003388](https://doi.org/10.1590/0004-2730000003388).
+
+Disponível em: <https://pubmed.ncbi.nlm.nih.gov/25166032/>.
+
+**Valores utilizados:** Vitamina D: suficiência >30, insuficiência 20-29, deficiência <20 ng/mL.
+
+### who-iron-2020
+
+WORLD HEALTH ORGANIZATION. **WHO guideline on use of ferritin concentrations to assess iron status in individuals and populations**. Geneva: WHO, 2020. ISBN 978-92-4-000012-8.
+
+Disponível em: <https://www.who.int/publications/i/item/9789240000124>.
 
 ---
 

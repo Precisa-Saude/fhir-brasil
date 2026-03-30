@@ -104,6 +104,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Adiponectin: {
     default: { max: 26, min: 4, optimalMax: 20, optimalMin: 8, unit: 'mcg/mL' },
+    source: 'tietz-7ed-2015',
   },
 
   ADMA: {
@@ -161,6 +162,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   AMH: {
     default: { max: 10.0, min: 1.0, optimalMax: 6.9, optimalMin: 2.0, unit: 'ng/mL' },
+    source: 'tietz-7ed-2015',
     variants: [
       {
         ageMax: 24,
@@ -201,10 +203,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   AntiThyroglobulin: {
     default: { max: 115, min: 0, optimalMax: 40, optimalMin: 0, unit: 'IU/mL' },
+    source: 'tietz-7ed-2015',
   },
 
   AntiTPO: {
     default: { max: 34, min: 0, optimalMax: 9, optimalMin: 0, unit: 'IU/mL' },
+    source: 'tietz-7ed-2015',
   },
 
   // Aortic valve calcium — no standardized clinical threshold; use mild cutoff
@@ -430,10 +434,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Cortisol: {
     default: { max: 25, min: 5, optimalMax: 20, optimalMin: 10, unit: 'mcg/dL' },
+    source: 'tietz-7ed-2015',
   },
 
   CortisolFree: {
     default: { max: 2.5, min: 0.5, optimalMax: 2.0, optimalMin: 0.8, unit: 'mcg/dL' },
+    source: 'tietz-7ed-2015',
   },
 
   CPeptide: {
@@ -485,6 +491,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   DHEAS: {
     default: { max: 500, min: 100, optimalMax: 400, optimalMin: 150, unit: 'mcg/dL' },
+    source: 'tietz-7ed-2015',
     variants: [
       {
         ageMax: 39,
@@ -565,6 +572,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Estradiol: {
     default: { max: 40, min: 10, optimalMax: 35, optimalMin: 15, unit: 'pg/mL' },
+    source: 'tietz-7ed-2015',
     variants: [
       {
         ageMin: 18,
@@ -620,6 +628,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   FolicAcid: {
     default: { max: 20, min: 3, optimalMax: 15, optimalMin: 5, unit: 'ng/mL' },
+    source: 'tietz-7ed-2015',
   },
 
   // =============================================================================
@@ -628,6 +637,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   FSH: {
     default: { max: 12.4, min: 1.5, optimalMax: 10.0, optimalMin: 3.0, unit: 'mIU/mL' },
+    source: 'tietz-7ed-2015',
     variants: [
       {
         ageMin: 18,
@@ -668,6 +678,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Ghrelin: {
     default: { max: 1000, min: 300, optimalMax: 800, optimalMin: 400, unit: 'pg/mL' },
+    source: 'tietz-7ed-2015',
   },
 
   Globulin: {
@@ -687,6 +698,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   GrowthHormone: {
     default: { max: 5, min: 0, optimalMax: 3, optimalMin: 0, unit: 'ng/mL' },
+    source: 'tietz-7ed-2015',
   },
 
   HbA1c: {
@@ -772,6 +784,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   IGF1: {
     default: { max: 350, min: 100, optimalMax: 300, optimalMin: 150, unit: 'ng/mL' },
+    source: 'tietz-7ed-2015',
   },
 
   // =============================================================================
@@ -859,6 +872,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   Leptin: {
     default: { max: 15, min: 2, optimalMax: 12, optimalMin: 3, unit: 'ng/mL' },
     direction: 'lower-better',
+    source: 'tietz-7ed-2015',
     variants: [
       {
         ageMin: 18,
@@ -875,6 +889,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   LH: {
     default: { max: 8.6, min: 1.7, optimalMax: 8.0, optimalMin: 2.0, unit: 'mIU/mL' },
+    source: 'tietz-7ed-2015',
     variants: [
       {
         ageMin: 18,
@@ -958,6 +973,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   MMA: {
     default: { max: 378, min: 0, optimalMax: 270, optimalMin: 0, unit: 'nmol/L' },
+    source: 'tietz-7ed-2015',
   },
 
   Monocytes: {
@@ -1068,10 +1084,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Progesterone: {
     default: { max: 0.9, min: 0.1, optimalMax: 0.7, optimalMin: 0.2, unit: 'ng/mL' },
+    source: 'tietz-7ed-2015',
   },
 
   Prolactin: {
     default: { max: 18, min: 2, optimalMax: 15, optimalMin: 4, unit: 'ng/mL' },
+    source: 'tietz-7ed-2015',
     variants: [
       {
         ageMin: 18,
@@ -1157,6 +1175,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   SHBG: {
     default: { max: 54, min: 18, optimalMax: 50, optimalMin: 20, unit: 'nmol/L' },
+    source: 'tietz-7ed-2015',
     variants: [
       {
         ageMin: 18,
@@ -1190,6 +1209,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   T3Free: {
     default: { max: 4.2, min: 2.3, optimalMax: 3.8, optimalMin: 2.8, unit: 'pg/mL' },
+    source: 'tietz-7ed-2015',
   },
 
   // =============================================================================
@@ -1198,18 +1218,22 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   T3Reverse: {
     default: { max: 27, min: 9, optimalMax: 22, optimalMin: 12, unit: 'ng/dL' },
+    source: 'tietz-7ed-2015',
   },
 
   T4Free: {
     default: { max: 1.8, min: 0.8, optimalMax: 1.5, optimalMin: 1.0, unit: 'ng/dL' },
+    source: 'tietz-7ed-2015',
   },
 
   T4Total: {
     default: { max: 12.0, min: 4.5, optimalMax: 10.0, optimalMin: 6.0, unit: 'ug/dL' },
+    source: 'tietz-7ed-2015',
   },
 
   Testosterone: {
     default: { max: 1000, min: 300, optimalMax: 800, optimalMin: 500, unit: 'ng/dL' },
+    source: 'tietz-7ed-2015',
     variants: [
       {
         ageMax: 49,
@@ -1232,12 +1256,14 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   TestosteroneBioavailable: {
     default: { max: 200, min: 50, optimalMax: 150, optimalMin: 80, unit: 'ng/dL' },
+    source: 'tietz-7ed-2015',
   },
 
   // TestosteroneFree - using direct immunoassay ranges (Quest/LabCorp standard)
   // Previous values (9.3-26.5 pg/mL) were based on equilibrium dialysis method
   TestosteroneFree: {
     default: { max: 155, min: 35, optimalMax: 120, optimalMin: 50, unit: 'pg/mL' },
+    source: 'tietz-7ed-2015',
     variants: [
       {
         ageMax: 49,
@@ -1260,6 +1286,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   TIBC: {
     default: { max: 400, min: 250, optimalMax: 370, optimalMin: 280, unit: 'mcg/dL' },
+    source: 'tietz-7ed-2015',
   },
 
   TotalProtein: {
@@ -1273,10 +1300,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Transferrin: {
     default: { max: 360, min: 200, optimalMax: 340, optimalMin: 220, unit: 'mg/dL' },
+    source: 'tietz-7ed-2015',
   },
 
   TransferrinSaturation: {
     default: { max: 50, min: 20, optimalMax: 45, optimalMin: 25, unit: '%' },
+    source: 'tietz-7ed-2015',
     variants: [
       {
         ageMin: 18,
@@ -1373,10 +1402,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Folate: {
     default: { max: 20, min: 3.9, optimalMax: 17, optimalMin: 5, unit: 'ng/mL' },
+    source: 'tietz-7ed-2015',
   },
 
   VitaminA: {
     default: { max: 100, min: 20, optimalMax: 80, optimalMin: 30, unit: 'mcg/dL' },
+    source: 'tietz-7ed-2015',
   },
 
   // =============================================================================
@@ -1385,19 +1416,22 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   VitaminB1: {
     default: { max: 180, min: 70, optimalMax: 150, optimalMin: 80, unit: 'nmol/L' },
+    source: 'tietz-7ed-2015',
   },
 
   VitaminB12: {
     default: { max: 900, min: 200, optimalMax: 800, optimalMin: 400, unit: 'pg/mL' },
-    source: 'sbpc-ml-2021',
+    source: 'tietz-7ed-2015',
   },
 
   VitaminB6: {
     default: { max: 50, min: 5, optimalMax: 40, optimalMin: 10, unit: 'ng/mL' },
+    source: 'tietz-7ed-2015',
   },
 
   VitaminC: {
     default: { max: 2.0, min: 0.4, optimalMax: 1.5, optimalMin: 0.6, unit: 'mg/dL' },
+    source: 'tietz-7ed-2015',
   },
 
   // =============================================================================
@@ -1406,15 +1440,17 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   VitaminD: {
     default: { max: 100, min: 30, optimalMax: 70, optimalMin: 40, unit: 'ng/mL' },
-    source: 'sbem-thyroid-2013',
+    source: 'sbem-vitamind-2014',
   },
 
   VitaminD_1_25: {
     default: { max: 72, min: 18, optimalMax: 60, optimalMin: 25, unit: 'pg/mL' },
+    source: 'tietz-7ed-2015',
   },
 
   VitaminE: {
     default: { max: 17, min: 5.5, optimalMax: 14, optimalMin: 7, unit: 'mg/L' },
+    source: 'tietz-7ed-2015',
   },
 
   // VLDL: estimado via fórmula de Friedewald (TG/5). Faixa padrão: 2-30 mg/dL.
@@ -1768,6 +1804,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   // DHT - Dihydrotestosterone (adult male reference; female values are much lower)
   DHT: {
     default: { max: 85, min: 30, optimalMax: 85, optimalMin: 30, unit: 'ng/dL' },
+    source: 'tietz-7ed-2015',
     variants: [
       {
         ageMin: 18,

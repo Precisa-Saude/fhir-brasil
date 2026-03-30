@@ -56,12 +56,14 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
 
   'contois-apoa1-1996': {
     abnt: 'CONTOIS, J. H. et al. Reference intervals for plasma apolipoprotein A-1 determined with a standardized commercial immunoturbidimetric assay: results from the Framingham Offspring Study. Clinical Chemistry, v. 42, n. 4, p. 507-514, 1996.',
+    doi: '10.1093/clinchem/42.4.507',
     key: 'contois-apoa1-1996',
     url: 'https://pubmed.ncbi.nlm.nih.gov/8605666/',
   },
 
   'friedewald-1972': {
     abnt: 'FRIEDEWALD, W. T.; LEVY, R. I.; FREDRICKSON, D. S. Estimation of the concentration of low-density lipoprotein cholesterol in plasma, without use of the preparative ultracentrifuge. Clinical Chemistry, v. 18, n. 6, p. 499-502, 1972.',
+    doi: '10.1093/clinchem/18.6.499',
     key: 'friedewald-1972',
     url: 'https://pubmed.ncbi.nlm.nih.gov/4337382/',
   },

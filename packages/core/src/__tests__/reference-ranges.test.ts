@@ -1,11 +1,11 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import {
+  applyFallbackReferenceRanges,
   biomarkerRangeDefinitions,
   defaultReferenceRanges,
-  getReferenceRange,
   getFallbackReferenceRange,
-  applyFallbackReferenceRanges,
-  type BiomarkerReferenceRange,
+  getReferenceRange,
   type ReferenceRangeContext,
 } from '../reference-ranges';
 

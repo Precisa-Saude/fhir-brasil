@@ -8,7 +8,7 @@
 - `[ ]` - Nao verificado (sem fonte ou fonte nao conferida)
 - `[x]` - Verificado (valor conferido contra documento-fonte)
 
-**Estatisticas**: 205/205 verificados (100%)
+**Estatisticas**: 204/205 verificados (99.5%) — 1 sem fonte publicada (ApoCIII_ApoA1_Ratio)
 
 ---
 

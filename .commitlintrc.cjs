@@ -30,6 +30,7 @@ module.exports = {
         'ci',
         'deps',
         'lint',
+        'config',
       ],
     ],
     'subject-case': [0],

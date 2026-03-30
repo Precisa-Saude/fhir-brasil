@@ -20,12 +20,8 @@ const config = [
       '**/build/**',
       '**/coverage/**',
       '**/.turbo/**',
-      '**/__tests__/**',
-      '**/*.test.ts',
-      '**/*.spec.ts',
-      // Data files (large definition arrays)
+      // Data files (large definition arrays — disable object sorting only)
       'packages/core/src/biomarkers.ts',
-      'packages/core/src/reference-ranges.ts',
       'packages/core/src/dexa-zone-data.ts',
     ],
   },
@@ -113,6 +109,40 @@ const config = [
           ignoreCase: true,
         },
       ],
+    },
+  },
+
+  // Test files - relaxed rules, no type-aware parsing (not in tsconfig project)
+  {
+    files: ['**/__tests__/**/*.ts', '**/*.test.ts', '**/*.spec.ts'],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        ecmaVersion: 2022,
+        sourceType: 'module',
+        project: false,
+      },
+    },
+    rules: {
+      'no-console': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/consistent-type-imports': 'off',
+      'perfectionist/sort-objects': 'off',
+      'max-lines': 'off',
+      'max-lines-per-function': 'off',
+    },
+  },
+
+  // Data files - disable object sorting (large definition arrays)
+  {
+    files: [
+      'packages/core/src/reference-ranges.ts',
+      'packages/core/src/biomarkers.ts',
+      'packages/core/src/dexa-zone-data.ts',
+    ],
+    rules: {
+      'perfectionist/sort-objects': 'off',
+      'max-lines': 'off',
     },
   },
 

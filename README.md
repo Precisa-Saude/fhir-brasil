@@ -9,7 +9,7 @@ Brazilian FHIR R4 toolkit — biomarker definitions, reference ranges, and clini
 
 ---
 
-## O que é / What is this
+## O que é
 
 **fhir-brasil** fornece uma base compartilhada para healthtechs brasileiras trabalharem com dados de saúde no padrão FHIR R4:
 
@@ -20,7 +20,7 @@ Brazilian FHIR R4 toolkit — biomarker definitions, reference ranges, and clini
 
 ---
 
-## Por que open-source
+## Por que código aberto
 
 1. **Transparência** — Definições de biomarcadores e faixas de referência devem ser auditáveis
 2. **Confiabilidade** — Códigos LOINC e citações SBPC/ML verificáveis por qualquer pessoa

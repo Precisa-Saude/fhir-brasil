@@ -10,6 +10,32 @@ Consulte [docs/development/verificacao-citacoes.md](development/verificacao-cita
 
 ---
 
+## Pesquisa Nacional de Saude (PNS) - Intervalos de referencia brasileiros
+
+### pns-hemograma-2019
+
+ROSENFELD, L. G. et al. Valores de referencia para exames laboratoriais de hemograma da populacao adulta brasileira: Pesquisa Nacional de Saude. **Revista Brasileira de Epidemiologia**, v. 22, supl. 2, e190003.supl.2, 2019. DOI: [10.1590/1980-549720190003.supl.2](https://doi.org/10.1590/1980-549720190003.supl.2).
+
+Disponivel em: <https://pubmed.ncbi.nlm.nih.gov/31596374/>.
+
+**Valores utilizados:** CBC completo (RBC, WBC, Hgb, Hct, Platelets, MCV, MCH, MCHC, RDW, MPV, Reticulocytes) e diferencial leucocitario, baseados em n=8.952 adultos brasileiros.
+
+### pns-bioquimica-2019
+
+SZWARCWALD, C. L. et al. Valores de referencia para exames laboratoriais de colesterol, hemoglobina glicosilada e creatinina da populacao adulta brasileira. **Revista Brasileira de Epidemiologia**, v. 22, supl. 2, e190002.supl.2, 2019. DOI: [10.1590/1980-549720190002.supl.2](https://doi.org/10.1590/1980-549720190002.supl.2).
+
+Disponivel em: <https://pubmed.ncbi.nlm.nih.gov/31596373/>.
+
+**Valores utilizados:** Creatinina e Albumina para populacao brasileira adulta.
+
+### pns-renal-2019
+
+MALTA, D. C. et al. Evaluation of renal function in the Brazilian adult population, according to laboratory criteria from the National Health Survey. **Revista Brasileira de Epidemiologia**, v. 22, supl. 2, e190010.supl.2, 2019. DOI: [10.1590/1980-549720190010.supl.2](https://doi.org/10.1590/1980-549720190010.supl.2).
+
+Disponivel em: <https://pubmed.ncbi.nlm.nih.gov/31596381/>.
+
+---
+
 ## Fontes Brasileiras
 
 ### sbpc-ml-2021
@@ -74,6 +100,24 @@ Disponível em: <https://diretriz.diabetes.org.br>.
 SOCIEDADE BRASILEIRA DE ENDOCRINOLOGIA E METABOLOGIA (SBEM). Consenso Brasileiro para a Abordagem Clínica e Tratamento do Hipotireoidismo Subclínico em Adultos. **Arquivos Brasileiros de Endocrinologia & Metabologia**, v. 57, n. 3, 2013.
 
 > **Nota**: Referência exata do consenso pendente de verificação.
+
+---
+
+## Fontes Internacionais
+
+### tietz-7ed-2015
+
+BURTIS, C. A.; BRUNS, D. E. **Tietz Fundamentals of Clinical Chemistry and Molecular Diagnostics**. 7. ed. St. Louis: Elsevier Saunders, 2015. ISBN 978-1-4557-4165-6.
+
+**Valores utilizados:** Eletrolitos, funcao hepatica, coagulacao, inflamacao, e demais analitos sem diretriz brasileira especifica.
+
+### kdigo-ckd-2024
+
+KIDNEY DISEASE: IMPROVING GLOBAL OUTCOMES (KDIGO) CKD Work Group. KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease. **Kidney International**, v. 105, n. 4S, p. S117-S314, 2024. DOI: [10.1016/j.kint.2023.10.018](https://doi.org/10.1016/j.kint.2023.10.018).
+
+Disponivel em: <https://pubmed.ncbi.nlm.nih.gov/38490803/>.
+
+**Valores utilizados:** Classificacao eGFR (G1-G5).
 
 ---
 

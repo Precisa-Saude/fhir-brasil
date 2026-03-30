@@ -85,6 +85,40 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     url: 'https://www.sbem.org.br',
   },
   // ---------------------------------------------------------------------------
+  // Pesquisa Nacional de Saúde (PNS) — Intervalos de referência brasileiros
+  // ---------------------------------------------------------------------------
+  'pns-hemograma-2019': {
+    key: 'pns-hemograma-2019',
+    abnt: 'ROSENFELD, L. G. et al. Valores de referência para exames laboratoriais de hemograma da população adulta brasileira: Pesquisa Nacional de Saúde. Revista Brasileira de Epidemiologia, v. 22, supl. 2, e190003.supl.2, 2019.',
+    doi: '10.1590/1980-549720190003.supl.2',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/31596374/',
+  },
+
+  'pns-bioquimica-2019': {
+    key: 'pns-bioquimica-2019',
+    abnt: 'SZWARCWALD, C. L. et al. Valores de referência para exames laboratoriais de colesterol, hemoglobina glicosilada e creatinina da população adulta brasileira. Revista Brasileira de Epidemiologia, v. 22, supl. 2, e190002.supl.2, 2019.',
+    doi: '10.1590/1980-549720190002.supl.2',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/31596373/',
+  },
+
+  'pns-renal-2019': {
+    key: 'pns-renal-2019',
+    abnt: 'MALTA, D. C. et al. Evaluation of renal function in the Brazilian adult population, according to laboratory criteria from the National Health Survey. Revista Brasileira de Epidemiologia, v. 22, supl. 2, e190010.supl.2, 2019.',
+    doi: '10.1590/1980-549720190010.supl.2',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/31596381/',
+  },
+
+  // ---------------------------------------------------------------------------
+  // Fontes internacionais — Nefrologia
+  // ---------------------------------------------------------------------------
+  'kdigo-ckd-2024': {
+    key: 'kdigo-ckd-2024',
+    abnt: 'KIDNEY DISEASE: IMPROVING GLOBAL OUTCOMES (KDIGO) CKD Work Group. KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease. Kidney International, v. 105, n. 4S, p. S117-S314, 2024.',
+    doi: '10.1016/j.kint.2023.10.018',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/38490803/',
+  },
+
+  // ---------------------------------------------------------------------------
   // Referência laboratorial geral
   // ---------------------------------------------------------------------------
   'tietz-7ed-2015': {

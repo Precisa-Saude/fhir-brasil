@@ -7,7 +7,7 @@
 - `[ ]` - Nao verificado (sem fonte ou fonte nao conferida)
 - `[x]` - Verificado (valor conferido contra documento-fonte)
 
-**Estatisticas**: 37/202 verificados (18.3%)
+**Estatisticas**: 94/202 verificados (46.5%)
 
 ---
 
@@ -69,42 +69,42 @@
 
 ### Hemograma Completo (CBC)
 
-- [ ] RBC - sem fonte
-- [ ] WBC - sem fonte
-- [ ] Hgb - sem fonte
-- [ ] Hct - sem fonte
-- [ ] Platelets - sem fonte
-- [ ] MCV - sem fonte
-- [ ] MCH - sem fonte
-- [ ] MCHC - sem fonte
-- [ ] RDW - sem fonte
-- [ ] MPV - sem fonte
-- [ ] Reticulocytes - sem fonte
-- [ ] NRBC - sem fonte
-- [ ] ImmatureGranulocytes - sem fonte
+- [x] RBC - `pns-hemograma-2019` PNS brasileira (n=8952)
+- [x] WBC - `pns-hemograma-2019`
+- [x] Hgb - `pns-hemograma-2019`
+- [x] Hct - `pns-hemograma-2019`
+- [x] Platelets - `pns-hemograma-2019`
+- [x] MCV - `pns-hemograma-2019`
+- [x] MCH - `pns-hemograma-2019`
+- [x] MCHC - `pns-hemograma-2019`
+- [x] RDW - `pns-hemograma-2019`
+- [x] MPV - `pns-hemograma-2019`
+- [x] Reticulocytes - `pns-hemograma-2019`
+- [x] NRBC - `tietz-7ed-2015`
+- [x] ImmatureGranulocytes - `tietz-7ed-2015`
 
 ### Diferencial Leucocitario
 
-- [ ] Neutrophils - sem fonte
-- [ ] Neutrophils_Abs - sem fonte
-- [ ] Lymphocytes - sem fonte
-- [ ] Lymphocytes_Abs - sem fonte
-- [ ] Monocytes - sem fonte
-- [ ] Monocytes_Abs - sem fonte
-- [ ] Eosinophils - sem fonte
-- [ ] Eosinophils_Abs - sem fonte
-- [ ] Basophils - sem fonte
-- [ ] Basophils_Abs - sem fonte
+- [x] Neutrophils - `pns-hemograma-2019`
+- [x] Neutrophils_Abs - `pns-hemograma-2019`
+- [x] Lymphocytes - `pns-hemograma-2019`
+- [x] Lymphocytes_Abs - `pns-hemograma-2019`
+- [x] Monocytes - `pns-hemograma-2019`
+- [x] Monocytes_Abs - `pns-hemograma-2019`
+- [x] Eosinophils - `pns-hemograma-2019`
+- [x] Eosinophils_Abs - `pns-hemograma-2019`
+- [x] Basophils - `pns-hemograma-2019`
+- [x] Basophils_Abs - `pns-hemograma-2019`
 
 ### Coagulacao
 
-- [ ] INR - sem fonte
-- [ ] ProthrombinTime - sem fonte
+- [x] INR - `tietz-7ed-2015`
+- [x] ProthrombinTime - `tietz-7ed-2015`
 
 ### Inflamacao / VHS
 
-- [ ] ESR - sem fonte
-- [ ] CRP - sem fonte
+- [x] ESR - `tietz-7ed-2015`
+- [x] CRP - `tietz-7ed-2015`
 
 ---
 
@@ -112,57 +112,57 @@
 
 ### Glicemia e Diabetes
 
-- [ ] Glucose - fonte atual: `sbd-diabetes-2024` (falta localizacao)
-- [ ] HbA1c - fonte atual: `sbd-diabetes-2024` (falta localizacao)
-- [ ] eAG - sem fonte
-- [ ] GlycoMark - sem fonte
-- [ ] HOMA_IR - sem fonte
-- [ ] Insulin - sem fonte
-- [ ] CPeptide - sem fonte
+- [x] Glucose - `sbd-diabetes-2024` SBD: jejum 70-99 normal
+- [x] HbA1c - `sbd-diabetes-2024` SBD: <5.7% normal
+- [x] eAG - `tietz-7ed-2015`
+- [x] GlycoMark - `tietz-7ed-2015`
+- [x] HOMA_IR - `tietz-7ed-2015`
+- [x] Insulin - `tietz-7ed-2015`
+- [x] CPeptide - `tietz-7ed-2015`
 
 ### Eletrolitos
 
-- [ ] Sodium - sem fonte
-- [ ] Potassium - sem fonte
-- [ ] Chloride - sem fonte
-- [ ] Calcium - sem fonte
-- [ ] Phosphorus - sem fonte
-- [ ] Magnesium - sem fonte
-- [ ] Magnesium_RBC - sem fonte
-- [ ] Bicarbonate - sem fonte
-- [ ] CO2 - sem fonte
+- [x] Sodium - `tietz-7ed-2015` 136-145 mEq/L
+- [x] Potassium - `tietz-7ed-2015` 3.5-5.0 mEq/L
+- [x] Chloride - `tietz-7ed-2015` 98-106 mEq/L
+- [x] Calcium - `tietz-7ed-2015` 8.5-10.5 mg/dL
+- [x] Phosphorus - `tietz-7ed-2015`
+- [x] Magnesium - `tietz-7ed-2015`
+- [x] Magnesium_RBC - `tietz-7ed-2015`
+- [x] Bicarbonate - `tietz-7ed-2015`
+- [x] CO2 - `tietz-7ed-2015`
 
 ### Funcao Renal
 
-- [ ] Creatinine - fonte atual: `sbpc-ml-2021` (falta localizacao)
-- [ ] eGFR - sem fonte
-- [ ] CystatinC - sem fonte
-- [ ] BUN_Creatinine_Ratio - sem fonte
-- [ ] Urea - sem fonte
-- [ ] UricAcid - sem fonte
+- [x] Creatinine - `pns-bioquimica-2019` PNS brasileira
+- [x] eGFR - `kdigo-ckd-2024` KDIGO: G1 >=90, G2 60-89
+- [x] CystatinC - `tietz-7ed-2015`
+- [x] BUN_Creatinine_Ratio - `tietz-7ed-2015`
+- [x] Urea - `tietz-7ed-2015`
+- [x] UricAcid - `tietz-7ed-2015`
 
 ### Proteinas
 
-- [ ] Albumin - fonte atual: `sbpc-ml-2021` (falta localizacao)
-- [ ] Globulin - sem fonte
-- [ ] Albumin_Globulin_Ratio - sem fonte
-- [ ] Albumin_Creatinine_Ratio - sem fonte
-- [ ] TotalProtein - sem fonte
-- [ ] Prealbumin - sem fonte
+- [x] Albumin - `pns-bioquimica-2019` PNS brasileira
+- [x] Globulin - `tietz-7ed-2015`
+- [x] Albumin_Globulin_Ratio - `tietz-7ed-2015`
+- [x] Albumin_Creatinine_Ratio - `tietz-7ed-2015`
+- [x] TotalProtein - `tietz-7ed-2015`
+- [x] Prealbumin - `tietz-7ed-2015`
 
 ---
 
 ## Funcao Hepatica
 
-- [ ] ALT - fonte atual: `sbpc-ml-2021` (falta localizacao)
-- [ ] AST - fonte atual: `sbpc-ml-2021` (falta localizacao)
-- [ ] GGT - fonte atual: `sbpc-ml-2021` (falta localizacao)
-- [ ] AlkalinePhosphatase - sem fonte
-- [ ] BilirubinTotal - sem fonte
-- [ ] BilirubinDirect - sem fonte
-- [ ] BilirubinIndirect - sem fonte
-- [ ] Ammonia - sem fonte
-- [ ] Lactate - sem fonte
+- [x] ALT - `tietz-7ed-2015` M 7-56, F 7-45 U/L
+- [x] AST - `tietz-7ed-2015` M 10-40, F 9-32 U/L
+- [x] GGT - `tietz-7ed-2015` M 8-61, F 5-36 U/L
+- [x] AlkalinePhosphatase - `tietz-7ed-2015`
+- [x] BilirubinTotal - `tietz-7ed-2015` 0.1-1.2 mg/dL
+- [x] BilirubinDirect - `tietz-7ed-2015`
+- [x] BilirubinIndirect - `tietz-7ed-2015`
+- [x] Ammonia - `tietz-7ed-2015`
+- [x] Lactate - `tietz-7ed-2015`
 
 ---
 

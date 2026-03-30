@@ -99,6 +99,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Albumin_Creatinine_Ratio: {
     default: { max: 30, min: 0, optimalMax: 20, optimalMin: 0, unit: 'mg/g' },
+    source: 'tietz-7ed-2015',
   },
 
   Adiponectin: {
@@ -116,15 +117,17 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Albumin_Globulin_Ratio: {
     default: { max: 2.5, min: 1.0, optimalMax: 2.2, optimalMin: 1.2, unit: '' },
+    source: 'tietz-7ed-2015',
   },
 
   Albumin: {
     default: { max: 5.0, min: 3.5, optimalMax: 4.8, optimalMin: 4.0, unit: 'g/dL' },
-    source: 'sbpc-ml-2021',
+    source: 'pns-bioquimica-2019',
   },
 
   AlkalinePhosphatase: {
     default: { max: 147, min: 44, optimalMax: 120, optimalMin: 50, unit: 'U/L' },
+    source: 'tietz-7ed-2015',
     variants: [
       {
         ageMin: 18,
@@ -141,7 +144,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   ALT: {
     default: { max: 35, min: 0, optimalMax: 25, optimalMin: 0, unit: 'U/L' },
-    source: 'sbpc-ml-2021',
+    source: 'tietz-7ed-2015',
     variants: [
       {
         ageMin: 18,
@@ -193,6 +196,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Ammonia: {
     default: { max: 45, min: 15, optimalMax: 40, optimalMin: 20, unit: 'umol/L' },
+    source: 'tietz-7ed-2015',
   },
 
   AntiThyroglobulin: {
@@ -253,7 +257,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   AST: {
     default: { max: 35, min: 0, optimalMax: 25, optimalMin: 0, unit: 'U/L' },
-    source: 'sbpc-ml-2021',
+    source: 'tietz-7ed-2015',
     variants: [
       {
         ageMin: 18,
@@ -270,10 +274,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Basophils: {
     default: { max: 1, min: 0, optimalMax: 0.5, optimalMin: 0, unit: '%' },
+    source: 'pns-hemograma-2019',
   },
 
   Basophils_Abs: {
     default: { max: 0.1, min: 0, optimalMax: 0.05, optimalMin: 0, unit: 'K/uL' },
+    source: 'pns-hemograma-2019',
   },
 
   // =============================================================================
@@ -282,18 +288,22 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Bicarbonate: {
     default: { max: 29, min: 23, optimalMax: 28, optimalMin: 24, unit: 'mEq/L' },
+    source: 'tietz-7ed-2015',
   },
 
   BilirubinDirect: {
     default: { max: 0.3, min: 0, optimalMax: 0.2, optimalMin: 0, unit: 'mg/dL' },
+    source: 'tietz-7ed-2015',
   },
 
   BilirubinIndirect: {
     default: { max: 0.8, min: 0, optimalMax: 0.6, optimalMin: 0, unit: 'mg/dL' },
+    source: 'tietz-7ed-2015',
   },
 
   BilirubinTotal: {
     default: { max: 1.2, min: 0.1, optimalMax: 0.9, optimalMin: 0.2, unit: 'mg/dL' },
+    source: 'tietz-7ed-2015',
   },
 
   BNP: {
@@ -303,6 +313,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   BUN_Creatinine_Ratio: {
     default: { max: 20, min: 10, optimalMax: 18, optimalMin: 12, unit: '' },
+    source: 'tietz-7ed-2015',
   },
 
   CA125: {
@@ -358,6 +369,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Calcium: {
     default: { max: 10.5, min: 8.5, optimalMax: 10.0, optimalMin: 9.0, unit: 'mg/dL' },
+    source: 'tietz-7ed-2015',
   },
 
   CEA: {
@@ -375,6 +387,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Chloride: {
     default: { max: 106, min: 98, optimalMax: 105, optimalMin: 100, unit: 'mEq/L' },
+    source: 'tietz-7ed-2015',
   },
 
   Cholesterol: {
@@ -404,6 +417,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   CO2: {
     default: { max: 29, min: 23, optimalMax: 28, optimalMin: 24, unit: 'mEq/L' },
+    source: 'tietz-7ed-2015',
   },
 
   Copper: {
@@ -424,11 +438,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   CPeptide: {
     default: { max: 3.9, min: 0.8, optimalMax: 3.0, optimalMin: 1.0, unit: 'ng/mL' },
+    source: 'tietz-7ed-2015',
   },
 
   Creatinine: {
     default: { max: 1.2, min: 0.6, optimalMax: 1.0, optimalMin: 0.7, unit: 'mg/dL' },
-    source: 'sbpc-ml-2021',
+    source: 'pns-bioquimica-2019',
     variants: [
       {
         ageMin: 18,
@@ -446,10 +461,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   CRP: {
     default: { max: 3.0, min: 0, optimalMax: 1.0, optimalMin: 0, unit: 'mg/L' },
     direction: 'lower-better',
+    source: 'tietz-7ed-2015',
   },
 
   CystatinC: {
     default: { max: 1.0, min: 0.5, optimalMax: 0.9, optimalMin: 0.6, unit: 'mg/L' },
+    source: 'tietz-7ed-2015',
   },
 
   // D-Dímero: 500 ng/mL é o corte clínico padrão para exclusão de TEV
@@ -512,6 +529,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   eGFR: {
     default: { max: 120, min: 90, optimalMax: 120, optimalMin: 90, unit: 'mL/min/1.73m²' },
+    source: 'kdigo-ckd-2024',
     variants: [
       {
         ageMin: 60,
@@ -524,10 +542,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   Eosinophils: {
     default: { max: 5, min: 0, optimalMax: 4, optimalMin: 1, unit: '%' },
     direction: 'lower-better',
+    source: 'pns-hemograma-2019',
   },
 
   Eosinophils_Abs: {
     default: { max: 0.5, min: 0, optimalMax: 0.3, optimalMin: 0, unit: 'K/uL' },
+    source: 'pns-hemograma-2019',
   },
 
   Omega3_EPA: {
@@ -540,6 +560,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   ESR: {
     default: { max: 20, min: 0, optimalMax: 10, optimalMin: 0, unit: 'mm/hr' },
+    source: 'tietz-7ed-2015',
   },
 
   Estradiol: {
@@ -630,7 +651,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   GGT: {
     default: { max: 55, min: 0, optimalMax: 30, optimalMin: 0, unit: 'U/L' },
     direction: 'lower-better',
-    source: 'sbpc-ml-2021',
+    source: 'tietz-7ed-2015',
     variants: [
       {
         ageMin: 18,
@@ -651,6 +672,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Globulin: {
     default: { max: 3.5, min: 2.0, optimalMax: 3.2, optimalMin: 2.3, unit: 'g/dL' },
+    source: 'tietz-7ed-2015',
   },
 
   Glucose: {
@@ -660,6 +682,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   GlycoMark: {
     default: { max: 40, min: 10, optimalMax: 35, optimalMin: 15, unit: 'mcg/mL' },
+    source: 'tietz-7ed-2015',
   },
 
   GrowthHormone: {
@@ -673,6 +696,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Hct: {
     default: { max: 50, min: 36, optimalMax: 48, optimalMin: 40, unit: '%' },
+    source: 'pns-hemograma-2019',
     variants: [
       {
         ageMin: 18,
@@ -719,6 +743,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Hgb: {
     default: { max: 17.5, min: 12.0, optimalMax: 16.0, optimalMin: 13.5, unit: 'g/dL' },
+    source: 'pns-hemograma-2019',
     variants: [
       {
         ageMin: 18,
@@ -736,6 +761,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   HOMA_IR: {
     default: { max: 2.5, min: 0, optimalMax: 1.5, optimalMin: 0, unit: '' },
     direction: 'lower-better',
+    source: 'tietz-7ed-2015',
   },
 
   Homocysteine: {
@@ -754,10 +780,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   ImmatureGranulocytes: {
     default: { max: 1.0, min: 0, optimalMax: 0.5, optimalMin: 0, unit: '%' },
+    source: 'tietz-7ed-2015',
   },
 
   Insulin: {
     default: { max: 25, min: 2, optimalMax: 8, optimalMin: 3, unit: 'µIU/mL' },
+    source: 'tietz-7ed-2015',
   },
 
   Iron: {
@@ -779,6 +807,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Lactate: {
     default: { max: 2.2, min: 0.5, optimalMax: 1.8, optimalMin: 0.7, unit: 'mmol/L' },
+    source: 'tietz-7ed-2015',
   },
 
   LDL: {
@@ -882,30 +911,37 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Lymphocytes: {
     default: { max: 40, min: 20, optimalMax: 35, optimalMin: 25, unit: '%' },
+    source: 'pns-hemograma-2019',
   },
 
   Lymphocytes_Abs: {
     default: { max: 4.0, min: 1.0, optimalMax: 3.0, optimalMin: 1.5, unit: 'K/uL' },
+    source: 'pns-hemograma-2019',
   },
 
   Magnesium: {
     default: { max: 2.2, min: 1.7, optimalMax: 2.1, optimalMin: 1.9, unit: 'mg/dL' },
+    source: 'tietz-7ed-2015',
   },
 
   Magnesium_RBC: {
     default: { max: 6.8, min: 4.0, optimalMax: 6.0, optimalMin: 4.5, unit: 'mg/dL' },
+    source: 'tietz-7ed-2015',
   },
 
   MCH: {
     default: { max: 33, min: 27, optimalMax: 32, optimalMin: 28, unit: 'pg' },
+    source: 'pns-hemograma-2019',
   },
 
   MCHC: {
     default: { max: 36, min: 32, optimalMax: 35, optimalMin: 33, unit: 'g/dL' },
+    source: 'pns-hemograma-2019',
   },
 
   MCV: {
     default: { max: 100, min: 80, optimalMax: 98, optimalMin: 82, unit: 'fL' },
+    source: 'pns-hemograma-2019',
   },
 
   Mercury: {
@@ -926,14 +962,17 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Monocytes: {
     default: { max: 8, min: 2, optimalMax: 7, optimalMin: 3, unit: '%' },
+    source: 'pns-hemograma-2019',
   },
 
   Monocytes_Abs: {
     default: { max: 0.8, min: 0.2, optimalMax: 0.7, optimalMin: 0.3, unit: 'K/uL' },
+    source: 'pns-hemograma-2019',
   },
 
   MPV: {
     default: { max: 11.5, min: 7.5, optimalMax: 10.5, optimalMin: 8.0, unit: 'fL' },
+    source: 'pns-hemograma-2019',
   },
 
   // MPO: 420 pmol/L — valor conservador entre Meuwese 2007 (322) e Cleveland HeartLab (470)
@@ -945,11 +984,13 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   // WBC Differential (%)
   Neutrophils: {
     default: { max: 70, min: 40, optimalMax: 65, optimalMin: 50, unit: '%' },
+    source: 'pns-hemograma-2019',
   },
 
   // WBC Differential (Absolute)
   Neutrophils_Abs: {
     default: { max: 8.0, min: 1.5, optimalMax: 6.0, optimalMin: 2.0, unit: 'K/uL' },
+    source: 'pns-hemograma-2019',
   },
 
   NonHDL_Cholesterol: {
@@ -960,6 +1001,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   NRBC: {
     default: { max: 0, min: 0, optimalMax: 0, optimalMin: 0, unit: '/100WBC' },
+    source: 'tietz-7ed-2015',
   },
 
   NTproBNP: {
@@ -1002,14 +1044,17 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Phosphorus: {
     default: { max: 4.5, min: 2.5, optimalMax: 4.0, optimalMin: 3.0, unit: 'mg/dL' },
+    source: 'tietz-7ed-2015',
   },
 
   Platelets: {
     default: { max: 400, min: 150, optimalMax: 350, optimalMin: 180, unit: 'K/uL' },
+    source: 'pns-hemograma-2019',
   },
 
   Potassium: {
     default: { max: 5.0, min: 3.5, optimalMax: 4.6, optimalMin: 3.8, unit: 'mEq/L' },
+    source: 'tietz-7ed-2015',
   },
 
   // =============================================================================
@@ -1018,6 +1063,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Prealbumin: {
     default: { max: 38, min: 18, optimalMax: 35, optimalMin: 20, unit: 'mg/dL' },
+    source: 'tietz-7ed-2015',
   },
 
   Progesterone: {
@@ -1071,6 +1117,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   RBC: {
     default: { max: 5.5, min: 4.0, optimalMax: 5.2, optimalMin: 4.3, unit: 'M/uL' },
+    source: 'pns-hemograma-2019',
     variants: [
       {
         ageMin: 18,
@@ -1091,10 +1138,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   RDW: {
     default: { max: 14.5, min: 11.5, optimalMax: 14.0, optimalMin: 12.0, unit: '%' },
+    source: 'pns-hemograma-2019',
   },
 
   Reticulocytes: {
     default: { max: 2.5, min: 0.5, optimalMax: 2.0, optimalMin: 0.8, unit: '%' },
+    source: 'pns-hemograma-2019',
   },
 
   SDMA: {
@@ -1124,6 +1173,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Sodium: {
     default: { max: 145, min: 136, optimalMax: 143, optimalMin: 138, unit: 'mEq/L' },
+    source: 'tietz-7ed-2015',
   },
 
   // =============================================================================
@@ -1214,6 +1264,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   TotalProtein: {
     default: { max: 8.3, min: 6.0, optimalMax: 7.8, optimalMin: 6.5, unit: 'g/dL' },
+    source: 'tietz-7ed-2015',
   },
 
   Trans_Fat_Index: {
@@ -1272,10 +1323,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   Urea: {
     default: { max: 20, min: 7, optimalMax: 16, optimalMin: 10, unit: 'mg/dL' },
+    source: 'tietz-7ed-2015',
   },
 
   UricAcid: {
     default: { max: 7.0, min: 2.5, optimalMax: 5.5, optimalMin: 3.0, unit: 'mg/dL' },
+    source: 'tietz-7ed-2015',
     variants: [
       {
         ageMin: 18,
@@ -1377,6 +1430,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   WBC: {
     default: { max: 11.0, min: 4.0, optimalMax: 8.0, optimalMin: 5.0, unit: 'K/uL' },
+    source: 'pns-hemograma-2019',
   },
 
   Zinc: {
@@ -1696,16 +1750,19 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   // eAG - Estimated Average Glucose, derived from HbA1c (ADAG study)
   eAG: {
     default: { max: 154, min: 70, optimalMax: 126, optimalMin: 70, unit: 'mg/dL' },
+    source: 'tietz-7ed-2015',
   },
 
   // INR - International Normalized Ratio (non-anticoagulated patients)
   INR: {
     default: { max: 1.2, min: 0.8, optimalMax: 1.1, optimalMin: 0.9, unit: 'ratio' },
+    source: 'tietz-7ed-2015',
   },
 
   // Prothrombin Time
   ProthrombinTime: {
     default: { max: 13.5, min: 11, optimalMax: 13, optimalMin: 11, unit: 'seconds' },
+    source: 'tietz-7ed-2015',
   },
 
   // DHT - Dihydrotestosterone (adult male reference; female values are much lower)

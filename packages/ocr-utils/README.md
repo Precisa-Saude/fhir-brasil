@@ -47,7 +47,7 @@ console.log(result.filteredReference);
 
 Este pacote implementa um padrão de **ancoragem antes do LLM** para prevenir alucinações na extração de dados laboratoriais:
 
-1. **Ancoragem (este pacote):** Escaneia o texto OCR bruto procurando nomes de biomarcadores conhecidos usando correspondência exata de strings contra as 183+ definições de `@precisa-saude/fhir`.
+1. **Ancoragem (este pacote):** Escaneia o texto OCR bruto procurando nomes de biomarcadores conhecidos usando correspondência exata de strings contra as 200+ definições de `@precisa-saude/fhir`.
 
 2. **Filtragem:** Gera uma referência LLM filtrada (`filteredReference`) contendo apenas os biomarcadores que foram realmente encontrados no texto. O LLM só pode extrair valores para biomarcadores presentes nesta lista.
 

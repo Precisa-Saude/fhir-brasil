@@ -10,7 +10,7 @@ interface Feature {
 const FEATURES: Feature[] = [
   {
     icon: <HeartPulse className="h-6 w-6" />,
-    title: '183+ Biomarcadores',
+    title: '200+ Biomarcadores',
     description:
       'Códigos LOINC, nomes em pt-BR e en-US, unidades UCUM e 20 categorias clínicas. Catalogo completo com normalização de aliases.',
   },

@@ -1,6 +1,6 @@
 # @precisa-saude/fhir
 
-Tipos FHIR R4, 183+ definições de biomarcadores com códigos LOINC, faixas de referência (SBPC/ML, SBC, SBD), conversores e importadores para o contexto clínico brasileiro.
+Tipos FHIR R4, 200+ definições de biomarcadores com códigos LOINC, faixas de referência (SBPC/ML, SBC, SBD), conversores e importadores para o contexto clínico brasileiro.
 
 ## Instalação
 
@@ -36,9 +36,9 @@ const bundle = labResultToFHIRBundle(report, observations, userProfile);
 ```ts
 import { normalizeCode, codeToLoinc, loincToCode } from '@precisa-saude/fhir';
 
-normalizeCode('CholHDL_Ratio');  // 'Cholesterol_HDL_Ratio'
-codeToLoinc('HDL');              // '2085-9'
-loincToCode('2085-9');           // 'HDL'
+normalizeCode('CholHDL_Ratio'); // 'Cholesterol_HDL_Ratio'
+codeToLoinc('HDL'); // '2085-9'
+loincToCode('2085-9'); // 'HDL'
 ```
 
 ### Consultar definições de biomarcadores
@@ -49,7 +49,7 @@ import { getDefinitionByCode, getAllDefinitions } from '@precisa-saude/fhir';
 const def = getDefinitionByCode('HDL');
 // { code: 'HDL', loinc: '2085-9', names: { pt: [...], en: [...] }, ... }
 
-const all = getAllDefinitions(); // 183+ definições
+const all = getAllDefinitions(); // 200+ definições
 ```
 
 ## Sub-path imports
@@ -67,14 +67,14 @@ import { validateFHIRObservation } from '@precisa-saude/fhir/validators';
 
 ## Módulos
 
-| Sub-path              | Descrição                                                        |
-| --------------------- | ---------------------------------------------------------------- |
-| `/biomarkers`         | 183+ definições com códigos LOINC, nomes pt/en, categorias       |
-| `/reference-ranges`   | Faixas de referência por sexo/idade (SBPC/ML, SBC, SBD, OMS)    |
-| `/converter`          | Converte dados laboratoriais para FHIR R4 Bundle                 |
-| `/importer`           | Importa FHIR Bundle de volta para estruturas internas            |
-| `/units`              | Mapeamento de unidades, conversão para UCUM                      |
-| `/validators`         | Validação de recursos FHIR (DiagnosticReport, Observation, Bundle) |
+| Sub-path            | Descrição                                                          |
+| ------------------- | ------------------------------------------------------------------ |
+| `/biomarkers`       | 200+ definições com códigos LOINC, nomes pt/en, categorias         |
+| `/reference-ranges` | Faixas de referência por sexo/idade (SBPC/ML, SBC, SBD, OMS)       |
+| `/converter`        | Converte dados laboratoriais para FHIR R4 Bundle                   |
+| `/importer`         | Importa FHIR Bundle de volta para estruturas internas              |
+| `/units`            | Mapeamento de unidades, conversão para UCUM                        |
+| `/validators`       | Validação de recursos FHIR (DiagnosticReport, Observation, Bundle) |
 
 ## Aviso médico
 

@@ -13,8 +13,8 @@ Brazilian FHIR R4 toolkit — biomarker definitions, reference ranges, and clini
 
 **fhir-brasil** fornece uma base compartilhada para healthtechs brasileiras trabalharem com dados de saúde no padrão FHIR R4:
 
-- **183+ biomarcadores** com códigos LOINC, nomes em português/inglês, categorias e unidades
-- **150+ faixas de referência** com variantes por sexo/idade, baseadas em diretrizes SBPC/ML, SBC e SBD
+- **200+ biomarcadores** com códigos LOINC, nomes em português/inglês, categorias e unidades
+- **200+ faixas de referência** com variantes por sexo/idade, baseadas em diretrizes SBPC/ML, SBC e SBD
 - **Calculadoras clínicas** — PhenoAge (idade biológica), BrDMrisc (risco de diabetes), HOMA-IR, VLDL, IMC
 - **Utilitários OCR** — ancoragem de texto para extração de biomarcadores de PDFs de resultados de laboratório
 
@@ -74,15 +74,15 @@ import { phenoage } from '@precisa-saude/fhir-calculators';
 
 const result = phenoage.calculatePhenoAge({
   chronologicalAge: 45,
-  albumin: 42,        // g/L
-  creatinine: 80,     // μmol/L
-  glucose: 5.2,       // mmol/L
-  crp: 1.5,           // mg/L
+  albumin: 42, // g/L
+  creatinine: 80, // μmol/L
+  glucose: 5.2, // mmol/L
+  crp: 1.5, // mg/L
   lymphocytePercent: 30,
-  mcv: 88,            // fL
-  rdw: 13,            // %
+  mcv: 88, // fL
+  rdw: 13, // %
   alkalinePhosphatase: 70, // U/L
-  wbc: 6.5,           // 10^9/L
+  wbc: 6.5, // 10^9/L
 });
 // → { phenoAge: 42.3, ageDifference: -2.7, ... }
 ```
@@ -91,28 +91,28 @@ const result = phenoage.calculatePhenoAge({
 
 ## Pacotes
 
-| Pacote | Descrição | Deps |
-|--------|-----------|------|
-| `@precisa-saude/fhir` | Tipos FHIR R4, 183+ biomarcadores, faixas de referência, conversores | 0 runtime deps |
-| `@precisa-saude/fhir-calculators` | PhenoAge, BrDMrisc, HOMA-IR, VLDL, IMC | `@precisa-saude/fhir` |
-| `@precisa-saude/fhir-ocr-utils` | Ancoragem OCR para extração de biomarcadores | `@precisa-saude/fhir` |
+| Pacote                            | Descrição                                                            | Deps                  |
+| --------------------------------- | -------------------------------------------------------------------- | --------------------- |
+| `@precisa-saude/fhir`             | Tipos FHIR R4, 200+ biomarcadores, faixas de referência, conversores | 0 runtime deps        |
+| `@precisa-saude/fhir-calculators` | PhenoAge, BrDMrisc, HOMA-IR, VLDL, IMC                               | `@precisa-saude/fhir` |
+| `@precisa-saude/fhir-ocr-utils`   | Ancoragem OCR para extração de biomarcadores                         | `@precisa-saude/fhir` |
 
 ---
 
 ## Biomarcadores suportados
 
-| Categoria | Qtd | Exemplos |
-|-----------|-----|----------|
-| Coração | 30+ | Colesterol, HDL, LDL, Triglicerídeos, ApoB, PCR, Lp(a) |
-| Tireoide | 6 | TSH, T3 Livre, T4 Livre, Anti-TPO |
-| Metabólico | 8 | Glicose, HbA1c, Insulina, HOMA-IR, Ácido Úrico |
-| Nutrientes | 15+ | Vitamina D, B12, Ferro, Ferritina, Folato, Zinco |
-| Fígado | 8 | ALT, AST, GGT, Bilirrubina, Albumina |
-| Sangue (CBC) | 15+ | Hemoglobina, Hematócrito, Plaquetas, Leucócitos |
-| Rins | 8 | Creatinina, TFGe, Ureia, Sódio, Potássio |
-| Hormônios | 10+ | Testosterona, Estradiol, DHEAS, FSH, LH |
-| Composição corporal | 15+ | % Gordura, Massa Magra, VAT, DMO |
-| Urina | 20+ | pH, Proteína, Glicose, Hemoglobina |
+| Categoria           | Qtd | Exemplos                                               |
+| ------------------- | --- | ------------------------------------------------------ |
+| Coração             | 30+ | Colesterol, HDL, LDL, Triglicerídeos, ApoB, PCR, Lp(a) |
+| Tireoide            | 6   | TSH, T3 Livre, T4 Livre, Anti-TPO                      |
+| Metabólico          | 8   | Glicose, HbA1c, Insulina, HOMA-IR, Ácido Úrico         |
+| Nutrientes          | 15+ | Vitamina D, B12, Ferro, Ferritina, Folato, Zinco       |
+| Fígado              | 8   | ALT, AST, GGT, Bilirrubina, Albumina                   |
+| Sangue (CBC)        | 15+ | Hemoglobina, Hematócrito, Plaquetas, Leucócitos        |
+| Rins                | 8   | Creatinina, TFGe, Ureia, Sódio, Potássio               |
+| Hormônios           | 10+ | Testosterona, Estradiol, DHEAS, FSH, LH                |
+| Composição corporal | 15+ | % Gordura, Massa Magra, VAT, DMO                       |
+| Urina               | 20+ | pH, Proteína, Glicose, Hemoglobina                     |
 
 ---
 

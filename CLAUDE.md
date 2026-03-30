@@ -19,7 +19,7 @@ Este é o monorepo open-source `fhir-brasil` — um toolkit FHIR R4 brasileiro c
 
 ```
 packages/
-  core/          — Tipos FHIR R4, 183+ biomarcadores, faixas de referência, conversores
+  core/          — Tipos FHIR R4, 200+ biomarcadores, faixas de referência, conversores
   calculators/   — PhenoAge, BrDMRisc, HOMA-IR, VLDL, IMC
   ocr-utils/     — Ancoragem OCR para extração de biomarcadores
 ```
@@ -130,6 +130,7 @@ Ao criar commits, NÃO inclua linhas de atribuição de IA. Mantenha as mensagen
 **Mensagens de commit em pt-BR**: Todas as mensagens de commit devem ser escritas em português brasileiro. O tipo (`feat`, `fix`, `refactor`, etc.) permanece em inglês (convenção universal), mas a descrição deve ser em pt-BR.
 
 **Exemplos**:
+
 - `feat(core): adicionar definição do biomarcador Cistatina C`
 - `fix(calculators): corrigir conversão de unidade para creatinina`
 - `docs: atualizar README com novos exemplos de uso`
@@ -197,13 +198,13 @@ Quando os checks de cobertura falharem:
 
 Ao fazer alterações significativas, atualize a documentação relevante:
 
-| Tipo de Alteração            | Arquivos a Atualizar                  |
-| ---------------------------- | ------------------------------------- |
-| Novo pacote                  | `README.md` (estrutura do projeto)    |
+| Tipo de Alteração            | Arquivos a Atualizar                    |
+| ---------------------------- | --------------------------------------- |
+| Novo pacote                  | `README.md` (estrutura do projeto)      |
 | Novo biomarcador             | `README.md` (contagem de biomarcadores) |
-| Nova calculadora             | `README.md`, README do pacote         |
-| Mudanças de API              | README do pacote, `CONVENTIONS.md`    |
-| Atualização de faixa de ref. | Citação da fonte no código            |
+| Nova calculadora             | `README.md`, README do pacote           |
+| Mudanças de API              | README do pacote, `CONVENTIONS.md`      |
+| Atualização de faixa de ref. | Citação da fonte no código              |
 
 ## Persistência de Planos
 

@@ -237,10 +237,9 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   // ApoCIII/ApoA1 Ratio: derivado de ApoCIII (~10 mg/dL) e ApoA1 (~100-150 mg/dL)
-  // Nota: o corte de 0.15 não tem fonte publicada identificada
+  // NOTA: corte de 0.15 sem fonte publicada — valor calculado, não validado clinicamente
   ApoCIII_ApoA1_Ratio: {
     default: { max: 0.15, min: 0, optimalMax: 0.1, optimalMin: 0, unit: '' },
-    source: 'khetarpal-apociii-2016',
   },
 
   // =============================================================================
@@ -314,9 +313,10 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'tietz-7ed-2015',
   },
 
+  // BNP: 35 pg/mL = corte não-agudo para triagem de IC (SBC IC 2018)
   BNP: {
-    default: { max: 100, min: 0, optimalMax: 50, optimalMin: 0, unit: 'pg/mL' },
-    source: 'maisel-bnp-2002',
+    default: { max: 35, min: 0, optimalMax: 20, optimalMin: 0, unit: 'pg/mL' },
+    source: 'sbc-ic-2018',
   },
 
   BUN_Creatinine_Ratio: {
@@ -409,19 +409,19 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   // Índice de Castelli I (CT/HDL-c)
   Cholesterol_HDL_Ratio: {
-    // Índice de Castelli I — SBC 2017 usa M <4.9, F <4.3
-    default: { max: 5.0, min: 0, optimalMax: 3.5, optimalMin: 0, unit: '' },
+    // Índice de Castelli I — SBC 2017: M <4.9, F <4.3
+    default: { max: 4.9, min: 0, optimalMax: 3.5, optimalMin: 0, unit: '' },
     direction: 'lower-better',
     source: 'castelli-ratio-1992',
     variants: [
       {
         ageMin: 18,
-        range: { max: 5.0, min: 0, optimalMax: 4.0, optimalMin: 0, unit: '' },
+        range: { max: 4.9, min: 0, optimalMax: 4.0, optimalMin: 0, unit: '' },
         sex: 'M',
       },
       {
         ageMin: 18,
-        range: { max: 4.5, min: 0, optimalMax: 3.5, optimalMin: 0, unit: '' },
+        range: { max: 4.3, min: 0, optimalMax: 3.5, optimalMin: 0, unit: '' },
         sex: 'F',
       },
     ],
@@ -613,23 +613,23 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   Ferritin: {
-    default: { max: 300, min: 20, optimalMax: 150, optimalMin: 50, unit: 'ng/mL' },
-    source: 'sbpc-ml-2021',
+    default: { max: 150, min: 12, optimalMax: 120, optimalMin: 30, unit: 'ng/mL' },
+    source: 'tietz-7ed-2015',
     variants: [
       {
         ageMin: 18,
-        range: { max: 400, min: 30, optimalMax: 200, optimalMin: 50, unit: 'ng/mL' },
+        range: { max: 250, min: 20, optimalMax: 200, optimalMin: 40, unit: 'ng/mL' },
         sex: 'M',
       },
       {
         ageMax: 50,
         ageMin: 18,
-        range: { max: 150, min: 15, optimalMax: 100, optimalMin: 30, unit: 'ng/mL' },
+        range: { max: 120, min: 10, optimalMax: 80, optimalMin: 20, unit: 'ng/mL' },
         sex: 'F',
       },
       {
         ageMin: 51,
-        range: { max: 300, min: 30, optimalMax: 150, optimalMin: 50, unit: 'ng/mL' },
+        range: { max: 200, min: 20, optimalMax: 150, optimalMin: 30, unit: 'ng/mL' },
         sex: 'F',
       },
     ],
@@ -1010,9 +1010,9 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'pns-hemograma-2019',
   },
 
-  // MPO: 420 pmol/L — valor conservador entre Meuwese 2007 (322) e Cleveland HeartLab (470)
+  // MPO: Meuwese 2007 (EPIC-Norfolk) — risco CV elevado >322 pmol/L
   Myeloperoxidase: {
-    default: { max: 420, min: 0, optimalMax: 300, optimalMin: 0, unit: 'pmol/L' },
+    default: { max: 470, min: 0, optimalMax: 322, optimalMin: 0, unit: 'pmol/L' },
     source: 'meuwese-mpo-2007',
   },
 
@@ -1247,7 +1247,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   // =============================================================================
 
   T3Reverse: {
-    default: { max: 27, min: 9, optimalMax: 22, optimalMin: 12, unit: 'ng/dL' },
+    default: { max: 24, min: 10, optimalMax: 20, optimalMin: 12, unit: 'ng/dL' },
     source: 'tietz-7ed-2015',
   },
 
@@ -1315,7 +1315,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   TIBC: {
-    default: { max: 400, min: 250, optimalMax: 370, optimalMin: 280, unit: 'mcg/dL' },
+    default: { max: 370, min: 250, optimalMax: 350, optimalMin: 280, unit: 'mcg/dL' },
     source: 'tietz-7ed-2015',
   },
 
@@ -1490,10 +1490,9 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'tietz-7ed-2015',
   },
 
-  // VLDL: estimado via fórmula de Friedewald (TG/5). Faixa padrão: 2-30 mg/dL.
-  // Código usa 5-40 — max acima do padrão (30); considerar ajustar.
+  // VLDL: estimado via fórmula de Friedewald (TG/5)
   VLDL: {
-    default: { max: 40, min: 5, optimalMax: 30, optimalMin: 10, unit: 'mg/dL' },
+    default: { max: 30, min: 2, optimalMax: 20, optimalMin: 5, unit: 'mg/dL' },
     source: 'friedewald-1972',
   },
 

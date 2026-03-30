@@ -84,6 +84,130 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     abnt: 'SOCIEDADE BRASILEIRA DE ENDOCRINOLOGIA E METABOLOGIA (SBEM). Consenso Brasileiro para a Abordagem Clínica e Tratamento do Hipotireoidismo Subclínico em Adultos. Arquivos Brasileiros de Endocrinologia & Metabologia, v. 57, n. 3, 2013.',
     url: 'https://www.sbem.org.br',
   },
+  // ---------------------------------------------------------------------------
+  // Referência laboratorial geral
+  // ---------------------------------------------------------------------------
+  'tietz-7ed-2015': {
+    key: 'tietz-7ed-2015',
+    abnt: 'BURTIS, C. A.; BRUNS, D. E. Tietz Fundamentals of Clinical Chemistry and Molecular Diagnostics. 7. ed. St. Louis: Elsevier Saunders, 2015.',
+    isbn: '978-1-4557-4165-6',
+  },
+
+  // ---------------------------------------------------------------------------
+  // Fontes internacionais — Cardiovascular
+  // ---------------------------------------------------------------------------
+  'agatston-1990': {
+    key: 'agatston-1990',
+    abnt: 'AGATSTON, A. S. et al. Quantification of coronary artery calcium using ultrafast computed tomography. Journal of the American College of Cardiology, v. 15, n. 4, p. 827-832, 1990.',
+    doi: '10.1016/0735-1097(90)90282-T',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/2407762/',
+  },
+
+  'rumberger-cac-1999': {
+    key: 'rumberger-cac-1999',
+    abnt: 'RUMBERGER, J. A. et al. Electron beam computed tomographic coronary calcium scanning: a review and guidelines for use in asymptomatic persons. Mayo Clinic Proceedings, v. 74, n. 3, p. 243-252, 1999.',
+    doi: '10.4065/74.3.243',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/10089993/',
+  },
+
+  'maisel-bnp-2002': {
+    key: 'maisel-bnp-2002',
+    abnt: 'MAISEL, A. S. et al. Rapid measurement of B-type natriuretic peptide in the emergency diagnosis of heart failure. New England Journal of Medicine, v. 347, n. 3, p. 161-167, 2002.',
+    doi: '10.1056/NEJMoa020233',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/12124404/',
+  },
+
+  'giannitsis-hstnt-2010': {
+    key: 'giannitsis-hstnt-2010',
+    abnt: 'GIANNITSIS, E. et al. Analytical validation of a high-sensitivity cardiac troponin T assay. Clinical Chemistry, v. 56, n. 2, p. 254-261, 2010.',
+    doi: '10.1373/clinchem.2009.132654',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/19959623/',
+  },
+
+  'schnabel-tni-2012': {
+    key: 'schnabel-tni-2012',
+    abnt: 'SCHNABEL, R. B. et al. Defining a reference population to determine the 99th percentile of a contemporary sensitive cardiac troponin I assay. Clinica Chimica Acta, v. 413, n. 15-16, p. 1259-1262, 2012.',
+    doi: '10.1016/j.cca.2012.04.010',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/22560907/',
+  },
+
+  // ---------------------------------------------------------------------------
+  // Fontes internacionais — Marcadores metabólicos e inflamatórios
+  // ---------------------------------------------------------------------------
+  'schlesinger-adma-2017': {
+    key: 'schlesinger-adma-2017',
+    abnt: 'SCHLESINGER, S. et al. The issue of plasma asymmetric dimethylarginine reference range: a systematic review and meta-analysis. PLoS One, v. 12, n. 5, e0177493, 2017.',
+    doi: '10.1371/journal.pone.0177493',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/28494019/',
+  },
+
+  'schwedhelm-sdma-2011': {
+    key: 'schwedhelm-sdma-2011',
+    abnt: 'SCHWEDHELM, E. et al. Plasma symmetric dimethylarginine reference limits from the Framingham Offspring Cohort. Clinical Chemistry and Laboratory Medicine, v. 49, n. 11, p. 1907-1910, 2011.',
+    doi: '10.1515/CCLM.2011.679',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/21864208/',
+  },
+
+  'selhub-homocysteine-1999': {
+    key: 'selhub-homocysteine-1999',
+    abnt: 'SELHUB, J. et al. Serum total homocysteine concentrations in the third National Health and Nutrition Examination Survey (1991-1994). American Journal of Clinical Nutrition, v. 69, n. 5, p. 1015-1020, 1999.',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/10232643/',
+  },
+
+  'friedewald-1972': {
+    key: 'friedewald-1972',
+    abnt: 'FRIEDEWALD, W. T.; LEVY, R. I.; FREDRICKSON, D. S. Estimation of the concentration of low-density lipoprotein cholesterol in plasma, without use of the preparative ultracentrifuge. Clinical Chemistry, v. 18, n. 6, p. 499-502, 1972.',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/4337382/',
+  },
+
+  'castelli-ratio-1992': {
+    key: 'castelli-ratio-1992',
+    abnt: 'CASTELLI, W. P. et al. Lipids and risk of coronary heart disease: the Framingham Study. Annals of Epidemiology, v. 2, n. 1-2, p. 23-28, 1992.',
+    doi: '10.1016/1047-2797(92)90033-M',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/1342260/',
+  },
+
+  'contois-apoa1-1996': {
+    key: 'contois-apoa1-1996',
+    abnt: 'CONTOIS, J. H. et al. Reference intervals for plasma apolipoprotein A-1 determined with a standardized commercial immunoturbidimetric assay: results from the Framingham Offspring Study. Clinical Chemistry, v. 42, n. 4, p. 507-514, 1996.',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/8605666/',
+  },
+
+  'khetarpal-apociii-2016': {
+    key: 'khetarpal-apociii-2016',
+    abnt: 'KHETARPAL, S. A. et al. Why is apolipoprotein CIII emerging as a novel therapeutic target to reduce the burden of cardiovascular disease? Current Atherosclerosis Reports, v. 18, n. 10, p. 59, 2016.',
+    url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC5018018/',
+  },
+
+  'meuwese-mpo-2007': {
+    key: 'meuwese-mpo-2007',
+    abnt: 'MEUWESE, M. C. et al. Serum myeloperoxidase levels are associated with the future risk of coronary artery disease in apparently healthy individuals: the EPIC-Norfolk Prospective Population Study. Journal of the American College of Cardiology, v. 50, n. 2, p. 159-165, 2007.',
+    doi: '10.1016/j.jacc.2007.03.033',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/17616301/',
+  },
+
+  // ---------------------------------------------------------------------------
+  // Fontes internacionais — Subfrações lipídicas (Ion Mobility)
+  // ---------------------------------------------------------------------------
+  'wells-ddimer-2003': {
+    key: 'wells-ddimer-2003',
+    abnt: 'WELLS, P. S. et al. Evaluation of D-dimer in the diagnosis of suspected deep-vein thrombosis. New England Journal of Medicine, v. 349, p. 1227-1235, 2003.',
+    doi: '10.1056/NEJMoa023153',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/14507948/',
+  },
+
+  'mcleod-ck-2016': {
+    key: 'mcleod-ck-2016',
+    abnt: 'MCLEOD, J. F. et al. Creatine kinase in the U.S. population: impact of demographics, comorbidities, and body composition on the normal range. Medicine, v. 95, n. 33, e4344, 2016.',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/27537560/',
+  },
+
+  'caulfield-ionmobility-2008': {
+    key: 'caulfield-ionmobility-2008',
+    abnt: 'CAULFIELD, M. P. et al. Direct determination of lipoprotein particle sizes and concentrations by ion mobility analysis. Clinical Chemistry, v. 54, n. 8, p. 1307-1316, 2008.',
+    doi: '10.1373/clinchem.2007.100586',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/18515257/',
+  },
 };
 
 /**

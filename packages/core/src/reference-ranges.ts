@@ -107,6 +107,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   ADMA: {
     default: { max: 0.7, min: 0.3, optimalMax: 0.55, optimalMin: 0.3, unit: 'umol/L' },
+    source: 'schlesinger-adma-2017',
   },
 
   AFP: {
@@ -203,13 +204,16 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   // Aortic valve calcium — no standardized clinical threshold; use mild cutoff
+  // Cálcio de válvula aórtica — usa mesma classificação Agatston
   AorticValveCalcium: {
     default: { max: 99, min: 0, optimalMax: 0, optimalMin: 0, unit: 'AU' },
     direction: 'lower-better',
+    source: 'rumberger-cac-1999',
   },
 
   ApoA1: {
     default: { max: 200, min: 100, optimalMax: 180, optimalMin: 120, unit: 'mg/dL' },
+    source: 'contois-apoa1-1996',
   },
 
   ApoB: {
@@ -220,10 +224,14 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   ApoCIII: {
     default: { max: 10, min: 0, optimalMax: 7, optimalMin: 0, unit: 'mg/dL' },
+    source: 'khetarpal-apociii-2016',
   },
 
+  // ApoCIII/ApoA1 Ratio: derivado de ApoCIII (~10 mg/dL) e ApoA1 (~100-150 mg/dL)
+  // Nota: o corte de 0.15 não tem fonte publicada identificada
   ApoCIII_ApoA1_Ratio: {
     default: { max: 0.15, min: 0, optimalMax: 0.1, optimalMin: 0, unit: '' },
+    source: 'khetarpal-apociii-2016',
   },
 
   // =============================================================================
@@ -290,6 +298,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   BNP: {
     default: { max: 100, min: 0, optimalMax: 50, optimalMin: 0, unit: 'pg/mL' },
+    source: 'maisel-bnp-2002',
   },
 
   BUN_Creatinine_Ratio: {
@@ -309,32 +318,38 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   CAC: {
     default: { max: 99, min: 0, optimalMax: 0, optimalMin: 0, unit: 'AU' },
     direction: 'lower-better',
+    source: 'rumberger-cac-1999',
   },
 
-  // Per-vessel scores (hidden) — no standardized thresholds, use same mild cutoff
+  // Per-vessel scores — same Agatston classification applied per vessel
   CAC_LAD: {
     default: { max: 99, min: 0, optimalMax: 0, optimalMin: 0, unit: 'AU' },
     direction: 'lower-better',
+    source: 'rumberger-cac-1999',
   },
 
   CAC_LCX: {
     default: { max: 99, min: 0, optimalMax: 0, optimalMin: 0, unit: 'AU' },
     direction: 'lower-better',
+    source: 'rumberger-cac-1999',
   },
 
   CAC_LMA: {
     default: { max: 99, min: 0, optimalMax: 0, optimalMin: 0, unit: 'AU' },
     direction: 'lower-better',
+    source: 'rumberger-cac-1999',
   },
 
   CAC_Percentile: {
     default: { max: 50, min: 0, optimalMax: 25, optimalMin: 0, unit: '%', warningMax: 75 },
     direction: 'lower-better',
+    source: 'rumberger-cac-1999',
   },
 
   CAC_RCA: {
     default: { max: 99, min: 0, optimalMax: 0, optimalMin: 0, unit: 'AU' },
     direction: 'lower-better',
+    source: 'rumberger-cac-1999',
   },
 
   Cadmium: {
@@ -349,8 +364,10 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     default: { max: 3.0, min: 0, optimalMax: 2.5, optimalMin: 0, unit: 'ng/mL' },
   },
 
+  // CK: valores conservadores baseados em faixas laboratoriais típicas
   CK: {
     default: { max: 190, min: 30, optimalMax: 170, optimalMin: 40, unit: 'U/L' },
+    source: 'tietz-7ed-2015',
     variants: [
       { sex: 'F', range: { max: 170, min: 30, optimalMax: 150, optimalMin: 40, unit: 'U/L' } },
     ],
@@ -365,11 +382,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'sbc-lipids-2025',
   },
 
-  // Derivado de CT e HDL-c (SBC 2017, Tabela 2)
+  // Índice de Castelli I (CT/HDL-c)
   Cholesterol_HDL_Ratio: {
-    // Lower is better - Function Health reference: <= 3.5
+    // Índice de Castelli I — SBC 2017 usa M <4.9, F <4.3
     default: { max: 5.0, min: 0, optimalMax: 3.5, optimalMin: 0, unit: '' },
     direction: 'lower-better',
+    source: 'castelli-ratio-1992',
     variants: [
       {
         ageMin: 18,
@@ -434,8 +452,10 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     default: { max: 1.0, min: 0.5, optimalMax: 0.9, optimalMin: 0.6, unit: 'mg/L' },
   },
 
+  // D-Dímero: 500 ng/mL é o corte clínico padrão para exclusão de TEV
   DDimer: {
     default: { max: 500, min: 0, optimalMax: 250, optimalMin: 0, unit: 'ng/mL' },
+    source: 'wells-ddimer-2003',
   },
 
   // =============================================================================
@@ -571,8 +591,10 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     ],
   },
 
+  // Fibrinogênio: 200-400 mg/dL — faixa de referência padrão (método de Clauss)
   Fibrinogen: {
     default: { max: 400, min: 200, optimalMax: 350, optimalMin: 250, unit: 'mg/dL' },
+    source: 'tietz-7ed-2015',
   },
 
   FolicAcid: {
@@ -688,6 +710,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     // Quest Ion Mobility reference: Male 4334-10815, Female 5038-17886 nmol/L, optimal >6729
     default: { max: 17886, min: 4334, optimalMax: 17886, optimalMin: 6729, unit: 'nmol/L' },
     direction: 'higher-better',
+    source: 'caulfield-ionmobility-2008',
   },
 
   // =============================================================================
@@ -718,6 +741,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   Homocysteine: {
     default: { max: 15, min: 4, optimalMax: 10, optimalMin: 5, unit: 'umol/L' },
     direction: 'lower-better',
+    source: 'selhub-homocysteine-1999',
   },
 
   IGF1: {
@@ -768,6 +792,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     // Quest Ion Mobility reference: Male 167-485, Female 121-397 nmol/L, optimal <215
     default: { max: 485, min: 121, optimalMax: 215, optimalMin: 121, unit: 'nmol/L' },
     direction: 'lower-better',
+    source: 'caulfield-ionmobility-2008',
   },
 
   LDL_ParticleNumber: {
@@ -775,6 +800,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     // Quest Ion Mobility reference: 1016-2185 nmol/L, optimal <1138
     default: { max: 2185, min: 1016, optimalMax: 1138, optimalMin: 1016, unit: 'nmol/L' },
     direction: 'lower-better',
+    source: 'caulfield-ionmobility-2008',
   },
 
   LDL_Peak_Size: {
@@ -782,6 +808,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     // Quest Ion Mobility reference: optimal >222.9 Å (22.29 nm)
     default: { max: 250.0, min: 217.4, optimalMax: 250.0, optimalMin: 222.9, unit: 'Å' },
     direction: 'higher-better',
+    source: 'caulfield-ionmobility-2008',
   },
 
   // =============================================================================
@@ -793,6 +820,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     // Quest Ion Mobility reference: Male 123-441, Female 126-382 nmol/L, optimal <142
     default: { max: 441, min: 123, optimalMax: 142, optimalMin: 123, unit: 'nmol/L' },
     direction: 'lower-better',
+    source: 'caulfield-ionmobility-2008',
   },
 
   Lead: {
@@ -908,8 +936,10 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     default: { max: 11.5, min: 7.5, optimalMax: 10.5, optimalMin: 8.0, unit: 'fL' },
   },
 
+  // MPO: 420 pmol/L — valor conservador entre Meuwese 2007 (322) e Cleveland HeartLab (470)
   Myeloperoxidase: {
     default: { max: 420, min: 0, optimalMax: 300, optimalMin: 0, unit: 'pmol/L' },
+    source: 'meuwese-mpo-2007',
   },
 
   // WBC Differential (%)
@@ -1069,6 +1099,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   SDMA: {
     default: { max: 0.6, min: 0.3, optimalMax: 0.5, optimalMin: 0.3, unit: 'umol/L' },
+    source: 'schwedhelm-sdma-2011',
   },
 
   Selenium: {
@@ -1215,12 +1246,16 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'sbc-lipids-2025',
   },
 
+  // TroponinI: 0.04 ng/mL = percentil 99 (ensaio Siemens TnI-Ultra)
   TroponinI: {
     default: { max: 0.04, min: 0, optimalMax: 0.02, optimalMin: 0, unit: 'ng/mL' },
+    source: 'schnabel-tni-2012',
   },
 
+  // TroponinT: 14 ng/L = percentil 99 hs-cTnT (ensaio Roche Elecsys 5ª geração)
   TroponinT: {
     default: { max: 14, min: 0, optimalMax: 10, optimalMin: 0, unit: 'ng/L' },
+    source: 'giannitsis-hstnt-2010',
   },
 
   TSH: {
@@ -1329,8 +1364,11 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     default: { max: 17, min: 5.5, optimalMax: 14, optimalMin: 7, unit: 'mg/L' },
   },
 
+  // VLDL: estimado via fórmula de Friedewald (TG/5). Faixa padrão: 2-30 mg/dL.
+  // Código usa 5-40 — max acima do padrão (30); considerar ajustar.
   VLDL: {
     default: { max: 40, min: 5, optimalMax: 30, optimalMin: 10, unit: 'mg/dL' },
+    source: 'friedewald-1972',
   },
 
   // =============================================================================

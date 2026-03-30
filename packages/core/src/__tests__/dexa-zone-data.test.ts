@@ -1,12 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  AGE_BRACKETS,
-  BODY_FAT_ZONES,
-  T_SCORE_ZONES,
-  ZONE_DEFS,
-} from '../dexa-zone-data';
 import type { BodyFatZone, TScoreZone } from '../dexa-zone-data';
+import { AGE_BRACKETS, BODY_FAT_ZONES, T_SCORE_ZONES, ZONE_DEFS } from '../dexa-zone-data';
 
 describe('AGE_BRACKETS', () => {
   it('has 5 brackets', () => {
@@ -96,9 +91,7 @@ describe('BODY_FAT_ZONES', () => {
     expect(maleEssential.fatPctMax).toBeLessThan(femaleEssential.fatPctMax);
 
     // Compare Obeso zone upper bounds
-    const maleObese = maleZones.find(
-      (z) => z.ageMin === 18 && z.label === 'Obeso',
-    ) as BodyFatZone;
+    const maleObese = maleZones.find((z) => z.ageMin === 18 && z.label === 'Obeso') as BodyFatZone;
     const femaleObese = femaleZones.find(
       (z) => z.ageMin === 18 && z.label === 'Obeso',
     ) as BodyFatZone;

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { computeDerivedBiomarkers } from '../derived';
 import type { BiomarkerInput } from '../derived';
+import { computeDerivedBiomarkers } from '../derived';
 
 describe('computeDerivedBiomarkers', () => {
   describe('HOMA-IR', () => {

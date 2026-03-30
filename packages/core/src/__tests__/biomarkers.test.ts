@@ -1,24 +1,25 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import {
   BIOMARKER_DEFINITIONS,
   CAC_INDICATOR_CODES,
-  loincToCode,
   codeToLoinc,
-  isValidLoinc,
-  isValidCode,
-  normalizeCode,
-  getSexForCode,
-  getDefinitionsBySex,
+  findCodeByName,
+  generateCacFullReference,
+  generateLLMReference,
+  getAllCodes,
+  getAllDefinitions,
+  getAllLoincCodes,
   getDefinitionByCode,
   getDefinitionByLoinc,
-  getAllDefinitions,
-  getAllCodes,
-  getAllLoincCodes,
-  generateLLMReference,
-  generateCacFullReference,
+  getDefinitionsBySex,
+  getSexForCode,
   isCacDocument,
+  isValidCode,
+  isValidLoinc,
+  loincToCode,
+  normalizeCode,
   toBiomarkerTests,
-  findCodeByName,
 } from '../biomarkers';
 
 describe('BIOMARKER_DEFINITIONS', () => {

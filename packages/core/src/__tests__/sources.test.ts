@@ -1,6 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import { biomarkerRangeDefinitions } from '../reference-ranges';
-import { SOURCE_REGISTRY, extractSourceKey } from '../sources';
+import { extractSourceKey, SOURCE_REGISTRY } from '../sources';
 
 describe('SOURCE_REGISTRY', () => {
   it('deve conter ao menos uma fonte registrada', () => {

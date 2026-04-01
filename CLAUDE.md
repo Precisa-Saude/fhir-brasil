@@ -222,20 +222,20 @@ Ao criar planos de implementação durante conversas:
 
 ## Publicação no npm
 
-Os pacotes são publicados automaticamente via GitHub Actions ao criar uma tag `v*`.
+Os pacotes são publicados automaticamente via semantic-release no workflow único `ci.yml`.
 
-**Fluxo de release:**
+**Fluxo de CI/CD** (`.github/workflows/ci.yml`):
 
-1. Atualizar versões nos `package.json` de cada pacote alterado
-2. Commitar: `chore: bump versão para X.Y.Z`
-3. Criar tag: `git tag vX.Y.Z`
-4. Push com tag: `git push origin main --tags`
-5. O workflow `.github/workflows/publish.yml` roda build, testes e publica no npm
+1. `build-and-test` — build, lint, typecheck, test (roda em PRs e push para main)
+2. `release` — semantic-release determina versão (só após checks passarem, só em main)
+3. `publish` — publica no npm (só se release criou nova versão)
+4. `build-site` / `deploy-site` — deploy do site para Cloudflare Pages (se houve alterações)
 
 **Pacotes publicados:**
 
 - `@precisa-saude/fhir` — pacote core
 - `@precisa-saude/fhir-calculators` — calculadoras clínicas
 - `@precisa-saude/fhir-ocr-utils` — utilitários OCR
+- `@precisa-saude/fhir-rnds` — cliente RNDS
 
 **Regras de versionamento:** Seguir semver. Bump minor para novas funcionalidades, patch para correções, major para breaking changes.

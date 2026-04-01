@@ -1,3 +1,9 @@
+## [0.3.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.3.0...v0.3.1) (2026-04-01)
+
+### Bug Fixes
+
+* **ci:** unificar CI e publish em workflow único ([#6](https://github.com/Precisa-Saude/fhir-brasil/issues/6)) ([bb866e4](https://github.com/Precisa-Saude/fhir-brasil/commit/bb866e4e6948e95ed316da302e2bf6f1dedfe821))
+
 ## [0.3.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.2.0...v0.3.0) (2026-04-01)
 
 ### Features

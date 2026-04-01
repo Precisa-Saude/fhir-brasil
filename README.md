@@ -17,6 +17,7 @@ Brazilian FHIR R4 toolkit — biomarker definitions, reference ranges, and clini
 - **200+ faixas de referência** com variantes por sexo/idade, baseadas em diretrizes SBPC/ML, SBC e SBD
 - **Calculadoras clínicas** — PhenoAge (idade biológica), BrDMrisc (risco de diabetes), HOMA-IR, VLDL, IMC
 - **Utilitários OCR** — ancoragem de texto para extração de biomarcadores de PDFs de resultados de laboratório
+- **Cliente RNDS** — cliente HTTP para a Rede Nacional de Dados em Saúde (DATASUS), com autenticação mTLS e zero dependências externas
 
 ---
 
@@ -40,6 +41,9 @@ npm install @precisa-saude/fhir-calculators
 
 # Utilitários OCR
 npm install @precisa-saude/fhir-ocr-utils
+
+# Cliente RNDS (Rede Nacional de Dados em Saúde)
+npm install @precisa-saude/fhir-rnds
 ```
 
 ---
@@ -65,6 +69,31 @@ const range = getReferenceRange('Cholesterol');
 
 const rangeForUser = getReferenceRange('HDL', { sex: 'F', age: 45 });
 // → Faixa ajustada para mulher de 45 anos
+```
+
+### Consultar paciente na RNDS
+
+```typescript
+import { RNDSClient } from '@precisa-saude/fhir-rnds';
+
+const client = new RNDSClient({
+  certificate: './certificado.pfx',
+  certificatePassword: process.env.RNDS_CERT_PASSWORD!,
+  cnes: '1234567',
+  cns: '123456789012345',
+  environment: 'homologation',
+});
+
+// Buscar paciente por CPF
+const patient = await client.getPatientByCpf('12345678900');
+// → FHIRPatient | null
+
+// Buscar estabelecimento por CNES
+const org = await client.getOrganizationByCnes('1234567');
+// → FHIROrganization | null
+
+// Enviar bundle de resultados laboratoriais
+const result = await client.submitBundle(bundle);
 ```
 
 ### Calcular PhenoAge
@@ -96,6 +125,7 @@ const result = phenoage.calculatePhenoAge({
 | `@precisa-saude/fhir`             | Tipos FHIR R4, 200+ biomarcadores, faixas de referência, conversores | 0 runtime deps        |
 | `@precisa-saude/fhir-calculators` | PhenoAge, BrDMrisc, HOMA-IR, VLDL, IMC                               | `@precisa-saude/fhir` |
 | `@precisa-saude/fhir-ocr-utils`   | Ancoragem OCR para extração de biomarcadores                         | `@precisa-saude/fhir` |
+| `@precisa-saude/fhir-rnds`        | Cliente HTTP para a RNDS (DATASUS) — autenticação mTLS, FHIR R4      | `@precisa-saude/fhir` |
 
 ---
 

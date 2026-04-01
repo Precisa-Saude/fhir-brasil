@@ -134,6 +134,22 @@ importers:
         specifier: ^2.1.8
         version: 2.1.9(@types/node@20.19.37)(lightningcss@1.32.0)
 
+  packages/rnds:
+    dependencies:
+      '@precisa-saude/fhir':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      tsup:
+        specifier: ^8.3.5
+        version: 8.5.1(jiti@2.6.1)(postcss@8.5.8)(typescript@5.7.3)(yaml@2.8.3)
+      typescript:
+        specifier: ~5.7.3
+        version: 5.7.3
+      vitest:
+        specifier: ^2.1.8
+        version: 2.1.9(@types/node@20.19.37)(lightningcss@1.32.0)
+
   site:
     dependencies:
       clsx:

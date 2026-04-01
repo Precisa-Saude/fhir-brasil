@@ -41,7 +41,7 @@ pnpm turbo run test:coverage    # Rodar testes com cobertura
 - **ESM + CJS** via tsup
 - **Vitest** para testes, limiar de 80% de cobertura
 - **Zero dependências runtime** em `@precisa-saude/fhir`
-- Mensagens de commit: `tipo(escopo): descrição` — escopos: `core`, `calculators`, `ocr-utils`, `docs`, `ci`
+- Mensagens de commit: `tipo(escopo): descrição` — escopos: `core`, `calculators`, `ocr-utils`, `rnds`, `docs`, `ci`
 
 ## Adicionar Novas Dependências
 
@@ -138,7 +138,7 @@ Ao criar commits, NÃO inclua linhas de atribuição de IA. Mantenha as mensagen
 
 **Escopos de mensagem de commit**: Use apenas estes escopos válidos:
 
-- `core`, `calculators`, `ocr-utils` — Alterações específicas de pacote
+- `core`, `calculators`, `ocr-utils`, `rnds` — Alterações específicas de pacote
 - `docs` — Atualizações de documentação
 - `ci` — Alterações de CI/CD
 - `deps` — Atualizações de dependências

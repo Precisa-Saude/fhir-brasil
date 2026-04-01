@@ -1,3 +1,14 @@
+## [0.3.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.2.0...v0.3.0) (2026-04-01)
+
+### Features
+
+* **rnds:** adicionar cliente HTTP para a RNDS ([#5](https://github.com/Precisa-Saude/fhir-brasil/issues/5)) ([225bea8](https://github.com/Precisa-Saude/fhir-brasil/commit/225bea8db1b580e849104f4d6f280b2ca2632a61))
+
+### Documentation
+
+* atualizar contagem de biomarcadores para 200+ em toda a documentação ([0489872](https://github.com/Precisa-Saude/fhir-brasil/commit/04898725b673ddfa1127410dcd0ea85d00f4d493))
+* sincronizar fontes de referência e corrigir textos do README ([7a881f1](https://github.com/Precisa-Saude/fhir-brasil/commit/7a881f1906575e1ad892f9e22b4ee56767882b4a))
+
 ## [0.2.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.1.8...v0.2.0) (2026-03-30)
 
 ### Features

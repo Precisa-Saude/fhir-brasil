@@ -1,4 +1,4 @@
-import { Activity, FlaskConical, HeartPulse } from 'lucide-react';
+import { Activity, FlaskConical, HeartPulse, Network } from 'lucide-react';
 import type { ReactNode } from 'react';
 
 interface Feature {
@@ -26,6 +26,12 @@ const FEATURES: Feature[] = [
     description:
       'PhenoAge (idade biológica), BrDMrisc (risco de diabetes), HOMA-IR, VLDL e IMC. Conversão automática de unidades brasileiras.',
   },
+  {
+    icon: <Network className="h-6 w-6" />,
+    title: 'Cliente RNDS',
+    description:
+      'Integração com a Rede Nacional de Dados em Saúde (DATASUS). Autenticação mTLS com certificado ICP-Brasil, zero dependências externas.',
+  },
 ];
 
 const gridStyle = {
@@ -36,8 +42,9 @@ const gridStyle = {
 
 const COL_STARTS = [
   'md:[grid-column-start:2]',
-  'md:[grid-column-start:6]',
-  'md:[grid-column-start:10]',
+  'md:[grid-column-start:8]',
+  'md:[grid-column-start:2]',
+  'md:[grid-column-start:8]',
 ] as const;
 
 export function Features() {
@@ -47,7 +54,7 @@ export function Features() {
         {FEATURES.map((feature, i) => (
           <div
             key={feature.title}
-            className={`rounded-2xl border border-ps-violet-dark/8 bg-white/50 p-8 outline outline-1 outline-ps-violet-dark/5 backdrop-blur-sm transition-colors hover:border-ps-violet-dark/15 md:col-span-4 ${COL_STARTS[i]}`}
+            className={`rounded-2xl border border-ps-violet-dark/8 bg-white/50 p-8 outline outline-1 outline-ps-violet-dark/5 backdrop-blur-sm transition-colors hover:border-ps-violet-dark/15 md:col-span-6 ${COL_STARTS[i]}`}
           >
             <div className="mb-4 inline-flex rounded-full bg-ps-sand p-3 text-ps-violet-dark">
               {feature.icon}

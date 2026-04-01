@@ -74,6 +74,34 @@ console.log(result.phenoAge)        // 38.2
 console.log(result.ageDifference)   // -6.8 (anos mais jovem)`,
   },
   {
+    label: 'Cliente RNDS',
+    code: `import { RNDSClient } from '@precisa-saude/fhir-rnds'
+
+const client = new RNDSClient({
+  certificate: './certificado.pfx',
+  certificatePassword: process.env.RNDS_CERT_PASSWORD!,
+  cnes: '1234567',              // CNES do estabelecimento
+  cns: '123456789012345',       // CNS do profissional
+  environment: 'homologation',  // ou 'production'
+})
+
+// Buscar paciente por CPF
+const patient = await client.getPatientByCpf('12345678900')
+console.log(patient?.name)
+// [{ family: 'Silva', given: ['João'] }]
+
+// Buscar estabelecimento por CNES
+const org = await client.getOrganizationByCnes('1234567')
+console.log(org?.name)
+// 'Hospital São Paulo'
+
+// Enviar bundle de resultados laboratoriais
+import { labResultToFHIRBundle } from '@precisa-saude/fhir'
+
+const bundle = labResultToFHIRBundle(report, observations, profile)
+const result = await client.submitBundle(bundle)`,
+  },
+  {
     label: 'Ancoragem OCR',
     code: `import { findBiomarkersInText, getMatchedCodes } from '@precisa-saude/fhir-ocr-utils'
 

@@ -23,6 +23,11 @@ const PACKAGES: PackageInfo[] = [
     description: 'Ancoragem OCR anti-alucinação para extração de biomarcadores',
     install: 'npm i @precisa-saude/fhir-ocr-utils',
   },
+  {
+    name: '@precisa-saude/fhir-rnds',
+    description: 'Cliente HTTP para a RNDS (DATASUS) — autenticação mTLS, zero deps externas',
+    install: 'npm i @precisa-saude/fhir-rnds',
+  },
 ];
 
 function CopyButton({ text }: { text: string }) {
@@ -65,7 +70,7 @@ export function Packages() {
             Pacotes
           </h2>
           <p className="mt-3 font-pausa text-lg text-ps-violet-dark/60">
-            Três pacotes modulares — use só o que precisar.
+            Quatro pacotes modulares — use só o que precisar.
           </p>
 
           <div className="mt-10 space-y-4">

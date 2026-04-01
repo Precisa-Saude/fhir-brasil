@@ -26,6 +26,7 @@ module.exports = {
         'core',
         'calculators',
         'ocr-utils',
+        'rnds',
         'docs',
         'ci',
         'deps',

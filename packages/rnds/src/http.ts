@@ -40,7 +40,7 @@ export function httpsRequestWithCert(
         passphrase: certOptions.passphrase,
         path: parsedUrl.pathname + parsedUrl.search,
         pfx: certOptions.pfx,
-        port: parsedUrl.port || 443,
+        port: Number(parsedUrl.port) || 443,
         timeout: options?.timeout ?? 30_000,
       },
       (res) => {
@@ -48,6 +48,10 @@ export function httpsRequestWithCert(
 
         res.on('data', (chunk: Buffer) => {
           chunks.push(chunk);
+        });
+
+        res.on('error', (err) => {
+          reject(new Error(`Erro na resposta HTTPS: ${err.message}`));
         });
 
         res.on('end', () => {

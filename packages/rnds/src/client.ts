@@ -44,19 +44,19 @@ export class RNDSClient {
   }
 
   async getPatientByCpf(cpf: string): Promise<FHIRPatient | null> {
-    return this.get<FHIRPatient>(`/Patient?identifier=${RNDS_NS.cpf}|${cpf}`);
+    return this.get<FHIRPatient>(`/Patient?identifier=${RNDS_NS.cpf}|${encodeURIComponent(cpf)}`);
   }
 
   async getPatientByCns(cns: string): Promise<FHIRPatient | null> {
-    return this.get<FHIRPatient>(`/Patient/${cns}`);
+    return this.get<FHIRPatient>(`/Patient/${encodeURIComponent(cns)}`);
   }
 
   async getOrganizationByCnes(cnes: string): Promise<FHIROrganization | null> {
-    return this.get<FHIROrganization>(`/Organization/${cnes}`);
+    return this.get<FHIROrganization>(`/Organization/${encodeURIComponent(cnes)}`);
   }
 
   async getPractitionerByCns(cns: string): Promise<FHIRPractitioner | null> {
-    return this.get<FHIRPractitioner>(`/Practitioner/${cns}`);
+    return this.get<FHIRPractitioner>(`/Practitioner/${encodeURIComponent(cns)}`);
   }
 
   async submitBundle(bundle: FHIRBundle): Promise<FHIRBundle> {

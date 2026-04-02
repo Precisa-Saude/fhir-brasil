@@ -58,7 +58,7 @@ jobs:
       pr_number: ${{ github.event.pull_request.number }}
     secrets: inherit
 
-  # ── Release (main only, after checks pass) ─────────────────
+  # ── Release (main only, after checks pass, skip site-only) ──
   release:
     name: Release
     needs: build-and-test
@@ -68,27 +68,48 @@ jobs:
       released: ${{ steps.semantic.outputs.released }}
       version: ${{ steps.semantic.outputs.version }}
     steps:
+      - name: Check for package changes
+        id: changes
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: commit } = await github.rest.repos.getCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.sha,
+            });
+            const packageChanged = commit.files?.some(
+              f => !f.filename.startsWith('site/')
+            );
+            core.setOutput('packages_changed', packageChanged ? 'true' : 'false');
+
       - uses: actions/checkout@v6
+        if: steps.changes.outputs.packages_changed == 'true'
         with:
           fetch-depth: 0
           token: ${{ secrets.PAT_TOKEN }}
 
       - uses: pnpm/action-setup@v4
+        if: steps.changes.outputs.packages_changed == 'true'
 
       - uses: actions/setup-node@v6
+        if: steps.changes.outputs.packages_changed == 'true'
         with:
           node-version: 22
           cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
+        if: steps.changes.outputs.packages_changed == 'true'
         run: pnpm install --frozen-lockfile
 
       - name: Build
+        if: steps.changes.outputs.packages_changed == 'true'
         run: pnpm turbo run build
 
       - name: Run semantic-release
         id: semantic
+        if: steps.changes.outputs.packages_changed == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
           HUSKY: 0
@@ -102,6 +123,11 @@ jobs:
           else
             echo "released=false" >> $GITHUB_OUTPUT
           fi
+
+      - name: Skip release (site-only changes)
+        id: skip
+        if: steps.changes.outputs.packages_changed != 'true'
+        run: echo "Somente alterações no site detectadas — release ignorado"
 
   # ── Publish to npm (only after release) ────────────────────
   publish:
@@ -128,29 +154,30 @@ jobs:
       - name: Build
         run: pnpm turbo run build
 
-      - name: Publish @precisa-saude/fhir
-        working-directory: packages/core
-        run: npm publish --provenance --access public
+      - name: Publish packages
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          publish_if_needed() {
+            local dir="$1"
+            local pkg_name pkg_version
+            pkg_name=$(node -p "require('./$dir/package.json').name")
+            pkg_version=$(node -p "require('./$dir/package.json').version")
 
-      - name: Publish @precisa-saude/fhir-calculators
-        working-directory: packages/calculators
-        run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+            if npm view "$pkg_name@$pkg_version" version 2>/dev/null; then
+              echo "Skipping $pkg_name@$pkg_version (already published)"
+            else
+              echo "Publishing $pkg_name@$pkg_version..."
+              cd "$dir"
+              npm publish --provenance --access public
+              cd "$GITHUB_WORKSPACE"
+            fi
+          }
 
-      - name: Publish @precisa-saude/fhir-ocr-utils
-        working-directory: packages/ocr-utils
-        run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Publish @precisa-saude/fhir-rnds
-        working-directory: packages/rnds
-        run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          publish_if_needed packages/core
+          publish_if_needed packages/calculators
+          publish_if_needed packages/ocr-utils
+          publish_if_needed packages/rnds
 
   # ── Deploy site (main only, after checks pass) ─────────────
   build-site:

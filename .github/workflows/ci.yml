@@ -79,7 +79,7 @@ jobs:
               ref: context.sha,
             });
             const packageChanged = commit.files?.some(
-              f => !f.filename.startsWith('site/')
+              f => f.filename.startsWith('packages/') || f.filename === 'package.json'
             );
             core.setOutput('packages_changed', packageChanged ? 'true' : 'false');
 

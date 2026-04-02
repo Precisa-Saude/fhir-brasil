@@ -1,3 +1,9 @@
+## [0.4.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.4.0...v0.4.1) (2026-04-02)
+
+### Bug Fixes
+
+* **ci:** ignorar release em alterações apenas do site e tolerar versões já publicadas ([01f589d](https://github.com/Precisa-Saude/fhir-brasil/commit/01f589da249295b1e187cbc2339403e12ef14d2b))
+
 ## [0.4.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.3.1...v0.4.0) (2026-04-02)
 
 ### Features

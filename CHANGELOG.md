@@ -1,3 +1,9 @@
+## [0.4.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.3.1...v0.4.0) (2026-04-02)
+
+### Features
+
+* **docs:** adicionar links externos para LOINC, UCUM, SBPC/ML e RNDS nos cards de features ([7dabe4a](https://github.com/Precisa-Saude/fhir-brasil/commit/7dabe4ae7f9fa57a1019add73d57eb9496251791))
+
 ## [0.3.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.3.0...v0.3.1) (2026-04-01)
 
 ### Bug Fixes

@@ -29,7 +29,7 @@ export async function range(args: string[], json: boolean): Promise<void> {
   if (values.sex) {
     const raw = (values.sex as string).toUpperCase();
     const sex = raw === 'MALE' ? 'M' : raw === 'FEMALE' ? 'F' : raw;
-    if (sex !== 'M' && sex !== 'F') exitWithError('--sex deve ser M, F, male ou female');
+    if (sex !== 'M' && sex !== 'F') exitWithError('--sex deve ser M ou F');
     ctx.biologicalSex = sex;
   }
   if (values.age) {

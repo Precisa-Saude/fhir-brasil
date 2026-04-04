@@ -1,8 +1,11 @@
 import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
+import path from 'path';
 import { defineConfig } from 'tsup';
 
-const { version } = JSON.parse(readFileSync('package.json', 'utf-8'));
+const pkgPath = path.resolve(path.dirname(fileURLToPath(import.meta.url)), 'package.json');
+const { version } = JSON.parse(readFileSync(pkgPath, 'utf-8'));
 
 export default defineConfig([
   {

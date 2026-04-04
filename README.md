@@ -230,6 +230,37 @@ const result = phenoage.calculatePhenoAge({
 
 ---
 
+## CLI
+
+Os pacotes core e ocr-utils incluem ferramentas de linha de comando — zero dependências externas.
+
+### `fhir-bio` — biomarcadores e conversão FHIR
+
+```bash
+npx @precisa-saude/fhir lookup Hemoglobin        # Buscar biomarcador por código
+npx @precisa-saude/fhir lookup-loinc 718-7        # Buscar por código LOINC
+npx @precisa-saude/fhir list                      # Listar todos os biomarcadores
+npx @precisa-saude/fhir categories                # Listar por categoria
+npx @precisa-saude/fhir range Glucose --sex F     # Faixa de referência
+npx @precisa-saude/fhir units Creatinine          # Informações de unidade
+npx @precisa-saude/fhir convert resultado.json    # Converter JSON para FHIR Bundle
+npx @precisa-saude/fhir validate bundle.json      # Validar recurso FHIR
+npx @precisa-saude/fhir import bundle.json        # Importar Bundle e extrair observações
+npx @precisa-saude/fhir loinc-map                 # Tabela de mapeamento LOINC ↔ código
+```
+
+### `fhir-ocr` — extração de biomarcadores de texto OCR
+
+```bash
+npx @precisa-saude/fhir-ocr-utils find resultado.txt     # Encontrar biomarcadores em texto
+npx @precisa-saude/fhir-ocr-utils codes resultado.txt    # Extrair códigos encontrados
+cat resultado.txt | npx @precisa-saude/fhir-ocr-utils find   # Lê de stdin
+```
+
+Todas as ferramentas suportam `--json` para saída estruturada e `--help` para detalhes.
+
+---
+
 ## Pacotes
 
 | Pacote                            | Descrição                                                            | Deps                  |

@@ -1,3 +1,17 @@
+## [0.5.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.4.1...v0.5.0) (2026-04-04)
+
+### Features
+
+* **core,ocr-utils:** adicionar CLI para fhir-bio e fhir-ocr ([#8](https://github.com/Precisa-Saude/fhir-brasil/issues/8)) ([6a92303](https://github.com/Precisa-Saude/fhir-brasil/commit/6a923035087af753d7924b2b330859afc8380df2))
+
+### Documentation
+
+* adicionar narrativa de problema, ecossistema e roadmap ao README ([#7](https://github.com/Precisa-Saude/fhir-brasil/issues/7)) ([74b758f](https://github.com/Precisa-Saude/fhir-brasil/commit/74b758f378f613def5e7f10835db6ad70a54504d))
+
+### CI/CD
+
+* restringir detecção de alterações no release para packages/ ([bc58967](https://github.com/Precisa-Saude/fhir-brasil/commit/bc5896700b16a01e8226c3fc0677574cc351a672))
+
 ## [0.4.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.4.0...v0.4.1) (2026-04-02)
 
 ### Bug Fixes

@@ -1,18 +1,30 @@
 import { defineConfig } from 'tsup';
 
-export default defineConfig({
-  entry: {
-    index: 'src/index.ts',
-    biomarkers: 'src/biomarkers.ts',
-    'reference-ranges': 'src/reference-ranges.ts',
-    converter: 'src/converter.ts',
-    importer: 'src/importer.ts',
-    units: 'src/units.ts',
-    validators: 'src/validators.ts',
+export default defineConfig([
+  {
+    clean: true,
+    dts: true,
+    entry: {
+      biomarkers: 'src/biomarkers.ts',
+      'cli-utils': 'src/cli-utils.ts',
+      converter: 'src/converter.ts',
+      importer: 'src/importer.ts',
+      index: 'src/index.ts',
+      'reference-ranges': 'src/reference-ranges.ts',
+      units: 'src/units.ts',
+      validators: 'src/validators.ts',
+    },
+    format: ['esm', 'cjs'],
+    sourcemap: true,
+    splitting: true,
   },
-  format: ['esm', 'cjs'],
-  dts: true,
-  splitting: true,
-  clean: true,
-  sourcemap: true,
-});
+  {
+    banner: { js: '#!/usr/bin/env node' },
+    clean: false,
+    dts: false,
+    entry: { cli: 'src/cli/index.ts' },
+    format: ['esm'],
+    sourcemap: false,
+    splitting: false,
+  },
+]);

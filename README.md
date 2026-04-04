@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/precisa-saude/fhir-brasil/actions/workflows/ci.yml/badge.svg)](https://github.com/precisa-saude/fhir-brasil/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Website](https://img.shields.io/badge/website-fhir--brasil.dev.br-blueviolet)](https://fhir-brasil.dev.br)
 
 Toolkit FHIR R4 para o ecossistema de saúde brasileiro — definições de biomarcadores, faixas de referência e calculadoras clínicas.
 
@@ -9,9 +10,96 @@ Brazilian FHIR R4 toolkit — biomarker definitions, reference ranges, and clini
 
 ---
 
+## O problema
+
+O sistema de saúde brasileiro opera como duas redes paralelas com troca mínima de dados:
+
+- **Laboratórios privados** (Weinmann, Fleury, etc.) entregam resultados como PDFs — sem formato padrão, sem codificação LOINC
+- **Laboratórios do SUS** enviam resultados por sistemas internos, cada vez mais conectados à RNDS — mas a adesão para exames de rotina ainda não é obrigatória
+- **Nenhum sistema enxerga o outro** — o médico da rede privada não tem acesso aos resultados do SUS, e vice-versa
+
+**Resultado: exames duplicados.** O mesmo hemograma é solicitado pelo endocrinologista (privado) e pela UBS (SUS) em questão de semanas, porque não existe uma visão longitudinal do paciente.
+
+Isso custa dinheiro (operadoras e SUS pagam), desperdiça capacidade laboratorial e prejudica o paciente.
+
+## The problem
+
+Brazil's healthcare system operates as two parallel networks with minimal data exchange:
+
+- **Private labs** deliver results as PDFs — no standard format, no LOINC coding
+- **Public labs (SUS)** increasingly report to RNDS — but routine lab results are not yet mandatory for private labs
+- **Neither system sees the other** — private doctors can't access SUS results, and vice versa
+
+**Result: duplicated exams.** The same blood panel gets ordered by a private specialist and a public health unit within weeks, because there's no longitudinal patient view.
+
+This wastes money, lab capacity, and harms patients.
+
+### Hoje: dados fragmentados
+
+```
+┌──────────────────────┐         ┌──────────────────────┐
+│     Rede Privada     │         │     Rede Pública     │
+│                      │         │                      │
+│  Lab privado         │         │  UBS / Lab SUS       │
+│  (Weinmann, Fleury)  │         │  (rede pública)      │
+│         │            │         │         │            │
+│         ▼            │         │         ▼            │
+│  PDF no WhatsApp     │         │  Sistema interno     │
+│  sem padrão          │         │  dados presos na UBS │
+│  sem LOINC           │         │                      │
+│         │            │         │         │            │
+│         ▼            │         │         ▼            │
+│  Médico pede exame   │         │  UBS pede exame      │
+│  sem histórico ◄─────┼── ✕ ──►┼─ sem histórico       │
+│  do SUS              │         │  privado             │
+└──────────┬───────────┘         └──────────┬───────────┘
+           │                                │
+           └───────────┐  ┌─────────────────┘
+                       ▼  ▼
+              ┌──────────────────┐
+              │ Exames duplicados│
+              │ custo desperdiçado│
+              └──────────────────┘
+```
+
+### Com fhir-brasil: interoperabilidade via FHIR R4
+
+```
+┌───────────────┐  ┌───────────────┐  ┌───────────────┐
+│  Lab privado  │  │     RNDS      │  │ UBS / Lab SUS │
+│  PDF upload   │  │  FHIR R4      │  │ via RNDS ou   │
+│               │  │  nativo       │  │ PDF           │
+└───────┬───────┘  └───────┬───────┘  └───────┬───────┘
+        │     OCR + parser │  FHIR import     │
+        └──────────────────┼──────────────────┘
+                           ▼
+          ┌────────────────────────────────┐
+          │    fhir-brasil (open source)   │
+          │                                │
+          │  200+ biomarcadores LOINC      │
+          │  Conversor FHIR R4             │
+          │  Faixas SBPC/ML                │
+          │  Calculadoras clínicas         │
+          └───────────────┬────────────────┘
+                          ▼
+          ┌────────────────────────────────┐
+          │  Aplicação                     │
+          │  (proprietário ou terceiros)   │
+          └───────┬────────────────┬───────┘
+                  ▼                ▼
+      ┌─────────────────┐ ┌────────────────────┐
+      │ Visão            │ │ Deduplicação       │
+      │ longitudinal     │ │ mesmo LOINC =      │
+      │ todas as fontes  │ │ mesmo exame        │
+      │ unificadas       │ │                    │
+      └─────────────────┘ └────────────────────┘
+```
+
+---
+
 ## O que é
 
-**fhir-brasil** fornece uma base compartilhada para healthtechs brasileiras trabalharem com dados de saúde no padrão FHIR R4:
+**fhir-brasil** é a camada de infraestrutura que resolve esse problema. Fornece uma base compartilhada para que healthtechs, instituições de pesquisa e desenvolvedores trabalhem com dados de saúde brasileiros no padrão FHIR R4:
 
 - **200+ biomarcadores** com códigos LOINC, nomes em português/inglês, categorias e unidades
 - **200+ faixas de referência** com variantes por sexo/idade, baseadas em diretrizes SBPC/ML, SBC e SBD
@@ -21,12 +109,36 @@ Brazilian FHIR R4 toolkit — biomarker definitions, reference ranges, and clini
 
 ---
 
+## Ecossistema
+
+O ecossistema de saúde brasileiro envolve múltiplos atores, cada um com seus próprios sistemas e necessidades de dados. O fhir-brasil fornece a base para que cada visão possa ser construída sobre o mesmo padrão:
+
+| Ator                           | Problema de dados                                        | Papel do fhir-brasil                             |
+| ------------------------------ | -------------------------------------------------------- | ------------------------------------------------ |
+| **Paciente**                   | Resultados espalhados entre PDFs, WhatsApp, portais      | Base para aplicações de consumo                  |
+| **Médico / Clínica**           | Sem visão completa do histórico laboratorial entre redes | Camada de normalização entre fontes              |
+| **Laboratório**                | Formatos proprietários, LOINC inconsistente              | Vocabulário compartilhado com 200+ biomarcadores |
+| **Operadora**                  | Pagando por exames duplicados entre redes                | Infraestrutura para analytics de deduplicação    |
+| **Universidade / Pesquisador** | Dados fragmentados em formatos proprietários             | Pacotes open-source para pesquisa em saúde       |
+| **DATASUS / Governo**          | Adoção da RNDS ainda lenta                               | Ferramentas comunitárias que aceleram a adoção   |
+
+---
+
 ## Por que código aberto
 
 1. **Transparência** — Definições de biomarcadores e faixas de referência devem ser auditáveis
 2. **Confiabilidade** — Códigos LOINC e citações SBPC/ML verificáveis por qualquer pessoa
 3. **Colaboração** — Healthtechs brasileiras contribuem e se beneficiam de uma base comum
 4. **Impacto social** — Dados de saúde padronizados ajudam a reduzir desigualdades no acesso
+
+---
+
+## O que o fhir-brasil não é
+
+- **Não é um prontuário eletrônico (EHR)** — é uma camada de dados, não um sistema clínico
+- **Não é uma ferramenta de diagnóstico** — todos os outputs são informativos
+- **Não substitui a RNDS** — complementa a plataforma nacional de interoperabilidade do DATASUS
+- **Não é um produto de consumo** — é infraestrutura para que outros possam construir produtos
 
 ---
 
@@ -152,6 +264,18 @@ const result = phenoage.calculatePhenoAge({
 - **LOINC** — Códigos LOINC verificados para interoperabilidade
 - **SBPC/ML** — Faixas de referência baseadas nas diretrizes brasileiras
 - **UCUM** — Unidades no formato Unified Code for Units of Measure
+
+---
+
+## Roadmap
+
+- [x] `@precisa-saude/fhir` — Core: tipos FHIR R4, biomarcadores, faixas de referência, conversores
+- [x] `@precisa-saude/fhir-calculators` — Calculadoras: PhenoAge, BrDMrisc, derivados
+- [x] `@precisa-saude/fhir-ocr-utils` — Utilitários OCR: ancoragem de biomarcadores em texto
+- [x] `@precisa-saude/fhir-rnds` — Cliente RNDS: autenticação mTLS, submissão de bundles
+- [ ] Integração com perfis RNDS (REL, RAC, SA, RIA)
+- [ ] Dados alimentares brasileiros (TBCA)
+- [ ] Módulo de nutrigenômica
 
 ---
 

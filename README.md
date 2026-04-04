@@ -6,8 +6,6 @@
 
 Toolkit FHIR R4 para o ecossistema de saúde brasileiro — definições de biomarcadores, faixas de referência e calculadoras clínicas.
 
-Brazilian FHIR R4 toolkit — biomarker definitions, reference ranges, and clinical calculators.
-
 ---
 
 ## O problema
@@ -21,18 +19,6 @@ O sistema de saúde brasileiro opera como duas redes paralelas com troca mínima
 **Resultado: exames duplicados.** O mesmo hemograma é solicitado pelo endocrinologista (privado) e pela UBS (SUS) em questão de semanas, porque não existe uma visão longitudinal do paciente.
 
 Isso custa dinheiro (operadoras e SUS pagam), desperdiça capacidade laboratorial e prejudica o paciente.
-
-## The problem
-
-Brazil's healthcare system operates as two parallel networks with minimal data exchange:
-
-- **Private labs** deliver results as PDFs — no standard format, no LOINC coding
-- **Public labs (SUS)** increasingly report to RNDS — but routine lab results are not yet mandatory for private labs
-- **Neither system sees the other** — private doctors can't access SUS results, and vice versa
-
-**Result: duplicated exams.** The same blood panel gets ordered by a private specialist and a public health unit within weeks, because there's no longitudinal patient view.
-
-This wastes money, lab capacity, and harms patients.
 
 ### Hoje: dados fragmentados
 
@@ -232,32 +218,105 @@ const result = phenoage.calculatePhenoAge({
 
 ## CLI
 
-Os pacotes core e ocr-utils incluem ferramentas de linha de comando — zero dependências externas.
+Os pacotes core e ocr-utils incluem ferramentas de linha de comando — zero dependências externas. Todas suportam `--json` para saída estruturada e `--help` para detalhes.
 
 ### `fhir-bio` — biomarcadores e conversão FHIR
 
+Buscar biomarcador por código:
+
 ```bash
-npx @precisa-saude/fhir lookup Hemoglobin        # Buscar biomarcador por código
-npx @precisa-saude/fhir lookup-loinc 718-7        # Buscar por código LOINC
-npx @precisa-saude/fhir list                      # Listar todos os biomarcadores
-npx @precisa-saude/fhir categories                # Listar por categoria
-npx @precisa-saude/fhir range Glucose --sex F     # Faixa de referência
-npx @precisa-saude/fhir units Creatinine          # Informações de unidade
-npx @precisa-saude/fhir convert resultado.json    # Converter JSON para FHIR Bundle
-npx @precisa-saude/fhir validate bundle.json      # Validar recurso FHIR
-npx @precisa-saude/fhir import bundle.json        # Importar Bundle e extrair observações
-npx @precisa-saude/fhir loinc-map                 # Tabela de mapeamento LOINC ↔ código
+fhir-bio lookup ApoB --json
+```
+
+```json
+{
+  "category": "coracao",
+  "code": "ApoB",
+  "loinc": "1884-6",
+  "names": {
+    "en": ["Apolipoprotein B", "ApoB"],
+    "pt": ["Apolipoproteína B", "ApoB"]
+  },
+  "unit": "mg/dL"
+}
+```
+
+Faixa de referência:
+
+```bash
+fhir-bio range Glucose --sex F --json
+```
+
+```json
+{
+  "code": "Glucose",
+  "context": {},
+  "direction": "range",
+  "range": {
+    "max": 100,
+    "min": 70,
+    "optimalMax": 90,
+    "optimalMin": 70,
+    "unit": "mg/dL"
+  }
+}
+```
+
+Informações de unidade:
+
+```bash
+fhir-bio units Creatinine --json
+```
+
+```json
+{
+  "canonicalUnit": "mg/dL",
+  "code": "Creatinine",
+  "defaultUnit": "mg/dL",
+  "ucum": "mg/dL"
+}
+```
+
+Outros comandos:
+
+```bash
+fhir-bio lookup-loinc 718-7         # Buscar por código LOINC
+fhir-bio list                       # Listar todos os biomarcadores
+fhir-bio categories                 # Listar por categoria
+fhir-bio convert resultado.json     # Converter JSON para FHIR Bundle
+fhir-bio validate bundle.json       # Validar recurso FHIR
+fhir-bio import bundle.json         # Importar Bundle e extrair observações
+fhir-bio loinc-map                  # Tabela de mapeamento LOINC ↔ código
 ```
 
 ### `fhir-ocr` — extração de biomarcadores de texto OCR
 
+Encontrar biomarcadores em texto (aceita arquivo ou stdin):
+
 ```bash
-npx @precisa-saude/fhir-ocr-utils find resultado.txt     # Encontrar biomarcadores em texto
-npx @precisa-saude/fhir-ocr-utils codes resultado.txt    # Extrair códigos encontrados
-cat resultado.txt | npx @precisa-saude/fhir-ocr-utils find   # Lê de stdin
+echo "Hemoglobina 14.5 g/dL Glicose 99 mg/dL TSH 2.5 mUI/L" | fhir-ocr find --json
 ```
 
-Todas as ferramentas suportam `--json` para saída estruturada e `--help` para detalhes.
+```json
+{
+  "matches": [
+    { "code": "TSH", "confidence": 1, "loinc": "3016-3", "matchedName": "TSH" },
+    { "code": "Glucose", "confidence": 1, "loinc": "2345-7", "matchedName": "Glicose" },
+    { "code": "Hgb", "confidence": 1, "loinc": "718-7", "matchedName": "Hemoglobin" }
+  ],
+  "stats": { "matchedCount": 3, "scanTimeMs": 1, "totalPatterns": 183 }
+}
+```
+
+Extrair apenas os códigos:
+
+```bash
+echo "Hemoglobina 14.5 g/dL Glicose 99 mg/dL" | fhir-ocr codes --json
+```
+
+```json
+["Glucose", "Hgb"]
+```
 
 ---
 

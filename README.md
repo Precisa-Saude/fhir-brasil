@@ -34,9 +34,66 @@ Brazil's healthcare system operates as two parallel networks with minimal data e
 
 This wastes money, lab capacity, and harms patients.
 
-![Hoje: dados fragmentados](docs/diagrams/before-fragmented-flow.svg)
+### Hoje: dados fragmentados
 
-![Com fhir-brasil: interoperabilidade via FHIR R4](docs/diagrams/after-interop-flow.svg)
+```
+┌──────────────────────┐         ┌──────────────────────┐
+│     Rede Privada     │         │     Rede Pública     │
+│                      │         │                      │
+│  Lab privado         │         │  UBS / Lab SUS       │
+│  (Weinmann, Fleury)  │         │  (rede pública)      │
+│         │            │         │         │            │
+│         ▼            │         │         ▼            │
+│  PDF no WhatsApp     │         │  Sistema interno     │
+│  sem padrão          │         │  dados presos na UBS │
+│  sem LOINC           │         │                      │
+│         │            │         │         │            │
+│         ▼            │         │         ▼            │
+│  Médico pede exame   │         │  UBS pede exame      │
+│  sem histórico ◄─────┼── ✕ ──►┼─ sem histórico       │
+│  do SUS              │         │  privado             │
+└──────────┬───────────┘         └──────────┬───────────┘
+           │                                │
+           └───────────┐  ┌─────────────────┘
+                       ▼  ▼
+              ┌──────────────────┐
+              │ Exames duplicados│
+              │ custo desperdiçado│
+              └──────────────────┘
+```
+
+### Com fhir-brasil: interoperabilidade via FHIR R4
+
+```
+┌───────────────┐  ┌───────────────┐  ┌───────────────┐
+│  Lab privado  │  │     RNDS      │  │ UBS / Lab SUS │
+│  PDF upload   │  │  FHIR R4      │  │ via RNDS ou   │
+│               │  │  nativo       │  │ PDF           │
+└───────┬───────┘  └───────┬───────┘  └───────┬───────┘
+        │     OCR + parser │  FHIR import     │
+        └──────────────────┼──────────────────┘
+                           ▼
+          ┌────────────────────────────────┐
+          │    fhir-brasil (open source)   │
+          │                                │
+          │  200+ biomarcadores LOINC      │
+          │  Conversor FHIR R4             │
+          │  Faixas SBPC/ML                │
+          │  Calculadoras clínicas         │
+          └───────────────┬────────────────┘
+                          ▼
+          ┌────────────────────────────────┐
+          │  Aplicação                     │
+          │  (proprietário ou terceiros)   │
+          └───────┬────────────────┬───────┘
+                  ▼                ▼
+      ┌─────────────────┐ ┌────────────────────┐
+      │ Visão            │ │ Deduplicação       │
+      │ longitudinal     │ │ mesmo LOINC =      │
+      │ todas as fontes  │ │ mesmo exame        │
+      │ unificadas       │ │                    │
+      └─────────────────┘ └────────────────────┘
+```
 
 ---
 

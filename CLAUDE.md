@@ -239,3 +239,77 @@ Os pacotes são publicados automaticamente via semantic-release no workflow úni
 - `@precisa-saude/fhir-rnds` — cliente RNDS
 
 **Regras de versionamento:** Seguir semver. Bump minor para novas funcionalidades, patch para correções, major para breaking changes.
+
+## Respondendo a Reviews de PR do Claude
+
+Após criar um PR, o Claude (reviewer automatizado) postará comentários inline. Quando solicitado a verificar ou responder:
+
+**Verificar comentários:**
+
+```bash
+# Ver resumo e comentários do PR
+gh pr view <PR_NUMBER> --comments
+
+# Obter comentários inline detalhados com IDs
+gh api repos/Precisa-Saude/fhir-brasil/pulls/<PR_NUMBER>/comments \
+  --jq '.[] | "\(.id) | \(.path):\(.line // .original_line) | \(.body | split("\n")[0])"'
+```
+
+**Responder a cada comentário individualmente:**
+
+```bash
+# Responder a um comentário específico
+gh api repos/Precisa-Saude/fhir-brasil/pulls/<PR_NUMBER>/comments/<COMMENT_ID>/replies \
+  -f body="Corrigido em <commit_hash> — <explicação>"
+```
+
+**Resolver o thread após responder:**
+
+```bash
+# Obter IDs dos threads
+gh api graphql -f query='
+query {
+  repository(owner: "Precisa-Saude", name: "fhir-brasil") {
+    pullRequest(number: <PR_NUMBER>) {
+      reviewThreads(first: 20) {
+        nodes {
+          id
+          isResolved
+          comments(first: 1) {
+            nodes { databaseId }
+          }
+        }
+      }
+    }
+  }
+}'
+
+# Resolver um thread
+gh api graphql -f query='
+  mutation {
+    resolveReviewThread(input: {threadId: "<thread_id>"}) {
+      thread { isResolved }
+    }
+  }
+'
+```
+
+**Categorias de resposta:**
+
+- **Fixed**: O problema era válido e foi corrigido em um commit de follow-up
+- **Won't fix**: O problema não se aplica, caso extremo não vale o esforço, ou over-engineering
+
+Sempre responda a cada comentário individualmente e resolva o thread. Forneça justificativa clara para respostas "won't fix".
+
+**Fazer replies e resolves em batch — não pedir permissão para cada um.** Ao responder a múltiplos comentários de PR, execute todas as chamadas `gh api` de reply e todas as mutations de resolve em um único comando Bash em batch (ex: usando um loop `for` ou chamadas encadeadas com `&&`). NÃO faça chamadas individuais de ferramentas que requerem prompts de permissão separados para cada comentário — isso é muito lento para reviews com muitos comentários.
+
+**CRÍTICO: Responder e resolver threads ANTES de fazer push**
+
+Ao fazer commits de follow-up para endereçar feedback de review do Claude:
+
+1. **Commitar localmente** (não fazer push ainda)
+2. **Responder a todos os comentários do Claude** usando o endpoint de replies
+3. **Resolver todos os threads** usando a mutation GraphQL
+4. **Então fazer push** do commit
+
+Isso evita que o Claude rode novamente imediatamente no push e crie novos comentários antes de você ter resolvido os existentes.

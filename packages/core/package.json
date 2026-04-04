@@ -91,11 +91,24 @@
         "types": "./dist/validators.d.cts",
         "default": "./dist/validators.cjs"
       }
+    },
+    "./cli-utils": {
+      "import": {
+        "types": "./dist/cli-utils.d.ts",
+        "default": "./dist/cli-utils.js"
+      },
+      "require": {
+        "types": "./dist/cli-utils.d.cts",
+        "default": "./dist/cli-utils.cjs"
+      }
     }
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "fhir-bio": "./dist/cli.js"
+  },
   "files": [
     "dist"
   ],

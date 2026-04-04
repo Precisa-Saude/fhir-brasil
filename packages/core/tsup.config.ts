@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import path from 'path';
 import { defineConfig } from 'tsup';
 
 const pkgPath = path.resolve(path.dirname(fileURLToPath(import.meta.url)), 'package.json');

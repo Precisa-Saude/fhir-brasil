@@ -249,10 +249,17 @@ fhir-bio range Glucose --sex F --json
 
 ```json
 {
+  "category": "metabolico",
   "code": "Glucose",
+  "loinc": "2345-7",
+  "names": {
+    "en": ["Glucose", "Blood Glucose", "Fasting Glucose"],
+    "pt": ["Glicose", "Glicemia", "Glicemia de Jejum"]
+  },
+  "unit": "mg/dL",
   "context": {},
   "direction": "range",
-  "range": {
+  "referenceRange": {
     "max": 100,
     "min": 70,
     "optimalMax": 90,
@@ -270,8 +277,15 @@ fhir-bio units Creatinine --json
 
 ```json
 {
-  "canonicalUnit": "mg/dL",
+  "category": "rins",
   "code": "Creatinine",
+  "loinc": "2160-0",
+  "names": {
+    "en": ["Creatinine", "Serum Creatinine"],
+    "pt": ["Creatinina", "Creatinina Sérica"]
+  },
+  "unit": "mg/dL",
+  "canonicalUnit": "mg/dL",
   "defaultUnit": "mg/dL",
   "ucum": "mg/dL"
 }

@@ -44,7 +44,7 @@ export async function range(args: string[], json: boolean): Promise<void> {
   const direction = getRangeDirection(code);
 
   if (json) {
-    outputJson({ code, context: ctx, direction, range: ref });
+    outputJson({ ...def, context: ctx, direction, referenceRange: ref });
     return;
   }
 

@@ -13,24 +13,23 @@ export async function units(args: string[], json: boolean): Promise<void> {
   const canonical = getCanonicalUnit(code);
   const ucum = defaultUnit ? unitToUCUM(defaultUnit) : '';
 
-  const data = {
+  const unitDetails = {
     canonicalUnit: canonical ?? '—',
-    code,
     defaultUnit,
     ucum: ucum || '—',
   };
 
   if (json) {
-    outputJson(data);
+    outputJson({ ...def, ...unitDetails });
     return;
   }
 
   outputText(
     [
       `Unidades: ${code}`,
-      `  Padrão:    ${data.defaultUnit || '—'}`,
-      `  Canônica:  ${data.canonicalUnit}`,
-      `  UCUM:      ${data.ucum}`,
+      `  Padrão:    ${unitDetails.defaultUnit || '—'}`,
+      `  Canônica:  ${unitDetails.canonicalUnit}`,
+      `  UCUM:      ${unitDetails.ucum}`,
     ].join('\n'),
   );
 }

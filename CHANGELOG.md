@@ -1,3 +1,14 @@
+## [0.5.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.5.0...v0.5.1) (2026-04-04)
+
+### Bug Fixes
+
+* **core:** padronizar resposta JSON dos comandos range e units com definição completa ([1cae8ee](https://github.com/Precisa-Saude/fhir-brasil/commit/1cae8eeade349381b5d224d56873434cc9a2d1c6))
+
+### Documentation
+
+* adicionar seção CLI ao README com exemplos de fhir-bio e fhir-ocr ([d30eb1c](https://github.com/Precisa-Saude/fhir-brasil/commit/d30eb1c7db7b5e29e17fe9c4466ab1d47a109e5b))
+* remover seções em inglês e adicionar exemplos JSON à seção CLI ([0df226c](https://github.com/Precisa-Saude/fhir-brasil/commit/0df226c83461a5e23220f8022da2569f7343bb34))
+
 ## [0.5.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.4.1...v0.5.0) (2026-04-04)
 
 ### Features

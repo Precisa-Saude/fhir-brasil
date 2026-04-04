@@ -1,17 +1,10 @@
-import { exitWithError, getInput, outputJson, outputText } from '../../cli-utils.js';
+import { getInput, outputJson, outputText, parseJson } from '../../cli-utils.js';
 import { validateFHIRImportBundle } from '../../validators.js';
 
 export async function validate(args: string[], json: boolean): Promise<void> {
   const raw = await getInput(args[0]);
-
-  let data: Record<string, unknown>;
-  try {
-    data = JSON.parse(raw);
-  } catch {
-    exitWithError('JSON inválido.');
-  }
-
-  const errors = validateFHIRImportBundle(data as never);
+  const data = parseJson<Parameters<typeof validateFHIRImportBundle>[0]>(raw, 'JSON inválido.');
+  const errors = validateFHIRImportBundle(data);
 
   if (json) {
     outputJson({ errors, valid: errors.length === 0 });

@@ -11,7 +11,7 @@ export async function readStdin(): Promise<string> {
   for await (const chunk of process.stdin) {
     chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
   }
-  return Buffer.concat(chunks).toString('utf-8').trim();
+  return Buffer.concat(chunks).toString('utf-8');
 }
 
 export async function getInput(fileArg?: string): Promise<string> {
@@ -20,14 +20,24 @@ export async function getInput(fileArg?: string): Promise<string> {
     return readFile(fileArg, 'utf-8');
   }
   const stdin = await readStdin();
-  if (!stdin) {
+  if (!stdin.trim()) {
     exitWithError('Forneça um arquivo ou envie dados via stdin.');
   }
   return stdin;
 }
 
+export function parseJson<T>(raw: string, errorMessage: string): T {
+  try {
+    return JSON.parse(raw) as T;
+  } catch {
+    exitWithError(errorMessage);
+  }
+}
+
 export function formatTable(headers: string[], rows: string[][]): string {
-  const widths = headers.map((h, i) => Math.max(h.length, ...rows.map((r) => (r[i] ?? '').length)));
+  const widths = headers.map((h, i) =>
+    rows.reduce((max, r) => Math.max(max, (r[i] ?? '').length), h.length),
+  );
   const fmt = (row: string[]) => row.map((c, i) => (c ?? '').padEnd(widths[i]!)).join('  ');
   const sep = widths.map((w) => '-'.repeat(w)).join('  ');
   return [fmt(headers), sep, ...rows.map(fmt)].join('\n');

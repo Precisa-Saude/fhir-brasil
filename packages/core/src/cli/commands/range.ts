@@ -27,9 +27,10 @@ export async function range(args: string[], json: boolean): Promise<void> {
 
   const ctx: ReferenceRangeContext = {};
   if (values.sex) {
-    const sex = (values.sex as string).toUpperCase();
-    if (sex !== 'M' && sex !== 'F') exitWithError('--sex deve ser M ou F');
-    ctx.biologicalSex = sex as 'M' | 'F';
+    const raw = (values.sex as string).toUpperCase();
+    const sex = raw === 'MALE' ? 'M' : raw === 'FEMALE' ? 'F' : raw;
+    if (sex !== 'M' && sex !== 'F') exitWithError('--sex deve ser M, F, male ou female');
+    ctx.biologicalSex = sex;
   }
   if (values.age) {
     const age = Number(values.age);

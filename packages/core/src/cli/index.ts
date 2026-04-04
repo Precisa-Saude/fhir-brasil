@@ -11,7 +11,7 @@ import { range } from './commands/range.js';
 import { units } from './commands/units.js';
 import { validate } from './commands/validate.js';
 
-const VERSION = '0.4.1';
+declare const __VERSION__: string;
 
 const HELP = `fhir-bio — CLI do @precisa-saude/fhir
 
@@ -62,7 +62,7 @@ async function main(): Promise<void> {
   });
 
   if (values.version) {
-    process.stdout.write(`${VERSION}\n`);
+    process.stdout.write(`${__VERSION__}\n`);
     return;
   }
 
@@ -78,7 +78,7 @@ async function main(): Promise<void> {
     exitWithError(`Comando desconhecido: ${command}\nUse --help para ver os comandos disponíveis.`);
   }
 
-  await handler(rest, values.json as boolean);
+  await handler(rest, Boolean(values.json));
 }
 
 main().catch((err: Error) => exitWithError(err.message));

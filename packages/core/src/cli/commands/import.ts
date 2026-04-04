@@ -1,17 +1,10 @@
-import { exitWithError, getInput, outputJson, outputText } from '../../cli-utils.js';
+import { getInput, outputJson, outputText, parseJson } from '../../cli-utils.js';
 import type { FHIRBundle } from '../../fhir-types.js';
 import { processImportBundle } from '../../importer.js';
 
 export async function importBundle(args: string[], json: boolean): Promise<void> {
   const raw = await getInput(args[0]);
-
-  let bundle: FHIRBundle;
-  try {
-    bundle = JSON.parse(raw);
-  } catch {
-    exitWithError('JSON inválido.');
-  }
-
+  const bundle = parseJson<FHIRBundle>(raw, 'JSON inválido.');
   const result = processImportBundle(bundle);
 
   if (json) {

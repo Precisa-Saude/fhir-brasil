@@ -62,7 +62,7 @@ Isso custa dinheiro (operadoras e SUS pagam), desperdiça capacidade laboratoria
           ┌────────────────────────────────┐
           │   fhir-brasil (código aberto)  │
           │                                │
-          │  200+ biomarcadores LOINC      │
+          │  180+ biomarcadores LOINC      │
           │  Conversor FHIR R4             │
           │  Faixas SBPC/ML                │
           │  Calculadoras clínicas         │
@@ -87,8 +87,8 @@ Isso custa dinheiro (operadoras e SUS pagam), desperdiça capacidade laboratoria
 
 **fhir-brasil** é a camada de infraestrutura que resolve esse problema. Fornece uma base compartilhada para que healthtechs, instituições de pesquisa e desenvolvedores trabalhem com dados de saúde brasileiros no padrão FHIR R4:
 
-- **200+ biomarcadores** com códigos LOINC, nomes em português/inglês, categorias e unidades
-- **200+ faixas de referência** com variantes por sexo/idade, baseadas em diretrizes SBPC/ML, SBC e SBD
+- **180+ biomarcadores** com códigos LOINC, nomes em português/inglês, categorias e unidades
+- **180+ faixas de referência** com variantes por sexo/idade, baseadas em diretrizes SBPC/ML, SBC e SBD
 - **Calculadoras clínicas** — PhenoAge (idade biológica), BrDMrisc (risco de diabetes), HOMA-IR, VLDL, IMC
 - **Utilitários OCR** — ancoragem de texto para extração de biomarcadores de PDFs de resultados de laboratório
 - **Cliente RNDS** — cliente HTTP para a Rede Nacional de Dados em Saúde (DATASUS), com autenticação mTLS e zero dependências externas
@@ -103,7 +103,7 @@ O ecossistema de saúde brasileiro envolve múltiplos atores, cada um com seus p
 | ------------------------------ | -------------------------------------------------------- | ------------------------------------------------ |
 | **Paciente**                   | Resultados espalhados entre PDFs, WhatsApp, portais      | Base para aplicações de consumo                  |
 | **Médico / Clínica**           | Sem visão completa do histórico laboratorial entre redes | Camada de normalização entre fontes              |
-| **Laboratório**                | Formatos proprietários, LOINC inconsistente              | Vocabulário compartilhado com 200+ biomarcadores |
+| **Laboratório**                | Formatos proprietários, LOINC inconsistente              | Vocabulário compartilhado com 180+ biomarcadores |
 | **Operadora**                  | Pagando por exames duplicados entre redes                | Infraestrutura para analytics de deduplicação    |
 | **Universidade / Pesquisador** | Dados fragmentados em formatos proprietários             | Pacotes open-source para pesquisa em saúde       |
 | **DATASUS / Governo**          | Adoção da RNDS ainda lenta                               | Ferramentas comunitárias que aceleram a adoção   |
@@ -338,7 +338,7 @@ echo "Hemoglobina 14.5 g/dL Glicose 99 mg/dL" | fhir-ocr codes --json
 
 | Pacote                            | Descrição                                                            | Deps                  |
 | --------------------------------- | -------------------------------------------------------------------- | --------------------- |
-| `@precisa-saude/fhir`             | Tipos FHIR R4, 200+ biomarcadores, faixas de referência, conversores | 0 runtime deps        |
+| `@precisa-saude/fhir`             | Tipos FHIR R4, 180+ biomarcadores, faixas de referência, conversores | 0 runtime deps        |
 | `@precisa-saude/fhir-calculators` | PhenoAge, BrDMrisc, HOMA-IR, VLDL, IMC                               | `@precisa-saude/fhir` |
 | `@precisa-saude/fhir-ocr-utils`   | Ancoragem OCR para extração de biomarcadores                         | `@precisa-saude/fhir` |
 | `@precisa-saude/fhir-rnds`        | Cliente HTTP para a RNDS (DATASUS) — autenticação mTLS, FHIR R4      | `@precisa-saude/fhir` |

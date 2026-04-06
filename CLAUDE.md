@@ -19,7 +19,7 @@ Este é o monorepo open-source `fhir-brasil` — um toolkit FHIR R4 brasileiro c
 
 ```
 packages/
-  core/          — Tipos FHIR R4, 200+ biomarcadores, faixas de referência, conversores
+  core/          — Tipos FHIR R4, 180+ biomarcadores, faixas de referência, conversores
   calculators/   — PhenoAge, BrDMRisc, HOMA-IR, VLDL, IMC
   ocr-utils/     — Ancoragem OCR para extração de biomarcadores
 ```

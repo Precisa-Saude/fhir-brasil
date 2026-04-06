@@ -1,0 +1,39 @@
+{
+  "report": {
+    "reportId": "report-test",
+    "userId": "user-test",
+    "laboratoryName": "Lab Teste",
+    "overallStatus": "NORMAL",
+    "processingStatus": "complete",
+    "collectionDate": "2024-01-15T08:00:00.000Z",
+    "createdAt": "2024-01-15T14:00:00.000Z"
+  },
+  "observations": [
+    {
+      "biomarkerCode": "Glucose",
+      "biomarkerName": "Glucose",
+      "value": 85,
+      "unit": "mg/dL",
+      "flag": "",
+      "referenceMin": 70,
+      "referenceMax": 100,
+      "reportId": "report-test"
+    }
+  ],
+  "profile": {
+    "userId": "user-test",
+    "name": "Paciente Teste",
+    "email": "test@example.com",
+    "birthDate": "1990-01-01",
+    "gender": "male",
+    "phone": "+55 11 99999-9999",
+    "address": {
+      "street": "Rua Teste",
+      "number": "100",
+      "city": "São Paulo",
+      "state": "SP",
+      "postalCode": "01000-000",
+      "country": "BR"
+    }
+  }
+}

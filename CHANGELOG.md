@@ -1,3 +1,17 @@
+## [0.6.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.5.1...v0.6.0) (2026-04-06)
+
+### Features
+
+* **docs:** redesenhar landing page com narrativa, grid e tema do landing ([#9](https://github.com/Precisa-Saude/fhir-brasil/issues/9)) ([6fa8e25](https://github.com/Precisa-Saude/fhir-brasil/commit/6fa8e25ef46af2d49416c84b87c02ecad0ad70d2))
+
+### Refactoring
+
+* **core,ocr-utils:** QA, cobertura CLI e conversão de unidades ([#10](https://github.com/Precisa-Saude/fhir-brasil/issues/10)) ([6d0d5c7](https://github.com/Precisa-Saude/fhir-brasil/commit/6d0d5c77078ad3b94dbef007136c0d2fecdaa32c))
+
+### Documentation
+
+* adicionar tabela resumo por publicação ao verificacao-citacoes.md ([0cb41b7](https://github.com/Precisa-Saude/fhir-brasil/commit/0cb41b70ffb1e49f8e022f40c52b432b9d9a3ea9))
+
 ## [0.5.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.5.0...v0.5.1) (2026-04-04)
 
 ### Bug Fixes

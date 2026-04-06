@@ -1,6 +1,6 @@
 # @precisa-saude/fhir
 
-Tipos FHIR R4, 200+ definições de biomarcadores com códigos LOINC, faixas de referência (SBPC/ML, SBC, SBD), conversores e importadores para o contexto clínico brasileiro.
+Tipos FHIR R4, 180+ definições de biomarcadores com códigos LOINC, faixas de referência (SBPC/ML, SBC, SBD), conversores e importadores para o contexto clínico brasileiro.
 
 ## Instalação
 
@@ -49,7 +49,7 @@ import { getDefinitionByCode, getAllDefinitions } from '@precisa-saude/fhir';
 const def = getDefinitionByCode('HDL');
 // { code: 'HDL', loinc: '2085-9', names: { pt: [...], en: [...] }, ... }
 
-const all = getAllDefinitions(); // 200+ definições
+const all = getAllDefinitions(); // 180+ definições
 ```
 
 ## Sub-path imports
@@ -69,7 +69,7 @@ import { validateFHIRObservation } from '@precisa-saude/fhir/validators';
 
 | Sub-path            | Descrição                                                          |
 | ------------------- | ------------------------------------------------------------------ |
-| `/biomarkers`       | 200+ definições com códigos LOINC, nomes pt/en, categorias         |
+| `/biomarkers`       | 180+ definições com códigos LOINC, nomes pt/en, categorias         |
 | `/reference-ranges` | Faixas de referência por sexo/idade (SBPC/ML, SBC, SBD, OMS)       |
 | `/converter`        | Converte dados laboratoriais para FHIR R4 Bundle                   |
 | `/importer`         | Importa FHIR Bundle de volta para estruturas internas              |

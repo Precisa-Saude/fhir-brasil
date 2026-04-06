@@ -254,10 +254,10 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   },
   Eosinophils_Abs: { aliases: CBC_DIFF_ALIASES, ...CBC_DIFF },
   Estradiol: {
-    // TODO: ng/dL ≠ pg/mL (1 ng/dL = 10 pg/mL) — display-only alias for now
-    aliases: { 'ng/dl': 'pg/mL', 'pg/ml': 'pg/mL' },
+    aliases: { 'ng/dl': 'ng/dL', 'pg/ml': 'pg/mL' },
     canonicalUcum: 'pg/mL',
     canonicalUnit: 'pg/mL',
+    molecularWeight: 272.38,
     siUcum: 'pmol/L',
     siUnit: 'pmol/L',
   },
@@ -408,8 +408,7 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   },
   RBC_Urine: { aliases: URINE_SEDIMENT_ALIASES, ...URINE_SEDIMENT },
   TestosteroneFree: {
-    // TODO: pmol/L ≠ pg/mL (needs MW conversion) — display-only alias for now
-    aliases: { 'pg/ml': 'pg/mL', 'pmol/l': 'pg/mL' },
+    aliases: { 'pg/ml': 'pg/mL', 'pmol/l': 'pmol/L' },
     canonicalUcum: 'pg/mL',
     canonicalUnit: 'pg/mL',
     molecularWeight: 288.42,
@@ -495,4 +494,111 @@ export function getCanonicalUnit(code: string): string | null {
  */
 export function getSIUnit(code: string): string | null {
   return BIOMARKER_UNITS[code]?.siUnit ?? null;
+}
+
+// ─── Unit Conversion ────────────────────────────────────────────────────────────
+
+/**
+ * Normalize a unit string to its canonical display form for a given biomarker.
+ * Returns the input unchanged if no alias is found.
+ */
+function normalizeUnit(unit: string, config: BiomarkerUnitConfig): string {
+  return config.aliases[unit.toLowerCase()] ?? config.aliases[unit] ?? unit;
+}
+
+/**
+ * Conversion factor tables for unit pairs that don't require molecular weight.
+ * Key format: "fromUnit -> toUnit" (using canonical display forms).
+ * Both directions must be listed explicitly — there is no auto-inversion.
+ */
+const FIXED_FACTORS: Record<string, number> = {
+  'g/dL -> g/L': 10,
+  'g/L -> g/dL': 0.1,
+  'ng/dL -> pg/mL': 10,
+  'ng/mL -> µg/L': 1,
+  'pg/mL -> ng/dL': 0.1,
+  'µg/L -> ng/mL': 1,
+};
+
+/**
+ * MW-based conversion definitions.
+ * Each entry maps a (fromUnit, toUnit) pair to the formula:
+ *   result = value × numerator / (MW × denominator)
+ *
+ * Common patterns:
+ *   mg/dL  → mmol/L:  value × 10   / MW
+ *   mg/dL  → µmol/L:  value × 10000 / MW  (or equivalently × 10 / MW × 1000)
+ *   ng/mL  → nmol/L:  value × 1000 / MW
+ *   pg/mL  → pmol/L:  value × 1000 / MW
+ *   ng/dL  → nmol/L:  value × 10   / MW
+ */
+/**
+ * MW conversion entries. Each direction is explicit to avoid fragile inversion logic.
+ * Formula: result = value × scale / MW  (when divideByMW is true)
+ *          result = value × MW / scale  (when divideByMW is false)
+ */
+interface MWConversion {
+  divideByMW: boolean;
+  scale: number;
+}
+
+const MW_CONVERSIONS: Record<string, MWConversion> = {
+  'mg/dL -> mmol/L': { divideByMW: true, scale: 10 },
+  'mg/dL -> µmol/L': { divideByMW: true, scale: 10_000 },
+  'mmol/L -> mg/dL': { divideByMW: false, scale: 10 },
+  'ng/dL -> nmol/L': { divideByMW: true, scale: 10 },
+  'ng/mL -> nmol/L': { divideByMW: true, scale: 1000 },
+  'nmol/L -> ng/dL': { divideByMW: false, scale: 10 },
+  'nmol/L -> ng/mL': { divideByMW: false, scale: 1000 },
+  'pg/mL -> pmol/L': { divideByMW: true, scale: 1000 },
+  'pmol/L -> pg/mL': { divideByMW: false, scale: 1000 },
+  'µmol/L -> mg/dL': { divideByMW: false, scale: 10_000 },
+};
+
+export interface ConversionResult {
+  unit: string;
+  value: number;
+}
+
+/**
+ * Convert a biomarker value between units.
+ *
+ * Supports:
+ * - Fixed-factor conversions (e.g. ng/dL ↔ pg/mL, g/dL ↔ g/L)
+ * - Molecular-weight-based conversions (e.g. mg/dL ↔ mmol/L, pg/mL ↔ pmol/L)
+ *
+ * @returns The converted value and target unit, or null if conversion is not possible.
+ */
+export function convertUnit(
+  value: number,
+  fromUnit: string,
+  toUnit: string,
+  biomarkerCode: string,
+): ConversionResult | null {
+  const config = BIOMARKER_UNITS[biomarkerCode];
+  if (!config) return null;
+
+  const normFrom = normalizeUnit(fromUnit, config);
+  const normTo = normalizeUnit(toUnit, config);
+
+  if (normFrom === normTo) {
+    return { unit: normTo, value };
+  }
+
+  const key = `${normFrom} -> ${normTo}`;
+
+  const fixedFactor = FIXED_FACTORS[key];
+  if (fixedFactor !== undefined) {
+    return { unit: normTo, value: value * fixedFactor };
+  }
+
+  const mwConv = MW_CONVERSIONS[key];
+  if (mwConv && config.molecularWeight) {
+    const result = mwConv.divideByMW
+      ? (value * mwConv.scale) / config.molecularWeight
+      : (value * config.molecularWeight) / mwConv.scale;
+    return { unit: normTo, value: result };
+  }
+
+  return null;
 }

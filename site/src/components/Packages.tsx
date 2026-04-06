@@ -72,7 +72,7 @@ export function Packages() {
             Pacotes
           </h2>
         </div>
-        <p className="col-span-full mb-8 text-center text-pretty font-pausa text-lg text-ps-violet-dark/60 md:col-span-6 md:col-start-5 3xl:col-start-6">
+        <p className="col-span-full mb-8 text-center text-pretty font-pausa text-lg text-ps-violet-dark/60 md:col-span-8 md:col-start-4 3xl:col-start-5">
           Quatro pacotes modulares — use só o que precisar.
         </p>
 
@@ -81,7 +81,7 @@ export function Packages() {
             {PACKAGES.map((pkg) => (
               <div
                 key={pkg.name}
-                className="flex flex-col gap-4 rounded-xl border border-ps-violet-dark/8 bg-white/50 p-6 backdrop-blur-sm sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-4 rounded-xl border border-ps-violet-dark/8 bg-white/50 p-6 backdrop-blur-sm lg:flex-row lg:items-center lg:justify-between"
               >
                 <div className="min-w-0 flex-1">
                   <h3 className="font-mono text-sm font-semibold text-ps-violet-dark">{pkg.name}</h3>

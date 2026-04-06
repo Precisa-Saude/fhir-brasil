@@ -56,12 +56,12 @@ const gridStyle = {
 } as const;
 
 const CARD_COLS_14 = [
-  { start: 2, span: 4 },
-  { start: 6, span: 4 },
-  { start: 10, span: 4 },
-  { start: 2, span: 4 },
-  { start: 6, span: 4 },
-  { start: 10, span: 4 },
+  { start: 2, span: 6 },
+  { start: 8, span: 6 },
+  { start: 2, span: 6 },
+  { start: 8, span: 6 },
+  { start: 2, span: 6 },
+  { start: 8, span: 6 },
 ] as const;
 
 export function Ecosystem() {
@@ -78,7 +78,7 @@ export function Ecosystem() {
         </div>
         <p
           className="col-span-full mb-8 text-center text-pretty font-pausa text-lg text-ps-violet-dark/60"
-          style={col(5, 6)}
+          style={col(4, 8)}
         >
           O fhir-brasil fornece a base para que cada ator do ecossistema de saúde possa construir
           sobre o mesmo padrão.

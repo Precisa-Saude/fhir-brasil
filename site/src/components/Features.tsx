@@ -72,7 +72,7 @@ export function Features() {
         </div>
         <p
           className="col-span-full mb-8 text-center text-pretty font-pausa text-lg text-ps-violet-dark/60"
-          style={col(5, 6)}
+          style={col(4, 8)}
         >
           Infraestrutura de código aberto que transforma dados fragmentados em recursos FHIR R4 padronizados.
         </p>

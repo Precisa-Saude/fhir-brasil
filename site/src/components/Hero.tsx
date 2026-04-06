@@ -53,7 +53,7 @@ export function Hero() {
             privada — código aberto, com códigos LOINC e diretrizes SBPC/ML.
           </p>
 
-          <div className="mx-auto mt-10 flex w-full max-w-sm flex-col gap-3 md:max-w-none md:w-[calc(4*var(--col-w)+3*1rem)]">
+          <div className="mx-auto mt-10 flex w-full flex-col gap-3 md:w-[calc(8*var(--col-w)+7*1rem)]">
             <button
               onClick={handleCopy}
               className="group flex w-full items-center justify-between rounded-full border border-primary-foreground/15 bg-white/10 px-4 py-2.5 font-mono text-sm text-white/90 transition-all hover:bg-white/20 sm:px-6 sm:py-3.5"

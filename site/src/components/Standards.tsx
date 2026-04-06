@@ -52,7 +52,7 @@ export function Standards() {
         </div>
         <p
           className="col-span-full mb-8 text-center text-pretty font-pausa text-lg text-ps-violet-dark/60"
-          style={col(5, 6)}
+          style={col(4, 8)}
         >
           Construído sobre padrões internacionais de interoperabilidade em saúde, adaptado para o
           contexto brasileiro.

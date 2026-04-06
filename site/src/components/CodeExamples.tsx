@@ -188,12 +188,12 @@ export function CodeExamples() {
           Comece em minutos
         </h2>
       </div>
-      <p className="col-span-full mb-8 text-center text-pretty font-pausa text-lg text-ps-violet-dark/60 md:col-span-6 md:col-start-5 3xl:col-start-6">
+      <p className="col-span-full mb-8 text-center text-pretty font-pausa text-lg text-ps-violet-dark/60 md:col-span-8 md:col-start-4 3xl:col-start-5">
         TypeScript-first, com tipagem completa e autocompletar no editor.
       </p>
 
       <div className="col-span-full md:col-span-10 md:col-start-3 3xl:col-start-4">
-        <div className="mt-8 mb-4 md:hidden">
+        <div className="mt-8 mb-4 lg:hidden">
           <Select value={TABS[activeTab].label} onValueChange={(v) => setActiveTab(TABS.findIndex((t) => t.label === v))}>
             <SelectTrigger className="w-full border-ps-violet-dark/15 bg-white/80 font-margem text-sm text-ps-violet-dark">
               <SelectValue />
@@ -205,7 +205,7 @@ export function CodeExamples() {
             </SelectContent>
           </Select>
         </div>
-        <div className="mt-8 mb-4 hidden justify-center md:flex">
+        <div className="mt-8 mb-4 hidden justify-center lg:flex">
         <div
           className="relative inline-grid min-w-max rounded-full border border-ps-violet-dark/10 bg-ps-sand/50 p-1"
           role="tablist"

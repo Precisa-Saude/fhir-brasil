@@ -2,18 +2,15 @@ import { join } from 'node:path';
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-// Mock process.exit to prevent test runner from exiting
-vi.spyOn(process, 'exit').mockImplementation((() => {
-  throw new Error('process.exit called');
-}) as never);
-
-// Capture stdout/stderr
 let stdoutOutput: string;
 let stderrOutput: string;
 
 beforeEach(() => {
   stdoutOutput = '';
   stderrOutput = '';
+  vi.spyOn(process, 'exit').mockImplementation((() => {
+    throw new Error('process.exit called');
+  }) as never);
   vi.spyOn(process.stdout, 'write').mockImplementation((chunk: string | Uint8Array) => {
     stdoutOutput += typeof chunk === 'string' ? chunk : chunk.toString();
     return true;
@@ -26,10 +23,6 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.restoreAllMocks();
-  // Re-apply exit mock after restoreAllMocks
-  vi.spyOn(process, 'exit').mockImplementation((() => {
-    throw new Error('process.exit called');
-  }) as never);
 });
 
 // ─── lookup ────────────────────────────────────────────────────────────────────

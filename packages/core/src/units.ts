@@ -509,6 +509,7 @@ function normalizeUnit(unit: string, config: BiomarkerUnitConfig): string {
 /**
  * Conversion factor tables for unit pairs that don't require molecular weight.
  * Key format: "fromUnit -> toUnit" (using canonical display forms).
+ * Both directions must be listed explicitly — there is no auto-inversion.
  */
 const FIXED_FACTORS: Record<string, number> = {
   'g/dL -> g/L': 10,
@@ -531,22 +532,27 @@ const FIXED_FACTORS: Record<string, number> = {
  *   pg/mL  → pmol/L:  value × 1000 / MW
  *   ng/dL  → nmol/L:  value × 10   / MW
  */
+/**
+ * MW conversion entries. Each direction is explicit to avoid fragile inversion logic.
+ * Formula: result = value × scale / MW  (when divideByMW is true)
+ *          result = value × MW / scale  (when divideByMW is false)
+ */
 interface MWConversion {
-  denominator: number;
-  numerator: number;
+  divideByMW: boolean;
+  scale: number;
 }
 
 const MW_CONVERSIONS: Record<string, MWConversion> = {
-  'mg/dL -> mmol/L': { denominator: 1, numerator: 10 },
-  'mg/dL -> µmol/L': { denominator: 1, numerator: 10_000 },
-  'mmol/L -> mg/dL': { denominator: 10, numerator: 1 },
-  'ng/dL -> nmol/L': { denominator: 1, numerator: 10 },
-  'ng/mL -> nmol/L': { denominator: 1, numerator: 1000 },
-  'nmol/L -> ng/dL': { denominator: 10, numerator: 1 },
-  'nmol/L -> ng/mL': { denominator: 1000, numerator: 1 },
-  'pg/mL -> pmol/L': { denominator: 1, numerator: 1000 },
-  'pmol/L -> pg/mL': { denominator: 1000, numerator: 1 },
-  'µmol/L -> mg/dL': { denominator: 10_000, numerator: 1 },
+  'mg/dL -> mmol/L': { divideByMW: true, scale: 10 },
+  'mg/dL -> µmol/L': { divideByMW: true, scale: 10_000 },
+  'mmol/L -> mg/dL': { divideByMW: false, scale: 10 },
+  'ng/dL -> nmol/L': { divideByMW: true, scale: 10 },
+  'ng/mL -> nmol/L': { divideByMW: true, scale: 1000 },
+  'nmol/L -> ng/dL': { divideByMW: false, scale: 10 },
+  'nmol/L -> ng/mL': { divideByMW: false, scale: 1000 },
+  'pg/mL -> pmol/L': { divideByMW: true, scale: 1000 },
+  'pmol/L -> pg/mL': { divideByMW: false, scale: 1000 },
+  'µmol/L -> mg/dL': { divideByMW: false, scale: 10_000 },
 };
 
 export interface ConversionResult {
@@ -588,10 +594,9 @@ export function convertUnit(
 
   const mwConv = MW_CONVERSIONS[key];
   if (mwConv && config.molecularWeight) {
-    const result =
-      mwConv.denominator === 1
-        ? (value * mwConv.numerator) / config.molecularWeight
-        : (value * config.molecularWeight) / mwConv.denominator;
+    const result = mwConv.divideByMW
+      ? (value * mwConv.scale) / config.molecularWeight
+      : (value * config.molecularWeight) / mwConv.scale;
     return { unit: normTo, value: result };
   }
 

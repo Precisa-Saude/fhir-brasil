@@ -1,18 +1,17 @@
-import { writeFileSync } from 'node:fs';
+import { unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-// Mock process.exit to prevent test runner from exiting
-vi.spyOn(process, 'exit').mockImplementation((() => {
-  throw new Error('process.exit called');
-}) as never);
-
 let stdoutOutput: string;
+const tmpFiles: string[] = [];
 
 beforeEach(() => {
   stdoutOutput = '';
+  vi.spyOn(process, 'exit').mockImplementation((() => {
+    throw new Error('process.exit called');
+  }) as never);
   vi.spyOn(process.stdout, 'write').mockImplementation((chunk: string | Uint8Array) => {
     stdoutOutput += typeof chunk === 'string' ? chunk : chunk.toString();
     return true;
@@ -22,9 +21,14 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.restoreAllMocks();
-  vi.spyOn(process, 'exit').mockImplementation((() => {
-    throw new Error('process.exit called');
-  }) as never);
+  for (const f of tmpFiles) {
+    try {
+      unlinkSync(f);
+    } catch {
+      /* already removed */
+    }
+  }
+  tmpFiles.length = 0;
 });
 
 const SAMPLE_OCR_TEXT = `
@@ -40,8 +44,12 @@ Triglicerídeos: 120 mg/dL
 `;
 
 function writeTmpFile(content: string): string {
-  const path = join(tmpdir(), `fhir-ocr-test-${Date.now()}.txt`);
+  const path = join(
+    tmpdir(),
+    `fhir-ocr-test-${Date.now()}-${Math.random().toString(36).slice(2)}.txt`,
+  );
   writeFileSync(path, content, 'utf-8');
+  tmpFiles.push(path);
   return path;
 }
 

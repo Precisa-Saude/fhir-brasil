@@ -1,5 +1,6 @@
 import { Eye, GitFork, Shield, Users } from 'lucide-react';
 import type { ReactNode } from 'react';
+import { CornerSquares } from './CornerSquares';
 import { useWideGrid } from '@/hooks/useWideGrid';
 
 interface Pillar {
@@ -54,7 +55,8 @@ export function OpenSource() {
   const offset = wide ? 1 : 0;
 
   return (
-    <section id="open-source" className="min-h-[50svh] bg-white/30 py-20 sm:py-28">
+    <section id="open-source" className="relative min-h-[50svh] bg-white/30 py-20 sm:py-28">
+      <CornerSquares position="top" />
       <div className="mx-auto grid gap-4 px-4 md:px-0" style={gridStyle}>
         <div className="col-span-full text-center md:col-span-12 md:col-start-2 3xl:col-start-3">
           <h2 className="font-margem text-3xl font-bold tracking-tight text-ps-violet-dark sm:text-4xl">

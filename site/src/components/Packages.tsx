@@ -1,5 +1,6 @@
 import { Check, Copy } from 'lucide-react';
 import { useState } from 'react';
+import { CornerSquares } from './CornerSquares';
 
 interface PackageInfo {
   name: string;
@@ -56,7 +57,8 @@ function CopyButton({ text }: { text: string }) {
 
 export function Packages() {
   return (
-    <section id="pacotes" className="min-h-[50svh] bg-white/30 py-20 sm:py-28">
+    <section id="pacotes" className="relative min-h-[50svh] bg-white/30 py-20 sm:py-28">
+      <CornerSquares position="top" />
       <div
         className="mx-auto grid gap-4 px-4 md:px-0"
         style={{

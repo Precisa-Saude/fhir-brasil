@@ -1,6 +1,5 @@
 import { Check, Copy } from 'lucide-react';
 import { useState } from 'react';
-import { CornerSquares } from './CornerSquares';
 
 const INSTALL_CMD = 'npm install @precisa-saude/fhir';
 
@@ -32,8 +31,6 @@ export function Hero() {
 
   return (
     <section className="relative min-h-[60svh] pt-16">
-      <div className="absolute inset-0 bg-primary" />
-      <CornerSquares position="bottom" />
 
       <div
         className="relative z-10 mx-auto grid gap-4 px-4 py-24 sm:py-32 md:px-0 lg:py-40"

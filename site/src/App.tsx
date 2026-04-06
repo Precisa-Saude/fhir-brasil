@@ -18,15 +18,21 @@ export default function App() {
     <div className="min-h-screen">
       <Nav />
       <main>
-        <MosaicBg colors={MOSAIC_COLORS}>
+        <MosaicBg colors={MOSAIC_COLORS} className="bg-primary">
           <Hero />
         </MosaicBg>
         <Problem />
-        <Features />
+        <MosaicBg colors={MOSAIC_COLORS}>
+          <Features />
+        </MosaicBg>
         <Ecosystem />
-        <CodeExamples />
+        <MosaicBg colors={MOSAIC_COLORS}>
+          <CodeExamples />
+        </MosaicBg>
         <Packages />
-        <Standards />
+        <MosaicBg colors={MOSAIC_COLORS}>
+          <Standards />
+        </MosaicBg>
         <OpenSource />
       </main>
       <Footer />

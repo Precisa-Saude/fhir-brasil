@@ -230,6 +230,11 @@ describe('cli: convert', () => {
     await convert([fixture], true);
     const data = JSON.parse(stdoutOutput);
     expect(data.resourceType).toBe('Bundle');
+    expect(data.entry.length).toBeGreaterThanOrEqual(2);
+    const obsEntry = data.entry.find(
+      (e: { resource: { resourceType: string } }) => e.resource.resourceType === 'Observation',
+    );
+    expect(obsEntry).toBeDefined();
   });
 
   it('should error on invalid JSON', async () => {

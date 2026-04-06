@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   BIOMARKER_DEFAULT_UNIT,
   BIOMARKER_UNITS,
+  convertUnit,
   getCanonicalUnit,
   getDefaultUnit,
   getSIUnit,
@@ -175,5 +176,127 @@ describe('getSIUnit', () => {
 
   it('returns null for unknown biomarker', () => {
     expect(getSIUnit('Unknown')).toBeNull();
+  });
+});
+
+describe('convertUnit', () => {
+  it('returns null for unknown biomarker', () => {
+    expect(convertUnit(100, 'mg/dL', 'mmol/L', 'NonExistent')).toBeNull();
+  });
+
+  it('returns same value when units are identical', () => {
+    const result = convertUnit(85, 'mg/dL', 'mg/dL', 'Glucose');
+    expect(result).toEqual({ unit: 'mg/dL', value: 85 });
+  });
+
+  it('normalizes aliases before comparing', () => {
+    const result = convertUnit(85, 'mg/dl', 'mg/dL', 'Glucose');
+    expect(result).toEqual({ unit: 'mg/dL', value: 85 });
+  });
+
+  // ─── Fixed-factor conversions ──────────────────────────────────────────────
+
+  it('converts Estradiol ng/dL → pg/mL (× 10)', () => {
+    const result = convertUnit(5, 'ng/dL', 'pg/mL', 'Estradiol');
+    expect(result).not.toBeNull();
+    expect(result!.unit).toBe('pg/mL');
+    expect(result!.value).toBeCloseTo(50, 5);
+  });
+
+  it('converts Estradiol pg/mL → ng/dL (÷ 10)', () => {
+    const result = convertUnit(50, 'pg/mL', 'ng/dL', 'Estradiol');
+    expect(result).not.toBeNull();
+    expect(result!.value).toBeCloseTo(5, 5);
+  });
+
+  it('converts Albumin g/dL → g/L (× 10)', () => {
+    const result = convertUnit(4.5, 'g/dL', 'g/L', 'Albumin');
+    expect(result).not.toBeNull();
+    expect(result!.value).toBeCloseTo(45, 5);
+  });
+
+  it('converts Ferritin ng/mL → µg/L (× 1)', () => {
+    const result = convertUnit(150, 'ng/mL', 'µg/L', 'Ferritin');
+    expect(result).not.toBeNull();
+    expect(result!.value).toBeCloseTo(150, 5);
+  });
+
+  // ─── MW-based conversions ─────────────────────────────────────────────────
+
+  it('converts Glucose mg/dL → mmol/L', () => {
+    // 100 mg/dL × 10 / 180.156 ≈ 5.551
+    const result = convertUnit(100, 'mg/dL', 'mmol/L', 'Glucose');
+    expect(result).not.toBeNull();
+    expect(result!.unit).toBe('mmol/L');
+    expect(result!.value).toBeCloseTo(5.551, 2);
+  });
+
+  it('converts Glucose mmol/L → mg/dL', () => {
+    // 5.551 mmol/L × 180.156 / 10 ≈ 100
+    const result = convertUnit(5.551, 'mmol/L', 'mg/dL', 'Glucose');
+    expect(result).not.toBeNull();
+    expect(result!.value).toBeCloseTo(100, 0);
+  });
+
+  it('converts Creatinine mg/dL → µmol/L', () => {
+    // 1.0 mg/dL × 10000 / 113.12 ≈ 88.4
+    const result = convertUnit(1.0, 'mg/dL', 'µmol/L', 'Creatinine');
+    expect(result).not.toBeNull();
+    expect(result!.value).toBeCloseTo(88.4, 0);
+  });
+
+  it('converts Cholesterol mg/dL → mmol/L', () => {
+    // 200 mg/dL × 10 / 386.65 ≈ 5.172
+    const result = convertUnit(200, 'mg/dL', 'mmol/L', 'Cholesterol');
+    expect(result).not.toBeNull();
+    expect(result!.value).toBeCloseTo(5.172, 2);
+  });
+
+  it('converts VitaminD ng/mL → nmol/L', () => {
+    // 30 ng/mL × 1000 / 384.64 ≈ 78.0
+    const result = convertUnit(30, 'ng/mL', 'nmol/L', 'VitaminD');
+    expect(result).not.toBeNull();
+    expect(result!.value).toBeCloseTo(78.0, 0);
+  });
+
+  it('converts TestosteroneFree pg/mL → pmol/L', () => {
+    // 10 pg/mL × 1000 / 288.42 ≈ 34.67
+    const result = convertUnit(10, 'pg/mL', 'pmol/L', 'TestosteroneFree');
+    expect(result).not.toBeNull();
+    expect(result!.value).toBeCloseTo(34.67, 1);
+  });
+
+  it('converts TestosteroneFree pmol/L → pg/mL', () => {
+    // 34.67 pmol/L × 288.42 / 1000 ≈ 10
+    const result = convertUnit(34.67, 'pmol/L', 'pg/mL', 'TestosteroneFree');
+    expect(result).not.toBeNull();
+    expect(result!.value).toBeCloseTo(10, 0);
+  });
+
+  it('converts Estradiol pg/mL → pmol/L (MW-based)', () => {
+    // 50 pg/mL × 1000 / 272.38 ≈ 183.56
+    const result = convertUnit(50, 'pg/mL', 'pmol/L', 'Estradiol');
+    expect(result).not.toBeNull();
+    expect(result!.value).toBeCloseTo(183.56, 0);
+  });
+
+  // ─── Roundtrip ────────────────────────────────────────────────────────────
+
+  it('roundtrip: Glucose mg/dL → mmol/L → mg/dL', () => {
+    const forward = convertUnit(100, 'mg/dL', 'mmol/L', 'Glucose')!;
+    const back = convertUnit(forward.value, 'mmol/L', 'mg/dL', 'Glucose')!;
+    expect(back.value).toBeCloseTo(100, 1);
+  });
+
+  it('roundtrip: TestosteroneFree pg/mL → pmol/L → pg/mL', () => {
+    const forward = convertUnit(15, 'pg/mL', 'pmol/L', 'TestosteroneFree')!;
+    const back = convertUnit(forward.value, 'pmol/L', 'pg/mL', 'TestosteroneFree')!;
+    expect(back.value).toBeCloseTo(15, 1);
+  });
+
+  // ─── Unsupported conversions ──────────────────────────────────────────────
+
+  it('returns null for unsupported conversion pair', () => {
+    expect(convertUnit(100, 'mg/dL', 'kg', 'Glucose')).toBeNull();
   });
 });

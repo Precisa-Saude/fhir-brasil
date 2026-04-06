@@ -21,7 +21,7 @@ function interventionStatus(endDate?: string): 'active' | 'completed' {
  * LOINC-like codes for lifestyle observation types
  */
 const LIFESTYLE_CODES: Record<string, { code: string; display: string }> = {
-  diet: { code: '81259-4', display: 'Associated precondition - Loss of appetite' },
+  diet: { code: '81259-4', display: 'Diet' },
   exercise: { code: '73985-4', display: 'Exercise activity' },
   sleep: { code: '93832-4', display: 'Sleep duration' },
 };

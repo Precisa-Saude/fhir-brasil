@@ -1,3 +1,14 @@
+## [0.6.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.6.0...v0.6.1) (2026-04-06)
+
+### Bug Fixes
+
+* **calculators,ocr-utils,rnds:** use workspace:^ for flexible semver range ([278a96d](https://github.com/Precisa-Saude/fhir-brasil/commit/278a96d373c0858e7a7d78447a99ea3b5bc23701))
+* **ci:** use pnpm publish to resolve workspace: protocol ([176c571](https://github.com/Precisa-Saude/fhir-brasil/commit/176c5717dda7fdf1d418cc15085ea032528ed411))
+
+### Documentation
+
+* simplificar diagrama da seção Problema no README ([3617bed](https://github.com/Precisa-Saude/fhir-brasil/commit/3617bed91efec9281337d5ed873945bf092405f0))
+
 ## [0.6.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.5.1...v0.6.0) (2026-04-06)
 
 ### Features

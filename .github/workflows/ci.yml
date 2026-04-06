@@ -169,7 +169,7 @@ jobs:
             else
               echo "Publishing $pkg_name@$pkg_version..."
               cd "$dir"
-              npm publish --provenance --access public
+              pnpm publish --provenance --access public --no-git-checks
               cd "$GITHUB_WORKSPACE"
             fi
           }

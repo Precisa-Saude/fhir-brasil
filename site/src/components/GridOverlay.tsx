@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 
+import { useWideGrid } from '@/hooks/useWideGrid';
+
 type GridMode = 'off' | 'columns' | 'guides';
 
 const STORAGE_KEY = 'fhir-grid-overlay';
-const TOTAL_COLS = 14;
-const GUTTER_COLS = 1;
 
 export function GridOverlay() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -44,22 +44,25 @@ export function GridOverlay() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [cycle]);
 
+  const wide = useWideGrid();
+  const totalCols = wide ? 16 : 14;
+  const gutterCols = wide ? 2 : 1;
+
   if (!isDev || mode === 'off') return null;
 
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[9999]">
       <div className="flex h-full items-stretch justify-center">
-        {/* Desktop grid */}
         <div
           className="hidden h-full w-full gap-4 md:grid"
           style={{
-            gridTemplateColumns: `repeat(${TOTAL_COLS}, 1fr)`,
+            gridTemplateColumns: `repeat(${totalCols}, 1fr)`,
             margin: '0 auto',
             maxWidth: 'var(--grid-max-w)',
           }}
         >
-          {Array.from({ length: TOTAL_COLS }).map((_, i) => {
-            const isGutter = i < GUTTER_COLS || i >= TOTAL_COLS - GUTTER_COLS;
+          {Array.from({ length: totalCols }).map((_, i) => {
+            const isGutter = i < gutterCols || i >= totalCols - gutterCols;
             return (
               <div
                 key={i}
@@ -72,7 +75,6 @@ export function GridOverlay() {
             );
           })}
         </div>
-        {/* Mobile grid */}
         <div
           className="grid h-full w-full gap-4 px-4 md:hidden"
           style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}
@@ -90,7 +92,6 @@ export function GridOverlay() {
         </div>
       </div>
 
-      {/* Row guides */}
       {mode === 'guides' && (
         <div className="absolute inset-0 overflow-hidden">
           <div
@@ -103,7 +104,6 @@ export function GridOverlay() {
         </div>
       )}
 
-      {/* Mode indicator */}
       <div className="fixed right-3 bottom-3 rounded-md bg-black/70 px-2 py-1 font-mono text-[10px] text-white">
         grid: {mode} <span className="text-white/50">(g)</span>
       </div>

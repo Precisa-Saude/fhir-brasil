@@ -56,7 +56,7 @@ function CopyButton({ text }: { text: string }) {
 
 export function Packages() {
   return (
-    <section id="pacotes" className="py-20 sm:py-28">
+    <section id="pacotes" className="min-h-[50svh] bg-white/30 py-20 sm:py-28">
       <div
         className="mx-auto grid gap-4 px-4 md:px-0"
         style={{
@@ -65,7 +65,7 @@ export function Packages() {
           width: '100%',
         }}
       >
-        <div className="col-span-full md:col-span-10 md:col-start-3">
+        <div className="col-span-full md:col-span-10 md:col-start-3 3xl:col-start-4">
           <h2 className="font-margem text-3xl font-bold tracking-tight text-ps-violet-dark sm:text-4xl">
             Pacotes
           </h2>

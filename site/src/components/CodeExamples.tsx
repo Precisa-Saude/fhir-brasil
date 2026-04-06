@@ -173,7 +173,7 @@ export function CodeExamples() {
   }, []);
 
   return (
-    <section id="exemplos" className="bg-white/30 py-20 sm:py-28">
+    <section id="exemplos" className="min-h-[50svh] py-20 sm:py-28">
       <div
         className="mx-auto grid gap-4 px-4 md:px-0"
         style={{
@@ -182,7 +182,7 @@ export function CodeExamples() {
           width: '100%',
         }}
       >
-      <div className="col-span-full md:col-span-10 md:col-start-3">
+      <div className="col-span-full md:col-span-10 md:col-start-3 3xl:col-start-4">
         <h2 className="font-margem text-3xl font-bold tracking-tight text-ps-violet-dark sm:text-4xl">
           Comece em minutos
         </h2>
@@ -190,16 +190,14 @@ export function CodeExamples() {
           TypeScript-first, com tipagem completa e autocompletar no editor.
         </p>
 
-        {/* Tabs */}
         <div className="mt-8 mb-4 flex justify-start overflow-x-auto md:justify-center">
         <div
           className="relative inline-grid min-w-max rounded-full border border-ps-violet-dark/10 bg-ps-sand/50 p-1"
           role="tablist"
           style={{ gridTemplateColumns: `repeat(${TABS.length}, 1fr)` }}
         >
-          {/* Sliding indicator */}
           <div
-            className="absolute top-1 bottom-1 rounded-full bg-ps-violet-dark shadow-sm transition-all duration-300 ease-out"
+            className="absolute top-1 bottom-1 rounded-full bg-ps-violet-dark transition-all duration-300 ease-out"
             style={{
               left: `calc(4px + ${activeTab} * ((100% - 8px) / ${TABS.length}))`,
               width: `calc((100% - 8px) / ${TABS.length})`,
@@ -224,8 +222,7 @@ export function CodeExamples() {
         </div>
         </div>
 
-        {/* Code block */}
-        <div className="overflow-hidden rounded-xl border border-ps-violet-dark/10 bg-[#282a36] shadow-lg">
+        <div className="overflow-hidden rounded-xl border border-ps-violet-dark/10 bg-[#282a36]">
           {highlightedCode.length > 0 ? (
             <div
               className="overflow-x-auto p-6 text-sm leading-relaxed [&_pre]:!bg-transparent"

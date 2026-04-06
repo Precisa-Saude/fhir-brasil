@@ -1,5 +1,6 @@
 import { Activity, ExternalLink, FlaskConical, HeartPulse, Network } from 'lucide-react';
 import type { ReactNode } from 'react';
+import { useWideGrid } from '@/hooks/useWideGrid';
 
 interface FeatureLink {
   label: string;
@@ -56,21 +57,20 @@ const gridStyle = {
   width: '100%',
 } as const;
 
-const COL_STARTS = [
-  'md:[grid-column-start:2]',
-  'md:[grid-column-start:8]',
-  'md:[grid-column-start:2]',
-  'md:[grid-column-start:8]',
-] as const;
+const COL_STARTS_14 = [2, 8, 2, 8] as const;
 
 export function Features() {
+  const wide = useWideGrid();
+  const offset = wide ? 1 : 0;
+
   return (
-    <section className="py-20 sm:py-28">
+    <section className="min-h-[50svh] py-20 sm:py-28">
       <div className="mx-auto flex flex-col gap-4 px-4 md:grid md:px-0" style={gridStyle}>
         {FEATURES.map((feature, i) => (
           <div
             key={feature.title}
-            className={`rounded-2xl border border-ps-violet-dark/8 bg-white/50 p-8 outline outline-1 outline-ps-violet-dark/5 backdrop-blur-sm transition-colors hover:border-ps-violet-dark/15 md:col-span-6 ${COL_STARTS[i]}`}
+            className="rounded-2xl border border-ps-violet-dark/8 bg-white/50 p-8 outline outline-1 outline-ps-violet-dark/5 backdrop-blur-sm transition-colors hover:border-ps-violet-dark/15 md:col-span-6"
+            style={{ gridColumnStart: COL_STARTS_14[i]! + offset }}
           >
             <div className="mb-4 inline-flex rounded-full bg-ps-sand p-3 text-ps-violet-dark">
               {feature.icon}

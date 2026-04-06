@@ -74,11 +74,14 @@ export function Ecosystem() {
           <h2 className="font-margem text-3xl font-bold tracking-tight text-ps-violet-dark sm:text-4xl">
             Ecossistema
           </h2>
-          <p className="mt-3 font-pausa text-lg text-ps-violet-dark/60">
-            O fhir-brasil fornece a base para que cada ator do ecossistema de saúde possa construir
-            sobre o mesmo padrão.
-          </p>
         </div>
+        <p
+          className="col-span-full mb-8 text-center text-pretty font-pausa text-lg text-ps-violet-dark/60"
+          style={{ gridColumn: `${5 + offset} / span 6` }}
+        >
+          O fhir-brasil fornece a base para que cada ator do ecossistema de saúde possa construir
+          sobre o mesmo padrão.
+        </p>
 
         {ACTORS.map((actor, i) => {
           const col = CARD_COLS_14[i]!;

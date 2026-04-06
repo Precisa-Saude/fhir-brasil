@@ -66,6 +66,18 @@ export function Features() {
   return (
     <section className="min-h-[50svh] py-20 sm:py-28">
       <div className="mx-auto flex flex-col gap-4 px-4 md:grid md:px-0" style={gridStyle}>
+        <div className="col-span-full text-center md:col-span-12 md:col-start-2 3xl:col-start-3">
+          <h2 className="font-margem text-3xl font-bold tracking-tight text-ps-violet-dark sm:text-4xl">
+            A solução
+          </h2>
+        </div>
+        <p
+          className="col-span-full mb-8 text-center text-pretty font-pausa text-lg text-ps-violet-dark/60"
+          style={{ gridColumn: `${5 + offset} / span 6` }}
+        >
+          Infraestrutura open-source que transforma dados fragmentados em recursos FHIR R4 padronizados.
+        </p>
+
         {FEATURES.map((feature, i) => (
           <div
             key={feature.title}

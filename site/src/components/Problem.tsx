@@ -85,7 +85,7 @@ export function Problem() {
         </div>
 
         <p
-          className="col-span-full font-pausa text-lg leading-relaxed text-ps-violet-dark/70"
+          className="col-span-full mb-8 text-pretty font-pausa text-lg leading-relaxed text-ps-violet-dark/70"
           style={{ gridColumn: `${2 + offset} / span 6` }}
         >
           O sistema de saúde brasileiro opera como duas redes paralelas com troca mínima de dados.
@@ -93,7 +93,7 @@ export function Problem() {
           usam sistemas internos cada vez mais conectados à RNDS — mas nenhum sistema enxerga o outro.
         </p>
         <p
-          className="col-span-full font-pausa text-lg leading-relaxed text-ps-violet-dark/70"
+          className="col-span-full mb-8 text-pretty font-pausa text-lg leading-relaxed text-ps-violet-dark/70"
           style={{ gridColumn: `${8 + offset} / span 6` }}
         >
           Resultado: exames duplicados. O mesmo hemograma é solicitado pelo endocrinologista (privado)
@@ -101,7 +101,7 @@ export function Problem() {
         </p>
 
         <div className="col-span-full md:col-span-10 md:col-start-3 3xl:col-start-4">
-          <div className="mt-10 mb-4 flex justify-center">
+          <div className="mb-4 flex justify-center">
             <div
               className="relative inline-grid min-w-max rounded-full border border-ps-violet-dark/10 bg-ps-sand/50 p-1"
               role="tablist"

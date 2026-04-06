@@ -65,15 +65,17 @@ export function Packages() {
           width: '100%',
         }}
       >
-        <div className="col-span-full md:col-span-10 md:col-start-3 3xl:col-start-4">
+        <div className="col-span-full text-center md:col-span-12 md:col-start-2 3xl:col-start-3">
           <h2 className="font-margem text-3xl font-bold tracking-tight text-ps-violet-dark sm:text-4xl">
             Pacotes
           </h2>
-          <p className="mt-3 font-pausa text-lg text-ps-violet-dark/60">
-            Quatro pacotes modulares — use só o que precisar.
-          </p>
+        </div>
+        <p className="col-span-full mb-8 text-center text-pretty font-pausa text-lg text-ps-violet-dark/60 md:col-span-6 md:col-start-5 3xl:col-start-6">
+          Quatro pacotes modulares — use só o que precisar.
+        </p>
 
-          <div className="mt-10 space-y-4">
+        <div className="col-span-full md:col-span-10 md:col-start-3 3xl:col-start-4">
+          <div className="space-y-4">
             {PACKAGES.map((pkg) => (
               <div
                 key={pkg.name}

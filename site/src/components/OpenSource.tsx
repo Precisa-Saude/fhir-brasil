@@ -60,11 +60,14 @@ export function OpenSource() {
           <h2 className="font-margem text-3xl font-bold tracking-tight text-ps-violet-dark sm:text-4xl">
             Por que open-source?
           </h2>
-          <p className="mt-3 font-pausa text-lg text-ps-violet-dark/60">
-            Saúde digital precisa de infraestrutura aberta. Dados clínicos não devem depender de
-            implementações proprietárias.
-          </p>
         </div>
+        <p
+          className="col-span-full mb-8 text-center text-pretty font-pausa text-lg text-ps-violet-dark/60"
+          style={{ gridColumn: `${5 + offset} / span 6` }}
+        >
+          Saúde digital precisa de infraestrutura aberta. Dados clínicos não devem depender de
+          implementações proprietárias.
+        </p>
 
         {PILLARS.map((pillar, i) => {
           const col = PILLAR_COLS_14[i]!;

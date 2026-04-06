@@ -182,14 +182,16 @@ export function CodeExamples() {
           width: '100%',
         }}
       >
-      <div className="col-span-full md:col-span-10 md:col-start-3 3xl:col-start-4">
+      <div className="col-span-full text-center md:col-span-12 md:col-start-2 3xl:col-start-3">
         <h2 className="font-margem text-3xl font-bold tracking-tight text-ps-violet-dark sm:text-4xl">
           Comece em minutos
         </h2>
-        <p className="mt-3 font-pausa text-lg text-ps-violet-dark/60">
-          TypeScript-first, com tipagem completa e autocompletar no editor.
-        </p>
+      </div>
+      <p className="col-span-full mb-8 text-center text-pretty font-pausa text-lg text-ps-violet-dark/60 md:col-span-6 md:col-start-5 3xl:col-start-6">
+        TypeScript-first, com tipagem completa e autocompletar no editor.
+      </p>
 
+      <div className="col-span-full md:col-span-10 md:col-start-3 3xl:col-start-4">
         <div className="mt-8 mb-4 flex justify-start overflow-x-auto md:justify-center">
         <div
           className="relative inline-grid min-w-max rounded-full border border-ps-violet-dark/10 bg-ps-sand/50 p-1"

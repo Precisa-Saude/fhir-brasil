@@ -93,7 +93,7 @@ importers:
   packages/calculators:
     dependencies:
       '@precisa-saude/fhir':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../core
     devDependencies:
       tsup:
@@ -121,7 +121,7 @@ importers:
   packages/ocr-utils:
     dependencies:
       '@precisa-saude/fhir':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../core
     devDependencies:
       tsup:
@@ -137,7 +137,7 @@ importers:
   packages/rnds:
     dependencies:
       '@precisa-saude/fhir':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../core
     devDependencies:
       tsup:

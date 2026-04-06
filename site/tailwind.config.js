@@ -4,20 +4,45 @@ export default {
   theme: {
     extend: {
       colors: {
-        'ps-violet-dark': 'oklch(0.39 0.082 292)',
-        'ps-violet-light': 'oklch(0.67 0.113 285)',
-        'ps-mint': 'oklch(0.90 0.085 181)',
-        'ps-sand': 'oklch(0.89 0.023 65)',
-        'ps-neutral': 'oklch(0.94 0.008 61)',
+        border: 'var(--border)',
+        input: 'var(--input)',
+        ring: 'var(--ring)',
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
+        primary: {
+          DEFAULT: 'var(--primary)',
+          foreground: 'var(--primary-foreground)',
+        },
+        secondary: {
+          DEFAULT: 'var(--secondary)',
+          foreground: 'var(--secondary-foreground)',
+        },
+        muted: {
+          DEFAULT: 'var(--muted)',
+          foreground: 'var(--muted-foreground)',
+        },
+        accent: {
+          DEFAULT: 'var(--accent)',
+          foreground: 'var(--accent-foreground)',
+        },
+        'ps-violet': 'var(--ps-violet)',
+        'ps-mint': 'var(--ps-mint)',
+        'ps-amber': 'var(--ps-amber)',
+        'ps-green': 'var(--ps-green)',
+        // Legacy aliases used across fhir-brasil components
+        'ps-violet-dark': 'var(--primary)',
+        'ps-violet-light': 'var(--ps-violet)',
+        'ps-sand': 'var(--secondary)',
+        'ps-neutral': 'var(--background)',
       },
       fontFamily: {
         sans: ['Roboto', 'system-ui', 'sans-serif'],
         serif: ['Roboto Serif', 'Georgia', 'serif'],
       },
       borderRadius: {
-        lg: '0.625rem',
-        md: 'calc(0.625rem - 2px)',
-        sm: 'calc(0.625rem - 4px)',
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
       },
     },
   },

@@ -1,5 +1,6 @@
 import { Check, Copy } from 'lucide-react';
 import { useState } from 'react';
+import { CornerSquares } from './CornerSquares';
 
 interface PackageInfo {
   name: string;
@@ -56,7 +57,8 @@ function CopyButton({ text }: { text: string }) {
 
 export function Packages() {
   return (
-    <section id="pacotes" className="py-20 sm:py-28">
+    <section id="pacotes" className="relative min-h-[50svh] bg-white/30 py-20 sm:py-28">
+      <CornerSquares position="top" />
       <div
         className="mx-auto grid gap-4 px-4 md:px-0"
         style={{
@@ -65,19 +67,21 @@ export function Packages() {
           width: '100%',
         }}
       >
-        <div className="col-span-full md:col-span-10 md:col-start-3">
+        <div className="col-span-full text-center md:col-span-12 md:col-start-2 3xl:col-start-3">
           <h2 className="font-margem text-3xl font-bold tracking-tight text-ps-violet-dark sm:text-4xl">
             Pacotes
           </h2>
-          <p className="mt-3 font-pausa text-lg text-ps-violet-dark/60">
-            Quatro pacotes modulares — use só o que precisar.
-          </p>
+        </div>
+        <p className="col-span-full mb-8 text-center text-pretty font-pausa text-lg text-ps-violet-dark/60 md:col-span-8 md:col-start-4 3xl:col-start-5">
+          Quatro pacotes modulares — use só o que precisar.
+        </p>
 
-          <div className="mt-10 space-y-4">
+        <div className="col-span-full md:col-span-10 md:col-start-3 3xl:col-start-4">
+          <div className="space-y-4">
             {PACKAGES.map((pkg) => (
               <div
                 key={pkg.name}
-                className="flex flex-col gap-4 rounded-xl border border-ps-violet-dark/8 bg-white/50 p-6 backdrop-blur-sm sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-4 rounded-xl border border-ps-violet-dark/8 bg-white/50 p-6 backdrop-blur-sm lg:flex-row lg:items-center lg:justify-between"
               >
                 <div className="min-w-0 flex-1">
                   <h3 className="font-mono text-sm font-semibold text-ps-violet-dark">{pkg.name}</h3>

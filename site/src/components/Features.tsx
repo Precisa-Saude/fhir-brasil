@@ -1,5 +1,6 @@
 import { Activity, ExternalLink, FlaskConical, HeartPulse, Network } from 'lucide-react';
 import type { ReactNode } from 'react';
+import { useGridCol } from '@/hooks/useGridCol';
 
 interface FeatureLink {
   label: string;
@@ -56,21 +57,31 @@ const gridStyle = {
   width: '100%',
 } as const;
 
-const COL_STARTS = [
-  'md:[grid-column-start:2]',
-  'md:[grid-column-start:8]',
-  'md:[grid-column-start:2]',
-  'md:[grid-column-start:8]',
-] as const;
+const COL_STARTS_14 = [2, 8, 2, 8] as const;
 
 export function Features() {
+  const col = useGridCol();
+
   return (
-    <section className="py-20 sm:py-28">
+    <section className="min-h-[50svh] py-20 sm:py-28">
       <div className="mx-auto flex flex-col gap-4 px-4 md:grid md:px-0" style={gridStyle}>
+        <div className="col-span-full text-center md:col-span-12 md:col-start-2 3xl:col-start-3">
+          <h2 className="font-margem text-3xl font-bold tracking-tight text-ps-violet-dark sm:text-4xl">
+            A solução
+          </h2>
+        </div>
+        <p
+          className="col-span-full mb-8 text-center text-pretty font-pausa text-lg text-ps-violet-dark/60"
+          style={col(4, 8)}
+        >
+          Infraestrutura de código aberto que transforma dados fragmentados em recursos FHIR R4 padronizados.
+        </p>
+
         {FEATURES.map((feature, i) => (
           <div
             key={feature.title}
-            className={`rounded-2xl border border-ps-violet-dark/8 bg-white/50 p-8 outline outline-1 outline-ps-violet-dark/5 backdrop-blur-sm transition-colors hover:border-ps-violet-dark/15 md:col-span-6 ${COL_STARTS[i]}`}
+            className="rounded-2xl border border-ps-violet-dark/8 bg-white/50 p-8 outline outline-1 outline-ps-violet-dark/5 backdrop-blur-sm transition-colors hover:border-ps-violet-dark/15 md:col-span-6"
+            style={col(COL_STARTS_14[i]!, 6)}
           >
             <div className="mb-4 inline-flex rounded-full bg-ps-sand p-3 text-ps-violet-dark">
               {feature.icon}

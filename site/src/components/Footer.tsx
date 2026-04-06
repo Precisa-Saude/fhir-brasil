@@ -54,10 +54,8 @@ export function Footer() {
           width: '100%',
         }}
       >
-      <div className="col-span-full md:col-span-12 md:col-start-2">
-        {/* Top row: logo lockup + social icons */}
+      <div className="col-span-full md:col-span-12 md:col-start-2 3xl:col-start-3">
         <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-between">
-          {/* Brand lockup */}
           <div className="flex flex-col items-center gap-2 sm:items-start">
             <span className="font-margem text-xs tracking-wide text-ps-violet-dark/40">
               Mantido por
@@ -75,7 +73,6 @@ export function Footer() {
             </a>
           </div>
 
-          {/* Social links */}
           <nav className="flex items-center gap-3">
             {SOCIAL_LINKS.map((link) => (
               <a
@@ -92,8 +89,7 @@ export function Footer() {
           </nav>
         </div>
 
-        {/* Disclaimer */}
-        <p className="mt-8 border-t border-ps-violet-dark/8 pt-6 text-justify font-margem text-sm leading-relaxed text-ps-violet-dark/30 [text-align-last:left]">
+        <p className="mt-8 border-t border-ps-violet-dark/8 pt-6 text-justify font-margem text-xs leading-relaxed text-ps-violet-dark/30 [text-align-last:left]">
           Este software é fornecido exclusivamente para fins informativos e educacionais. Não
           constitui aconselhamento médico, diagnóstico ou recomendação de tratamento. Os dados e
           cálculos fornecidos não substituem a avaliação de um profissional de saúde qualificado.

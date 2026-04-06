@@ -23,29 +23,29 @@ Isso custa dinheiro (operadoras e SUS pagam), desperdiça capacidade laboratoria
 ### Hoje: dados fragmentados
 
 ```
-┌──────────────────────┐         ┌──────────────────────┐
-│     Rede Privada     │         │     Rede Pública     │
-│                      │         │                      │
-│  Lab privado         │         │  UBS / Lab SUS       │
-│  (Weinmann, Fleury)  │         │  (rede pública)      │
-│         │            │         │         │            │
-│         ▼            │         │         ▼            │
-│  PDF no WhatsApp     │         │  Sistema interno     │
-│  sem padrão          │         │  dados presos na UBS │
-│  sem LOINC           │         │                      │
-│         │            │         │         │            │
-│         ▼            │         │         ▼            │
-│  Médico pede exame   │         │  UBS pede exame      │
-│  sem histórico ◄─────┼── ✕ ──►┼─ sem histórico       │
-│  do SUS              │         │  privado             │
-└──────────┬───────────┘         └──────────┬───────────┘
-           │                                │
-           └───────────┐  ┌─────────────────┘
-                       ▼  ▼
-              ┌──────────────────┐
-              │ Exames duplicados│
+┌───────────────────────┐       ┌───────────────────────┐
+│     Rede Privada      │       │     Rede Pública      │
+│                       │       │                       │
+│  Lab privado          │       │  UBS / Lab SUS        │
+│  (Dasa, Fleury, etc.)   │       │  (rede pública)       │
+│         │             │       │         │             │
+│         ▼             │       │         ▼             │
+│  PDF no WhatsApp      │       │  Sistema interno      │
+│  sem padrão           │       │  dados presos na UBS  │
+│  sem LOINC            │       │                       │
+│         │             │       │         │             │
+│         ▼             │       │         ▼             │
+│  Médico pede exame    │       │  UBS pede exame       │
+│  sem histórico  ◄─────┤── ✕ ──├─  sem histórico      │
+│  do SUS               │       │  privado              │
+└───────────┬───────────┘       └───────────┬───────────┘
+            │                               │
+            └───────────┐   ┌───────────────┘
+                        ▼   ▼
+              ┌───────────────────┐
+              │ Exames duplicados │
               │ custo desperdiçado│
-              └──────────────────┘
+              └───────────────────┘
 ```
 
 ### Com fhir-brasil: interoperabilidade via FHIR R4
@@ -60,7 +60,7 @@ Isso custa dinheiro (operadoras e SUS pagam), desperdiça capacidade laboratoria
         └──────────────────┼──────────────────┘
                            ▼
           ┌────────────────────────────────┐
-          │    fhir-brasil (open source)   │
+          │   fhir-brasil (código aberto)  │
           │                                │
           │  200+ biomarcadores LOINC      │
           │  Conversor FHIR R4             │

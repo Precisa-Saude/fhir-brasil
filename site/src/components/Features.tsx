@@ -1,6 +1,6 @@
 import { Activity, ExternalLink, FlaskConical, HeartPulse, Network } from 'lucide-react';
 import type { ReactNode } from 'react';
-import { useWideGrid } from '@/hooks/useWideGrid';
+import { useGridCol } from '@/hooks/useGridCol';
 
 interface FeatureLink {
   label: string;
@@ -60,8 +60,7 @@ const gridStyle = {
 const COL_STARTS_14 = [2, 8, 2, 8] as const;
 
 export function Features() {
-  const wide = useWideGrid();
-  const offset = wide ? 1 : 0;
+  const col = useGridCol();
 
   return (
     <section className="min-h-[50svh] py-20 sm:py-28">
@@ -73,16 +72,16 @@ export function Features() {
         </div>
         <p
           className="col-span-full mb-8 text-center text-pretty font-pausa text-lg text-ps-violet-dark/60"
-          style={{ gridColumn: `${5 + offset} / span 6` }}
+          style={col(5, 6)}
         >
-          Infraestrutura open-source que transforma dados fragmentados em recursos FHIR R4 padronizados.
+          Infraestrutura de código aberto que transforma dados fragmentados em recursos FHIR R4 padronizados.
         </p>
 
         {FEATURES.map((feature, i) => (
           <div
             key={feature.title}
             className="rounded-2xl border border-ps-violet-dark/8 bg-white/50 p-8 outline outline-1 outline-ps-violet-dark/5 backdrop-blur-sm transition-colors hover:border-ps-violet-dark/15 md:col-span-6"
-            style={{ gridColumnStart: COL_STARTS_14[i]! + offset }}
+            style={col(COL_STARTS_14[i]!, 6)}
           >
             <div className="mb-4 inline-flex rounded-full bg-ps-sand p-3 text-ps-violet-dark">
               {feature.icon}

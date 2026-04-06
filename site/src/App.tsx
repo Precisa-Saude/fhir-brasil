@@ -15,7 +15,7 @@ const MOSAIC_COLORS = ['var(--ps-violet)', 'var(--ps-mint)'];
 
 export default function App() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-hidden">
       <Nav />
       <main>
         <MosaicBg colors={MOSAIC_COLORS} className="bg-primary">

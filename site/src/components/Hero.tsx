@@ -33,14 +33,14 @@ export function Hero() {
     <section className="relative min-h-[60svh] pt-16">
 
       <div
-        className="relative z-10 mx-auto grid gap-4 px-4 py-24 sm:py-32 md:px-0 lg:py-40"
+        className="relative z-10 mx-auto grid gap-4 px-4 py-10 sm:py-32 md:px-0 lg:py-40"
         style={gridStyle}
       >
         <div className="col-span-full text-center md:col-span-12 md:col-start-2 3xl:col-start-3">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary-foreground/15 bg-white/10 px-4 py-1.5 backdrop-blur-sm">
             <span className="h-2 w-2 rounded-full bg-ps-mint" />
             <span className="font-margem text-sm font-medium text-primary-foreground/70">
-              Open-source · TypeScript · Zero deps
+              Código aberto · TypeScript · Zero deps
             </span>
           </div>
 
@@ -50,13 +50,13 @@ export function Hero() {
 
           <p className="mx-auto mt-6 mb-4 font-pausa text-xl leading-snug text-primary-foreground/70 sm:text-2xl">
             A camada de infraestrutura que conecta dados de saúde fragmentados entre redes pública e
-            privada — open-source, com códigos LOINC e diretrizes SBPC/ML.
+            privada — código aberto, com códigos LOINC e diretrizes SBPC/ML.
           </p>
 
           <div className="mx-auto mt-10 flex w-full max-w-sm flex-col gap-3 md:max-w-none md:w-[calc(4*var(--col-w)+3*1rem)]">
             <button
               onClick={handleCopy}
-              className="group flex w-full items-center justify-between rounded-full border border-primary-foreground/15 bg-white/10 px-6 py-3.5 font-mono text-sm text-white/90 transition-all hover:bg-white/20"
+              className="group flex w-full items-center justify-between rounded-full border border-primary-foreground/15 bg-white/10 px-4 py-2.5 font-mono text-sm text-white/90 transition-all hover:bg-white/20 sm:px-6 sm:py-3.5"
             >
               <span>
                 <span className="text-ps-mint/80">$</span> {INSTALL_CMD}

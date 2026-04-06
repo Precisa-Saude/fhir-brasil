@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { CornerSquares } from './CornerSquares';
-import { useWideGrid } from '@/hooks/useWideGrid';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useGridCol } from '@/hooks/useGridCol';
 
 const TABS = [
   {
@@ -43,7 +44,7 @@ const TABS = [
        +------------------+----------------+
                           v
          +-------------------------------+
-         |   fhir-brasil (open source)   |
+         |   fhir-brasil (codigo aberto) |
          |                               |
          |  200+ biomarcadores LOINC     |
          |  Conversor FHIR R4            |
@@ -73,8 +74,7 @@ const gridStyle = {
 
 export function Problem() {
   const [activeTab, setActiveTab] = useState(0);
-  const wide = useWideGrid();
-  const offset = wide ? 1 : 0;
+  const col = useGridCol();
 
   return (
     <section className="relative min-h-[50svh] bg-white/30 py-20 sm:py-28">
@@ -88,7 +88,7 @@ export function Problem() {
 
         <p
           className="col-span-full mb-8 text-pretty font-pausa text-lg leading-relaxed text-ps-violet-dark/70"
-          style={{ gridColumn: `${2 + offset} / span 6` }}
+          style={col(2, 6)}
         >
           O sistema de saúde brasileiro opera como duas redes paralelas com troca mínima de dados.
           Laboratórios privados entregam resultados como PDFs sem formato padrão. Laboratórios do SUS
@@ -96,14 +96,26 @@ export function Problem() {
         </p>
         <p
           className="col-span-full mb-8 text-pretty font-pausa text-lg leading-relaxed text-ps-violet-dark/70"
-          style={{ gridColumn: `${8 + offset} / span 6` }}
+          style={col(8, 6)}
         >
           Resultado: exames duplicados. O mesmo hemograma é solicitado pelo endocrinologista (privado)
           e pela UBS (SUS) em questão de semanas, porque não existe uma visão longitudinal do paciente.
         </p>
 
         <div className="col-span-full md:col-span-10 md:col-start-3 3xl:col-start-4">
-          <div className="mb-4 flex justify-center">
+          <div className="mb-4 md:hidden">
+            <Select value={TABS[activeTab].label} onValueChange={(v) => setActiveTab(TABS.findIndex((t) => t.label === v))}>
+              <SelectTrigger className="w-full border-ps-violet-dark/15 bg-white/80 font-margem text-sm text-ps-violet-dark">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {TABS.map((tab) => (
+                  <SelectItem key={tab.label} value={tab.label} className="font-margem text-sm">{tab.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="mb-4 hidden justify-center md:flex">
             <div
               className="relative inline-grid min-w-max rounded-full border border-ps-violet-dark/10 bg-ps-sand/50 p-1"
               role="tablist"

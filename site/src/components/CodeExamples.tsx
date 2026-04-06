@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const TABS = [
   {
@@ -192,7 +193,19 @@ export function CodeExamples() {
       </p>
 
       <div className="col-span-full md:col-span-10 md:col-start-3 3xl:col-start-4">
-        <div className="mt-8 mb-4 flex justify-start overflow-x-auto md:justify-center">
+        <div className="mt-8 mb-4 md:hidden">
+          <Select value={TABS[activeTab].label} onValueChange={(v) => setActiveTab(TABS.findIndex((t) => t.label === v))}>
+            <SelectTrigger className="w-full border-ps-violet-dark/15 bg-white/80 font-margem text-sm text-ps-violet-dark">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {TABS.map((tab) => (
+                <SelectItem key={tab.label} value={tab.label} className="font-margem text-sm">{tab.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="mt-8 mb-4 hidden justify-center md:flex">
         <div
           className="relative inline-grid min-w-max rounded-full border border-ps-violet-dark/10 bg-ps-sand/50 p-1"
           role="tablist"

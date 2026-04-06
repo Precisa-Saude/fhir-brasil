@@ -1,4 +1,4 @@
-import { useWideGrid } from '@/hooks/useWideGrid';
+import { useGridCol } from '@/hooks/useGridCol';
 
 const STANDARDS = [
   {
@@ -23,7 +23,7 @@ const STANDARDS = [
   },
   {
     label: 'Apache-2.0',
-    description: 'Licença open-source permissiva',
+    description: 'Licença de código aberto permissiva',
     href: 'https://www.apache.org/licenses/LICENSE-2.0',
   },
 ] as const;
@@ -40,8 +40,7 @@ const gridStyle = {
 const COL_STARTS_14 = [2, 6, 10, 4, 8] as const;
 
 export function Standards() {
-  const wide = useWideGrid();
-  const offset = wide ? 1 : 0;
+  const col = useGridCol();
 
   return (
     <section className="min-h-[50svh] py-20 sm:py-28">
@@ -53,7 +52,7 @@ export function Standards() {
         </div>
         <p
           className="col-span-full mb-8 text-center text-pretty font-pausa text-lg text-ps-violet-dark/60"
-          style={{ gridColumn: `${5 + offset} / span 6` }}
+          style={col(5, 6)}
         >
           Construído sobre padrões internacionais de interoperabilidade em saúde, adaptado para o
           contexto brasileiro.
@@ -66,7 +65,7 @@ export function Standards() {
             target="_blank"
             rel="noopener noreferrer"
             className="flex h-32 flex-col items-center justify-center gap-2 rounded-xl border border-ps-violet-dark/8 bg-white/60 px-4 text-center outline outline-1 outline-ps-violet-dark/5 backdrop-blur-sm transition-colors hover:border-ps-violet-dark/15 md:col-span-4"
-            style={{ gridColumnStart: COL_STARTS_14[i]! + offset }}
+            style={col(COL_STARTS_14[i]!, 4)}
           >
             <span className="font-margem text-base font-bold text-ps-violet-dark">
               {standard.label}

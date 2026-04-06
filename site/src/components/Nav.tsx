@@ -1,12 +1,12 @@
 import { ExternalLink, Flame, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { useWideGrid } from '@/hooks/useWideGrid';
+import { useDesktop, useWideGrid } from '@/hooks/useWideGrid';
 
 const NAV_LINKS = [
   { label: 'Exemplos', href: '#exemplos' },
   { label: 'Pacotes', href: '#pacotes' },
-  { label: 'Open Source', href: '#open-source' },
+  { label: 'Código Aberto', href: '#open-source' },
 ] as const;
 
 const gridStyle = {
@@ -17,21 +17,22 @@ const gridStyle = {
 
 export function Nav() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const desktop = useDesktop();
   const wide = useWideGrid();
   const offset = wide ? 1 : 0;
 
   return (
     <nav className="fixed top-0 z-50 w-full border-b border-white/10 bg-ps-violet-dark/95 backdrop-blur-md">
       <div
-        className="mx-auto grid h-16 items-center gap-4 px-4 md:px-0"
+        className="mx-auto flex h-16 items-center justify-between px-4 md:grid md:gap-4 md:px-0"
         style={gridStyle}
       >
         <a
           href="#"
-          className="col-span-3 inline-flex items-center gap-1.5 font-margem text-xl font-bold tracking-tight text-white"
-          style={{ gridColumnStart: 1 + offset }}
+          className="inline-flex items-center gap-1.5 font-margem text-xl font-bold tracking-tight text-white md:col-span-3"
+          style={desktop ? { gridColumnStart: 1 + offset } : undefined}
         >
-          <Flame className="h-6 w-6 text-white" />
+          <Flame className="h-6 w-6 shrink-0 text-white" />
           fhir-brasil
         </a>
 
@@ -59,7 +60,7 @@ export function Nav() {
 
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="col-start-[-1] rounded-md p-2 text-white md:hidden"
+          className="rounded-md p-2 text-white md:hidden"
           aria-label={mobileOpen ? 'Fechar menu' : 'Abrir menu'}
         >
           {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}

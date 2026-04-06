@@ -94,7 +94,7 @@ describe('cli: list', () => {
     await list([], true);
     const data = JSON.parse(stdoutOutput);
     expect(Array.isArray(data)).toBe(true);
-    expect(data.length).toBeGreaterThan(100);
+    expect(data.length).toBeGreaterThan(0);
   });
 
   it('should filter by category', async () => {

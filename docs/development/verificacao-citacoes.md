@@ -340,3 +340,42 @@
 - [x] Lipase - `tietz-7ed-2015`
 - [x] F2Isoprostanes - `tietz-7ed-2015`
 - [x] CoQ10 - `tietz-7ed-2015`
+
+---
+
+## Resumo por Publicação
+
+| Chave                         | Referência completa                                                                                                                              | Biomarcadores |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | :-----------: |
+| `tietz-7ed-2015`              | BURTIS, C. A.; BRUNS, D. E. Tietz Fundamentals of Clinical Chemistry and Molecular Diagnostics. 7. ed. Elsevier Saunders, 2015                   |      103      |
+| `pns-hemograma-2019`          | ROSENFELD, L. G. et al. Valores de referência para exames laboratoriais de hemograma da população adulta brasileira. Rev. Bras. Epidemiol., 2019 |      21       |
+| `kelly-dxa-2009`              | KELLY, T. L. et al. Dual energy X-ray absorptiometry body composition reference values from NHANES. PLoS One, 2009                               |       8       |
+| `harris-omega3-2004`          | HARRIS, W. S.; VON SCHACKY, C. The Omega-3 Index: a new risk factor for death from coronary heart disease? Prev. Med., 2004                      |       7       |
+| `rumberger-cac-1999`          | RUMBERGER, J. A. et al. Electron beam computed tomographic coronary calcium scanning. Mayo Clin. Proc., 1999                                     |       7       |
+| `sbc-lipids-2025`             | RACHED, F. H. et al. Diretriz Brasileira de Dislipidemias e Prevenção da Aterosclerose – 2025. Arq. Bras. Cardiol., 2025                         |       7       |
+| `sturgeon-nacb-2008`          | STURGEON, C. M. et al. NACB Laboratory Medicine Practice Guidelines for use of tumor markers. Clin. Chem., 2008                                  |       7       |
+| `caulfield-ionmobility-2008`  | CAULFIELD, M. P. et al. Direct determination of lipoprotein particle sizes and concentrations by ion mobility analysis. Clin. Chem., 2008        |       5       |
+| `simopoulos-omega-ratio-2002` | SIMOPOULOS, A. P. The importance of the ratio of omega-6/omega-3 essential fatty acids. Biomed. Pharmacother., 2002                              |       5       |
+| `nr7-pcmso-2020`              | BRASIL. NR-7 — PCMSO, Quadro 1: Indicadores biológicos. Portaria n. 6.734, 2020                                                                  |       4       |
+| `kdigo-ckd-2024`              | KDIGO CKD Work Group. KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of CKD. Kidney Int., 2024                         |       3       |
+| `who-osteoporosis-1994`       | WHO Study Group. Assessment of fracture risk and its application to screening for postmenopausal osteoporosis. WHO Tech. Rep. Series, 1994       |       3       |
+| `ofenheimer-vat-2020`         | OFENHEIMER, A. et al. Reference values of body composition parameters and VAT by DXA. Eur. J. Clin. Nutr., 2020                                  |       2       |
+| `pns-bioquimica-2019`         | SZWARCWALD, C. L. et al. Valores de referência para exames laboratoriais de colesterol, HbA1c e creatinina. Rev. Bras. Epidemiol., 2019          |       2       |
+| `sbc-ic-2018`                 | ROHDE, L. E. P. et al. Diretriz Brasileira de Insuficiência Cardíaca Crônica e Aguda. Arq. Bras. Cardiol., 2018                                  |       2       |
+| `sbd-diabetes-2024`           | Sociedade Brasileira de Diabetes. Diretrizes da SBD 2024                                                                                         |       2       |
+| `castelli-ratio-1992`         | CASTELLI, W. P. et al. Lipids and risk of coronary heart disease: the Framingham Study. Ann. Epidemiol., 1992                                    |       1       |
+| `contois-apoa1-1996`          | CONTOIS, J. H. et al. Reference intervals for plasma apolipoprotein A-1. Clin. Chem., 1996                                                       |       1       |
+| `friedewald-1972`             | FRIEDEWALD, W. T. et al. Estimation of LDL cholesterol concentration in plasma. Clin. Chem., 1972                                                |       1       |
+| `gallagher-bodyfat-2000`      | GALLAGHER, D. et al. Healthy percentage body fat ranges. Am. J. Clin. Nutr., 2000                                                                |       1       |
+| `giannitsis-hstnt-2010`       | GIANNITSIS, E. et al. Analytical validation of a high-sensitivity cardiac troponin T assay. Clin. Chem., 2010                                    |       1       |
+| `khetarpal-apociii-2016`      | KHETARPAL, S. A. et al. Why is apolipoprotein CIII emerging as a novel therapeutic target? Curr. Atheroscler. Rep., 2016                         |       1       |
+| `meuwese-mpo-2007`            | MEUWESE, M. C. et al. Serum myeloperoxidase levels and future risk of coronary artery disease. J. Am. Coll. Cardiol., 2007                       |       1       |
+| `sbem-thyroid-2013`           | SGARBI, J. A. et al. Consenso brasileiro para abordagem clínica do hipotireoidismo subclínico. Arq. Bras. Endocrinol. Metab., 2013               |       1       |
+| `sbem-vitamind-2014`          | MAEDA, S. S. et al. Recomendações da SBEM para diagnóstico e tratamento da hipovitaminose D. Arq. Bras. Endocrinol. Metab., 2014                 |       1       |
+| `sbpc-ml-2021`                | SBPC/ML. Recomendações da SBPC/ML. São Paulo, 2021                                                                                               |       1       |
+| `schlesinger-adma-2017`       | SCHLESINGER, S. et al. Asymmetric and symmetric dimethylarginine as risk markers. PLoS One, 2016                                                 |       1       |
+| `schnabel-tni-2012`           | SCHNABEL, R. B. et al. Relations of biomarkers and atrial fibrillation incidence. Circulation, 2010                                              |       1       |
+| `schwedhelm-sdma-2011`        | SCHWEDHELM, E. et al. Plasma symmetric dimethylarginine reference limits from Framingham. Clin. Chem. Lab. Med., 2011                            |       1       |
+| `selhub-homocysteine-1999`    | SELHUB, J. et al. Serum total homocysteine concentrations in NHANES III. Ann. Intern. Med., 1999                                                 |       1       |
+| `wells-ddimer-2003`           | WELLS, P. S. et al. Evaluation of D-dimer in the diagnosis of suspected DVT. N. Engl. J. Med., 2003                                              |       1       |
+| `who-obesity-2000`            | WHO. Obesity: preventing and managing the global epidemic. WHO Tech. Rep. Series, 2000                                                           |       1       |

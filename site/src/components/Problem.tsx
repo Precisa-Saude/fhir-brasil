@@ -41,11 +41,6 @@ const TABS = [
                        |
                        ▼
             fhir-brasil (código aberto)
-
-            200+ biomarcadores LOINC
-            Conversor FHIR R4
-            Faixas SBPC/ML
-            Calculadoras clínicas
                        |
                        ▼
             Aplicação

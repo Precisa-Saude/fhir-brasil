@@ -61,11 +61,6 @@ Isso custa dinheiro (operadoras e SUS pagam), desperdiça capacidade laboratoria
                            ▼
           ┌────────────────────────────────┐
           │   fhir-brasil (código aberto)  │
-          │                                │
-          │  180+ biomarcadores LOINC      │
-          │  Conversor FHIR R4             │
-          │  Faixas SBPC/ML                │
-          │  Calculadoras clínicas         │
           └───────────────┬────────────────┘
                           ▼
           ┌────────────────────────────────┐

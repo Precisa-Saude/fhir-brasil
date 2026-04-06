@@ -7,62 +7,56 @@ import { useGridCol } from '@/hooks/useGridCol';
 const TABS = [
   {
     label: 'Hoje: dados fragmentados',
-    diagram: `+----------------------+       +----------------------+
-|    Rede Privada      |       |    Rede Publica       |
-|                      |       |                       |
-|  Lab privado         |       |  UBS / Lab SUS        |
-|  (Weinmann, Fleury)  |       |  (rede publica)       |
-|         |            |       |         |             |
-|         v            |       |         v             |
-|  PDF no WhatsApp     |       |  Sistema interno      |
-|  sem padrao          |       |  dados presos na UBS  |
-|  sem LOINC           |       |                       |
-|         |            |       |         |             |
-|         v            |       |         v             |
-|  Medico pede exame   |       |  UBS pede exame       |
-|  sem historico <-----+-- X -->-- sem historico        |
-|  do SUS              |       |  privado              |
-+----------+-----------+       +----------+------------+
-           |                              |
-           +------------+  +-------------+
-                        v  v
-               +-----------------+
-               | Exames          |
-               | duplicados,     |
-               | custo           |
-               | desperdicado    |
-               +-----------------+`,
+    diagram: `
+  Rede Privada                Rede Pública
+  ─────────────               ─────────────
+
+  Lab privado                 UBS / Lab SUS
+  (Dasa, Fleury, etc.)          (rede pública)
+       |                           |
+       ▼                           ▼
+  PDF no WhatsApp             Sistema interno
+  sem padrão                  dados presos na UBS
+  sem LOINC
+       |                           |
+       ▼                           ▼
+  Médico pede exame           UBS pede exame
+  sem histórico  ◄── ✕ ──►  sem histórico
+  do SUS                      privado
+       |                           |
+       +─────────────┬─────────────+
+                     ▼
+            Exames duplicados
+            custo desperdiçado
+`,
   },
   {
     label: 'Com fhir-brasil',
-    diagram: `+--------------+  +--------------+  +--------------+
-|  Lab privado |  |    RNDS      |  | UBS / Lab SUS|
-|  PDF upload  |  |  FHIR R4     |  | via RNDS ou  |
-|              |  |  nativo      |  | PDF          |
-+------+-------+  +------+-------+  +------+-------+
-       |    OCR + parser  | FHIR import    |
-       +------------------+----------------+
-                          v
-         +-------------------------------+
-         |   fhir-brasil (codigo aberto) |
-         |                               |
-         |  200+ biomarcadores LOINC     |
-         |  Conversor FHIR R4            |
-         |  Faixas SBPC/ML              |
-         |  Calculadoras clinicas        |
-         +--------------+----------------+
-                        v
-         +-------------------------------+
-         |  Aplicacao                    |
-         |  (proprietario ou terceiros)  |
-         +-------+--------------+-------+
-                 v              v
-     +----------------+ +------------------+
-     | Visao           | | Deduplicacao     |
-     | longitudinal    | | mesmo LOINC =    |
-     | todas as fontes | | mesmo exame      |
-     | unificadas      | |                  |
-     +----------------+ +------------------+`,
+    diagram: `
+  Lab privado       RNDS           UBS / Lab SUS
+  PDF upload        FHIR R4        via RNDS ou PDF
+       |            nativo              |
+       |               |                |
+       +───── OCR + parser ── FHIR import
+                       |
+                       ▼
+            fhir-brasil (código aberto)
+
+            200+ biomarcadores LOINC
+            Conversor FHIR R4
+            Faixas SBPC/ML
+            Calculadoras clínicas
+                       |
+                       ▼
+            Aplicação
+            (proprietário ou terceiros)
+                  |              |
+                  ▼              ▼
+         Visão              Deduplicação
+         longitudinal       mesmo LOINC =
+         todas as fontes    mesmo exame
+         unificadas
+`,
   },
 ] as const;
 

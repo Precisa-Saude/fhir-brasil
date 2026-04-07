@@ -2,6 +2,19 @@
 
 Este diretório contém o Implementation Guide (IG) do fhir-brasil, escrito em [FHIR Shorthand (FSH)](https://build.fhir.org/ig/HL7/fhir-shorthand/) e compilado com [SUSHI](https://fshschool.org/docs/sushi/).
 
+## Como instalar
+
+O pacote FHIR está disponível no [Simplifier FHIR Package Registry](https://simplifier.net/packages/br.dev.fhir-brasil.core).
+
+```bash
+# Via FHIR CLI
+fhir install br.dev.fhir-brasil.core 0.9.0
+
+# Ou como dependência em outro IG (sushi-config.yaml)
+# dependencies:
+#   br.dev.fhir-brasil.core: 0.9.0
+```
+
 ## Conteúdo
 
 ### Perfis

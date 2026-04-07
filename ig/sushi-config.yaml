@@ -1,15 +1,22 @@
-id: br.fhir-brasil
+id: br.dev.fhir-brasil.core
 canonical: https://fhir-brasil.dev.br/ig
 name: FHIRBrasil
 title: fhir-brasil Implementation Guide
 status: draft
-version: 0.1.0
+version: 0.9.0
 fhirVersion: 4.0.1
 copyrightYear: 2026+
 releaseLabel: draft
 publisher:
   name: Precisa Saúde
   url: https://precisa-saude.com.br
+contact:
+  - name: Precisa Saúde
+    telecom:
+      - system: url
+        value: https://precisa-saude.com.br
+      - system: email
+        value: contato@precisa-saude.com.br
 jurisdiction: urn:iso:std:iso:3166#BR "Brazil"
 license: Apache-2.0
 description: >-

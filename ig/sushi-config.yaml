@@ -1,0 +1,22 @@
+id: br.fhir-brasil
+canonical: https://fhir-brasil.dev.br/ig
+name: FHIRBrasil
+title: fhir-brasil Implementation Guide
+status: draft
+version: 0.1.0
+fhirVersion: 4.0.1
+copyrightYear: 2026+
+releaseLabel: draft
+publisher:
+  name: Precisa Saúde
+  url: https://precisa-saude.com.br
+jurisdiction: urn:iso:std:iso:3166#BR "Brazil"
+license: Apache-2.0
+description: >-
+  Implementation Guide brasileiro com perfis FHIR R4 para resultados
+  laboratoriais, incluindo definições de biomarcadores, faixas de
+  referência e extensões para dados derivados de OCR.
+dependencies:
+  hl7.fhir.r4.core: 4.0.1
+parameters:
+  show-hierarchical-table: true

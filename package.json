@@ -42,6 +42,7 @@
     "eslint-plugin-perfectionist": "^5.7.0",
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-simple-import-sort": "^12.1.1",
+    "fsh-sushi": "^3.18.1",
     "globals": "^17.4.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",

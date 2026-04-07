@@ -37,10 +37,21 @@ describe('validateCPF', () => {
 });
 
 describe('validateCNS', () => {
+  // CNS definitivos (começam com 1 ou 2) — soma ponderada mod-11 = 0
+  it('valida CNS definitivo válido', () => {
+    expect(validateCNS('100000000000007')).toBe(true);
+    expect(validateCNS('200000000000003')).toBe(true);
+  });
+
   // CNS provisórios (começam com 7, 8 ou 9) — soma ponderada mod-11 = 0
   it('valida CNS provisório válido', () => {
     expect(validateCNS('700000000000005')).toBe(true);
     expect(validateCNS('800000000000001')).toBe(true);
+  });
+
+  it('rejeita CNS definitivo com dígitos errados', () => {
+    expect(validateCNS('100000000000001')).toBe(false);
+    expect(validateCNS('200000000000009')).toBe(false);
   });
 
   it.each([
@@ -101,6 +112,11 @@ describe('cpfToFHIRIdentifier', () => {
     const identifier = cpfToFHIRIdentifier('52998224725');
     expect(identifier.value).toBe('52998224725');
   });
+
+  it('lança erro para CPF inválido', () => {
+    expect(() => cpfToFHIRIdentifier('00000000000')).toThrow('CPF inválido');
+    expect(() => cpfToFHIRIdentifier('123')).toThrow('CPF inválido');
+  });
 });
 
 describe('cnsToFHIRIdentifier', () => {
@@ -111,5 +127,10 @@ describe('cnsToFHIRIdentifier', () => {
       use: 'official',
       value: '700000000000005',
     });
+  });
+
+  it('lança erro para CNS inválido', () => {
+    expect(() => cnsToFHIRIdentifier('000000000000000')).toThrow('CNS inválido');
+    expect(() => cnsToFHIRIdentifier('123')).toThrow('CNS inválido');
   });
 });

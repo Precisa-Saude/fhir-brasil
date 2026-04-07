@@ -70,46 +70,15 @@ export function validateCNS(cns: string): boolean {
 
   const firstDigit = digits[0]!;
 
-  if (firstDigit === '1' || firstDigit === '2') {
-    // CNS definitivo — mod-11
-    const pis = digits.substring(0, 11);
-    let sum = 0;
-    for (let i = 0; i < 11; i++) {
-      sum += Number(pis[i]) * (15 - i);
-    }
-    let remainder = sum % 11;
-    let checkDigit: number;
+  // CNS deve começar com 1, 2 (definitivo) ou 7, 8, 9 (provisório)
+  if (!['1', '2', '7', '8', '9'].includes(firstDigit)) return false;
 
-    if (remainder === 0) {
-      checkDigit = 0;
-    } else if (remainder === 1) {
-      // Recalcular com peso diferente
-      sum = 0;
-      for (let i = 0; i < 11; i++) {
-        sum += Number(pis[i]) * (15 - i);
-      }
-      sum += 2;
-      remainder = sum % 11;
-      checkDigit = remainder === 0 ? 0 : 11 - remainder;
-    } else {
-      checkDigit = 11 - remainder;
-    }
-
-    const suffix = digits.substring(11);
-    const expectedSuffix = `${String(checkDigit).padStart(4, '0')}`;
-    return suffix === expectedSuffix || suffix.length === 4;
+  // Ambos os tipos usam soma ponderada mod-11 = 0
+  let sum = 0;
+  for (let i = 0; i < 15; i++) {
+    sum += Number(digits[i]) * (15 - i);
   }
-
-  if (firstDigit === '7' || firstDigit === '8' || firstDigit === '9') {
-    // CNS provisório — soma ponderada mod-11 deve ser 0
-    let sum = 0;
-    for (let i = 0; i < 15; i++) {
-      sum += Number(digits[i]) * (15 - i);
-    }
-    return sum % 11 === 0;
-  }
-
-  return false;
+  return sum % 11 === 0;
 }
 
 /**
@@ -141,8 +110,12 @@ export function formatCNS(cns: string): string {
  *
  * @param cpf — CPF com 11 dígitos (com ou sem formatação)
  * @returns FHIR Identifier com sistema RNDS para CPF
+ * @throws Error se o CPF for inválido
  */
 export function cpfToFHIRIdentifier(cpf: string): FHIRIdentifier {
+  if (!validateCPF(cpf)) {
+    throw new Error(`CPF inválido: ${cpf}`);
+  }
   return {
     system: CPF_SYSTEM,
     use: 'official',
@@ -155,8 +128,12 @@ export function cpfToFHIRIdentifier(cpf: string): FHIRIdentifier {
  *
  * @param cns — CNS com 15 dígitos
  * @returns FHIR Identifier com sistema RNDS para CNS
+ * @throws Error se o CNS for inválido
  */
 export function cnsToFHIRIdentifier(cns: string): FHIRIdentifier {
+  if (!validateCNS(cns)) {
+    throw new Error(`CNS inválido: ${cns}`);
+  }
   return {
     system: CNS_SYSTEM,
     use: 'official',

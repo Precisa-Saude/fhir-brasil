@@ -13,8 +13,8 @@ import { resolve } from 'node:path';
 import { BIOMARKER_DEFINITIONS } from '../packages/core/src/biomarkers';
 
 const biomarkersWithLoinc = BIOMARKER_DEFINITIONS.filter((b) => b.loinc).sort((a, b) => {
-  const catA = Array.isArray(a.category) ? a.category[0]! : a.category;
-  const catB = Array.isArray(b.category) ? b.category[0]! : b.category;
+  const catA = Array.isArray(a.category) ? (a.category[0] ?? '') : a.category;
+  const catB = Array.isArray(b.category) ? (b.category[0] ?? '') : b.category;
   if (catA !== catB) return catA.localeCompare(catB);
   return a.code.localeCompare(b.code);
 });
@@ -29,7 +29,7 @@ const lines: string[] = [
 
 let currentCategory = '';
 for (const b of biomarkersWithLoinc) {
-  const cat = Array.isArray(b.category) ? b.category[0]! : b.category;
+  const cat = Array.isArray(b.category) ? (b.category[0] ?? '') : b.category;
   if (cat !== currentCategory) {
     currentCategory = cat;
     lines.push(`// ${cat}`);

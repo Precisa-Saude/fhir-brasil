@@ -2,6 +2,18 @@
 
 Cliente HTTP para a RNDS (Rede Nacional de Dados em Saúde) — API FHIR R4 do DATASUS com autenticação mTLS, cache de token JWT e zero dependências runtime externas.
 
+## Status de Produção
+
+> **Este pacote foi testado exclusivamente contra um servidor mock** com fixtures realistas baseadas na documentação da RNDS. A validação contra a infraestrutura real da RNDS (ambientes de homologação e produção do DATASUS) **ainda não foi realizada**, pois requer:
+>
+> - Certificado digital **ICP-Brasil** (tipo A1 ou A3) emitido para um estabelecimento de saúde
+> - **Credenciamento ativo** no Portal de Serviços DATASUS
+> - CNES e CNS válidos vinculados ao certificado
+>
+> Se você testou este pacote contra a RNDS real, por favor [abra uma issue](https://github.com/Precisa-Saude/fhir-brasil/issues/new?template=rnds-teste-real.md) com os resultados — isso ajuda a comunidade inteira.
+
+---
+
 ## Instalação
 
 ```bash

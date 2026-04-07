@@ -1,0 +1,12 @@
+{
+  "resourceType": "Organization",
+  "id": "1234567",
+  "active": true,
+  "identifier": [
+    {
+      "system": "http://rnds.saude.gov.br/fhir/r4/NamingSystem/cnes",
+      "value": "1234567"
+    }
+  ],
+  "name": "Hospital São Paulo"
+}

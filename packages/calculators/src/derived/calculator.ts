@@ -7,6 +7,7 @@
  * Currently supports:
  * - HOMA-IR = (Fasting Glucose × Fasting Insulin) / 405
  * - VLDL = Triglycerides / 5
+ * - eAG = 28.7 × HbA1c(%) − 46.7 (Nathan et al. 2008)
  * - BMI = weight_kg / (height_m)² (requires UserContext with height)
  */
 
@@ -36,6 +37,7 @@ interface CalculationDef {
   code: string;
   inputs: string[];
   unit: string;
+  validate: (values: Map<string, number>) => boolean;
 }
 
 interface ContextCalculationDef {
@@ -44,6 +46,7 @@ interface ContextCalculationDef {
   code: string;
   inputs: string[];
   unit: string;
+  validate: (values: Map<string, number>) => boolean;
 }
 
 const CALCULATIONS: CalculationDef[] = [
@@ -52,12 +55,21 @@ const CALCULATIONS: CalculationDef[] = [
     code: 'HOMA_IR',
     inputs: ['Glucose', 'Insulin'],
     unit: 'index',
+    validate: (v) => v.get('Glucose')! > 0 && v.get('Insulin')! > 0,
   },
   {
     calculate: (v) => v.get('Triglycerides')! / 5,
     code: 'VLDL',
     inputs: ['Triglycerides'],
     unit: 'mg/dL',
+    validate: (v) => v.get('Triglycerides')! > 0,
+  },
+  {
+    calculate: (v) => 28.7 * v.get('HbA1c')! - 46.7,
+    code: 'eAG',
+    inputs: ['HbA1c'],
+    unit: 'mg/dL',
+    validate: (v) => v.get('HbA1c')! > 0,
   },
 ];
 
@@ -73,6 +85,7 @@ const CONTEXT_CALCULATIONS: ContextCalculationDef[] = [
     code: 'BMI',
     inputs: ['TotalMass'],
     unit: 'kg/m2',
+    validate: (v) => v.get('TotalMass')! > 0,
   },
 ];
 
@@ -81,6 +94,8 @@ const CONTEXT_CALCULATIONS: ContextCalculationDef[] = [
  * Only adds a calculated biomarker if:
  * - All required inputs are present with numeric values
  * - The biomarker isn't already present in the results
+ * - Input values pass the calculator's validation (e.g. positive values)
+ * - The calculated result is finite and positive
  */
 export function computeDerivedBiomarkers(
   biomarkers: BiomarkerInput[],
@@ -110,8 +125,10 @@ export function computeDerivedBiomarkers(
     }
 
     if (!allPresent) continue;
+    if (!calc.validate(values)) continue;
 
     const rawValue = calc.calculate(values);
+    if (!Number.isFinite(rawValue) || rawValue <= 0) continue;
     const value = parseFloat(rawValue.toPrecision(10));
     const loinc = lookupLoinc(calc.code);
 
@@ -142,8 +159,10 @@ export function computeDerivedBiomarkers(
       }
 
       if (!allPresent) continue;
+      if (!calc.validate(values)) continue;
 
       const rawValue = calc.calculate(values, options.userContext);
+      if (!Number.isFinite(rawValue) || rawValue <= 0) continue;
       const value = parseFloat(rawValue.toPrecision(10));
       const loinc = lookupLoinc(calc.code);
 

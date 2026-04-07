@@ -24,7 +24,7 @@ O sistema de saúde brasileiro opera como redes paralelas com troca mínima de d
 - **Utilitários OCR** — ancoragem de texto para extração de biomarcadores de PDFs de resultados de laboratório
 - **Cliente RNDS** — cliente HTTP para a Rede Nacional de Dados em Saúde (DATASUS), com autenticação mTLS e zero dependências externas
 
-> 397+ testes automatizados, cobertura acima de 80%, revisão contínua de faixas de referência.
+> 580+ testes automatizados, cobertura acima de 80%, revisão contínua de faixas de referência.
 
 ---
 
@@ -182,6 +182,9 @@ echo "Hemoglobina 14.5 g/dL Glicose 99 mg/dL" | fhir-ocr codes --json
 - **LOINC** — Códigos LOINC verificados para interoperabilidade
 - **SBPC/ML** — Faixas de referência baseadas nas diretrizes brasileiras
 - **UCUM** — Unidades no formato Unified Code for Units of Measure
+- **TUSS/TISS** — Terminologias ANS para saúde suplementar
+- **CID-10 pt-BR** — Classificação Internacional de Doenças (tradução DATASUS)
+- **IBGE/CNES** — Códigos de município e tipos de estabelecimento de saúde
 
 ---
 
@@ -191,8 +194,9 @@ echo "Hemoglobina 14.5 g/dL Glicose 99 mg/dL" | fhir-ocr codes --json
 - [x] `@precisa-saude/fhir-calculators` — Calculadoras: PhenoAge, BrDMrisc, derivados
 - [x] `@precisa-saude/fhir-ocr-utils` — Utilitários OCR: ancoragem de biomarcadores em texto
 - [x] `@precisa-saude/fhir-rnds` — Cliente RNDS: autenticação mTLS, submissão de bundles
-- [ ] Implementation Guide FHIR (perfil BRLabObservation via SUSHI)
-- [ ] Helpers de identificadores brasileiros (CPF, CNS)
+- [x] Implementation Guide FHIR — perfis BRPatient, BRLabObservation, BRDiagnosticReport via SUSHI
+- [x] Terminologias brasileiras — TUSS, TISS, CID-10, SUS raça/cor, IBGE, CNES
+- [x] Helpers de identificadores brasileiros (CPF, CNS)
 - [ ] Integração com perfis RNDS (REL, RAC, SA, RIA)
 
 ---

@@ -7,3 +7,4 @@ coverage/
 *.tsbuildinfo
 ig/output/
 ig/fsh-generated/
+ig/scripts/data/

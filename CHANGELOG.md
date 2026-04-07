@@ -1,3 +1,13 @@
+## [0.6.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.6.1...v0.6.2) (2026-04-07)
+
+### Bug Fixes
+
+* **docs,site:** Stage 1 — reconciliar README, site e metadata com estado atual ([#11](https://github.com/Precisa-Saude/fhir-brasil/issues/11)) ([fbd5223](https://github.com/Precisa-Saude/fhir-brasil/commit/fbd5223c4217aea52d1ddc0999e284265ebd1b45))
+
+### Refactoring
+
+* **rnds:** Stage 2 — fixtures de teste e disclosure de produção ([#12](https://github.com/Precisa-Saude/fhir-brasil/issues/12)) ([f813100](https://github.com/Precisa-Saude/fhir-brasil/commit/f813100e1d22fd88041836b4ba31442f5035fb22))
+
 ## [0.6.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.6.0...v0.6.1) (2026-04-06)
 
 ### Bug Fixes

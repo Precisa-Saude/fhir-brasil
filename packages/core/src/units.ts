@@ -201,7 +201,59 @@ const URINE_SEDIMENT: Omit<BiomarkerUnitConfig, 'aliases'> = {
   siUnit: '/HPF',
 };
 
+/** Percentage biomarkers — canonical and SI both use %. */
+const PERCENTAGE_ALIASES: Record<string, string> = { '%': '%', pct: '%', percent: '%' };
+const PERCENTAGE: Omit<BiomarkerUnitConfig, 'aliases'> = {
+  canonicalUcum: '%',
+  canonicalUnit: '%',
+  siUcum: '%',
+  siUnit: '%',
+};
+
+/** Enzyme activity — canonical and SI both use U/L. */
+const ENZYME_ALIASES: Record<string, string> = { 'iu/l': 'U/L', 'u/l': 'U/L' };
+const ENZYME: Omit<BiomarkerUnitConfig, 'aliases'> = {
+  canonicalUcum: 'U/L',
+  canonicalUnit: 'U/L',
+  siUcum: 'U/L',
+  siUnit: 'U/L',
+};
+
+/** Monovalent electrolytes — mEq/L ↔ mmol/L (1:1). */
+const ELECTROLYTE_MONO_ALIASES: Record<string, string> = { 'meq/l': 'mEq/L', 'mmol/l': 'mmol/L' };
+const ELECTROLYTE_MONO: Omit<BiomarkerUnitConfig, 'aliases'> = {
+  canonicalUcum: 'meq/L',
+  canonicalUnit: 'mEq/L',
+  siUcum: 'mmol/L',
+  siUnit: 'mmol/L',
+};
+
+/** CAC scores — Agatston Units (AU), dimensionless. */
+const CAC_ALIASES: Record<string, string> = { au: 'AU' };
+const CAC: Omit<BiomarkerUnitConfig, 'aliases'> = {
+  canonicalUcum: '{score}',
+  canonicalUnit: 'AU',
+  siUcum: '{score}',
+  siUnit: 'AU',
+};
+
+/** nmol/L biomarkers — same unit for canonical and SI. */
+const NMOL_L_ALIASES: Record<string, string> = { 'nmol/l': 'nmol/L' };
+const NMOL_L: Omit<BiomarkerUnitConfig, 'aliases'> = {
+  canonicalUcum: 'nmol/L',
+  canonicalUnit: 'nmol/L',
+  siUcum: 'nmol/L',
+  siUnit: 'nmol/L',
+};
+
 export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
+  AFP: {
+    aliases: { 'ng/ml': 'ng/mL' },
+    canonicalUcum: 'ng/mL',
+    canonicalUnit: 'ng/mL',
+    siUcum: 'ng/mL',
+    siUnit: 'ng/mL',
+  },
   Albumin: {
     aliases: { 'g/dl': 'g/dL', 'g/l': 'g/L' },
     canonicalUcum: 'g/dL',
@@ -209,6 +261,17 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'g/L',
     siUnit: 'g/L',
   },
+  AlkalinePhosphatase: { aliases: ENZYME_ALIASES, ...ENZYME },
+  ALT: { aliases: ENZYME_ALIASES, ...ENZYME },
+  AMH: {
+    aliases: { 'ng/ml': 'ng/mL', 'pmol/l': 'pmol/L' },
+    canonicalUcum: 'ng/mL',
+    canonicalUnit: 'ng/mL',
+    molecularWeight: 12_500,
+    siUcum: 'pmol/L',
+    siUnit: 'pmol/L',
+  },
+  Amylase: { aliases: ENZYME_ALIASES, ...ENZYME },
   AntiThyroglobulin: {
     aliases: { 'iu/ml': 'IU/mL', 'ui/ml': 'IU/mL' },
     canonicalUcum: '[iU]/mL',
@@ -216,8 +279,97 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: '[iU]/mL',
     siUnit: 'IU/mL',
   },
+  AntiTPO: {
+    aliases: { 'iu/ml': 'IU/mL', 'ui/ml': 'IU/mL' },
+    canonicalUcum: '[iU]/mL',
+    canonicalUnit: 'IU/mL',
+    siUcum: '[iU]/mL',
+    siUnit: 'IU/mL',
+  },
+  AoA1: {
+    aliases: { 'mg/dl': 'mg/dL' },
+    canonicalUcum: 'mg/dL',
+    canonicalUnit: 'mg/dL',
+    siUcum: 'mg/dL',
+    siUnit: 'mg/dL',
+  },
+  AorticValveCalcium: { aliases: CAC_ALIASES, ...CAC },
+  ApoB: {
+    aliases: { 'mg/dl': 'mg/dL' },
+    canonicalUcum: 'mg/dL',
+    canonicalUnit: 'mg/dL',
+    siUcum: 'mg/dL',
+    siUnit: 'mg/dL',
+  },
+  AST: { aliases: ENZYME_ALIASES, ...ENZYME },
+  Basophils: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   Basophils_Abs: { aliases: CBC_DIFF_ALIASES, ...CBC_DIFF },
+  BilirubinDirect: {
+    aliases: { 'mg/dl': 'mg/dL', 'µmol/l': 'µmol/L' },
+    canonicalUcum: 'mg/dL',
+    canonicalUnit: 'mg/dL',
+    molecularWeight: 584.66,
+    siUcum: 'umol/L',
+    siUnit: 'µmol/L',
+  },
+  BilirubinIndirect: {
+    aliases: { 'mg/dl': 'mg/dL', 'µmol/l': 'µmol/L' },
+    canonicalUcum: 'mg/dL',
+    canonicalUnit: 'mg/dL',
+    molecularWeight: 584.66,
+    siUcum: 'umol/L',
+    siUnit: 'µmol/L',
+  },
+  BilirubinTotal: {
+    aliases: { 'mg/dl': 'mg/dL', 'µmol/l': 'µmol/L' },
+    canonicalUcum: 'mg/dL',
+    canonicalUnit: 'mg/dL',
+    molecularWeight: 584.66,
+    siUcum: 'umol/L',
+    siUnit: 'µmol/L',
+  },
   BMC: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
+  BMI: {
+    aliases: { 'kg/m2': 'kg/m²', 'kg/m²': 'kg/m²' },
+    canonicalUcum: 'kg/m2',
+    canonicalUnit: 'kg/m²',
+    siUcum: 'kg/m2',
+    siUnit: 'kg/m²',
+  },
+  BNP: {
+    aliases: { 'pg/ml': 'pg/mL' },
+    canonicalUcum: 'pg/mL',
+    canonicalUnit: 'pg/mL',
+    siUcum: 'pg/mL',
+    siUnit: 'pg/mL',
+  },
+  CA125: {
+    aliases: { 'u/ml': 'U/mL' },
+    canonicalUcum: 'U/mL',
+    canonicalUnit: 'U/mL',
+    siUcum: 'U/mL',
+    siUnit: 'U/mL',
+  },
+  CAC_LAD: { aliases: CAC_ALIASES, ...CAC },
+  CAC_LCX: { aliases: CAC_ALIASES, ...CAC },
+  CAC_LMA: { aliases: CAC_ALIASES, ...CAC },
+  CAC_RCA: { aliases: CAC_ALIASES, ...CAC },
+  Calcium: {
+    aliases: { 'mg/dl': 'mg/dL', 'mmol/l': 'mmol/L' },
+    canonicalUcum: 'mg/dL',
+    canonicalUnit: 'mg/dL',
+    molecularWeight: 40.08,
+    siUcum: 'mmol/L',
+    siUnit: 'mmol/L',
+  },
+  CEA: {
+    aliases: { 'ng/ml': 'ng/mL' },
+    canonicalUcum: 'ng/mL',
+    canonicalUnit: 'ng/mL',
+    siUcum: 'ng/mL',
+    siUnit: 'ng/mL',
+  },
+  Chloride: { aliases: ELECTROLYTE_MONO_ALIASES, ...ELECTROLYTE_MONO },
   Cholesterol: {
     aliases: { 'mg/dl': 'mg/dL', 'mmol/l': 'mmol/L' },
     canonicalUcum: 'mg/dL',
@@ -225,6 +377,16 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     molecularWeight: 386.65,
     siUcum: 'mmol/L',
     siUnit: 'mmol/L',
+  },
+  CK: { aliases: ENZYME_ALIASES, ...ENZYME },
+  CO2: { aliases: ELECTROLYTE_MONO_ALIASES, ...ELECTROLYTE_MONO },
+  Cortisol: {
+    aliases: { 'mcg/dl': 'µg/dL', 'nmol/l': 'nmol/L', 'ug/dl': 'µg/dL', 'µg/dl': 'µg/dL' },
+    canonicalUcum: 'ug/dL',
+    canonicalUnit: 'µg/dL',
+    molecularWeight: 362.46,
+    siUcum: 'nmol/L',
+    siUnit: 'nmol/L',
   },
   Creatinine: {
     aliases: { 'mg/dl': 'mg/dL', 'umol/l': 'µmol/L', 'µmol/l': 'µmol/L' },
@@ -241,6 +403,22 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'mg/L',
     siUnit: 'mg/L',
   },
+  DHEAS: {
+    aliases: { 'mcg/dl': 'µg/dL', 'ug/dl': 'µg/dL', 'µg/dl': 'µg/dL', 'µmol/l': 'µmol/L' },
+    canonicalUcum: 'ug/dL',
+    canonicalUnit: 'µg/dL',
+    molecularWeight: 368.49,
+    siUcum: 'umol/L',
+    siUnit: 'µmol/L',
+  },
+  DHT: {
+    aliases: { 'ng/dl': 'ng/dL', 'nmol/l': 'nmol/L' },
+    canonicalUcum: 'ng/dL',
+    canonicalUnit: 'ng/dL',
+    molecularWeight: 290.44,
+    siUcum: 'nmol/L',
+    siUnit: 'nmol/L',
+  },
   eGFR: {
     aliases: {
       'ml/min/1,73 m2': 'mL/min/1.73m²',
@@ -252,7 +430,16 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'mL/min/{1.73_m2}',
     siUnit: 'mL/min/1.73m²',
   },
+  Eosinophils: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   Eosinophils_Abs: { aliases: CBC_DIFF_ALIASES, ...CBC_DIFF },
+  EPADPADHA: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
+  ESR: {
+    aliases: { 'mm/h': 'mm/h', 'mm/hr': 'mm/h' },
+    canonicalUcum: 'mm/h',
+    canonicalUnit: 'mm/h',
+    siUcum: 'mm/h',
+    siUnit: 'mm/h',
+  },
   Estradiol: {
     aliases: { 'ng/dl': 'ng/dL', 'pg/ml': 'pg/mL' },
     canonicalUcum: 'pg/mL',
@@ -275,6 +462,14 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'ug/L',
     siUnit: 'µg/L',
   },
+  Folate: {
+    aliases: { 'ng/ml': 'ng/mL', 'nmol/l': 'nmol/L' },
+    canonicalUcum: 'ng/mL',
+    canonicalUnit: 'ng/mL',
+    molecularWeight: 441.4,
+    siUcum: 'nmol/L',
+    siUnit: 'nmol/L',
+  },
   FSH: {
     aliases: {
       'iu/l': 'mIU/mL',
@@ -286,6 +481,14 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: '[iU]/L',
     siUnit: 'IU/L',
   },
+  GGT: { aliases: ENZYME_ALIASES, ...ENZYME },
+  Globulin: {
+    aliases: { 'g/dl': 'g/dL', 'g/l': 'g/L' },
+    canonicalUcum: 'g/dL',
+    canonicalUnit: 'g/dL',
+    siUcum: 'g/L',
+    siUnit: 'g/L',
+  },
   Glucose: {
     aliases: { 'mg/dl': 'mg/dL', 'mmol/l': 'mmol/L' },
     canonicalUcum: 'mg/dL',
@@ -294,6 +497,8 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'mmol/L',
     siUnit: 'mmol/L',
   },
+  HbA1c: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
+  Hct: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   HDL: {
     aliases: { 'mg/dl': 'mg/dL', 'mmol/l': 'mmol/L' },
     canonicalUcum: 'mg/dL',
@@ -302,12 +507,41 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'mmol/L',
     siUnit: 'mmol/L',
   },
+  HDL_Large: { aliases: NMOL_L_ALIASES, ...NMOL_L },
   Hgb: {
     aliases: { 'g/dl': 'g/dL', 'g/l': 'g/L' },
     canonicalUcum: 'g/dL',
     canonicalUnit: 'g/dL',
     siUcum: 'g/L',
     siUnit: 'g/L',
+  },
+  Homocysteine: {
+    aliases: { 'umol/l': 'µmol/L', 'µmol/l': 'µmol/L' },
+    canonicalUcum: 'umol/L',
+    canonicalUnit: 'µmol/L',
+    siUcum: 'umol/L',
+    siUnit: 'µmol/L',
+  },
+  IgA: {
+    aliases: { 'g/l': 'g/L', 'mg/dl': 'mg/dL' },
+    canonicalUcum: 'g/L',
+    canonicalUnit: 'g/L',
+    siUcum: 'g/L',
+    siUnit: 'g/L',
+  },
+  IgG: {
+    aliases: { 'g/l': 'g/L', 'mg/dl': 'mg/dL' },
+    canonicalUcum: 'g/L',
+    canonicalUnit: 'g/L',
+    siUcum: 'g/L',
+    siUnit: 'g/L',
+  },
+  INR: {
+    aliases: { '{ratio}': '{ratio}' },
+    canonicalUcum: '{ratio}',
+    canonicalUnit: '{ratio}',
+    siUcum: '{ratio}',
+    siUnit: '{ratio}',
   },
   Insulin: {
     aliases: {
@@ -341,6 +575,8 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'mmol/L',
     siUnit: 'mmol/L',
   },
+  LDL_Medium: { aliases: NMOL_L_ALIASES, ...NMOL_L },
+  LDL_ParticleNumber: { aliases: NMOL_L_ALIASES, ...NMOL_L },
   LDL_Peak_Size: {
     aliases: { å: 'Ao', angstrom: 'Ao', ao: 'Ao', nm: 'nm' },
     canonicalUcum: 'Ao',
@@ -348,7 +584,23 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'nm',
     siUnit: 'nm',
   },
+  LDL_Small: { aliases: NMOL_L_ALIASES, ...NMOL_L },
+  Lead: {
+    aliases: { 'mcg/dl': 'µg/dL', 'ug/dl': 'µg/dL', 'µg/dl': 'µg/dL', 'µmol/l': 'µmol/L' },
+    canonicalUcum: 'ug/dL',
+    canonicalUnit: 'µg/dL',
+    molecularWeight: 207.2,
+    siUcum: 'umol/L',
+    siUnit: 'µmol/L',
+  },
   LeanMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
+  Leptin: {
+    aliases: { 'ng/ml': 'ng/mL' },
+    canonicalUcum: 'ng/mL',
+    canonicalUnit: 'ng/mL',
+    siUcum: 'ng/mL',
+    siUnit: 'ng/mL',
+  },
   Leukocytes_Urine: { aliases: URINE_SEDIMENT_ALIASES, ...URINE_SEDIMENT },
   LH: {
     aliases: {
@@ -361,6 +613,7 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: '[iU]/L',
     siUnit: 'IU/L',
   },
+  Lipase: { aliases: ENZYME_ALIASES, ...ENZYME },
   Lipoprotein_a: {
     aliases: { 'mg/dl': 'mg/dL', 'nmol/l': 'nmol/L' },
     canonicalUcum: 'nmol/L',
@@ -368,7 +621,15 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'nmol/L',
     siUnit: 'nmol/L',
   },
+  Lymphocytes: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   Lymphocytes_Abs: { aliases: CBC_DIFF_ALIASES, ...CBC_DIFF },
+  MCH: {
+    aliases: { pg: 'pg' },
+    canonicalUcum: 'pg',
+    canonicalUnit: 'pg',
+    siUcum: 'pg',
+    siUnit: 'pg',
+  },
   MCHC: {
     aliases: { 'g/dl': 'g/dL', 'g/l': 'g/L' },
     canonicalUcum: 'g/dL',
@@ -376,9 +637,81 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'g/L',
     siUnit: 'g/L',
   },
+  MCV: {
+    aliases: { fl: 'fL' },
+    canonicalUcum: 'fL',
+    canonicalUnit: 'fL',
+    siUcum: 'fL',
+    siUnit: 'fL',
+  },
+  Mercury: {
+    aliases: { 'mcg/l': 'µg/L', 'nmol/l': 'nmol/L', 'ug/l': 'µg/L', 'µg/l': 'µg/L' },
+    canonicalUcum: 'ug/L',
+    canonicalUnit: 'µg/L',
+    molecularWeight: 200.59,
+    siUcum: 'nmol/L',
+    siUnit: 'nmol/L',
+  },
+  Microalbumin_Urine: {
+    aliases: { 'mg/l': 'mg/L' },
+    canonicalUcum: 'mg/L',
+    canonicalUnit: 'mg/L',
+    siUcum: 'mg/L',
+    siUnit: 'mg/L',
+  },
+  MMA: { aliases: NMOL_L_ALIASES, ...NMOL_L },
+  Monocytes: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   Monocytes_Abs: { aliases: CBC_DIFF_ALIASES, ...CBC_DIFF },
+  MPV: {
+    aliases: { fl: 'fL' },
+    canonicalUcum: 'fL',
+    canonicalUnit: 'fL',
+    siUcum: 'fL',
+    siUnit: 'fL',
+  },
+  Myeloperoxidase: {
+    aliases: { 'pmol/l': 'pmol/L' },
+    canonicalUcum: 'pmol/L',
+    canonicalUnit: 'pmol/L',
+    siUcum: 'pmol/L',
+    siUnit: 'pmol/L',
+  },
+  Neutrophils: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   Neutrophils_Abs: { aliases: CBC_DIFF_ALIASES, ...CBC_DIFF },
+  // MW 386.65 = colesterol livre. Frações lipoproteicas são heterogêneas,
+  // mas a conversão mg/dL→mmol/L usa MW do colesterol por convenção clínica.
+  NonHDL_Cholesterol: {
+    aliases: { 'mg/dl': 'mg/dL', 'mmol/l': 'mmol/L' },
+    canonicalUcum: 'mg/dL',
+    canonicalUnit: 'mg/dL',
+    molecularWeight: 386.65,
+    siUcum: 'mmol/L',
+    siUnit: 'mmol/L',
+  },
+  NTproBNP: {
+    aliases: { 'pg/ml': 'pg/mL' },
+    canonicalUcum: 'pg/mL',
+    canonicalUnit: 'pg/mL',
+    siUcum: 'pg/mL',
+    siUnit: 'pg/mL',
+  },
+  Omega3_DHA: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
+  Omega3_DPA: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
+  Omega3_EPA: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
+  Omega3_Total: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
+  Omega6_AA: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
+  Omega6_LA: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
+  Omega6_Total: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   Platelets: { aliases: CBC_DIFF_ALIASES, ...CBC_DIFF },
+  Potassium: { aliases: ELECTROLYTE_MONO_ALIASES, ...ELECTROLYTE_MONO },
+  Progesterone: {
+    aliases: { 'ng/ml': 'ng/mL', 'nmol/l': 'nmol/L' },
+    canonicalUcum: 'ng/mL',
+    canonicalUnit: 'ng/mL',
+    molecularWeight: 314.46,
+    siUcum: 'nmol/L',
+    siUnit: 'nmol/L',
+  },
   Prolactin: {
     aliases: {
       'microg/l': 'ng/mL',
@@ -389,6 +722,27 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     canonicalUnit: 'ng/mL',
     siUcum: 'ug/L',
     siUnit: 'µg/L',
+  },
+  ProthrombinTime: {
+    aliases: { s: 's', sec: 's' },
+    canonicalUcum: 's',
+    canonicalUnit: 's',
+    siUcum: 's',
+    siUnit: 's',
+  },
+  PSA: {
+    aliases: { 'ng/ml': 'ng/mL' },
+    canonicalUcum: 'ng/mL',
+    canonicalUnit: 'ng/mL',
+    siUcum: 'ng/mL',
+    siUnit: 'ng/mL',
+  },
+  PSA_Free: {
+    aliases: { 'ng/ml': 'ng/mL' },
+    canonicalUcum: 'ng/mL',
+    canonicalUnit: 'ng/mL',
+    siUcum: 'ng/mL',
+    siUnit: 'ng/mL',
   },
   RBC: {
     aliases: {
@@ -407,6 +761,49 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUnit: 'M/uL',
   },
   RBC_Urine: { aliases: URINE_SEDIMENT_ALIASES, ...URINE_SEDIMENT },
+  RDW: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
+  Reticulocytes: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
+  RheumatoidFactor: {
+    aliases: { 'iu/ml': 'IU/mL', 'ui/ml': 'IU/mL' },
+    canonicalUcum: '[iU]/mL',
+    canonicalUnit: 'IU/mL',
+    siUcum: '[iU]/mL',
+    siUnit: 'IU/mL',
+  },
+  SHBG: { aliases: NMOL_L_ALIASES, ...NMOL_L },
+  Sodium: { aliases: ELECTROLYTE_MONO_ALIASES, ...ELECTROLYTE_MONO },
+  T3Free: {
+    aliases: { 'pg/ml': 'pg/mL', 'pmol/l': 'pmol/L' },
+    canonicalUcum: 'pg/mL',
+    canonicalUnit: 'pg/mL',
+    molecularWeight: 650.98,
+    siUcum: 'pmol/L',
+    siUnit: 'pmol/L',
+  },
+  T4Free: {
+    aliases: { 'ng/dl': 'ng/dL', 'pmol/l': 'pmol/L' },
+    canonicalUcum: 'ng/dL',
+    canonicalUnit: 'ng/dL',
+    molecularWeight: 776.87,
+    siUcum: 'pmol/L',
+    siUnit: 'pmol/L',
+  },
+  T4Total: {
+    aliases: { 'mcg/dl': 'µg/dL', 'nmol/l': 'nmol/L', 'ug/dl': 'µg/dL', 'µg/dl': 'µg/dL' },
+    canonicalUcum: 'ug/dL',
+    canonicalUnit: 'µg/dL',
+    molecularWeight: 776.87,
+    siUcum: 'nmol/L',
+    siUnit: 'nmol/L',
+  },
+  Testosterone: {
+    aliases: { 'ng/dl': 'ng/dL', 'nmol/l': 'nmol/L' },
+    canonicalUcum: 'ng/dL',
+    canonicalUnit: 'ng/dL',
+    molecularWeight: 288.42,
+    siUcum: 'nmol/L',
+    siUnit: 'nmol/L',
+  },
   TestosteroneFree: {
     aliases: { 'pg/ml': 'pg/mL', 'pmol/l': 'pmol/L' },
     canonicalUcum: 'pg/mL',
@@ -428,6 +825,13 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUnit: 'µmol/L',
   },
   TotalMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
+  TotalProtein: {
+    aliases: { 'g/dl': 'g/dL', 'g/l': 'g/L' },
+    canonicalUcum: 'g/dL',
+    canonicalUnit: 'g/dL',
+    siUcum: 'g/L',
+    siUnit: 'g/L',
+  },
   Triglycerides: {
     aliases: { 'mg/dl': 'mg/dL', 'mmol/l': 'mmol/L' },
     canonicalUcum: 'mg/dL',
@@ -435,6 +839,20 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     molecularWeight: 885.4,
     siUcum: 'mmol/L',
     siUnit: 'mmol/L',
+  },
+  TroponinI: {
+    aliases: { 'ng/ml': 'ng/mL' },
+    canonicalUcum: 'ng/mL',
+    canonicalUnit: 'ng/mL',
+    siUcum: 'ng/mL',
+    siUnit: 'ng/mL',
+  },
+  TroponinT: {
+    aliases: { 'ng/l': 'ng/L' },
+    canonicalUcum: 'ng/L',
+    canonicalUnit: 'ng/L',
+    siUcum: 'ng/L',
+    siUnit: 'ng/L',
   },
   TSH: {
     aliases: {
@@ -455,6 +873,14 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     molecularWeight: 60.06,
     siUcum: 'mmol/L',
     siUnit: 'mmol/L',
+  },
+  UricAcid: {
+    aliases: { 'mg/dl': 'mg/dL', 'µmol/l': 'µmol/L' },
+    canonicalUcum: 'mg/dL',
+    canonicalUnit: 'mg/dL',
+    molecularWeight: 168.11,
+    siUcum: 'umol/L',
+    siUnit: 'µmol/L',
   },
   VATMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
   VATVolume: {
@@ -478,6 +904,14 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     molecularWeight: 384.64,
     siUcum: 'nmol/L',
     siUnit: 'nmol/L',
+  },
+  VLDL: {
+    aliases: { 'mg/dl': 'mg/dL', 'mmol/l': 'mmol/L' },
+    canonicalUcum: 'mg/dL',
+    canonicalUnit: 'mg/dL',
+    molecularWeight: 386.65,
+    siUcum: 'mmol/L',
+    siUnit: 'mmol/L',
   },
   WBC: { aliases: CBC_DIFF_ALIASES, ...CBC_DIFF },
 };
@@ -514,6 +948,10 @@ function normalizeUnit(unit: string, config: BiomarkerUnitConfig): string {
 const FIXED_FACTORS: Record<string, number> = {
   'g/dL -> g/L': 10,
   'g/L -> g/dL': 0.1,
+  'g/L -> mg/dL': 100,
+  'mEq/L -> mmol/L': 1,
+  'mg/dL -> g/L': 0.01,
+  'mmol/L -> mEq/L': 1,
   'ng/dL -> pg/mL': 10,
   'ng/mL -> µg/L': 1,
   'pg/mL -> ng/dL': 0.1,
@@ -547,12 +985,22 @@ const MW_CONVERSIONS: Record<string, MWConversion> = {
   'mg/dL -> µmol/L': { divideByMW: true, scale: 10_000 },
   'mmol/L -> mg/dL': { divideByMW: false, scale: 10 },
   'ng/dL -> nmol/L': { divideByMW: true, scale: 10 },
+  'ng/dL -> pmol/L': { divideByMW: true, scale: 10_000 },
   'ng/mL -> nmol/L': { divideByMW: true, scale: 1000 },
+  'ng/mL -> pmol/L': { divideByMW: true, scale: 1_000_000 },
   'nmol/L -> ng/dL': { divideByMW: false, scale: 10 },
   'nmol/L -> ng/mL': { divideByMW: false, scale: 1000 },
+  'nmol/L -> µg/dL': { divideByMW: false, scale: 10_000 },
+  'nmol/L -> µg/L': { divideByMW: false, scale: 1000 },
   'pg/mL -> pmol/L': { divideByMW: true, scale: 1000 },
+  'pmol/L -> ng/dL': { divideByMW: false, scale: 10_000 },
+  'pmol/L -> ng/mL': { divideByMW: false, scale: 1_000_000 },
   'pmol/L -> pg/mL': { divideByMW: false, scale: 1000 },
+  'µg/dL -> nmol/L': { divideByMW: true, scale: 10_000 },
+  'µg/dL -> µmol/L': { divideByMW: true, scale: 10 },
+  'µg/L -> nmol/L': { divideByMW: true, scale: 1000 },
   'µmol/L -> mg/dL': { divideByMW: false, scale: 10_000 },
+  'µmol/L -> µg/dL': { divideByMW: false, scale: 10 },
 };
 
 export interface ConversionResult {

@@ -44,3 +44,6 @@ export * from './screening-intervals';
 
 // Export i18n utilities
 export * from './i18n';
+
+// Export Brazilian identifier helpers (CPF, CNS)
+export * from './identifiers';

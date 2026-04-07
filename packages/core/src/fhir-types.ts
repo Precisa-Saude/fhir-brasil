@@ -95,11 +95,19 @@ export interface FHIRAttachment {
   url?: string;
 }
 
+export interface FHIRIdentifier {
+  system?: string;
+  type?: FHIRCodeableConcept;
+  use?: 'usual' | 'official' | 'temp' | 'secondary' | 'old';
+  value?: string;
+}
+
 export interface FHIRPatient {
   address?: FHIRAddress[];
   birthDate?: string;
   gender?: 'male' | 'female' | 'other' | 'unknown';
   id?: string;
+  identifier?: FHIRIdentifier[];
   name?: FHIRHumanName[];
   resourceType: 'Patient';
   telecom?: FHIRContactPoint[];

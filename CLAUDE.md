@@ -22,6 +22,7 @@ packages/
   core/          — Tipos FHIR R4, 180+ biomarcadores, faixas de referência, conversores
   calculators/   — PhenoAge, BrDMRisc, HOMA-IR, VLDL, IMC
   ocr-utils/     — Ancoragem OCR para extração de biomarcadores
+  rnds/          — Cliente HTTP para a RNDS (DATASUS), autenticação mTLS
 ```
 
 ## Comandos
@@ -56,6 +57,7 @@ pnpm turbo run test:coverage    # Rodar testes com cobertura
 - `@precisa-saude/fhir` deve ter **zero dependências runtime**
 - `@precisa-saude/fhir-calculators` depende apenas de `@precisa-saude/fhir`
 - `@precisa-saude/fhir-ocr-utils` depende apenas de `@precisa-saude/fhir`
+- `@precisa-saude/fhir-rnds` depende apenas de `@precisa-saude/fhir`
 - Pergunte antes de adicionar qualquer dependência runtime externa
 
 ## Seguir Planos Acordados — Sem Desvios Silenciosos

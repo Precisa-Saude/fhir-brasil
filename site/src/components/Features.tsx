@@ -17,7 +17,7 @@ interface Feature {
 const FEATURES: Feature[] = [
   {
     icon: <HeartPulse className="h-6 w-6" />,
-    title: '200+ Biomarcadores',
+    title: '180+ Biomarcadores',
     description:
       'Códigos LOINC, nomes em pt-BR e en-US, unidades UCUM e 20 categorias clínicas. Catalogo completo com normalização de aliases.',
     links: [
@@ -44,7 +44,7 @@ const FEATURES: Feature[] = [
     icon: <Network className="h-6 w-6" />,
     title: 'Cliente RNDS',
     description:
-      'Integração com a Rede Nacional de Dados em Saúde (DATASUS). Autenticação mTLS com certificado ICP-Brasil, zero dependências externas.',
+      'Integração com a Rede Nacional de Dados em Saúde (DATASUS). Autenticação mTLS com certificado ICP-Brasil, zero dependências externas. Testado contra mock RNDS — validação contra infraestrutura real requer certificado ICP-Brasil.',
     links: [
       { label: 'RNDS', href: 'https://rnds.saude.gov.br/' },
     ],

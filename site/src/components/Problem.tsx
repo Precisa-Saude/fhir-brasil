@@ -12,7 +12,7 @@ const TABS = [
   ─────────────               ─────────────
 
   Lab privado                 UBS / Lab SUS
-  (Dasa, Fleury, etc.)          (rede pública)
+  (grandes redes)               (rede pública)
        |                           |
        ▼                           ▼
   PDF no WhatsApp             Sistema interno

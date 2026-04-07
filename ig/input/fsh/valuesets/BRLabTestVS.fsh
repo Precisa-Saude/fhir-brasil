@@ -20,4 +20,3 @@ Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-bras
 * $LOINC#54434-6 "Número de Partículas LDL"
 * $LOINC#35505-7 "Padrão LDL"
 * $LOINC#17782-4 "Tamanho de Pico LDL"
-* $LOINC#21619-2 "Genótipo APOE"

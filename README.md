@@ -2,124 +2,40 @@
 
 [![CI](https://github.com/precisa-saude/fhir-brasil/actions/workflows/ci.yml/badge.svg)](https://github.com/precisa-saude/fhir-brasil/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Website](https://img.shields.io/badge/website-fhir--brasil.dev.br-blueviolet)](https://fhir-brasil.dev.br)
+[![npm @precisa-saude/fhir](https://img.shields.io/npm/v/@precisa-saude/fhir?label=%40precisa-saude%2Ffhir)](https://www.npmjs.com/package/@precisa-saude/fhir)
+[![npm @precisa-saude/fhir-calculators](https://img.shields.io/npm/v/@precisa-saude/fhir-calculators?label=fhir-calculators)](https://www.npmjs.com/package/@precisa-saude/fhir-calculators)
+[![npm @precisa-saude/fhir-ocr-utils](https://img.shields.io/npm/v/@precisa-saude/fhir-ocr-utils?label=fhir-ocr-utils)](https://www.npmjs.com/package/@precisa-saude/fhir-ocr-utils)
+[![npm @precisa-saude/fhir-rnds](https://img.shields.io/npm/v/@precisa-saude/fhir-rnds?label=fhir-rnds)](https://www.npmjs.com/package/@precisa-saude/fhir-rnds)
 
-Toolkit FHIR R4 para o ecossistema de saúde brasileiro — definições de biomarcadores, faixas de referência e calculadoras clínicas.
+Toolkit FHIR R4 para o ecossistema de saúde brasileiro — definições de biomarcadores, faixas de referência, calculadoras clínicas, normalização de aliases e cliente RNDS.
 
----
-
-## O problema
-
-O sistema de saúde brasileiro opera como duas redes paralelas com troca mínima de dados:
-
-- **Laboratórios privados** (Weinmann, Fleury, etc.) entregam resultados como PDFs — sem formato padrão, sem codificação LOINC
-- **Laboratórios do SUS** enviam resultados por sistemas internos, cada vez mais conectados à RNDS — mas a adesão para exames de rotina ainda não é obrigatória
-- **Nenhum sistema enxerga o outro** — o médico da rede privada não tem acesso aos resultados do SUS, e vice-versa
-
-**Resultado: exames duplicados.** O mesmo hemograma é solicitado pelo endocrinologista (privado) e pela UBS (SUS) em questão de semanas, porque não existe uma visão longitudinal do paciente.
-
-Isso custa dinheiro (operadoras e SUS pagam), desperdiça capacidade laboratorial e prejudica o paciente.
-
-### Hoje: dados fragmentados
-
-```
-┌───────────────────────┐       ┌───────────────────────┐
-│     Rede Privada      │       │     Rede Pública      │
-│                       │       │                       │
-│  Lab privado          │       │  UBS / Lab SUS        │
-│  (Dasa, Fleury, etc.)   │       │  (rede pública)       │
-│         │             │       │         │             │
-│         ▼             │       │         ▼             │
-│  PDF no WhatsApp      │       │  Sistema interno      │
-│  sem padrão           │       │  dados presos na UBS  │
-│  sem LOINC            │       │                       │
-│         │             │       │         │             │
-│         ▼             │       │         ▼             │
-│  Médico pede exame    │       │  UBS pede exame       │
-│  sem histórico  ◄─────┤── ✕ ──├─  sem histórico      │
-│  do SUS               │       │  privado              │
-└───────────┬───────────┘       └───────────┬───────────┘
-            │                               │
-            └───────────┐   ┌───────────────┘
-                        ▼   ▼
-              ┌───────────────────┐
-              │ Exames duplicados │
-              │ custo desperdiçado│
-              └───────────────────┘
-```
-
-### Com fhir-brasil: interoperabilidade via FHIR R4
-
-```
-┌───────────────┐  ┌───────────────┐  ┌───────────────┐
-│  Lab privado  │  │     RNDS      │  │ UBS / Lab SUS │
-│  PDF upload   │  │  FHIR R4      │  │ via RNDS ou   │
-│               │  │  nativo       │  │ PDF           │
-└───────┬───────┘  └───────┬───────┘  └───────┬───────┘
-        │     OCR + parser │  FHIR import     │
-        └──────────────────┼──────────────────┘
-                           ▼
-          ┌────────────────────────────────┐
-          │   fhir-brasil (código aberto)  │
-          └───────────────┬────────────────┘
-                          ▼
-          ┌────────────────────────────────┐
-          │  Aplicação                     │
-          │  (proprietário ou terceiros)   │
-          └───────┬────────────────┬───────┘
-                  ▼                ▼
-      ┌─────────────────┐ ┌────────────────────┐
-      │ Visão            │ │ Deduplicação       │
-      │ longitudinal     │ │ mesmo LOINC =      │
-      │ todas as fontes  │ │ mesmo exame        │
-      │ unificadas       │ │                    │
-      └─────────────────┘ └────────────────────┘
-```
+Documentação completa e contexto do projeto em [fhir-brasil.dev.br](https://fhir-brasil.dev.br).
 
 ---
 
-## O que é
+## Visão geral
 
-**fhir-brasil** é a camada de infraestrutura que resolve esse problema. Fornece uma base compartilhada para que healthtechs, instituições de pesquisa e desenvolvedores trabalhem com dados de saúde brasileiros no padrão FHIR R4:
+O sistema de saúde brasileiro opera como redes paralelas com troca mínima de dados — laboratórios privados entregam PDFs sem padrão, laboratórios do SUS usam sistemas internos, e nenhum enxerga o outro. O **fhir-brasil** fornece a infraestrutura de código aberto para resolver essa fragmentação via FHIR R4:
 
-- **180+ biomarcadores** com códigos LOINC, nomes em português/inglês, categorias e unidades
+- **180+ biomarcadores** com códigos LOINC, nomes em pt-BR/en-US, categorias e unidades UCUM
 - **180+ faixas de referência** com variantes por sexo/idade, baseadas em diretrizes SBPC/ML, SBC e SBD
+- **Normalização de aliases** — cada laboratório usa nomes diferentes para o mesmo exame; `normalizeCode('colesterol HDL')` retorna `'HDL'`
 - **Calculadoras clínicas** — PhenoAge (idade biológica), BrDMrisc (risco de diabetes), HOMA-IR, VLDL, IMC
 - **Utilitários OCR** — ancoragem de texto para extração de biomarcadores de PDFs de resultados de laboratório
 - **Cliente RNDS** — cliente HTTP para a Rede Nacional de Dados em Saúde (DATASUS), com autenticação mTLS e zero dependências externas
 
----
-
-## Ecossistema
-
-O ecossistema de saúde brasileiro envolve múltiplos atores, cada um com seus próprios sistemas e necessidades de dados. O fhir-brasil fornece a base para que cada visão possa ser construída sobre o mesmo padrão:
-
-| Ator                           | Problema de dados                                        | Papel do fhir-brasil                             |
-| ------------------------------ | -------------------------------------------------------- | ------------------------------------------------ |
-| **Paciente**                   | Resultados espalhados entre PDFs, WhatsApp, portais      | Base para aplicações de consumo                  |
-| **Médico / Clínica**           | Sem visão completa do histórico laboratorial entre redes | Camada de normalização entre fontes              |
-| **Laboratório**                | Formatos proprietários, LOINC inconsistente              | Vocabulário compartilhado com 180+ biomarcadores |
-| **Operadora**                  | Pagando por exames duplicados entre redes                | Infraestrutura para analytics de deduplicação    |
-| **Universidade / Pesquisador** | Dados fragmentados em formatos proprietários             | Pacotes open-source para pesquisa em saúde       |
-| **DATASUS / Governo**          | Adoção da RNDS ainda lenta                               | Ferramentas comunitárias que aceleram a adoção   |
+> 397+ testes automatizados, cobertura acima de 80%, revisão contínua de faixas de referência.
 
 ---
 
-## Por que código aberto
+## Pacotes
 
-1. **Transparência** — Definições de biomarcadores e faixas de referência devem ser auditáveis
-2. **Confiabilidade** — Códigos LOINC e citações SBPC/ML verificáveis por qualquer pessoa
-3. **Colaboração** — Healthtechs brasileiras contribuem e se beneficiam de uma base comum
-4. **Impacto social** — Dados de saúde padronizados ajudam a reduzir desigualdades no acesso
-
----
-
-## O que o fhir-brasil não é
-
-- **Não é um prontuário eletrônico (EHR)** — é uma camada de dados, não um sistema clínico
-- **Não é uma ferramenta de diagnóstico** — todos os outputs são informativos
-- **Não substitui a RNDS** — complementa a plataforma nacional de interoperabilidade do DATASUS
-- **Não é um produto de consumo** — é infraestrutura para que outros possam construir produtos
+| Pacote                                                     | Descrição                                                                                     | Deps                  |
+| ---------------------------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------- |
+| [`@precisa-saude/fhir`](packages/core/)                    | Tipos FHIR R4, 180+ biomarcadores, faixas de referência, conversores, normalização de aliases | 0 runtime deps        |
+| [`@precisa-saude/fhir-calculators`](packages/calculators/) | PhenoAge, BrDMrisc, HOMA-IR, VLDL, IMC                                                        | `@precisa-saude/fhir` |
+| [`@precisa-saude/fhir-ocr-utils`](packages/ocr-utils/)     | Ancoragem OCR para extração de biomarcadores                                                  | `@precisa-saude/fhir` |
+| [`@precisa-saude/fhir-rnds`](packages/rnds/)               | Cliente HTTP para a RNDS (DATASUS) — autenticação mTLS, FHIR R4                               | `@precisa-saude/fhir` |
 
 ---
 
@@ -143,13 +59,14 @@ npm install @precisa-saude/fhir-rnds
 
 ## Uso rápido
 
-### Converter resultado de laboratório para FHIR
+### Normalizar aliases de biomarcadores
 
 ```typescript
-import { labResultToFHIRBundle } from '@precisa-saude/fhir';
+import { normalizeCode } from '@precisa-saude/fhir';
 
-const bundle = labResultToFHIRBundle(report, observations, userProfile);
-// → FHIR R4 Bundle com Patient + DiagnosticReport + Observations
+normalizeCode('colesterol HDL'); // → 'HDL'
+normalizeCode('Hemoglobina glicada'); // → 'HbA1c'
+normalizeCode('TSH ultrassensível'); // → 'TSH'
 ```
 
 ### Consultar faixas de referência
@@ -162,6 +79,15 @@ const range = getReferenceRange('Cholesterol');
 
 const rangeForUser = getReferenceRange('HDL', { sex: 'F', age: 45 });
 // → Faixa ajustada para mulher de 45 anos
+```
+
+### Converter resultado de laboratório para FHIR
+
+```typescript
+import { labResultToFHIRBundle } from '@precisa-saude/fhir';
+
+const bundle = labResultToFHIRBundle(report, observations, userProfile);
+// → FHIR R4 Bundle com Patient + DiagnosticReport + Observations
 ```
 
 ### Consultar paciente na RNDS
@@ -177,17 +103,11 @@ const client = new RNDSClient({
   environment: 'homologation',
 });
 
-// Buscar paciente por CPF
 const patient = await client.getPatientByCpf('12345678900');
-// → FHIRPatient | null
-
-// Buscar estabelecimento por CNES
-const org = await client.getOrganizationByCnes('1234567');
-// → FHIROrganization | null
-
-// Enviar bundle de resultados laboratoriais
 const result = await client.submitBundle(bundle);
 ```
+
+> **Nota:** O Cliente RNDS foi testado contra servidor mock abrangente. Validação contra infraestrutura real do RNDS requer certificado ICP-Brasil e ainda não foi realizada. Veja [detalhes no README do pacote](packages/rnds/).
 
 ### Calcular PhenoAge
 
@@ -196,15 +116,15 @@ import { phenoage } from '@precisa-saude/fhir-calculators';
 
 const result = phenoage.calculatePhenoAge({
   chronologicalAge: 45,
-  albumin: 42, // g/L
-  creatinine: 80, // μmol/L
-  glucose: 5.2, // mmol/L
-  crp: 1.5, // mg/L
+  albumin: 42,
+  creatinine: 80,
+  glucose: 5.2,
+  crp: 1.5,
   lymphocytePercent: 30,
-  mcv: 88, // fL
-  rdw: 13, // %
-  alkalinePhosphatase: 70, // U/L
-  wbc: 6.5, // 10^9/L
+  mcv: 88,
+  rdw: 13,
+  alkalinePhosphatase: 70,
+  wbc: 6.5,
 });
 // → { phenoAge: 42.3, ageDifference: -2.7, ... }
 ```
@@ -217,126 +137,25 @@ Os pacotes core e ocr-utils incluem ferramentas de linha de comando — zero dep
 
 ### `fhir-bio` — biomarcadores e conversão FHIR
 
-Buscar biomarcador por código:
-
 ```bash
-fhir-bio lookup ApoB --json
-```
-
-```json
-{
-  "category": "coracao",
-  "code": "ApoB",
-  "loinc": "1884-6",
-  "names": {
-    "en": ["Apolipoprotein B", "ApoB"],
-    "pt": ["Apolipoproteína B", "ApoB"]
-  },
-  "unit": "mg/dL"
-}
-```
-
-Faixa de referência:
-
-```bash
-fhir-bio range Glucose --sex F --json
-```
-
-```json
-{
-  "category": "metabolico",
-  "code": "Glucose",
-  "loinc": "2345-7",
-  "names": {
-    "en": ["Glucose", "Blood Glucose", "Fasting Glucose"],
-    "pt": ["Glicose", "Glicemia", "Glicemia de Jejum"]
-  },
-  "unit": "mg/dL",
-  "context": {},
-  "direction": "range",
-  "referenceRange": {
-    "max": 100,
-    "min": 70,
-    "optimalMax": 90,
-    "optimalMin": 70,
-    "unit": "mg/dL"
-  }
-}
-```
-
-Informações de unidade:
-
-```bash
-fhir-bio units Creatinine --json
-```
-
-```json
-{
-  "category": "rins",
-  "code": "Creatinine",
-  "loinc": "2160-0",
-  "names": {
-    "en": ["Creatinine", "Serum Creatinine"],
-    "pt": ["Creatinina", "Creatinina Sérica"]
-  },
-  "unit": "mg/dL",
-  "canonicalUnit": "mg/dL",
-  "defaultUnit": "mg/dL",
-  "ucum": "mg/dL"
-}
-```
-
-Outros comandos:
-
-```bash
-fhir-bio lookup-loinc 718-7         # Buscar por código LOINC
-fhir-bio list                       # Listar todos os biomarcadores
-fhir-bio categories                 # Listar por categoria
-fhir-bio convert resultado.json     # Converter JSON para FHIR Bundle
-fhir-bio validate bundle.json       # Validar recurso FHIR
-fhir-bio import bundle.json         # Importar Bundle e extrair observações
-fhir-bio loinc-map                  # Tabela de mapeamento LOINC ↔ código
+fhir-bio lookup ApoB --json          # Buscar biomarcador por código
+fhir-bio range Glucose --sex F --json # Faixa de referência
+fhir-bio units Creatinine --json      # Informações de unidade
+fhir-bio lookup-loinc 718-7           # Buscar por código LOINC
+fhir-bio list                         # Listar todos os biomarcadores
+fhir-bio categories                   # Listar por categoria
+fhir-bio convert resultado.json       # Converter JSON para FHIR Bundle
+fhir-bio validate bundle.json         # Validar recurso FHIR
+fhir-bio import bundle.json           # Importar Bundle e extrair observações
+fhir-bio loinc-map                    # Tabela de mapeamento LOINC ↔ código
 ```
 
 ### `fhir-ocr` — extração de biomarcadores de texto OCR
 
-Encontrar biomarcadores em texto (aceita arquivo ou stdin):
-
 ```bash
 echo "Hemoglobina 14.5 g/dL Glicose 99 mg/dL TSH 2.5 mUI/L" | fhir-ocr find --json
-```
-
-```json
-{
-  "matches": [
-    { "code": "TSH", "confidence": 1, "loinc": "3016-3", "matchedName": "TSH" },
-    { "code": "Glucose", "confidence": 1, "loinc": "2345-7", "matchedName": "Glicose" },
-    { "code": "Hgb", "confidence": 1, "loinc": "718-7", "matchedName": "Hemoglobin" }
-  ],
-  "stats": { "matchedCount": 3, "scanTimeMs": 1, "totalPatterns": 183 }
-}
-```
-
-Extrair apenas os códigos:
-
-```bash
 echo "Hemoglobina 14.5 g/dL Glicose 99 mg/dL" | fhir-ocr codes --json
 ```
-
-```json
-["Glucose", "Hgb"]
-```
-
----
-
-## Pacotes
-
-| Pacote                            | Descrição                                                            | Deps                  |
-| --------------------------------- | -------------------------------------------------------------------- | --------------------- |
-| `@precisa-saude/fhir`             | Tipos FHIR R4, 180+ biomarcadores, faixas de referência, conversores | 0 runtime deps        |
-| `@precisa-saude/fhir-calculators` | PhenoAge, BrDMrisc, HOMA-IR, VLDL, IMC                               | `@precisa-saude/fhir` |
-| `@precisa-saude/fhir-ocr-utils`   | Ancoragem OCR para extração de biomarcadores                         | `@precisa-saude/fhir` |
-| `@precisa-saude/fhir-rnds`        | Cliente HTTP para a RNDS (DATASUS) — autenticação mTLS, FHIR R4      | `@precisa-saude/fhir` |
 
 ---
 
@@ -372,15 +191,17 @@ echo "Hemoglobina 14.5 g/dL Glicose 99 mg/dL" | fhir-ocr codes --json
 - [x] `@precisa-saude/fhir-calculators` — Calculadoras: PhenoAge, BrDMrisc, derivados
 - [x] `@precisa-saude/fhir-ocr-utils` — Utilitários OCR: ancoragem de biomarcadores em texto
 - [x] `@precisa-saude/fhir-rnds` — Cliente RNDS: autenticação mTLS, submissão de bundles
+- [ ] Implementation Guide FHIR (perfil BRLabObservation via SUSHI)
+- [ ] Helpers de identificadores brasileiros (CPF, CNS)
 - [ ] Integração com perfis RNDS (REL, RAC, SA, RIA)
-- [ ] Dados alimentares brasileiros (TBCA)
-- [ ] Módulo de nutrigenômica
 
 ---
 
 ## Contribuindo
 
 Veja [CONTRIBUTING.md](CONTRIBUTING.md) para detalhes sobre como contribuir.
+
+Histórico de versões em [CHANGELOG.md](CHANGELOG.md).
 
 ---
 

@@ -27,7 +27,7 @@ const ACTORS: Actor[] = [
     icon: <FlaskConical className="h-5 w-5" />,
     name: 'Laboratório',
     problem: 'Formatos proprietários, LOINC inconsistente',
-    role: 'Vocabulário compartilhado com 200+ biomarcadores',
+    role: 'Vocabulário compartilhado com 180+ biomarcadores',
   },
   {
     icon: <Building2 className="h-5 w-5" />,

@@ -1,3 +1,20 @@
+## [0.10.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.9.0...v0.10.0) (2026-04-07)
+
+### Features
+
+* **calculators:** adicionar calculadora eAG (PRE-182) ([#19](https://github.com/Precisa-Saude/fhir-brasil/issues/19)) ([c62f5de](https://github.com/Precisa-Saude/fhir-brasil/commit/c62f5de451f3212a7a6453d483475505db686aeb))
+* **docs,ci:** preparar publicação do IG no Simplifier (PRE-181) ([#17](https://github.com/Precisa-Saude/fhir-brasil/issues/17)) ([67fbc66](https://github.com/Precisa-Saude/fhir-brasil/commit/67fbc6691f00fbb13d567e64efbb072bcb42fcc3))
+* **docs:** adicionar terminologias brasileiras — TUSS, TISS, CID-10, SUS, IBGE, CNES ([#16](https://github.com/Precisa-Saude/fhir-brasil/issues/16)) ([20c0966](https://github.com/Precisa-Saude/fhir-brasil/commit/20c09660cf306710b4dbd86c747f43dd4023ad56))
+
+### Bug Fixes
+
+* **ci:** mover check de SIMPLIFIER_API_KEY para step-level ([#18](https://github.com/Precisa-Saude/fhir-brasil/issues/18)) ([61df4a7](https://github.com/Precisa-Saude/fhir-brasil/commit/61df4a727d8be77c0c35b98618f7fc8083e314eb))
+
+### Documentation
+
+* remover badge FHIR IG do README principal ([72c1f3b](https://github.com/Precisa-Saude/fhir-brasil/commit/72c1f3bec822985f63bcf71ca086c678d245b4e6))
+* remover seção de instalação do IG ainda não publicado ([cc8e21a](https://github.com/Precisa-Saude/fhir-brasil/commit/cc8e21acfe22b1f557e8ad114f95b1adc8e8a543))
+
 ## [0.9.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.8.0...v0.9.0) (2026-04-07)
 
 ### Features

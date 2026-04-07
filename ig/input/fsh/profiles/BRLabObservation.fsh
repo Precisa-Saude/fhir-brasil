@@ -26,7 +26,7 @@ Description: "Perfil para resultados de exames laboratoriais brasileiros. Restri
 * code.coding[loinc].system 1..1
 * code.coding[loinc].system = $LOINC (exactly)
 * code.coding[loinc].code 1..1
-* code.coding[loinc].code from BRLabTestVS (extensible)
+* code.coding[loinc].code from BRLabTestVS (preferred)
 * code.coding[loinc].display 1..1
 * code.coding[loinc].display ^short = "Nome do exame em pt-BR"
 

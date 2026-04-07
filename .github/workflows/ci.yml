@@ -185,6 +185,59 @@ jobs:
           publish_if_needed packages/ocr-utils
           publish_if_needed packages/rnds
 
+  # ── Publicar FHIR IG no Simplifier ──────────────────────────
+  publish-ig:
+    name: Publish FHIR IG
+    needs: release
+    if: needs.release.outputs.released == 'true' && secrets.SIMPLIFIER_API_KEY != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Instalar dependências
+        run: pnpm install --frozen-lockfile
+
+      - name: Compilar IG (SUSHI)
+        run: pnpm exec sushi ig/ -o ig/output
+
+      - name: Montar pacote FHIR (.tgz)
+        run: node ig/scripts/build-package-tgz.js
+
+      - name: Verificar se versão já foi publicada
+        id: check
+        run: |
+          VERSION=$(node -p "JSON.parse(require('fs').readFileSync('ig/output/package/package.json','utf8')).version")
+          PKG_NAME=$(node -p "JSON.parse(require('fs').readFileSync('ig/output/package/package.json','utf8')).name")
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            "https://packages.simplifier.net/${PKG_NAME}/${VERSION}")
+          if [ "$STATUS" = "200" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "Versão ${PKG_NAME}@${VERSION} já publicada — pulando upload"
+          elif [ "$STATUS" = "404" ]; then
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "Versão ${PKG_NAME}@${VERSION} não encontrada — publicando"
+          else
+            echo "::error::Status inesperado do Simplifier: HTTP ${STATUS}"
+            exit 1
+          fi
+
+      - name: Publicar no Simplifier
+        if: steps.check.outputs.exists == 'false'
+        run: |
+          curl -X POST "https://packages.simplifier.net" \
+            -H "Authorization: Bearer ${{ secrets.SIMPLIFIER_API_KEY }}" \
+            -F "file=@ig/output/package.tgz" \
+            --fail --silent --show-error
+
   # ── Deploy site (main only, after checks pass) ─────────────
   build-site:
     name: Build Site

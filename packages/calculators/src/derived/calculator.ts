@@ -7,6 +7,7 @@
  * Currently supports:
  * - HOMA-IR = (Fasting Glucose × Fasting Insulin) / 405
  * - VLDL = Triglycerides / 5
+ * - eAG = 28.7 × HbA1c(%) − 46.7 (Nathan et al. 2008)
  * - BMI = weight_kg / (height_m)² (requires UserContext with height)
  */
 
@@ -57,6 +58,12 @@ const CALCULATIONS: CalculationDef[] = [
     calculate: (v) => v.get('Triglycerides')! / 5,
     code: 'VLDL',
     inputs: ['Triglycerides'],
+    unit: 'mg/dL',
+  },
+  {
+    calculate: (v) => 28.7 * v.get('HbA1c')! - 46.7,
+    code: 'eAG',
+    inputs: ['HbA1c'],
     unit: 'mg/dL',
   },
 ];

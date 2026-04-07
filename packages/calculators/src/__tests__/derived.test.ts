@@ -50,6 +50,34 @@ describe('computeDerivedBiomarkers', () => {
     });
   });
 
+  describe('eAG', () => {
+    it('should calculate eAG from HbA1c', () => {
+      const biomarkers: BiomarkerInput[] = [{ code: 'HbA1c', value: 5.4 }];
+      const derived = computeDerivedBiomarkers(biomarkers);
+      const eag = derived.find((b) => b.code === 'eAG');
+
+      expect(eag).toBeDefined();
+      // eAG = 28.7 × 5.4 − 46.7 = 108.28
+      expect(eag!.value).toBeCloseTo(108.28, 1);
+      expect(eag!.unit).toBe('mg/dL');
+    });
+
+    it('should not calculate eAG if HbA1c is missing', () => {
+      const biomarkers: BiomarkerInput[] = [{ code: 'Glucose', value: 90 }];
+      const derived = computeDerivedBiomarkers(biomarkers);
+      expect(derived.find((b) => b.code === 'eAG')).toBeUndefined();
+    });
+
+    it('should not calculate eAG if already present', () => {
+      const biomarkers: BiomarkerInput[] = [
+        { code: 'HbA1c', value: 5.4 },
+        { code: 'eAG', value: 110 },
+      ];
+      const derived = computeDerivedBiomarkers(biomarkers);
+      expect(derived.find((b) => b.code === 'eAG')).toBeUndefined();
+    });
+  });
+
   describe('BMI', () => {
     it('should calculate BMI from TotalMass and user height', () => {
       const biomarkers: BiomarkerInput[] = [{ code: 'TotalMass', value: 80 }];
@@ -85,6 +113,7 @@ describe('computeDerivedBiomarkers', () => {
         { code: 'Glucose', value: 100 },
         { code: 'Insulin', value: 12 },
         { code: 'Triglycerides', value: 200 },
+        { code: 'HbA1c', value: 5.4 },
         { code: 'TotalMass', value: 70 },
       ];
       const derived = computeDerivedBiomarkers(biomarkers, {
@@ -93,8 +122,9 @@ describe('computeDerivedBiomarkers', () => {
 
       expect(derived.find((b) => b.code === 'HOMA_IR')).toBeDefined();
       expect(derived.find((b) => b.code === 'VLDL')).toBeDefined();
+      expect(derived.find((b) => b.code === 'eAG')).toBeDefined();
       expect(derived.find((b) => b.code === 'BMI')).toBeDefined();
-      expect(derived.length).toBe(3);
+      expect(derived.length).toBe(4);
     });
   });
 

@@ -105,6 +105,14 @@ describe('computeDerivedBiomarkers', () => {
       });
       expect(derived.find((b) => b.code === 'BMI')).toBeUndefined();
     });
+
+    it('should not calculate BMI with zero height', () => {
+      const biomarkers: BiomarkerInput[] = [{ code: 'TotalMass', value: 80 }];
+      const derived = computeDerivedBiomarkers(biomarkers, {
+        userContext: { heightCm: 0 },
+      });
+      expect(derived.find((b) => b.code === 'BMI')).toBeUndefined();
+    });
   });
 
   describe('multiple derived biomarkers', () => {

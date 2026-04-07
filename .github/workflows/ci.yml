@@ -189,30 +189,47 @@ jobs:
   publish-ig:
     name: Publish FHIR IG
     needs: release
-    if: needs.release.outputs.released == 'true' && secrets.SIMPLIFIER_API_KEY != ''
+    if: needs.release.outputs.released == 'true'
     runs-on: ubuntu-latest
     steps:
+      - name: Verificar se API key está configurada
+        id: has-key
+        run: |
+          if [ -z "${{ secrets.SIMPLIFIER_API_KEY }}" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "SIMPLIFIER_API_KEY não configurada — pulando publicação"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/checkout@v6
+        if: steps.has-key.outputs.configured == 'true'
         with:
           ref: main
 
       - uses: pnpm/action-setup@v4
+        if: steps.has-key.outputs.configured == 'true'
 
       - uses: actions/setup-node@v6
+        if: steps.has-key.outputs.configured == 'true'
         with:
           node-version: 22
           cache: 'pnpm'
 
       - name: Instalar dependências
+        if: steps.has-key.outputs.configured == 'true'
         run: pnpm install --frozen-lockfile
 
       - name: Compilar IG (SUSHI)
+        if: steps.has-key.outputs.configured == 'true'
         run: pnpm exec sushi ig/ -o ig/output
 
       - name: Montar pacote FHIR (.tgz)
+        if: steps.has-key.outputs.configured == 'true'
         run: node ig/scripts/build-package-tgz.js
 
       - name: Verificar se versão já foi publicada
+        if: steps.has-key.outputs.configured == 'true'
         id: check
         run: |
           VERSION=$(node -p "JSON.parse(require('fs').readFileSync('ig/output/package/package.json','utf8')).version")
@@ -231,7 +248,7 @@ jobs:
           fi
 
       - name: Publicar no Simplifier
-        if: steps.check.outputs.exists == 'false'
+        if: steps.has-key.outputs.configured == 'true' && steps.check.outputs.exists == 'false'
         run: |
           curl -X POST "https://packages.simplifier.net" \
             -H "Authorization: Bearer ${{ secrets.SIMPLIFIER_API_KEY }}" \

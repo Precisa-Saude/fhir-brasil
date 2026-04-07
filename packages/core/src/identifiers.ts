@@ -114,7 +114,7 @@ export function formatCNS(cns: string): string {
  */
 export function cpfToFHIRIdentifier(cpf: string): FHIRIdentifier {
   if (!validateCPF(cpf)) {
-    throw new Error(`CPF inválido: ${cpf}`);
+    throw new Error('CPF inválido');
   }
   return {
     system: CPF_SYSTEM,
@@ -132,7 +132,7 @@ export function cpfToFHIRIdentifier(cpf: string): FHIRIdentifier {
  */
 export function cnsToFHIRIdentifier(cns: string): FHIRIdentifier {
   if (!validateCNS(cns)) {
-    throw new Error(`CNS inválido: ${cns}`);
+    throw new Error('CNS inválido');
   }
   return {
     system: CNS_SYSTEM,

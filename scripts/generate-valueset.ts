@@ -8,9 +8,13 @@
  */
 
 import { writeFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
+// Importa direto do source — este script é uma ferramenta de build, não código de runtime
 import { BIOMARKER_DEFINITIONS } from '../packages/core/src/biomarkers';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const biomarkersWithLoinc = BIOMARKER_DEFINITIONS.filter((b) => b.loinc).sort((a, b) => {
   const catA = Array.isArray(a.category) ? (a.category[0] ?? '') : a.category;
@@ -39,15 +43,7 @@ for (const b of biomarkersWithLoinc) {
 }
 lines.push('');
 
-const outputPath = resolve(
-  import.meta.dirname,
-  '..',
-  'ig',
-  'input',
-  'fsh',
-  'valuesets',
-  'BRLabTestVS.fsh',
-);
+const outputPath = resolve(__dirname, '..', 'ig', 'input', 'fsh', 'valuesets', 'BRLabTestVS.fsh');
 writeFileSync(outputPath, lines.join('\n'), 'utf-8');
 
 // eslint-disable-next-line no-console

@@ -116,6 +116,8 @@ describe('cpfToFHIRIdentifier', () => {
   it('lança erro para CPF inválido', () => {
     expect(() => cpfToFHIRIdentifier('00000000000')).toThrow('CPF inválido');
     expect(() => cpfToFHIRIdentifier('123')).toThrow('CPF inválido');
+    // Não deve incluir o valor do CPF na mensagem (PII)
+    expect(() => cpfToFHIRIdentifier('00000000000')).toThrow(/^CPF inválido$/);
   });
 });
 
@@ -132,5 +134,7 @@ describe('cnsToFHIRIdentifier', () => {
   it('lança erro para CNS inválido', () => {
     expect(() => cnsToFHIRIdentifier('000000000000000')).toThrow('CNS inválido');
     expect(() => cnsToFHIRIdentifier('123')).toThrow('CNS inválido');
+    // Não deve incluir o valor do CNS na mensagem (PII)
+    expect(() => cnsToFHIRIdentifier('000000000000000')).toThrow(/^CNS inválido$/);
   });
 });

@@ -23,8 +23,8 @@ Description: "Perfil para laudos de exames laboratoriais brasileiros. Restringe 
 * subject only Reference(BRPatient)
 
 // Data efetiva obrigatória
+* effective[x] 1..1
 * effective[x] only dateTime
-* effectiveDateTime 1..1
 
 // Resultados referenciam BRLabObservation
 * result 1..*

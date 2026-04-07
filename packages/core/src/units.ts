@@ -678,6 +678,8 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   },
   Neutrophils: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   Neutrophils_Abs: { aliases: CBC_DIFF_ALIASES, ...CBC_DIFF },
+  // MW 386.65 = colesterol livre. Frações lipoproteicas são heterogêneas,
+  // mas a conversão mg/dL→mmol/L usa MW do colesterol por convenção clínica.
   NonHDL_Cholesterol: {
     aliases: { 'mg/dl': 'mg/dL', 'mmol/l': 'mmol/L' },
     canonicalUcum: 'mg/dL',
@@ -946,7 +948,9 @@ function normalizeUnit(unit: string, config: BiomarkerUnitConfig): string {
 const FIXED_FACTORS: Record<string, number> = {
   'g/dL -> g/L': 10,
   'g/L -> g/dL': 0.1,
+  'g/L -> mg/dL': 100,
   'mEq/L -> mmol/L': 1,
+  'mg/dL -> g/L': 0.01,
   'mmol/L -> mEq/L': 1,
   'ng/dL -> pg/mL': 10,
   'ng/mL -> µg/L': 1,

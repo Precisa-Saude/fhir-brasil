@@ -24,6 +24,9 @@ Description: "Perfil para pacientes brasileiros. Restringe Patient do FHIR R4 pa
 * identifier[cns].value 1..1
 * identifier[cns].value ^short = "CNS com 15 dígitos"
 
+// Pelo menos um identificador brasileiro (CPF ou CNS) deve estar presente
+* obeys br-patient-identifier
+
 // Nome obrigatório
 * name 1..*
 
@@ -32,3 +35,9 @@ Description: "Perfil para pacientes brasileiros. Restringe Patient do FHIR R4 pa
 
 // Sexo obrigatório
 * gender 1..1
+
+
+Invariant: br-patient-identifier
+Description: "Paciente deve ter pelo menos um identificador brasileiro (CPF ou CNS)"
+Expression: "identifier.where(system = 'http://rnds.saude.gov.br/fhir/r4/NamingSystem/cpf').exists() or identifier.where(system = 'http://rnds.saude.gov.br/fhir/r4/NamingSystem/cns').exists()"
+Severity: #error

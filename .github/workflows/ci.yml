@@ -48,6 +48,9 @@ jobs:
       - name: Test
         run: pnpm turbo run test
 
+      - name: Compile FHIR IG (SUSHI)
+        run: npx fsh-sushi ig/ -o ig/output
+
   # ── PR only: Claude code review ────────────────────────────
   review:
     name: Code Review

@@ -6,7 +6,6 @@
 [![npm @precisa-saude/fhir-calculators](https://img.shields.io/npm/v/@precisa-saude/fhir-calculators?label=fhir-calculators)](https://www.npmjs.com/package/@precisa-saude/fhir-calculators)
 [![npm @precisa-saude/fhir-ocr-utils](https://img.shields.io/npm/v/@precisa-saude/fhir-ocr-utils?label=fhir-ocr-utils)](https://www.npmjs.com/package/@precisa-saude/fhir-ocr-utils)
 [![npm @precisa-saude/fhir-rnds](https://img.shields.io/npm/v/@precisa-saude/fhir-rnds?label=fhir-rnds)](https://www.npmjs.com/package/@precisa-saude/fhir-rnds)
-[![FHIR IG](https://img.shields.io/badge/FHIR_IG-br.dev.fhir--brasil.core-orange)](https://simplifier.net/packages/br.dev.fhir-brasil.core)
 
 Toolkit FHIR R4 para o ecossistema de saúde brasileiro — definições de biomarcadores, faixas de referência, calculadoras clínicas, normalização de aliases e cliente RNDS.
 

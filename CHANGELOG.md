@@ -1,3 +1,9 @@
+## [0.7.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.6.2...v0.7.0) (2026-04-07)
+
+### Features
+
+* **docs:** Stage 3 — FHIR Implementation Guide com BRLabObservation via SUSHI ([#13](https://github.com/Precisa-Saude/fhir-brasil/issues/13)) ([55ddb18](https://github.com/Precisa-Saude/fhir-brasil/commit/55ddb186cf24594d7a34b4589750f185ce6deeee)), closes [#pattern](https://github.com/Precisa-Saude/fhir-brasil/issues/pattern) [#value](https://github.com/Precisa-Saude/fhir-brasil/issues/value)
+
 ## [0.6.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.6.1...v0.6.2) (2026-04-07)
 
 ### Bug Fixes

@@ -1,0 +1,12 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction-response",
+  "entry": [
+    {
+      "response": {
+        "status": "201 Created",
+        "location": "Observation/abc-123/_history/1"
+      }
+    }
+  ]
+}

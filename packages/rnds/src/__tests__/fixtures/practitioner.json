@@ -1,0 +1,11 @@
+{
+  "resourceType": "Practitioner",
+  "id": "987654321098765",
+  "active": true,
+  "name": [
+    {
+      "family": "Santos",
+      "given": ["Maria"]
+    }
+  ]
+}

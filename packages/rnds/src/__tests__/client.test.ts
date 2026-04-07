@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { RNDSClient } from '../client';
 import { RNDSAuthError, RNDSError, RNDSValidationError } from '../errors';
 import type { FHIROrganization, FHIRPractitioner } from '../types';
+import { fixtures } from './fixtures';
 
 const mockGetToken = vi.fn().mockResolvedValue('mock-jwt-token');
 
@@ -82,12 +83,7 @@ describe('RNDSClient', () => {
 
   describe('getPatientByCpf', () => {
     it('retorna paciente encontrado', async () => {
-      const patient: FHIRPatient = {
-        birthDate: '1990-01-01',
-        gender: 'male',
-        name: [{ family: 'Silva', given: ['João'] }],
-        resourceType: 'Patient',
-      };
+      const patient = fixtures.patientByCpf as FHIRPatient;
 
       mockFetch.mockResolvedValue(jsonResponse(patient));
       const result = await client.getPatientByCpf('12345678900');
@@ -110,10 +106,7 @@ describe('RNDSClient', () => {
 
   describe('getPatientByCns', () => {
     it('retorna paciente por CNS via lookup direto', async () => {
-      const patient: FHIRPatient = {
-        name: [{ text: 'Maria' }],
-        resourceType: 'Patient',
-      };
+      const patient = fixtures.patientByCns as FHIRPatient;
 
       mockFetch.mockResolvedValue(jsonResponse(patient));
       const result = await client.getPatientByCns('123456789012345');
@@ -134,10 +127,7 @@ describe('RNDSClient', () => {
 
   describe('getOrganizationByCnes', () => {
     it('retorna organização via lookup direto por CNES', async () => {
-      const org: FHIROrganization = {
-        name: 'Hospital ABC',
-        resourceType: 'Organization',
-      };
+      const org = fixtures.organization as FHIROrganization;
 
       mockFetch.mockResolvedValue(jsonResponse(org));
       const result = await client.getOrganizationByCnes('1234567');
@@ -158,10 +148,7 @@ describe('RNDSClient', () => {
 
   describe('getPractitionerByCns', () => {
     it('retorna profissional via lookup direto por CNS', async () => {
-      const practitioner: FHIRPractitioner = {
-        name: [{ text: 'Dr. Carlos' }],
-        resourceType: 'Practitioner',
-      };
+      const practitioner = fixtures.practitioner as FHIRPractitioner;
 
       mockFetch.mockResolvedValue(jsonResponse(practitioner));
       const result = await client.getPractitionerByCns('123456789012345');
@@ -239,15 +226,10 @@ describe('RNDSClient', () => {
     });
 
     it('lança RNDSValidationError para 422 com OperationOutcome', async () => {
-      const outcome = {
-        issue: [{ code: 'invalid', severity: 'error' }],
-        resourceType: 'OperationOutcome',
-      };
-
       mockFetch.mockResolvedValue({
         ok: false,
         status: 422,
-        text: () => Promise.resolve(JSON.stringify(outcome)),
+        text: () => Promise.resolve(JSON.stringify(fixtures.operationOutcomeError)),
       } as Response);
 
       await expect(

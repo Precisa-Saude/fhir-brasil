@@ -51,7 +51,7 @@ const title = yamlValue('title');
 
 // Extrair description (multiline >-)
 // Termina na próxima chave top-level (sem indentação) ou no fim do arquivo
-const descMatch = configText.match(/^description:\s*>-\n([\s\S]*?)(?=^[^\s]|\z)/m);
+const descMatch = (configText + '\n\0').match(/^description:\s*>-\n([\s\S]*?)(?=^\S)/m);
 const description = descMatch
   ? descMatch[1]
       .split('\n')

@@ -189,7 +189,7 @@ jobs:
   publish-ig:
     name: Publish FHIR IG
     needs: release
-    if: needs.release.outputs.released == 'true'
+    if: needs.release.outputs.released == 'true' && secrets.SIMPLIFIER_API_KEY != ''
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6

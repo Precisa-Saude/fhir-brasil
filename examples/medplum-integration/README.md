@@ -37,7 +37,7 @@ const bundle = labResultToFHIRBundle(report, observations, profile);
 // 2. Enviar para o Medplum
 const medplum = new MedplumClient({ baseUrl: 'http://localhost:8103' });
 await medplum.startClientLogin(clientId, clientSecret);
-const result = await medplum.executeBatch(bundle);
+const batchResult = await medplum.executeBatch(bundle);
 
 // 3. Consultar observações armazenadas
 const obs = await medplum.searchResources('Observation', {

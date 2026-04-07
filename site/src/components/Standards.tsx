@@ -12,6 +12,16 @@ const STANDARDS = [
     href: 'https://loinc.org/',
   },
   {
+    label: 'TUSS / TISS',
+    description: 'Terminologias ANS para saúde suplementar',
+    href: 'https://www.gov.br/ans/pt-br/assuntos/prestadores/padrao-para-troca-de-informacao-de-saude-suplementar-2013-tiss',
+  },
+  {
+    label: 'CID-10 pt-BR',
+    description: 'Classificação Internacional de Doenças (DATASUS)',
+    href: 'https://datasus.saude.gov.br/',
+  },
+  {
     label: 'SBPC/ML',
     description: 'Sociedade Brasileira de Patologia Clínica',
     href: 'https://www.sbpc.org.br/',
@@ -35,9 +45,10 @@ const gridStyle = {
 } as const;
 
 // Map each card to its grid column start position (desktop only)
-// Row 1: cols 2-5, 6-9, 10-13 (three cards, 4 cols each)
-// Row 2: cols 4-7, 8-11 (two cards, centered)
-const COL_STARTS_14 = [2, 6, 10, 4, 8] as const;
+// Row 1: cols 1-4, 5-8, 9-12 (three cards, 4 cols each)
+// Row 2: cols 1-4, 5-8, 9-12 (three cards, 4 cols each)
+// Row 3: cols 5-8 (one card, centered)
+const COL_STARTS_14 = [2, 6, 10, 2, 6, 10, 6] as const;
 
 export function Standards() {
   const col = useGridCol();

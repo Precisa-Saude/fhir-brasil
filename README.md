@@ -182,6 +182,9 @@ echo "Hemoglobina 14.5 g/dL Glicose 99 mg/dL" | fhir-ocr codes --json
 - **LOINC** — Códigos LOINC verificados para interoperabilidade
 - **SBPC/ML** — Faixas de referência baseadas nas diretrizes brasileiras
 - **UCUM** — Unidades no formato Unified Code for Units of Measure
+- **TUSS/TISS** — Terminologias ANS para saúde suplementar
+- **CID-10 pt-BR** — Classificação Internacional de Doenças (tradução DATASUS)
+- **IBGE/CNES** — Códigos de município e tipos de estabelecimento de saúde
 
 ---
 

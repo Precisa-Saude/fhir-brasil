@@ -48,6 +48,9 @@ jobs:
       - name: Test
         run: pnpm turbo run test
 
+      - name: Test FHIR IG terminologies
+        run: npx vitest run ig/scripts/__tests__/
+
       - name: Compile FHIR IG (SUSHI)
         run: pnpm exec sushi build ig/ -o ig/output
 

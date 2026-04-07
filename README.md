@@ -55,21 +55,6 @@ npm install @precisa-saude/fhir-ocr-utils
 npm install @precisa-saude/fhir-rnds
 ```
 
-### Implementation Guide (perfis FHIR)
-
-Os perfis, extensões e terminologias brasileiras estão disponíveis como pacote FHIR no [Simplifier Package Registry](https://simplifier.net/packages/br.dev.fhir-brasil.core):
-
-```bash
-fhir install br.dev.fhir-brasil.core
-```
-
-Ou como dependência em outro IG (`sushi-config.yaml`):
-
-```yaml
-dependencies:
-  br.dev.fhir-brasil.core: 0.9.0
-```
-
 ---
 
 ## Uso rápido

@@ -51,12 +51,17 @@ try {
 }
 
 const raw = readFileSync(jsonPath, 'utf-8');
-const parsed: unknown[] = JSON.parse(raw);
+const parsed: unknown = JSON.parse(raw);
+
+if (!Array.isArray(parsed) || parsed.length === 0) {
+  // eslint-disable-next-line no-console
+  console.error('Erro: JSON do IBGE está vazio ou não é um array.');
+  process.exit(1);
+}
 
 // Validar estrutura do primeiro registro
-const first = parsed[0] as Record<string, unknown> | undefined;
+const first = parsed[0] as Record<string, unknown>;
 if (
-  !first ||
   typeof first['municipio-id'] !== 'number' ||
   typeof first['municipio-nome'] !== 'string' ||
   typeof first['UF-sigla'] !== 'string' ||

@@ -128,6 +128,46 @@ describe('computeDerivedBiomarkers', () => {
     });
   });
 
+  describe('input validation', () => {
+    it('should not calculate HOMA-IR with zero glucose', () => {
+      const biomarkers: BiomarkerInput[] = [
+        { code: 'Glucose', value: 0 },
+        { code: 'Insulin', value: 10 },
+      ];
+      const derived = computeDerivedBiomarkers(biomarkers);
+      expect(derived.find((b) => b.code === 'HOMA_IR')).toBeUndefined();
+    });
+
+    it('should not calculate HOMA-IR with negative insulin', () => {
+      const biomarkers: BiomarkerInput[] = [
+        { code: 'Glucose', value: 90 },
+        { code: 'Insulin', value: -5 },
+      ];
+      const derived = computeDerivedBiomarkers(biomarkers);
+      expect(derived.find((b) => b.code === 'HOMA_IR')).toBeUndefined();
+    });
+
+    it('should not calculate VLDL with zero triglycerides', () => {
+      const biomarkers: BiomarkerInput[] = [{ code: 'Triglycerides', value: 0 }];
+      const derived = computeDerivedBiomarkers(biomarkers);
+      expect(derived.find((b) => b.code === 'VLDL')).toBeUndefined();
+    });
+
+    it('should not calculate eAG with zero HbA1c', () => {
+      const biomarkers: BiomarkerInput[] = [{ code: 'HbA1c', value: 0 }];
+      const derived = computeDerivedBiomarkers(biomarkers);
+      expect(derived.find((b) => b.code === 'eAG')).toBeUndefined();
+    });
+
+    it('should not calculate BMI with zero weight', () => {
+      const biomarkers: BiomarkerInput[] = [{ code: 'TotalMass', value: 0 }];
+      const derived = computeDerivedBiomarkers(biomarkers, {
+        userContext: { heightCm: 175 },
+      });
+      expect(derived.find((b) => b.code === 'BMI')).toBeUndefined();
+    });
+  });
+
   describe('string values', () => {
     it('should skip biomarkers with string values', () => {
       const biomarkers: BiomarkerInput[] = [

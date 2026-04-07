@@ -1,3 +1,9 @@
+## [0.8.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.7.0...v0.8.0) (2026-04-07)
+
+### Features
+
+* **core:** Stage 4 — ADR calculadoras, helpers CPF/CNS, FHIRIdentifier ([#14](https://github.com/Precisa-Saude/fhir-brasil/issues/14)) ([fffe4f5](https://github.com/Precisa-Saude/fhir-brasil/commit/fffe4f5c70db3b82f04afec6996f3cb747563317))
+
 ## [0.7.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.6.2...v0.7.0) (2026-04-07)
 
 ### Features

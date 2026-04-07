@@ -35,7 +35,8 @@ const configPath = join(ROOT, 'sushi-config.yaml');
 const configText = readFileSync(configPath, 'utf8');
 
 function yamlValue(key) {
-  const re = new RegExp(`^${key}:\\s+(.+)$`, 'm');
+  // Ancorar em início de linha sem indentação para não capturar chaves nested
+  const re = new RegExp(`^(?!\\s)${key}:\\s+(.+)$`, 'm');
   const m = configText.match(re);
   return m ? m[1].trim().replace(/^['"]|['"]$/g, '') : undefined;
 }
@@ -49,7 +50,8 @@ const name = yamlValue('name');
 const title = yamlValue('title');
 
 // Extrair description (multiline >-)
-const descMatch = configText.match(/^description:\s*>-\n([\s\S]*?)(?=^\w)/m);
+// Termina na próxima chave top-level (sem indentação) ou no fim do arquivo
+const descMatch = configText.match(/^description:\s*>-\n([\s\S]*?)(?=^[^\s]|\z)/m);
 const description = descMatch
   ? descMatch[1]
       .split('\n')

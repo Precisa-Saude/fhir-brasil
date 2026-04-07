@@ -222,9 +222,12 @@ jobs:
           if [ "$STATUS" = "200" ]; then
             echo "exists=true" >> "$GITHUB_OUTPUT"
             echo "Versão ${PKG_NAME}@${VERSION} já publicada — pulando upload"
-          else
+          elif [ "$STATUS" = "404" ]; then
             echo "exists=false" >> "$GITHUB_OUTPUT"
             echo "Versão ${PKG_NAME}@${VERSION} não encontrada — publicando"
+          else
+            echo "::error::Status inesperado do Simplifier: HTTP ${STATUS}"
+            exit 1
           fi
 
       - name: Publicar no Simplifier

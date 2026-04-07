@@ -1,0 +1,23 @@
+ValueSet: BRLabTestVS
+Id: br-lab-test-vs
+Title: "BR Lab Test ValueSet"
+Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-brasil. Subset inicial: biomarcadores cardiovasculares. Este ValueSet será expandido progressivamente para cobrir todos os 165+ biomarcadores com código LOINC presentes no pacote core."
+
+* $LOINC#1884-6 "Apolipoproteína B"
+* $LOINC#1869-7 "Apolipoproteína A-1"
+* $LOINC#2085-9 "Colesterol HDL"
+* $LOINC#2089-1 "Colesterol LDL"
+* $LOINC#2093-3 "Colesterol Total"
+* $LOINC#2571-8 "Triglicerídeos"
+* $LOINC#13458-5 "Colesterol VLDL"
+* $LOINC#43396-1 "Colesterol Não-HDL"
+* $LOINC#9830-1 "Razão Colesterol Total / HDL"
+* $LOINC#1988-5 "Proteína C-Reativa"
+* $LOINC#10835-7 "Lipoproteína (a)"
+* $LOINC#43729-3 "HDL Grande"
+* $LOINC#43727-7 "LDL Pequeno"
+* $LOINC#96735-6 "LDL Médio"
+* $LOINC#54434-6 "Número de Partículas LDL"
+* $LOINC#35505-7 "Padrão LDL"
+* $LOINC#17782-4 "Tamanho de Pico LDL"
+* $LOINC#21619-2 "Genótipo APOE"

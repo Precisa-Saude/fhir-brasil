@@ -104,7 +104,7 @@ function generateFsh(entries: CidEntry[]): string {
       lines.push(`// ${prefix}`);
     }
     // Escapar aspas duplas na descrição
-    const desc = entry.description.replace(/"/g, '\\"');
+    const desc = entry.description.replace(/"/g, "'");
     lines.push(`* $ICD10#${entry.code} "${desc}"`);
   }
 

@@ -51,7 +51,25 @@ try {
 }
 
 const raw = readFileSync(jsonPath, 'utf-8');
-const municipios: MunicipioNivelado[] = JSON.parse(raw);
+const parsed: unknown[] = JSON.parse(raw);
+
+// Validar estrutura do primeiro registro
+const first = parsed[0] as Record<string, unknown> | undefined;
+if (
+  !first ||
+  typeof first['municipio-id'] !== 'number' ||
+  typeof first['municipio-nome'] !== 'string' ||
+  typeof first['UF-sigla'] !== 'string' ||
+  typeof first['UF-nome'] !== 'string'
+) {
+  // eslint-disable-next-line no-console
+  console.error(
+    'Erro: formato inesperado do JSON do IBGE. Campos esperados: municipio-id, municipio-nome, UF-sigla, UF-nome',
+  );
+  process.exit(1);
+}
+
+const municipios = parsed as MunicipioNivelado[];
 
 // Ordenar por código IBGE
 municipios.sort((a, b) => a['municipio-id'] - b['municipio-id']);
@@ -78,7 +96,7 @@ for (const m of municipios) {
     lines.push(`// ${m['UF-nome']} (${uf})`);
   }
   const code = String(m['municipio-id']);
-  const name = m['municipio-nome'].replace(/"/g, '\\"');
+  const name = m['municipio-nome'].replace(/"/g, "'");
   lines.push(`* #${code} "${name}"`);
 }
 

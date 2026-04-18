@@ -239,6 +239,43 @@ describe('getReferenceRange', () => {
       const range = getReferenceRange('Hgb', context);
       expect(range?.min).toBe(10.5);
     });
+
+    it('pregnancy variants supersede age variants (pregnant 65+ gets pregnancy TSH, not elderly)', () => {
+      const context: ReferenceRangeContext = {
+        age: 67,
+        biologicalSex: 'F',
+        pregnant: true,
+      };
+      // Pregnancy catch-all (max 3.0) beats the ageMin=65 variant (max 6.0).
+      const range = getReferenceRange('TSH', context);
+      expect(range?.max).toBe(3.0);
+    });
+
+    it('male context with pregnant=true on TSH falls through to default (sex filter still applies)', () => {
+      const context: ReferenceRangeContext = {
+        age: 40,
+        biologicalSex: 'M',
+        pregnancyTrimester: 1,
+        pregnant: true,
+      };
+      // All TSH pregnancy variants have sex='F'. Male context skips them;
+      // hasPregnancyVariant is true, so non-pregnancy variants are also
+      // skipped → default.
+      const range = getReferenceRange('TSH', context);
+      expect(range).toEqual(biomarkerRangeDefinitions.TSH.default);
+    });
+
+    it('pregnant=undefined is treated as non-pregnant (conservative fallback)', () => {
+      const context: ReferenceRangeContext = {
+        age: 30,
+        biologicalSex: 'F',
+        // pregnant intentionally omitted
+      };
+      const range = getReferenceRange('Creatinine', context);
+      // Should get the female sex-specific variant, not the pregnancy one.
+      expect(range?.max).toBe(1.1);
+      expect(range?.min).toBe(0.5);
+    });
   });
 
   describe('fastingRequired metadata', () => {

@@ -2070,12 +2070,28 @@ export function getReferenceRange(
   // recebendo a variante por sexo/idade (mais informativa que o default). Apenas
   // quando existe ao menos uma variante gestacional é que bloqueamos as variantes
   // não-gestacionais para contextos gestantes — evitando mistura de faixas.
+  //
+  // Precedência quando pregnant=true: variantes gestacionais têm precedência
+  // absoluta sobre variantes etárias. Uma gestante de 65+ anos consultando
+  // TSH recebe a faixa gestacional, não a variante ageMin=65. Isto é
+  // intencional — em gestação, o eixo HPG domina sobre o envelhecimento
+  // fisiológico. Casos raros de gestação pós-menopausa (FIV) seguem essa
+  // regra; o consumidor que precise distinguir deve aplicar lógica de
+  // contexto adicional.
+  //
+  // Tratamento de `pregnant: undefined` vs `false`: ambos são tratados como
+  // "não-gestante" (fallback seguro). O consumidor deve setar pregnant: true
+  // explicitamente para ativar variantes gestacionais; contexto sem a flag
+  // recebe a faixa padrão da população geral.
   const hasPregnancyVariant = definition.variants.some((v) => v.pregnant === true);
 
-  // Find matching variant (first match wins - more specific variants should be listed first).
-  // Variantes gestacionais devem vir primeiro na lista; variantes específicas de
-  // trimestre devem preceder variantes gestacionais gerais (catch-all) para que
-  // a mais específica ganhe a correspondência.
+  // Find matching variant (first match wins — more specific variants must be
+  // listed first). Ordem obrigatória quando há variantes gestacionais:
+  //   1. variantes trimestre-específicas (pregnant=true + pregnancyTrimester=N)
+  //   2. catch-all gestacional (pregnant=true, sem trimester)
+  //   3. variantes por sexo/idade não-gestacionais
+  // Reordenar quebraria o matching; a verificação `variant.pregnancyTrimester
+  // !== pregnancyTrimester` depende da catch-all vir por último.
   for (const variant of definition.variants) {
     if (variant.pregnant === true) {
       if (!pregnant) continue;

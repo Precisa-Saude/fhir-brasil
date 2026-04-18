@@ -61,6 +61,13 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     url: 'https://pubmed.ncbi.nlm.nih.gov/8605666/',
   },
 
+  'ferreira-vitd-2017': {
+    abnt: 'FERREIRA, C. E. S. et al. Posicionamento oficial da Sociedade Brasileira de Patologia Clínica/Medicina Laboratorial e da Sociedade Brasileira de Endocrinologia e Metabologia sobre intervalos de referência da vitamina D [25(OH)D]. Archives of Endocrinology and Metabolism, v. 61, n. 6, p. 527-542, 2017.',
+    doi: '10.1590/2359-3997000000310',
+    key: 'ferreira-vitd-2017',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/29412389/',
+  },
+
   'friedewald-1972': {
     abnt: 'FRIEDEWALD, W. T.; LEVY, R. I.; FREDRICKSON, D. S. Estimation of the concentration of low-density lipoprotein cholesterol in plasma, without use of the preparative ultracentrifuge. Clinical Chemistry, v. 18, n. 6, p. 499-502, 1972.',
     doi: '10.1093/clinchem/18.6.499',
@@ -72,6 +79,13 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     abnt: 'GALLAGHER, D. et al. Healthy percentage body fat ranges: an approach for developing guidelines based on body mass index. American Journal of Clinical Nutrition, v. 72, n. 3, p. 694-701, 2000.',
     key: 'gallagher-bodyfat-2000',
     url: 'https://pubmed.ncbi.nlm.nih.gov/10966886/',
+  },
+
+  'geloneze-brams-2009': {
+    abnt: 'GELONEZE, B. et al. HOMA1-IR and HOMA2-IR indexes in identifying insulin resistance and metabolic syndrome — Brazilian Metabolic Syndrome Study (BRAMS). Arquivos Brasileiros de Endocrinologia & Metabologia, v. 53, n. 2, p. 281-287, 2009.',
+    doi: '10.1590/S0004-27302009000200020',
+    key: 'geloneze-brams-2009',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/19466221/',
   },
 
   'george-ck-2016': {
@@ -226,8 +240,13 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
   // Sociedade Brasileira de Diabetes
   // ---------------------------------------------------------------------------
   'sbd-diabetes-2024': {
-    // TODO: Verificar edição exata e dados completos
-    abnt: 'SOCIEDADE BRASILEIRA DE DIABETES (SBD). Diretrizes da Sociedade Brasileira de Diabetes 2024. São Paulo: SBD, 2024.',
+    // Chave mantida como 'sbd-diabetes-2024' para compatibilidade com
+    // consumidores publicados; a diretriz correspondente é o documento vivo
+    // de diretriz.diabetes.org.br, cuja edição citada quando este registro foi
+    // atualizado é "Edição 2025". Semelhante ao caso de sbpc-ml-2021 abaixo.
+    abnt: 'SOCIEDADE BRASILEIRA DE DIABETES (SBD). Diretriz da Sociedade Brasileira de Diabetes — Edição 2025. São Paulo: SBD, 2025.',
+    doi: '10.29327/5660187',
+    isbn: '978-65-272-1932-3',
     key: 'sbd-diabetes-2024',
     url: 'https://diretriz.diabetes.org.br',
   },
@@ -253,11 +272,12 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
   // Sociedade Brasileira de Patologia Clínica / Medicina Laboratorial
   // ---------------------------------------------------------------------------
   'sbpc-ml-2021': {
-    // TODO: Verificar título exato e dados completos na biblioteca SBPC
-    // https://www.bibliotecasbpc.org.br/index.php?P=4&C=0.2
-    abnt: 'SOCIEDADE BRASILEIRA DE PATOLOGIA CLÍNICA/MEDICINA LABORATORIAL (SBPC/ML). Recomendações da SBPC/ML. São Paulo: SBPC/ML, 2021.',
+    // Chave mantida como 'sbpc-ml-2021' para compatibilidade com consumidores;
+    // a edição autoritativa é de 2020 (verificada na Biblioteca Digital SBPC/ML
+    // em 2026-04-18). Ano na citação ABNT reflete a edição real.
+    abnt: 'SOCIEDADE BRASILEIRA DE PATOLOGIA CLÍNICA/MEDICINA LABORATORIAL (SBPC/ML). Recomendações da Sociedade Brasileira de Patologia Clínica/Medicina Laboratorial (SBPC/ML): Boas Práticas em Laboratório Clínico. São Paulo: SBPC/ML, 2020.',
     key: 'sbpc-ml-2021',
-    url: 'https://www.bibliotecasbpc.org.br/index.php?P=4&C=0.2',
+    url: 'https://bibliotecasbpc.org.br/index.php?P=4&C=0.2.443',
   },
   'schwedhelm-sdma-2011': {
     abnt: 'SCHWEDHELM, E. et al. Plasma symmetric dimethylarginine reference limits from the Framingham Offspring Cohort. Clinical Chemistry and Laboratory Medicine, v. 49, n. 11, p. 1907-1910, 2011.',

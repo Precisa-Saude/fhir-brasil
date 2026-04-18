@@ -22,9 +22,24 @@ import { getCanonicalUnit as getCanonicalUnitForCode } from './units';
 export type SexKey = 'M' | 'F' | 'all';
 
 /**
+ * Pré-condição de jejum para a faixa de referência.
+ *
+ * - `strict`: coleta exige jejum mínimo (ex.: glicemia de jejum, insulina).
+ * - `preferred`: jejum recomendado, mas faixa aplicável em não-jejum
+ *   (ex.: perfil lipídico pós-SBC 2017, com corte de triglicérides distinto).
+ * - `not-required`: valor independe do estado prandial (ex.: HbA1c, TSH).
+ */
+export type FastingRequirement = 'strict' | 'preferred' | 'not-required';
+
+/**
  * Reference range configuration for a biomarker
  */
 export interface BiomarkerReferenceRange {
+  /**
+   * Pré-condição de jejum para a interpretação da faixa. Opcional;
+   * consumidores devem aplicar sinalização adequada quando `strict`.
+   */
+  fastingRequired?: FastingRequirement;
   max?: number;
   min?: number;
   optimalMax?: number;
@@ -34,11 +49,28 @@ export interface BiomarkerReferenceRange {
 }
 
 /**
- * A variant of a reference range that applies to a specific sex and/or age group
+ * Trimestre gestacional. Usado em variantes e no contexto de consulta
+ * para matching de faixas específicas da gestação.
+ */
+export type PregnancyTrimester = 1 | 2 | 3;
+
+/**
+ * A variant of a reference range that applies to a specific sex, age group,
+ * and/or pregnancy state.
+ *
+ * Ordem de avaliação: variantes são processadas na ordem em que aparecem.
+ * Para que usuárias gestantes recebam a variante gestacional correta,
+ * essas variantes devem ser listadas **antes** das variantes por idade/sexo.
  */
 export interface RangeVariant {
   ageMax?: number;
   ageMin?: number;
+  pregnancyTrimester?: PregnancyTrimester;
+  /**
+   * Quando `true`, a variante só se aplica a contextos de gestação.
+   * Se `pregnancyTrimester` estiver definido, o trimestre deve coincidir.
+   */
+  pregnant?: boolean;
   range: BiomarkerReferenceRange;
   sex: SexKey;
 }
@@ -75,11 +107,16 @@ export interface BiomarkerRangeDefinition {
 }
 
 /**
- * User context for personalized reference range lookup
+ * User context for personalized reference range lookup.
+ *
+ * Para gestação, defina `pregnant: true` e, quando disponível,
+ * `pregnancyTrimester` para obter a variante trimestre-específica.
  */
 export interface ReferenceRangeContext {
   age?: number;
   biologicalSex?: 'M' | 'F';
+  pregnancyTrimester?: PregnancyTrimester;
+  pregnant?: boolean;
 }
 
 // =============================================================================
@@ -93,10 +130,6 @@ export interface ReferenceRangeContext {
  * for sex/age-specific ranges.
  */
 export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition> = {
-  // =============================================================================
-  // LIPIDS
-  // =============================================================================
-
   Albumin_Creatinine_Ratio: {
     default: { max: 30, min: 0, optimalMax: 20, optimalMin: 0, unit: 'mg/g' },
     source: 'tietz-7ed-2015',
@@ -242,10 +275,6 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     default: { max: 0.15, min: 0, optimalMax: 0.1, optimalMin: 0, unit: '' },
   },
 
-  // =============================================================================
-  // THYROID
-  // =============================================================================
-
   Omega6_AA: {
     default: { max: 15.0, min: 5.0, optimalMax: 12.0, optimalMin: 7.0, unit: '%' },
     source: 'simopoulos-omega-ratio-2002',
@@ -288,10 +317,6 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     default: { max: 0.1, min: 0, optimalMax: 0.05, optimalMin: 0, unit: 'K/uL' },
     source: 'pns-hemograma-2019',
   },
-
-  // =============================================================================
-  // HEMATOLOGY - CBC
-  // =============================================================================
 
   Bicarbonate: {
     default: { max: 29, min: 23, optimalMax: 28, optimalMin: 24, unit: 'mEq/L' },
@@ -453,7 +478,14 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   CPeptide: {
-    default: { max: 3.9, min: 0.8, optimalMax: 3.0, optimalMin: 1.0, unit: 'ng/mL' },
+    default: {
+      fastingRequired: 'strict',
+      max: 3.9,
+      min: 0.8,
+      optimalMax: 3.0,
+      optimalMin: 1.0,
+      unit: 'ng/mL',
+    },
     source: 'tietz-7ed-2015',
   },
 
@@ -461,6 +493,14 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     default: { max: 1.2, min: 0.6, optimalMax: 1.0, optimalMin: 0.7, unit: 'mg/dL' },
     source: 'pns-bioquimica-2019',
     variants: [
+      // Gestação: hiperfiltração glomerular (↑ 40–50% GFR) reduz a creatinina
+      // sérica. Valores "normais" de não-gestante podem sinalizar disfunção
+      // renal em gestante. Limites tipicamente citados: 0.4–0.8 mg/dL.
+      {
+        pregnant: true,
+        range: { max: 0.8, min: 0.4, optimalMax: 0.7, optimalMin: 0.5, unit: 'mg/dL' },
+        sex: 'F',
+      },
       {
         ageMin: 18,
         range: { max: 1.3, min: 0.7, optimalMax: 1.1, optimalMin: 0.8, unit: 'mg/dL' },
@@ -490,10 +530,6 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     default: { max: 500, min: 0, optimalMax: 250, optimalMin: 0, unit: 'ng/mL' },
     source: 'wells-ddimer-2003',
   },
-
-  // =============================================================================
-  // METABOLIC PANEL
-  // =============================================================================
 
   Omega3_DHA: {
     default: { max: 8.0, min: 2.0, optimalMax: 6.5, optimalMin: 3.5, unit: '%' },
@@ -612,10 +648,24 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'tietz-7ed-2015',
   },
 
+  // Ferritina — WHO 2020 é o documento de referência específico para avaliação
+  // do status de ferro via ferritina. Importante: inflamação aguda eleva
+  // ferritina (proteína de fase aguda); WHO 2020 recomenda dosagem concomitante
+  // de PCR para interpretação em contexto inflamatório (fora do escopo deste
+  // tipo de faixa, mas documentado aqui para consumidores).
   Ferritin: {
     default: { max: 150, min: 12, optimalMax: 120, optimalMin: 30, unit: 'ng/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'who-iron-2020',
     variants: [
+      // Gestação: ferritina cai fisiologicamente no 2º/3º trimestre pela expansão
+      // do volume plasmático e maior demanda fetal. WHO 2020: <15 ng/mL sugere
+      // depleção; muitas diretrizes nacionais usam <30 como gatilho mais sensível
+      // na gestação dada a alta prevalência de deficiência subclínica.
+      {
+        pregnant: true,
+        range: { max: 120, min: 15, optimalMax: 80, optimalMin: 30, unit: 'ng/mL' },
+        sex: 'F',
+      },
       {
         ageMin: 18,
         range: { max: 250, min: 20, optimalMax: 200, optimalMin: 40, unit: 'ng/mL' },
@@ -645,10 +695,6 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     default: { max: 20, min: 3, optimalMax: 15, optimalMin: 5, unit: 'ng/mL' },
     source: 'tietz-7ed-2015',
   },
-
-  // =============================================================================
-  // LIVER FUNCTION
-  // =============================================================================
 
   FSH: {
     default: { max: 12.4, min: 1.5, optimalMax: 10.0, optimalMin: 3.0, unit: 'mIU/mL' },
@@ -701,9 +747,38 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'tietz-7ed-2015',
   },
 
+  // Glicemia de jejum — 70–99 mg/dL é a faixa de normalidade (SBD 2024, ADA);
+  // hipoglicemia clinicamente acionável em não-diabético é <54 mg/dL (Level 2
+  // ADA/SBD), não 70. O corte 70 era Level 1 (alerta em diabético em tratamento)
+  // e gerava falsos "abaixo do normal" em indivíduos saudáveis cuja glicemia
+  // em jejum está fisiologicamente entre 54–70. optimalMin preserva o alvo.
   Glucose: {
-    default: { max: 100, min: 70, optimalMax: 90, optimalMin: 70, unit: 'mg/dL' },
+    default: {
+      fastingRequired: 'strict',
+      max: 100,
+      min: 54,
+      optimalMax: 90,
+      optimalMin: 70,
+      unit: 'mg/dL',
+    },
     source: 'sbd-diabetes-2024',
+    variants: [
+      // Gestação: DMG (IADPSG/SBD 2024) usa cortes mais restritivos na glicemia
+      // de jejum — ≥92 mg/dL já indica diabetes mellitus gestacional. Portanto
+      // a faixa "normal" em gestante vai até 91 mg/dL no jejum.
+      {
+        pregnant: true,
+        range: {
+          fastingRequired: 'strict',
+          max: 91,
+          min: 54,
+          optimalMax: 85,
+          optimalMin: 70,
+          unit: 'mg/dL',
+        },
+        sex: 'F',
+      },
+    ],
   },
 
   GlycoMark: {
@@ -716,8 +791,14 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'tietz-7ed-2015',
   },
 
+  // HbA1c — SBD 2024 não estabelece piso de referência clinicamente acionável.
+  // Valores <4.0% podem refletir anemia hemolítica, perda sanguínea recente ou
+  // hemoglobinopatia, não patologia do metabolismo glicêmico. Usamos min=2 como
+  // piso de sanidade (HbA1c <2% é quase sempre erro instrumental/entrada) sem
+  // criar flag clínico em valores fisiologicamente baixos. optimalMin preserva
+  // o alvo fisiológico da fração glicada.
   HbA1c: {
-    default: { max: 5.7, min: 4.0, optimalMax: 5.3, optimalMin: 4.5, unit: '%' },
+    default: { max: 5.7, min: 2, optimalMax: 5.3, optimalMin: 4.5, unit: '%' },
     source: 'sbd-diabetes-2024',
   },
 
@@ -764,14 +845,37 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'caulfield-ionmobility-2008',
   },
 
-  // =============================================================================
-  // INFLAMMATION
-  // =============================================================================
-
   Hgb: {
     default: { max: 17.5, min: 12.0, optimalMax: 16.0, optimalMin: 13.5, unit: 'g/dL' },
     source: 'pns-hemograma-2019',
     variants: [
+      // Gestação: hemodiluição fisiológica reduz o piso aceitável.
+      // OMS e CDC: anemia gestacional quando Hgb <11 g/dL (1º e 3º tri) ou
+      // <10.5 g/dL (2º tri, dilucional mais acentuada). Catch-all adota a
+      // faixa mais conservadora (2º tri) quando trimestre é desconhecido.
+      {
+        pregnant: true,
+        pregnancyTrimester: 1,
+        range: { max: 14.0, min: 11.0, optimalMax: 13.0, optimalMin: 11.5, unit: 'g/dL' },
+        sex: 'F',
+      },
+      {
+        pregnant: true,
+        pregnancyTrimester: 2,
+        range: { max: 14.0, min: 10.5, optimalMax: 13.0, optimalMin: 11.0, unit: 'g/dL' },
+        sex: 'F',
+      },
+      {
+        pregnant: true,
+        pregnancyTrimester: 3,
+        range: { max: 14.0, min: 11.0, optimalMax: 13.0, optimalMin: 11.5, unit: 'g/dL' },
+        sex: 'F',
+      },
+      {
+        pregnant: true,
+        range: { max: 14.0, min: 10.5, optimalMax: 13.0, optimalMin: 11.0, unit: 'g/dL' },
+        sex: 'F',
+      },
       {
         ageMin: 18,
         range: { max: 17.5, min: 13.5, optimalMax: 16.5, optimalMin: 14.0, unit: 'g/dL' },
@@ -785,10 +889,20 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     ],
   },
 
+  // HOMA-IR — corte 2.71 do estudo BRAMS (Geloneze et al., 2009) validado em
+  // população urbana brasileira; Tietz 7ª ed. não publica corte próprio de
+  // HOMA-IR, então a fonte anterior era citação inadequada.
   HOMA_IR: {
-    default: { max: 2.5, min: 0, optimalMax: 1.5, optimalMin: 0, unit: '' },
+    default: {
+      fastingRequired: 'strict',
+      max: 2.71,
+      min: 0,
+      optimalMax: 1.5,
+      optimalMin: 0,
+      unit: '',
+    },
     direction: 'lower-better',
-    source: 'tietz-7ed-2015',
+    source: 'geloneze-brams-2009',
   },
 
   Homocysteine: {
@@ -802,17 +916,20 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'tietz-7ed-2015',
   },
 
-  // =============================================================================
-  // METABOLIC
-  // =============================================================================
-
   ImmatureGranulocytes: {
     default: { max: 1.0, min: 0, optimalMax: 0.5, optimalMin: 0, unit: '%' },
     source: 'tietz-7ed-2015',
   },
 
   Insulin: {
-    default: { max: 25, min: 2, optimalMax: 8, optimalMin: 3, unit: 'µIU/mL' },
+    default: {
+      fastingRequired: 'strict',
+      max: 25,
+      min: 2,
+      optimalMax: 8,
+      optimalMin: 3,
+      unit: 'µIU/mL',
+    },
     source: 'tietz-7ed-2015',
   },
 
@@ -867,10 +984,6 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     direction: 'higher-better',
     source: 'caulfield-ionmobility-2008',
   },
-
-  // =============================================================================
-  // IRON STUDIES
-  // =============================================================================
 
   LDL_Small: {
     // LDL Small (LDL Pequena): lower is better (small dense LDL is most atherogenic)
@@ -931,10 +1044,6 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'simopoulos-omega-ratio-2002',
   },
 
-  // =============================================================================
-  // VITAMINS
-  // =============================================================================
-
   Lipoprotein_a: {
     default: { max: 75, min: 0, optimalMax: 30, optimalMin: 0, unit: 'nmol/L' },
     direction: 'lower-better',
@@ -985,10 +1094,6 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     default: { max: 30, min: 0, optimalMax: 20, optimalMin: 0, unit: 'mg/L' },
     source: 'kdigo-ckd-2024',
   },
-
-  // =============================================================================
-  // HORMONES
-  // =============================================================================
 
   MMA: {
     default: { max: 378, min: 0, optimalMax: 270, optimalMin: 0, unit: 'nmol/L' },
@@ -1070,10 +1175,6 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'simopoulos-omega-ratio-2002',
   },
 
-  // =============================================================================
-  // TUMOR MARKERS
-  // =============================================================================
-
   OmegaCheck: {
     default: { max: 8.0, min: 4.0, optimalMax: 8.0, optimalMin: 5.5, unit: '%' },
     source: 'harris-omega3-2004',
@@ -1098,10 +1199,6 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     default: { max: 5.0, min: 3.5, optimalMax: 4.6, optimalMin: 3.8, unit: 'mEq/L' },
     source: 'tietz-7ed-2015',
   },
-
-  // =============================================================================
-  // CARDIAC MARKERS
-  // =============================================================================
 
   Prealbumin: {
     default: { max: 38, min: 18, optimalMax: 35, optimalMin: 20, unit: 'mg/dL' },
@@ -1177,10 +1274,6 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     ],
   },
 
-  // =============================================================================
-  // URINALYSIS
-  // =============================================================================
-
   RDW: {
     default: { max: 14.5, min: 11.5, optimalMax: 14.0, optimalMin: 12.0, unit: '%' },
     source: 'pns-hemograma-2019',
@@ -1223,10 +1316,6 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'tietz-7ed-2015',
   },
 
-  // =============================================================================
-  // KIDNEY FUNCTION
-  // =============================================================================
-
   SpecificGravity_Urine: {
     default: { max: 1.03, min: 1.005, optimalMax: 1.025, optimalMin: 1.01, unit: 'SG' },
     source: 'tietz-7ed-2015',
@@ -1241,10 +1330,6 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     default: { max: 4.2, min: 2.3, optimalMax: 3.8, optimalMin: 2.8, unit: 'pg/mL' },
     source: 'tietz-7ed-2015',
   },
-
-  // =============================================================================
-  // OMEGA FATTY ACIDS
-  // =============================================================================
 
   T3Reverse: {
     default: { max: 24, min: 10, optimalMax: 20, optimalMin: 12, unit: 'ng/dL' },
@@ -1351,8 +1436,18 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     ],
   },
 
+  // Triglicérides — SBC 2017/2025 permite dosagem não-jejum com corte distinto
+  // (<175 mg/dL pós-prandial). Marcamos `preferred` para indicar que a faixa
+  // padrão é de jejum, mas não bloqueamos interpretação em não-jejum.
   Triglycerides: {
-    default: { max: 150, min: 0, optimalMax: 100, optimalMin: 0, unit: 'mg/dL' },
+    default: {
+      fastingRequired: 'preferred',
+      max: 150,
+      min: 0,
+      optimalMax: 100,
+      optimalMin: 0,
+      unit: 'mg/dL',
+    },
     direction: 'lower-better',
     source: 'sbc-lipids-2025',
   },
@@ -1369,10 +1464,47 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'giannitsis-hstnt-2010',
   },
 
+  // TSH — 0.4–4.0 é a faixa de referência adulta geral. O alvo 2.5 µIU/mL é
+  // específico do 1º trimestre gestacional (ATA 2017) e não se aplica a
+  // não-gestantes; optimalMax=3.0 reflete o limite superior do tercil "ótimo"
+  // sem invadir a faixa subclínica. Variante ageMin=65 mantém limite superior
+  // expandido (tolerância fisiológica do eixo em idosos, SBEM 2013).
   TSH: {
-    default: { max: 4.0, min: 0.4, optimalMax: 2.5, optimalMin: 1.0, unit: 'µIU/mL' },
+    default: { max: 4.0, min: 0.4, optimalMax: 3.0, optimalMin: 1.0, unit: 'µIU/mL' },
     source: 'sbem-thyroid-2013',
     variants: [
+      // Variantes gestacionais (ATA 2017 / SBEM): supressão fisiológica por hCG
+      // no 1º trimestre, recuperação progressiva no 2º/3º. Trimestre-específicas
+      // precedem a catch-all; catch-all cobre contexto gestante sem trimestre
+      // conhecido.
+      // optimalMin/optimalMax definem subfaixa "alvo" mais estreita que o
+      // intervalo de referência — ex.: 1º tri aceita 0.1–2.5, mas o alvo
+      // terapêutico é 0.5–2.5.
+      {
+        pregnant: true,
+        pregnancyTrimester: 1,
+        range: { max: 2.5, min: 0.1, optimalMax: 2.0, optimalMin: 0.5, unit: 'µIU/mL' },
+        sex: 'F',
+      },
+      {
+        pregnant: true,
+        pregnancyTrimester: 2,
+        range: { max: 3.0, min: 0.2, optimalMax: 2.5, optimalMin: 0.5, unit: 'µIU/mL' },
+        sex: 'F',
+      },
+      {
+        pregnant: true,
+        pregnancyTrimester: 3,
+        range: { max: 3.0, min: 0.3, optimalMax: 2.5, optimalMin: 0.5, unit: 'µIU/mL' },
+        sex: 'F',
+      },
+      // Catch-all gestacional — usada quando o trimestre não é informado.
+      // Adota a faixa mais conservadora (2º/3º trimestre: 0.2–3.0).
+      {
+        pregnant: true,
+        range: { max: 3.0, min: 0.2, optimalMax: 2.5, optimalMin: 0.5, unit: 'µIU/mL' },
+        sex: 'F',
+      },
       {
         ageMin: 65,
         range: { max: 6.0, min: 0.4, optimalMax: 4.0, optimalMin: 1.0, unit: 'µIU/mL' },
@@ -1407,10 +1539,6 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     default: { max: 1.0, min: 0.1, optimalMax: 1.0, optimalMin: 0.1, unit: 'mg/dL' },
     source: 'tietz-7ed-2015',
   },
-
-  // =============================================================================
-  // ADVANCED CARDIOVASCULAR
-  // =============================================================================
 
   pH_Urine: {
     default: { max: 8.0, min: 4.5, optimalMax: 7.0, optimalMin: 5.5, unit: 'pH' },
@@ -1447,10 +1575,6 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'tietz-7ed-2015',
   },
 
-  // =============================================================================
-  // MINERALS
-  // =============================================================================
-
   VitaminB1: {
     default: { max: 180, min: 70, optimalMax: 150, optimalMin: 80, unit: 'nmol/L' },
     source: 'tietz-7ed-2015',
@@ -1471,13 +1595,28 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'tietz-7ed-2015',
   },
 
-  // =============================================================================
-  // HEAVY METALS
-  // =============================================================================
-
+  // Vitamina D — posicionamento conjunto SBEM/SBPC-ML 2017:
+  // ≥20 ng/mL é desejável para população saudável <60 anos
+  // ≥30 ng/mL é recomendado para grupos de risco (idosos, gestantes, DRC,
+  // osteoporose, hiperparatireoidismo secundário).
+  // A variante ageMin=60 cobre idosos. Gestação, doença renal crônica,
+  // osteoporose e hiperparatireoidismo secundário também exigem min=30;
+  // o tipo `BiomarkerReferenceRange` atual não expressa esses contextos
+  // clínicos além de gestação e idade, portanto consumidores devem aplicar
+  // o limiar ≥30 nessas populações quando souberem a comorbidade. Gestação
+  // será modelada quando `pregnant: true` — aceita-se TODO até lá.
+  // TODO(PR-vitd-pregnancy): adicionar variante `pregnant: true` com min=30
+  // quando a modelagem de comorbidades chegar ao schema.
   VitaminD: {
-    default: { max: 100, min: 30, optimalMax: 70, optimalMin: 40, unit: 'ng/mL' },
-    source: 'sbem-vitamind-2014',
+    default: { max: 100, min: 20, optimalMax: 70, optimalMin: 40, unit: 'ng/mL' },
+    source: 'ferreira-vitd-2017',
+    variants: [
+      {
+        ageMin: 60,
+        range: { max: 100, min: 30, optimalMax: 70, optimalMin: 40, unit: 'ng/mL' },
+        sex: 'all',
+      },
+    ],
   },
 
   VitaminD_1_25: {
@@ -1490,15 +1629,15 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'tietz-7ed-2015',
   },
 
-  // VLDL: estimado via fórmula de Friedewald (TG/5)
+  // VLDL — estimado clinicamente via TG/5 (método Friedewald). O corte de
+  // referência deriva de triglicérides <150 mg/dL (SBC 2025, dislipidemias),
+  // portanto VLDL <30. Friedewald-1972 permanece registrada como fonte do
+  // método de cálculo, mas a faixa de referência tem respaldo na diretriz
+  // SBC 2025.
   VLDL: {
     default: { max: 30, min: 2, optimalMax: 20, optimalMin: 5, unit: 'mg/dL' },
-    source: 'friedewald-1972',
+    source: 'sbc-lipids-2025',
   },
-
-  // =============================================================================
-  // OTHER
-  // =============================================================================
 
   WBC: {
     default: { max: 11.0, min: 4.0, optimalMax: 8.0, optimalMin: 5.0, unit: 'K/uL' },
@@ -1509,10 +1648,6 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     default: { max: 120, min: 60, optimalMax: 100, optimalMin: 70, unit: 'mcg/dL' },
     source: 'tietz-7ed-2015',
   },
-
-  // =============================================================================
-  // BODY COMPOSITION (DXA)
-  // =============================================================================
 
   AndroidFatPct: {
     default: { max: 35, min: 10, optimalMax: 25, optimalMin: 15, unit: '%' },
@@ -1763,10 +1898,6 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     ],
   },
 
-  // =============================================================================
-  // BONE DENSITOMETRY (DXA)
-  // =============================================================================
-
   BMD_Total: {
     default: { max: 1.4, min: 0.9, optimalMax: 1.3, optimalMin: 1.0, unit: 'g/cm²' },
     direction: 'higher-better',
@@ -1784,10 +1915,6 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     direction: 'higher-better',
     source: 'who-osteoporosis-1994',
   },
-
-  // =============================================================================
-  // MISSING LAB RANGES
-  // =============================================================================
 
   Amylase: {
     default: { max: 100, min: 28, optimalMax: 90, optimalMin: 35, unit: 'U/L' },
@@ -1936,10 +2063,53 @@ export function getReferenceRange(
     return definition.default;
   }
 
-  const { age, biologicalSex } = context;
+  const { age, biologicalSex, pregnancyTrimester, pregnant } = context;
 
-  // Find matching variant (first match wins - more specific variants should be listed first)
+  // Detect whether the biomarker has pregnancy-specific variants at all.
+  // Se o biomarcador não modela gestação, uma usuária gestante deve continuar
+  // recebendo a variante por sexo/idade (mais informativa que o default). Apenas
+  // quando existe ao menos uma variante gestacional é que bloqueamos as variantes
+  // não-gestacionais para contextos gestantes — evitando mistura de faixas.
+  //
+  // Precedência quando pregnant=true: variantes gestacionais têm precedência
+  // absoluta sobre variantes etárias. Uma gestante de 65+ anos consultando
+  // TSH recebe a faixa gestacional, não a variante ageMin=65. Isto é
+  // intencional — em gestação, o eixo HPG domina sobre o envelhecimento
+  // fisiológico. Casos raros de gestação pós-menopausa (FIV) seguem essa
+  // regra; o consumidor que precise distinguir deve aplicar lógica de
+  // contexto adicional.
+  //
+  // Tratamento de `pregnant: undefined` vs `false`: ambos são tratados como
+  // "não-gestante" (fallback seguro). O consumidor deve setar pregnant: true
+  // explicitamente para ativar variantes gestacionais; contexto sem a flag
+  // recebe a faixa padrão da população geral.
+  const hasPregnancyVariant = definition.variants.some((v) => v.pregnant === true);
+
+  // Find matching variant (first match wins — more specific variants must be
+  // listed first). Ordem obrigatória quando há variantes gestacionais:
+  //   1. variantes trimestre-específicas (pregnant=true + pregnancyTrimester=N)
+  //   2. catch-all gestacional (pregnant=true, sem trimester)
+  //   3. variantes por sexo/idade não-gestacionais
+  // Reordenar quebraria o matching; a verificação `variant.pregnancyTrimester
+  // !== pregnancyTrimester` depende da catch-all vir por último.
   for (const variant of definition.variants) {
+    if (variant.pregnant === true) {
+      if (!pregnant) continue;
+      // Variante com trimestre específico só casa quando o contexto também
+      // especifica o mesmo trimestre. Variantes gestacionais sem trimestre
+      // (catch-all) casam com qualquer contexto gestante, servindo de fallback.
+      if (
+        variant.pregnancyTrimester !== undefined &&
+        variant.pregnancyTrimester !== pregnancyTrimester
+      ) {
+        continue;
+      }
+    } else if (pregnant && hasPregnancyVariant) {
+      // Só pulamos variantes não-gestacionais se o biomarcador tem variantes
+      // gestacionais; caso contrário, a variante por sexo/idade é aplicável.
+      continue;
+    }
+
     // Check sex match ('all' matches everyone)
     if (variant.sex !== 'all' && variant.sex !== biologicalSex) {
       continue;

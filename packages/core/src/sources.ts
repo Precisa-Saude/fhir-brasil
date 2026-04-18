@@ -62,7 +62,7 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
   },
 
   'ferreira-vitd-2017': {
-    abnt: 'FERREIRA, C. E. S. et al. Posicionamento oficial da Sociedade Brasileira de Patologia Clínica/Medicina Laboratorial e da Sociedade Brasileira de Endocrinologia e Metabologia sobre intervalos de referência da vitamina D [25(OH)D]. Arquivos de Endocrinologia e Metabologia, v. 61, n. 6, p. 527-542, 2017.',
+    abnt: 'FERREIRA, C. E. S. et al. Posicionamento oficial da Sociedade Brasileira de Patologia Clínica/Medicina Laboratorial e da Sociedade Brasileira de Endocrinologia e Metabologia sobre intervalos de referência da vitamina D [25(OH)D]. Archives of Endocrinology and Metabolism, v. 61, n. 6, p. 527-542, 2017.',
     doi: '10.1590/2359-3997000000310',
     key: 'ferreira-vitd-2017',
     url: 'https://pubmed.ncbi.nlm.nih.gov/29412389/',
@@ -240,6 +240,10 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
   // Sociedade Brasileira de Diabetes
   // ---------------------------------------------------------------------------
   'sbd-diabetes-2024': {
+    // Chave mantida como 'sbd-diabetes-2024' para compatibilidade com
+    // consumidores publicados; a diretriz correspondente é o documento vivo
+    // de diretriz.diabetes.org.br, cuja edição citada quando este registro foi
+    // atualizado é "Edição 2025". Semelhante ao caso de sbpc-ml-2021 abaixo.
     abnt: 'SOCIEDADE BRASILEIRA DE DIABETES (SBD). Diretriz da Sociedade Brasileira de Diabetes — Edição 2025. São Paulo: SBD, 2025.',
     doi: '10.29327/5660187',
     isbn: '978-65-272-1932-3',

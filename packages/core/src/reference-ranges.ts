@@ -793,11 +793,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   // HbA1c — SBD 2024 não estabelece piso de referência clinicamente acionável.
   // Valores <4.0% podem refletir anemia hemolítica, perda sanguínea recente ou
-  // hemoglobinopatia, não patologia do metabolismo glicêmico. Mantemos min=0
-  // para evitar flag de "abaixo do normal" em valores fisiologicamente baixos;
-  // optimalMin preserva o alvo fisiológico da fração glicada.
+  // hemoglobinopatia, não patologia do metabolismo glicêmico. Usamos min=2 como
+  // piso de sanidade (HbA1c <2% é quase sempre erro instrumental/entrada) sem
+  // criar flag clínico em valores fisiologicamente baixos. optimalMin preserva
+  // o alvo fisiológico da fração glicada.
   HbA1c: {
-    default: { max: 5.7, min: 0, optimalMax: 5.3, optimalMin: 4.5, unit: '%' },
+    default: { max: 5.7, min: 2, optimalMax: 5.3, optimalMin: 4.5, unit: '%' },
     source: 'sbd-diabetes-2024',
   },
 
@@ -850,7 +851,8 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     variants: [
       // Gestação: hemodiluição fisiológica reduz o piso aceitável.
       // OMS e CDC: anemia gestacional quando Hgb <11 g/dL (1º e 3º tri) ou
-      // <10.5 g/dL (2º tri, dilucional mais acentuada).
+      // <10.5 g/dL (2º tri, dilucional mais acentuada). Catch-all adota a
+      // faixa mais conservadora (2º tri) quando trimestre é desconhecido.
       {
         pregnant: true,
         pregnancyTrimester: 1,
@@ -867,6 +869,11 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
         pregnant: true,
         pregnancyTrimester: 3,
         range: { max: 14.0, min: 11.0, optimalMax: 13.0, optimalMin: 11.5, unit: 'g/dL' },
+        sex: 'F',
+      },
+      {
+        pregnant: true,
+        range: { max: 14.0, min: 10.5, optimalMax: 13.0, optimalMin: 11.0, unit: 'g/dL' },
         sex: 'F',
       },
       {
@@ -1467,24 +1474,35 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'sbem-thyroid-2013',
     variants: [
       // Variantes gestacionais (ATA 2017 / SBEM): supressão fisiológica por hCG
-      // no 1º trimestre, recuperação progressiva no 2º/3º. Listadas primeiro
-      // para ter precedência sobre a variante etária em gestantes.
+      // no 1º trimestre, recuperação progressiva no 2º/3º. Trimestre-específicas
+      // precedem a catch-all; catch-all cobre contexto gestante sem trimestre
+      // conhecido.
+      // optimalMin/optimalMax definem subfaixa "alvo" mais estreita que o
+      // intervalo de referência — ex.: 1º tri aceita 0.1–2.5, mas o alvo
+      // terapêutico é 0.5–2.5.
       {
         pregnant: true,
         pregnancyTrimester: 1,
-        range: { max: 2.5, min: 0.1, optimalMax: 2.5, optimalMin: 0.1, unit: 'µIU/mL' },
+        range: { max: 2.5, min: 0.1, optimalMax: 2.0, optimalMin: 0.5, unit: 'µIU/mL' },
         sex: 'F',
       },
       {
         pregnant: true,
         pregnancyTrimester: 2,
-        range: { max: 3.0, min: 0.2, optimalMax: 3.0, optimalMin: 0.2, unit: 'µIU/mL' },
+        range: { max: 3.0, min: 0.2, optimalMax: 2.5, optimalMin: 0.5, unit: 'µIU/mL' },
         sex: 'F',
       },
       {
         pregnant: true,
         pregnancyTrimester: 3,
-        range: { max: 3.0, min: 0.3, optimalMax: 3.0, optimalMin: 0.3, unit: 'µIU/mL' },
+        range: { max: 3.0, min: 0.3, optimalMax: 2.5, optimalMin: 0.5, unit: 'µIU/mL' },
+        sex: 'F',
+      },
+      // Catch-all gestacional — usada quando o trimestre não é informado.
+      // Adota a faixa mais conservadora (2º/3º trimestre: 0.2–3.0).
+      {
+        pregnant: true,
+        range: { max: 3.0, min: 0.2, optimalMax: 2.5, optimalMin: 0.5, unit: 'µIU/mL' },
         sex: 'F',
       },
       {
@@ -1580,9 +1598,15 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   // Vitamina D — posicionamento conjunto SBEM/SBPC-ML 2017:
   // ≥20 ng/mL é desejável para população saudável <60 anos
   // ≥30 ng/mL é recomendado para grupos de risco (idosos, gestantes, DRC,
-  // osteoporose, hiperparatireoidismo secundário). A variante ageMin=60 reflete
-  // o limiar mais restritivo para idosos; gestação e comorbidades devem ser
-  // tratadas via contexto específico quando o consumidor suportar.
+  // osteoporose, hiperparatireoidismo secundário).
+  // A variante ageMin=60 cobre idosos. Gestação, doença renal crônica,
+  // osteoporose e hiperparatireoidismo secundário também exigem min=30;
+  // o tipo `BiomarkerReferenceRange` atual não expressa esses contextos
+  // clínicos além de gestação e idade, portanto consumidores devem aplicar
+  // o limiar ≥30 nessas populações quando souberem a comorbidade. Gestação
+  // será modelada quando `pregnant: true` — aceita-se TODO até lá.
+  // TODO(PR-vitd-pregnancy): adicionar variante `pregnant: true` com min=30
+  // quando a modelagem de comorbidades chegar ao schema.
   VitaminD: {
     default: { max: 100, min: 20, optimalMax: 70, optimalMin: 40, unit: 'ng/mL' },
     source: 'ferreira-vitd-2017',
@@ -2041,23 +2065,32 @@ export function getReferenceRange(
 
   const { age, biologicalSex, pregnancyTrimester, pregnant } = context;
 
+  // Detect whether the biomarker has pregnancy-specific variants at all.
+  // Se o biomarcador não modela gestação, uma usuária gestante deve continuar
+  // recebendo a variante por sexo/idade (mais informativa que o default). Apenas
+  // quando existe ao menos uma variante gestacional é que bloqueamos as variantes
+  // não-gestacionais para contextos gestantes — evitando mistura de faixas.
+  const hasPregnancyVariant = definition.variants.some((v) => v.pregnant === true);
+
   // Find matching variant (first match wins - more specific variants should be listed first).
-  // Variantes gestacionais (pregnant === true) devem vir primeiro na lista para
-  // que usuárias gestantes recebam o ajuste apropriado ao invés da faixa
-  // etária/sexo padrão.
+  // Variantes gestacionais devem vir primeiro na lista; variantes específicas de
+  // trimestre devem preceder variantes gestacionais gerais (catch-all) para que
+  // a mais específica ganhe a correspondência.
   for (const variant of definition.variants) {
-    // Pregnancy gating: variantes com pregnant=true só casam com contexto gestacional;
-    // variantes sem pregnant (padrão) são ignoradas quando o contexto indica gestação,
-    // para evitar que uma gestante receba a faixa não-gestacional.
     if (variant.pregnant === true) {
       if (!pregnant) continue;
+      // Variante com trimestre específico só casa quando o contexto também
+      // especifica o mesmo trimestre. Variantes gestacionais sem trimestre
+      // (catch-all) casam com qualquer contexto gestante, servindo de fallback.
       if (
         variant.pregnancyTrimester !== undefined &&
         variant.pregnancyTrimester !== pregnancyTrimester
       ) {
         continue;
       }
-    } else if (pregnant) {
+    } else if (pregnant && hasPregnancyVariant) {
+      // Só pulamos variantes não-gestacionais se o biomarcador tem variantes
+      // gestacionais; caso contrário, a variante por sexo/idade é aplicável.
       continue;
     }
 

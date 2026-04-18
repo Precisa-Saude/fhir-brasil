@@ -203,16 +203,30 @@ describe('getReferenceRange', () => {
       expect(range?.min).toBe(0.5);
     });
 
-    it('skips non-pregnancy variants when context is pregnant and no pregnancy variant exists', () => {
+    it('falls through to sex/age variant when pregnant but biomarker has no pregnancy variant', () => {
       const context: ReferenceRangeContext = {
         age: 30,
         biologicalSex: 'F',
         pregnant: true,
       };
-      // HDL has no pregnancy variant — should fall back to default, not
-      // the female age-based variant.
+      // HDL has no pregnancy variant — a pregnant woman should still get the
+      // female sex-specific cutoff (min: 50), not the generic unisex default.
+      // Non-pregnancy variants are only skipped when at least one pregnancy
+      // variant exists on the biomarker.
       const range = getReferenceRange('HDL', context);
-      expect(range).toEqual(biomarkerRangeDefinitions.HDL.default);
+      expect(range?.min).toBe(50);
+    });
+
+    it('matches catch-all pregnancy variant for TSH when trimester is unknown', () => {
+      const context: ReferenceRangeContext = {
+        age: 32,
+        biologicalSex: 'F',
+        pregnant: true,
+      };
+      const range = getReferenceRange('TSH', context);
+      // Catch-all gestacional adota faixa conservadora (2º/3º trimestre).
+      expect(range?.max).toBe(3.0);
+      expect(range?.min).toBe(0.2);
     });
 
     it('returns pregnancy hemoglobin variant with reduced floor for 2nd trimester', () => {

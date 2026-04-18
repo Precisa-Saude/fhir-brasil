@@ -240,8 +240,9 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
   // Sociedade Brasileira de Diabetes
   // ---------------------------------------------------------------------------
   'sbd-diabetes-2024': {
-    // TODO: Verificar edição exata e dados completos
-    abnt: 'SOCIEDADE BRASILEIRA DE DIABETES (SBD). Diretrizes da Sociedade Brasileira de Diabetes 2024. São Paulo: SBD, 2024.',
+    abnt: 'SOCIEDADE BRASILEIRA DE DIABETES (SBD). Diretriz da Sociedade Brasileira de Diabetes — Edição 2025. São Paulo: SBD, 2025.',
+    doi: '10.29327/5660187',
+    isbn: '978-65-272-1932-3',
     key: 'sbd-diabetes-2024',
     url: 'https://diretriz.diabetes.org.br',
   },
@@ -267,11 +268,12 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
   // Sociedade Brasileira de Patologia Clínica / Medicina Laboratorial
   // ---------------------------------------------------------------------------
   'sbpc-ml-2021': {
-    // TODO: Verificar título exato e dados completos na biblioteca SBPC
-    // https://www.bibliotecasbpc.org.br/index.php?P=4&C=0.2
-    abnt: 'SOCIEDADE BRASILEIRA DE PATOLOGIA CLÍNICA/MEDICINA LABORATORIAL (SBPC/ML). Recomendações da SBPC/ML. São Paulo: SBPC/ML, 2021.',
+    // Chave mantida como 'sbpc-ml-2021' para compatibilidade com consumidores;
+    // a edição autoritativa é de 2020 (verificada na Biblioteca Digital SBPC/ML
+    // em 2026-04-18). Ano na citação ABNT reflete a edição real.
+    abnt: 'SOCIEDADE BRASILEIRA DE PATOLOGIA CLÍNICA/MEDICINA LABORATORIAL (SBPC/ML). Recomendações da Sociedade Brasileira de Patologia Clínica/Medicina Laboratorial (SBPC/ML): Boas Práticas em Laboratório Clínico. São Paulo: SBPC/ML, 2020.',
     key: 'sbpc-ml-2021',
-    url: 'https://www.bibliotecasbpc.org.br/index.php?P=4&C=0.2',
+    url: 'https://bibliotecasbpc.org.br/index.php?P=4&C=0.2.443',
   },
   'schwedhelm-sdma-2011': {
     abnt: 'SCHWEDHELM, E. et al. Plasma symmetric dimethylarginine reference limits from the Framingham Offspring Cohort. Clinical Chemistry and Laboratory Medicine, v. 49, n. 11, p. 1907-1910, 2011.',

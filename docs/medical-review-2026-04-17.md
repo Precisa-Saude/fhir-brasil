@@ -234,9 +234,11 @@ Sem disagreements numéricos graves entre os dois repositórios nos biomarcadore
 
 ---
 
-## 4. Plano de remediação sugerido
+## 4. Plano de remediação
 
-Segue o padrão PRE-189 da plataforma (PRs sequenciais, cada um com 2 rodadas de revisão automática antes de merge):
+> **Atualização (2026-04-18):** escopo PR A–E consolidado no PR #20 a pedido do mantenedor — evita coordenação de múltiplos PRs sequenciais para um registro ainda de baixo volume de contribuições. PR F (calculators) concluiu-se sem mudanças necessárias; detalhes abaixo.
+
+Segue o padrão PRE-189 da plataforma (cada PR passa por 2 rodadas de revisão automática antes de merge):
 
 ### PR A — P1 correções clínicas críticas
 
@@ -274,6 +276,14 @@ Segue o padrão PRE-189 da plataforma (PRs sequenciais, cada um com 2 rodadas de
 ### PR F (se aplicável) — `packages/calculators`
 
 - Auditoria paralela: confirmar CKD-EPI 2021 sem fator de raça em eGFR; revisar PhenoAge (já auditado na plataforma); revisar HOMA-IR com novo corte BRAMS.
+
+**Resultado (2026-04-18):**
+
+- `packages/calculators` **não implementa eGFR** — o valor chega pronto do upstream (lab ou cliente) e só passa por `reference-ranges.ts` (fonte `kdigo-ckd-2024`). Nenhuma correção de de-indexação racial aplicável ao código deste repositório.
+- `derived/calculator.ts` calcula HOMA-IR via `(Glucose × Insulin) / 405` — fórmula correta, sem corte embutido. O corte de 2.71 vive em `reference-ranges.ts` e já foi atualizado nesta PR (P1-05).
+- PhenoAge foi auditado na plataforma (PRE-190). BrDMrisc permanece fora do escopo desta revisão.
+
+Nenhuma mudança em `packages/calculators` neste PR.
 
 ---
 

@@ -144,6 +144,102 @@ describe('getReferenceRange', () => {
       expect(maleRange).toEqual(femaleRange);
     });
   });
+
+  describe('pregnancy variants', () => {
+    it('returns 1st trimester TSH variant for pregnant context', () => {
+      const context: ReferenceRangeContext = {
+        age: 32,
+        biologicalSex: 'F',
+        pregnancyTrimester: 1,
+        pregnant: true,
+      };
+      const range = getReferenceRange('TSH', context);
+      expect(range?.max).toBe(2.5);
+      expect(range?.min).toBe(0.1);
+    });
+
+    it('returns 2nd trimester TSH variant for pregnant context', () => {
+      const context: ReferenceRangeContext = {
+        age: 32,
+        biologicalSex: 'F',
+        pregnancyTrimester: 2,
+        pregnant: true,
+      };
+      const range = getReferenceRange('TSH', context);
+      expect(range?.max).toBe(3.0);
+      expect(range?.min).toBe(0.2);
+    });
+
+    it('returns pregnancy creatinine variant with reduced upper bound', () => {
+      const context: ReferenceRangeContext = {
+        age: 30,
+        biologicalSex: 'F',
+        pregnant: true,
+      };
+      const range = getReferenceRange('Creatinine', context);
+      expect(range?.max).toBe(0.8);
+      expect(range?.min).toBe(0.4);
+    });
+
+    it('returns pregnancy glucose variant with DMG cutoff', () => {
+      const context: ReferenceRangeContext = {
+        age: 30,
+        biologicalSex: 'F',
+        pregnant: true,
+      };
+      const range = getReferenceRange('Glucose', context);
+      expect(range?.max).toBe(91);
+    });
+
+    it('returns non-pregnancy variant when pregnant=false', () => {
+      const context: ReferenceRangeContext = {
+        age: 30,
+        biologicalSex: 'F',
+        pregnant: false,
+      };
+      const range = getReferenceRange('Creatinine', context);
+      // Female adult variant (non-pregnant)
+      expect(range?.max).toBe(1.1);
+      expect(range?.min).toBe(0.5);
+    });
+
+    it('skips non-pregnancy variants when context is pregnant and no pregnancy variant exists', () => {
+      const context: ReferenceRangeContext = {
+        age: 30,
+        biologicalSex: 'F',
+        pregnant: true,
+      };
+      // HDL has no pregnancy variant — should fall back to default, not
+      // the female age-based variant.
+      const range = getReferenceRange('HDL', context);
+      expect(range).toEqual(biomarkerRangeDefinitions.HDL.default);
+    });
+
+    it('returns pregnancy hemoglobin variant with reduced floor for 2nd trimester', () => {
+      const context: ReferenceRangeContext = {
+        age: 28,
+        biologicalSex: 'F',
+        pregnancyTrimester: 2,
+        pregnant: true,
+      };
+      const range = getReferenceRange('Hgb', context);
+      expect(range?.min).toBe(10.5);
+    });
+  });
+
+  describe('fastingRequired metadata', () => {
+    it('marks Glucose as strict fasting', () => {
+      expect(biomarkerRangeDefinitions.Glucose.default.fastingRequired).toBe('strict');
+    });
+
+    it('marks Triglycerides as preferred fasting (non-fasting acceptable per SBC)', () => {
+      expect(biomarkerRangeDefinitions.Triglycerides.default.fastingRequired).toBe('preferred');
+    });
+
+    it('leaves HbA1c without fasting requirement', () => {
+      expect(biomarkerRangeDefinitions.HbA1c.default.fastingRequired).toBeUndefined();
+    });
+  });
 });
 
 describe('getFallbackReferenceRange', () => {

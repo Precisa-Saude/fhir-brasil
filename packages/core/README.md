@@ -67,14 +67,31 @@ import { validateFHIRObservation } from '@precisa-saude/fhir/validators';
 
 ## Módulos
 
-| Sub-path            | Descrição                                                          |
-| ------------------- | ------------------------------------------------------------------ |
-| `/biomarkers`       | 180+ definições com códigos LOINC, nomes pt/en, categorias         |
-| `/reference-ranges` | Faixas de referência por sexo/idade (SBPC/ML, SBC, SBD, OMS)       |
-| `/converter`        | Converte dados laboratoriais para FHIR R4 Bundle                   |
-| `/importer`         | Importa FHIR Bundle de volta para estruturas internas              |
-| `/units`            | Mapeamento de unidades, conversão para UCUM                        |
-| `/validators`       | Validação de recursos FHIR (DiagnosticReport, Observation, Bundle) |
+| Sub-path            | Descrição                                                             |
+| ------------------- | --------------------------------------------------------------------- |
+| `/biomarkers`       | 180+ definições com códigos LOINC, nomes pt/en, categorias            |
+| `/reference-ranges` | Faixas de referência por sexo/idade/gestação (SBPC/ML, SBC, SBD, OMS) |
+| `/converter`        | Converte dados laboratoriais para FHIR R4 Bundle                      |
+| `/importer`         | Importa FHIR Bundle de volta para estruturas internas                 |
+| `/units`            | Mapeamento de unidades, conversão para UCUM                           |
+| `/validators`       | Validação de recursos FHIR (DiagnosticReport, Observation, Bundle)    |
+
+## Escopo das faixas de referência
+
+As faixas em `/reference-ranges` são **validadas para adultos (≥18 anos)**. Variantes pediátricas não estão incluídas — consumidores que atendem populações pediátricas devem adicionar suas próprias faixas ou buscar fontes específicas (SBP, protocolos neonatais).
+
+Variantes gestacionais estão disponíveis para `TSH`, `Hgb`, `Ferritin`, `Creatinine` e `Glucose`. Para usar, passe `pregnant: true` e, quando conhecido, `pregnancyTrimester` no `ReferenceRangeContext`:
+
+```ts
+const range = getReferenceRange('TSH', {
+  biologicalSex: 'F',
+  pregnant: true,
+  pregnancyTrimester: 1,
+});
+// → { max: 2.5, min: 0.1, ... } (alvo ATA 2017 para 1º trimestre)
+```
+
+O metadado opcional `fastingRequired` em `BiomarkerReferenceRange` indica se a amostra exige jejum estrito (ex.: `Glucose`, `Insulin`, `HOMA_IR`) ou se o jejum é preferido mas não obrigatório (ex.: `Triglycerides`, que aceita dosagem não-jejum por SBC 2017/2025).
 
 ## Aviso médico
 

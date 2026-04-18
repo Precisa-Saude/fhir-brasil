@@ -612,9 +612,14 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'tietz-7ed-2015',
   },
 
+  // Ferritina — WHO 2020 é o documento de referência específico para avaliação
+  // do status de ferro via ferritina. Importante: inflamação aguda eleva
+  // ferritina (proteína de fase aguda); WHO 2020 recomenda dosagem concomitante
+  // de PCR para interpretação em contexto inflamatório (fora do escopo deste
+  // tipo de faixa, mas documentado aqui para consumidores).
   Ferritin: {
     default: { max: 150, min: 12, optimalMax: 120, optimalMin: 30, unit: 'ng/mL' },
-    source: 'tietz-7ed-2015',
+    source: 'who-iron-2020',
     variants: [
       {
         ageMin: 18,
@@ -701,8 +706,13 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'tietz-7ed-2015',
   },
 
+  // Glicemia de jejum — 70–99 mg/dL é a faixa de normalidade (SBD 2024, ADA);
+  // hipoglicemia clinicamente acionável em não-diabético é <54 mg/dL (Level 2
+  // ADA/SBD), não 70. O corte 70 era Level 1 (alerta em diabético em tratamento)
+  // e gerava falsos "abaixo do normal" em indivíduos saudáveis cuja glicemia
+  // em jejum está fisiologicamente entre 54–70. optimalMin preserva o alvo.
   Glucose: {
-    default: { max: 100, min: 70, optimalMax: 90, optimalMin: 70, unit: 'mg/dL' },
+    default: { max: 100, min: 54, optimalMax: 90, optimalMin: 70, unit: 'mg/dL' },
     source: 'sbd-diabetes-2024',
   },
 
@@ -716,8 +726,13 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'tietz-7ed-2015',
   },
 
+  // HbA1c — SBD 2024 não estabelece piso de referência clinicamente acionável.
+  // Valores <4.0% podem refletir anemia hemolítica, perda sanguínea recente ou
+  // hemoglobinopatia, não patologia do metabolismo glicêmico. Mantemos min=0
+  // para evitar flag de "abaixo do normal" em valores fisiologicamente baixos;
+  // optimalMin preserva o alvo fisiológico da fração glicada.
   HbA1c: {
-    default: { max: 5.7, min: 4.0, optimalMax: 5.3, optimalMin: 4.5, unit: '%' },
+    default: { max: 5.7, min: 0, optimalMax: 5.3, optimalMin: 4.5, unit: '%' },
     source: 'sbd-diabetes-2024',
   },
 
@@ -785,10 +800,13 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     ],
   },
 
+  // HOMA-IR — corte 2.71 do estudo BRAMS (Geloneze et al., 2009) validado em
+  // população urbana brasileira; Tietz 7ª ed. não publica corte próprio de
+  // HOMA-IR, então a fonte anterior era citação inadequada.
   HOMA_IR: {
-    default: { max: 2.5, min: 0, optimalMax: 1.5, optimalMin: 0, unit: '' },
+    default: { max: 2.71, min: 0, optimalMax: 1.5, optimalMin: 0, unit: '' },
     direction: 'lower-better',
-    source: 'tietz-7ed-2015',
+    source: 'geloneze-brams-2009',
   },
 
   Homocysteine: {
@@ -1369,8 +1387,13 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'giannitsis-hstnt-2010',
   },
 
+  // TSH — 0.4–4.0 é a faixa de referência adulta geral. O alvo 2.5 µIU/mL é
+  // específico do 1º trimestre gestacional (ATA 2017) e não se aplica a
+  // não-gestantes; optimalMax=3.0 reflete o limite superior do tercil "ótimo"
+  // sem invadir a faixa subclínica. Variante ageMin=65 mantém limite superior
+  // expandido (tolerância fisiológica do eixo em idosos, SBEM 2013).
   TSH: {
-    default: { max: 4.0, min: 0.4, optimalMax: 2.5, optimalMin: 1.0, unit: 'µIU/mL' },
+    default: { max: 4.0, min: 0.4, optimalMax: 3.0, optimalMin: 1.0, unit: 'µIU/mL' },
     source: 'sbem-thyroid-2013',
     variants: [
       {
@@ -1475,9 +1498,22 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   // HEAVY METALS
   // =============================================================================
 
+  // Vitamina D — posicionamento conjunto SBEM/SBPC-ML 2017:
+  // ≥20 ng/mL é desejável para população saudável <60 anos
+  // ≥30 ng/mL é recomendado para grupos de risco (idosos, gestantes, DRC,
+  // osteoporose, hiperparatireoidismo secundário). A variante ageMin=60 reflete
+  // o limiar mais restritivo para idosos; gestação e comorbidades devem ser
+  // tratadas via contexto específico quando o consumidor suportar.
   VitaminD: {
-    default: { max: 100, min: 30, optimalMax: 70, optimalMin: 40, unit: 'ng/mL' },
-    source: 'sbem-vitamind-2014',
+    default: { max: 100, min: 20, optimalMax: 70, optimalMin: 40, unit: 'ng/mL' },
+    source: 'ferreira-vitd-2017',
+    variants: [
+      {
+        ageMin: 60,
+        range: { max: 100, min: 30, optimalMax: 70, optimalMin: 40, unit: 'ng/mL' },
+        sex: 'all',
+      },
+    ],
   },
 
   VitaminD_1_25: {
@@ -1490,10 +1526,14 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'tietz-7ed-2015',
   },
 
-  // VLDL: estimado via fórmula de Friedewald (TG/5)
+  // VLDL — estimado clinicamente via TG/5 (método Friedewald). O corte de
+  // referência deriva de triglicérides <150 mg/dL (SBC 2025, dislipidemias),
+  // portanto VLDL <30. Friedewald-1972 permanece registrada como fonte do
+  // método de cálculo, mas a faixa de referência tem respaldo na diretriz
+  // SBC 2025.
   VLDL: {
     default: { max: 30, min: 2, optimalMax: 20, optimalMin: 5, unit: 'mg/dL' },
-    source: 'friedewald-1972',
+    source: 'sbc-lipids-2025',
   },
 
   // =============================================================================

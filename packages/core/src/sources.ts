@@ -61,6 +61,13 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     url: 'https://pubmed.ncbi.nlm.nih.gov/8605666/',
   },
 
+  'ferreira-vitd-2017': {
+    abnt: 'FERREIRA, C. E. S. et al. Posicionamento oficial da Sociedade Brasileira de Patologia Clínica/Medicina Laboratorial e da Sociedade Brasileira de Endocrinologia e Metabologia sobre intervalos de referência da vitamina D [25(OH)D]. Arquivos de Endocrinologia e Metabologia, v. 61, n. 6, p. 527-542, 2017.',
+    doi: '10.1590/2359-3997000000310',
+    key: 'ferreira-vitd-2017',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/29412389/',
+  },
+
   'friedewald-1972': {
     abnt: 'FRIEDEWALD, W. T.; LEVY, R. I.; FREDRICKSON, D. S. Estimation of the concentration of low-density lipoprotein cholesterol in plasma, without use of the preparative ultracentrifuge. Clinical Chemistry, v. 18, n. 6, p. 499-502, 1972.',
     doi: '10.1093/clinchem/18.6.499',
@@ -72,6 +79,13 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     abnt: 'GALLAGHER, D. et al. Healthy percentage body fat ranges: an approach for developing guidelines based on body mass index. American Journal of Clinical Nutrition, v. 72, n. 3, p. 694-701, 2000.',
     key: 'gallagher-bodyfat-2000',
     url: 'https://pubmed.ncbi.nlm.nih.gov/10966886/',
+  },
+
+  'geloneze-brams-2009': {
+    abnt: 'GELONEZE, B. et al. HOMA1-IR and HOMA2-IR indexes in identifying insulin resistance and metabolic syndrome — Brazilian Metabolic Syndrome Study (BRAMS). Arquivos Brasileiros de Endocrinologia & Metabologia, v. 53, n. 2, p. 281-287, 2009.',
+    doi: '10.1590/S0004-27302009000200020',
+    key: 'geloneze-brams-2009',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/19466221/',
   },
 
   'george-ck-2016': {

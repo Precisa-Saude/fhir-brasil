@@ -1,3 +1,9 @@
+## [0.10.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.10.0...v0.10.1) (2026-04-18)
+
+### Bug Fixes
+
+* **core:** auditoria clínica — faixas, fontes, variantes gestacionais e jejum ([#20](https://github.com/Precisa-Saude/fhir-brasil/issues/20)) ([aaf4b14](https://github.com/Precisa-Saude/fhir-brasil/commit/aaf4b141facbc6b767050fc23ebeded2dede1a25))
+
 ## [0.10.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.9.0...v0.10.0) (2026-04-07)
 
 ### Features

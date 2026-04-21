@@ -1,10 +1,10 @@
+import { GridOverlay, MosaicBg } from '@precisa-saude/ui/decorative';
+
 import { CodeExamples } from './components/CodeExamples';
 import { Ecosystem } from './components/Ecosystem';
 import { Features } from './components/Features';
 import { Footer } from './components/Footer';
-import { GridOverlay } from './components/GridOverlay';
 import { Hero } from './components/Hero';
-import MosaicBg from './components/MosaicBg';
 import { Nav } from './components/Nav';
 import { OpenSource } from './components/OpenSource';
 import { Packages } from './components/Packages';
@@ -36,7 +36,7 @@ export default function App() {
         <OpenSource />
       </main>
       <Footer />
-      <GridOverlay />
+      <GridOverlay enabled={import.meta.env.DEV} />
     </div>
   );
 }

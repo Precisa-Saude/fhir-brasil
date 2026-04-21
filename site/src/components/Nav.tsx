@@ -1,7 +1,7 @@
+import { useDesktop, useWideGrid } from '@precisa-saude/ui/hooks';
+import { cn } from '@precisa-saude/ui/utils';
 import { ExternalLink, Flame, Menu, X } from 'lucide-react';
 import { useState } from 'react';
-import { cn } from '@/lib/utils';
-import { useDesktop, useWideGrid } from '@/hooks/useWideGrid';
 
 const NAV_LINKS = [
   { label: 'Exemplos', href: '#exemplos', col: 5, span: 2 },

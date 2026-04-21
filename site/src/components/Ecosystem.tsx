@@ -1,7 +1,7 @@
+import { CornerSquares } from '@precisa-saude/ui/decorative';
+import { useGridCol } from '@precisa-saude/ui/hooks';
 import { Building2, FlaskConical, GraduationCap, Landmark, Stethoscope, User } from 'lucide-react';
 import type { ReactNode } from 'react';
-import { CornerSquares } from './CornerSquares';
-import { useGridCol } from '@/hooks/useGridCol';
 
 interface Actor {
   icon: ReactNode;

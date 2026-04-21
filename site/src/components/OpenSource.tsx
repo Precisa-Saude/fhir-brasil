@@ -1,7 +1,7 @@
+import { CornerSquares } from '@precisa-saude/ui/decorative';
+import { useGridCol } from '@precisa-saude/ui/hooks';
 import { Eye, GitFork, Shield, Users } from 'lucide-react';
 import type { ReactNode } from 'react';
-import { CornerSquares } from './CornerSquares';
-import { useGridCol } from '@/hooks/useGridCol';
 
 interface Pillar {
   icon: ReactNode;

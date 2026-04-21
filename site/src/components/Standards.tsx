@@ -1,4 +1,4 @@
-import { useGridCol } from '@/hooks/useGridCol';
+import { useGridCol } from '@precisa-saude/ui/hooks';
 
 const STANDARDS = [
   {

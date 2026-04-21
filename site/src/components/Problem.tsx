@@ -1,8 +1,14 @@
+import { CornerSquares } from '@precisa-saude/ui/decorative';
+import { useGridCol } from '@precisa-saude/ui/hooks';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@precisa-saude/ui/primitives';
+import { cn } from '@precisa-saude/ui/utils';
 import { useState } from 'react';
-import { cn } from '@/lib/utils';
-import { CornerSquares } from './CornerSquares';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useGridCol } from '@/hooks/useGridCol';
 
 const TABS = [
   {

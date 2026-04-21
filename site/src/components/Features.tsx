@@ -1,6 +1,6 @@
+import { useGridCol } from '@precisa-saude/ui/hooks';
 import { Activity, ExternalLink, FlaskConical, HeartPulse, Network } from 'lucide-react';
 import type { ReactNode } from 'react';
-import { useGridCol } from '@/hooks/useGridCol';
 
 interface FeatureLink {
   label: string;

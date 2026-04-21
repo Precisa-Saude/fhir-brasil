@@ -4,17 +4,13 @@
 @import '@precisa-saude/themes';
 @config '../tailwind.config.js';
 
+@custom-variant 3xl (@media (min-width: 1440px));
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-}
 
-@custom-variant 3xl (@media (min-width: 1440px));
-
-/* ─── Base ─── */
-
-@layer base {
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 5rem;

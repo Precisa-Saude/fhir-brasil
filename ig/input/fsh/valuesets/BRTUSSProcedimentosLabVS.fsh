@@ -1,89 +1,92 @@
+// Códigos TUSS realinhados com a tabela oficial ANS (MAPEAMENTO TUSS x SIGTAP 2017 04.xlsx).
+// Fonte: https://www.gov.br/ans/pt-br/arquivos/assuntos/prestadores/padrao-para-troca-de-informacao-de-saude-suplementar-tiss/padrao-tiss-tabelas-relacionadas/padraotiss_mapeamento_tuss_sigtap.zip
+// Ver issue #23 para auditoria completa e justificativa de cada mudança.
+
 ValueSet: BRTUSSProcedimentosLabVS
 Id: tuss-procedimentos-lab-vs
 Title: "TUSS Procedimentos Laboratoriais ValueSet"
-Description: "Subconjunto de códigos TUSS para procedimentos laboratoriais relevantes aos biomarcadores suportados pelo fhir-brasil. Códigos da Tabela 22 (Procedimentos e Eventos em Saúde) da TUSS."
+Description: "Subconjunto de códigos TUSS para procedimentos laboratoriais relevantes aos biomarcadores suportados pelo fhir-brasil. Códigos da Tabela 22 (Procedimentos e Eventos em Saúde) da TUSS, alinhados com a tabela oficial ANS competência 2017-04."
 
 // Hematologia
-* $TUSS#40304361 "Hemograma completo"
-* $TUSS#40304370 "Hemograma completo (eritrograma, leucograma e plaquetas)"
-* $TUSS#40304540 "Reticulócitos, contagem"
-* $TUSS#40304060 "Velocidade de hemossedimentação (VHS)"
+* $TUSS#40304361 "Hemograma com contagem de plaquetas (eritrograma, leucograma, plaquetas)"
+* $TUSS#40304558 "Reticulócitos, contagem"
+* $TUSS#40304370 "Hemossedimentação (VHS)"
 
 // Bioquímica — glicose e metabolismo
-* $TUSS#40301630 "Glicose"
-* $TUSS#40302040 "Hemoglobina glicada (A1C)"
-* $TUSS#40301770 "Insulina"
-* $TUSS#40301354 "Ácido úrico"
-* $TUSS#40301460 "Creatina quinase (CK total)"
+* $TUSS#40302040 "Glicose"
+* $TUSS#40302733 "Hemoglobina glicada (Fração A1c)"
+* $TUSS#40316360 "Insulina"
+* $TUSS#40301150 "Ácido úrico"
+* $TUSS#40301648 "Creatino fosfoquinase total (CK)"
 
 // Bioquímica — perfil lipídico
-* $TUSS#40301397 "Colesterol total"
-* $TUSS#40301400 "Colesterol HDL"
-* $TUSS#40301419 "Colesterol LDL"
-* $TUSS#40302695 "Triglicerídeos"
-* $TUSS#40301427 "Colesterol VLDL"
-* $TUSS#40301338 "Apolipoproteína A-1"
-* $TUSS#40301346 "Apolipoproteína B"
-* $TUSS#40302580 "Lipoproteína (a)"
+* $TUSS#40301605 "Colesterol total"
+* $TUSS#40301583 "Colesterol HDL"
+* $TUSS#40301591 "Colesterol LDL"
+* $TUSS#40302547 "Triglicerídeos"
+* $TUSS#40302695 "Colesterol VLDL"
+* $TUSS#40301354 "Apolipoproteína A (Apo A)"
+* $TUSS#40301362 "Apolipoproteína B (Apo B)"
+* $TUSS#40302210 "Lipoproteína (a) — Lp(a)"
 
 // Bioquímica — função hepática
-* $TUSS#40301311 "Albumina"
-* $TUSS#40301370 "Bilirrubina total e frações"
-* $TUSS#40302610 "Proteínas totais"
-* $TUSS#40301575 "Fosfatase alcalina"
-* $TUSS#40302903 "Gama-glutamil transferase (GGT)"
-* $TUSS#40301680 "Transaminase glutâmico-oxalacética (TGO/AST)"
-* $TUSS#40301699 "Transaminase glutâmico-pirúvica (TGP/ALT)"
+* $TUSS#40301222 "Albumina"
+* $TUSS#40301397 "Bilirrubinas (direta, indireta e total)"
+* $TUSS#40302377 "Proteínas totais"
+* $TUSS#40301885 "Fosfatase alcalina"
+* $TUSS#40301990 "Gama-glutamil transferase (GGT)"
+* $TUSS#40302504 "Transaminase oxalacética (TGO/AST)"
+* $TUSS#40302512 "Transaminase pirúvica (TGP/ALT)"
 
 // Bioquímica — função renal
-* $TUSS#40301443 "Creatinina"
-* $TUSS#40302709 "Ureia"
-* $TUSS#40301885 "Potássio"
-* $TUSS#40301915 "Sódio"
-* $TUSS#40302857 "Clearance de creatinina"
+* $TUSS#40301630 "Creatinina"
+* $TUSS#40302580 "Ureia"
+* $TUSS#40302318 "Potássio"
+* $TUSS#40302423 "Sódio"
+* $TUSS#40301508 "Clearance de creatinina"
 
 // Bioquímica — minerais e eletrólitos
-* $TUSS#40301389 "Cálcio"
-* $TUSS#40301826 "Magnésio"
-* $TUSS#40301567 "Ferro sérico"
-* $TUSS#40301559 "Ferritina"
-* $TUSS#40301362 "Capacidade de ligação do ferro (TIBC)"
+* $TUSS#40301400 "Cálcio"
+* $TUSS#40302237 "Magnésio"
+* $TUSS#40301842 "Ferro sérico"
+* $TUSS#40316270 "Ferritina"
+* $TUSS#40301427 "Capacidade de fixação de ferro (TIBC)"
 
 // Hormônios — tireoide
-* $TUSS#40316491 "TSH"
-* $TUSS#40316556 "T4 livre"
-* $TUSS#40316548 "T3 livre"
-* $TUSS#40316130 "Anticorpos anti-tireoglobulina"
-* $TUSS#40316122 "Anticorpos anti-peroxidase tireoidiana (anti-TPO)"
+* $TUSS#40316521 "Tireoestimulante, hormônio (TSH)"
+* $TUSS#40316491 "T4 livre"
+* $TUSS#40316467 "T3 livre"
+* $TUSS#40316530 "Tireoglobulina (anti-TG)"
+* $TUSS#40316157 "Anti-TPO"
 
 // Hormônios — reprodutivos
-* $TUSS#40316220 "Estradiol"
-* $TUSS#40316360 "FSH — Hormônio folículo-estimulante"
-* $TUSS#40316378 "LH — Hormônio luteinizante"
-* $TUSS#40316440 "Progesterona"
-* $TUSS#40316459 "Prolactina"
-* $TUSS#40316521 "Testosterona total"
-* $TUSS#40316530 "Testosterona livre"
+* $TUSS#40316246 "Estradiol"
+* $TUSS#40316289 "Folículo estimulante, hormônio (FSH)"
+* $TUSS#40316335 "Hormônio luteinizante (LH)"
+* $TUSS#40316408 "Progesterona"
+* $TUSS#40316416 "Prolactina"
+* $TUSS#40316513 "Testosterona total"
+* $TUSS#40316505 "Testosterona livre"
 
 // Hormônios — outros
 * $TUSS#40316190 "Cortisol"
-* $TUSS#40316203 "DHEA-Sulfato"
+* $TUSS#40316459 "Sulfato de dehidroepiandrosterona (S-DHEA)"
 
 // Vitaminas
-* $TUSS#40302750 "Vitamina B12"
-* $TUSS#40301583 "Folato (ácido fólico)"
-* $TUSS#40302717 "Vitamina D (25-hidroxi)"
+* $TUSS#40316572 "Vitamina B12"
+* $TUSS#40301087 "Ácido fólico (eritrocitário)"
+* $TUSS#40302830 "Vitamina D 25 hidroxi"
 
 // Marcadores tumorais
-* $TUSS#40308014 "Alfa-fetoproteína (AFP)"
-* $TUSS#40308049 "CA-125"
-* $TUSS#40308120 "Antígeno carcinoembrionário (CEA)"
-* $TUSS#40308189 "PSA total"
-* $TUSS#40308197 "PSA livre"
+* $TUSS#40316068 "Alfa-fetoproteína (AFP)"
+* $TUSS#40316378 "Marcadores tumorais (CA 19.9, CA 125, CA 72-4, CA 15-3, etc.)"
+* $TUSS#40316122 "Antígeno carcinoembriogênico (CEA)"
+* $TUSS#40316149 "Antígeno específico prostático total (PSA)"
+* $TUSS#40316130 "Antígeno específico prostático livre (PSA livre)"
 
 // Marcadores inflamatórios
-* $TUSS#40302466 "Proteína C-reativa (PCR)"
+* $TUSS#40308391 "Proteína C reativa, quantitativa"
 
 // Urinálise
-* $TUSS#40311104 "Urina tipo I (EAS)"
-* $TUSS#40311295 "Microalbuminúria"
+* $TUSS#40311210 "Rotina de urina (EAS — caracteres físicos, elementos anormais e sedimentoscopia)"
+* $TUSS#40311171 "Microalbuminúria"

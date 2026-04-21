@@ -1,174 +1,26 @@
-import js from '@eslint/js';
-import typescript from '@typescript-eslint/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
-import prettierConfig from 'eslint-config-prettier';
-import prettier from 'eslint-plugin-prettier';
-import simpleImportSort from 'eslint-plugin-simple-import-sort';
-import perfectionist from 'eslint-plugin-perfectionist';
-import globals from 'globals';
+import base from '@precisa-saude/eslint-config/base';
 
-/** @type {import('eslint').Linter.Config[]} */
-const config = [
-  js.configs.recommended,
-
-  // Global ignores
+export default [
+  ...base,
   {
-    ignores: [
-      '**/node_modules/**',
-      '**/dist/**',
-      '**/build/**',
-      '**/coverage/**',
-      '**/.turbo/**',
-      // Data files (large definition arrays — disable object sorting only)
-      'packages/core/src/biomarkers.ts',
-      'packages/core/src/dexa-zone-data.ts',
-    ],
-  },
-
-  // TypeScript config for all .ts files
-  {
-    files: ['**/*.ts'],
+    // Test files are excluded from package tsconfigs (to keep tsc --noEmit tight),
+    // so disable type-aware parsing for them or ESLint errors trying to locate a project.
+    files: ['**/*.test.ts', '**/*.spec.ts', '**/__tests__/**/*.ts'],
     languageOptions: {
-      parser: tsParser,
-      parserOptions: {
-        ecmaVersion: 2022,
-        sourceType: 'module',
-        project: true,
-      },
-      globals: {
-        ...globals.es2022,
-        ...globals.node,
-      },
-    },
-    plugins: {
-      '@typescript-eslint': typescript,
-      prettier,
-      'simple-import-sort': simpleImportSort,
-      perfectionist,
-    },
-    rules: {
-      ...typescript.configs.recommended.rules,
-      ...prettierConfig.rules,
-
-      // Import sorting
-      'simple-import-sort/imports': 'error',
-      'simple-import-sort/exports': 'error',
-
-      // Prettier integration
-      'prettier/prettier': 'error',
-
-      // TypeScript specific
-      '@typescript-eslint/explicit-function-return-type': 'off',
-      '@typescript-eslint/explicit-module-boundary-types': 'off',
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        {
-          argsIgnorePattern: '^_',
-          varsIgnorePattern: '^_',
-          caughtErrorsIgnorePattern: '^_',
-        },
-      ],
-      '@typescript-eslint/consistent-type-imports': [
-        'error',
-        {
-          prefer: 'type-imports',
-          fixStyle: 'separate-type-imports',
-        },
-      ],
-
-      // General code quality
-      'no-console': 'warn',
-      'prefer-const': 'error',
-      'no-var': 'error',
-      'object-shorthand': 'error',
-      'prefer-arrow-callback': 'error',
-      'prefer-template': 'error',
-      'no-throw-literal': 'error',
-
-      // TypeScript handles undefined variables better than ESLint
-      'no-undef': 'off',
-
-      // Interface sorting
-      'perfectionist/sort-interfaces': [
-        'error',
-        {
-          type: 'alphabetical',
-          order: 'asc',
-          ignoreCase: true,
-        },
-      ],
-
-      // Object sorting
-      'perfectionist/sort-objects': [
-        'error',
-        {
-          type: 'alphabetical',
-          order: 'asc',
-          ignoreCase: true,
-        },
-      ],
+      parserOptions: { project: false },
     },
   },
-
-  // Test files - relaxed rules, no type-aware parsing (not in tsconfig project)
   {
-    files: ['**/__tests__/**/*.ts', '**/*.test.ts', '**/*.spec.ts'],
-    languageOptions: {
-      parser: tsParser,
-      parserOptions: {
-        ecmaVersion: 2022,
-        sourceType: 'module',
-        project: false,
-      },
-    },
-    rules: {
-      'no-console': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/consistent-type-imports': 'off',
-      'perfectionist/sort-objects': 'off',
-      'max-lines': 'off',
-      'max-lines-per-function': 'off',
-    },
-  },
-
-  // Data files - disable object sorting (large definition arrays)
-  {
+    // Large definition arrays — disable object sorting and line limits so the
+    // medical-data tables stay readable.
     files: [
-      'packages/core/src/reference-ranges.ts',
       'packages/core/src/biomarkers.ts',
       'packages/core/src/dexa-zone-data.ts',
+      'packages/core/src/reference-ranges.ts',
     ],
     rules: {
       'perfectionist/sort-objects': 'off',
       'max-lines': 'off',
-    },
-  },
-
-  // Config files - minimal linting without type-aware rules
-  {
-    files: ['**/*.config.{js,ts,cjs,mjs}'],
-    languageOptions: {
-      parser: tsParser,
-      parserOptions: {
-        ecmaVersion: 2022,
-        sourceType: 'module',
-        project: false,
-      },
-    },
-    plugins: {
-      '@typescript-eslint': typescript,
-      prettier,
-    },
-    rules: {
-      '@typescript-eslint/no-require-imports': 'off',
-      '@typescript-eslint/consistent-type-imports': 'off',
-      'no-console': 'off',
-      'no-undef': 'off',
-      'prettier/prettier': 'error',
-      'prefer-const': 'error',
     },
   },
 ];
-
-export default config;

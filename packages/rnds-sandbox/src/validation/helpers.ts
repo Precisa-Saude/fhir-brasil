@@ -13,7 +13,10 @@ export function issue(
   diagnostics: string,
   path: string,
 ): ValidationIssue {
-  return { code, diagnostics, expression: [path], location: [path], severity };
+  // Apenas `expression` (FHIRPath) — `location` foi marcado deprecated
+  // no R4 em favor de `expression`. Conteúdo idêntico em ambos só
+  // poluiria a saída.
+  return { code, diagnostics, expression: [path], severity };
 }
 
 /** Retorna issue `error/required` se `value` for null/undefined. */

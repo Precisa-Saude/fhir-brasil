@@ -119,7 +119,17 @@ describe('validateBRLabObservation', () => {
     };
     expect(
       validateBRLabObservation(obs, 'r').some(
-        (i) => i.code === 'invalid' && i.location?.[0]?.includes('valueQuantity.system'),
+        (i) => i.code === 'invalid' && i.expression?.[0]?.includes('valueQuantity.system'),
+      ),
+    ).toBe(true);
+  });
+
+  it('rejeita valueQuantity sem system (1..1 do FSH)', () => {
+    const { system: _, ...vqSemSystem } = validLabObservation.valueQuantity;
+    const obs = { ...validLabObservation, valueQuantity: vqSemSystem };
+    expect(
+      validateBRLabObservation(obs, 'r').some(
+        (i) => i.code === 'required' && i.expression?.[0]?.includes('valueQuantity.system'),
       ),
     ).toBe(true);
   });
@@ -177,10 +187,10 @@ describe('validateBundle', () => {
     expect(result.valid).toBe(false);
     // Deve incluir issue para Patient.gender e Observation.status
     expect(
-      result.issues.some((i) => i.location?.[0]?.includes('Bundle.entry[0].resource.gender')),
+      result.issues.some((i) => i.expression?.[0]?.includes('Bundle.entry[0].resource.gender')),
     ).toBe(true);
     expect(
-      result.issues.some((i) => i.location?.[0]?.includes('Bundle.entry[1].resource.status')),
+      result.issues.some((i) => i.expression?.[0]?.includes('Bundle.entry[1].resource.status')),
     ).toBe(true);
   });
 
@@ -201,5 +211,47 @@ describe('validateBundle', () => {
       type: 'transaction',
     };
     expect(validateBundle(bundle).valid).toBe(true);
+  });
+
+  it('NÃO aplica BRLabObservation a Observation não-laboratorial (regression)', () => {
+    // Observation de vital-signs (sem category laboratory) — não deve ser
+    // forçada ao perfil de exame de laboratório só porque é Observation.
+    const vitalSigns = {
+      category: [
+        {
+          coding: [
+            {
+              code: 'vital-signs',
+              system: 'http://terminology.hl7.org/CodeSystem/observation-category',
+            },
+          ],
+        },
+      ],
+      code: { coding: [{ code: '85354-9', system: 'http://loinc.org' }] },
+      resourceType: 'Observation',
+      // sem subject, sem effectiveDateTime, sem valueQuantity — passaria por
+      // BRLabObservation, mas como NÃO é laboratory, deve passar.
+    };
+    const issues = validateResource(vitalSigns, 'r');
+    expect(issues).toEqual([]);
+  });
+
+  it('aplica BRLabObservation quando category contém laboratory', () => {
+    const labObs = {
+      category: [
+        {
+          coding: [
+            {
+              code: 'laboratory',
+              system: 'http://terminology.hl7.org/CodeSystem/observation-category',
+            },
+          ],
+        },
+      ],
+      resourceType: 'Observation',
+      // sem code/value/subject/effective — deve falhar porque agora aplica
+      // BRLabObservation
+    };
+    expect(validateResource(labObs, 'r').length).toBeGreaterThan(0);
   });
 });

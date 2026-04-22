@@ -314,7 +314,6 @@ function handleSubmitBundle(ctx: RouteContext): RouteResponse {
             code: i.code,
             diagnostics: i.diagnostics,
             expression: i.expression,
-            location: i.location,
             severity: i.severity,
           })),
           resourceType: 'OperationOutcome',

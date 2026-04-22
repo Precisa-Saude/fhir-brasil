@@ -133,6 +133,12 @@ export function validateBRLabObservation(resource: unknown, path: string): Valid
     issues.push(
       ...requireField(get(value, 'unit'), 'valueQuantity.unit', `${path}.valueQuantity.unit`),
     );
+    issues.push(
+      ...requireField(get(value, 'system'), 'valueQuantity.system', `${path}.valueQuantity.system`),
+    );
+    issues.push(
+      ...requireField(get(value, 'code'), 'valueQuantity.code', `${path}.valueQuantity.code`),
+    );
     const sys = get(value, 'system');
     if (sys !== undefined && sys !== SYS_UCUM) {
       issues.push(

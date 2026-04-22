@@ -68,7 +68,11 @@ export function validateResource(resource: ResourceLike, path: string): Validati
     case 'Patient':
       return validateBRPatient(resource, path);
     case 'Observation':
-      return validateBRLabObservation(resource, path);
+      // BRLabObservation só se aplica a observações laboratoriais. Vital-signs,
+      // social-history etc. usam outros perfis e seriam rejeitados injustamente.
+      // Heurística: aplicar a regra do perfil BR apenas quando o recurso já se
+      // declara `laboratory` em algum `category.coding`. Caso contrário, passa.
+      return looksLikeLabObservation(resource) ? validateBRLabObservation(resource, path) : [];
     case 'DiagnosticReport':
       return validateBRDiagnosticReport(resource, path);
     default:
@@ -76,6 +80,17 @@ export function validateResource(resource: ResourceLike, path: string): Validati
       // chamador declarar `meta.profile` se quiser conformidade estrita.
       return [];
   }
+}
+
+const SYS_OBS_CATEGORY = 'http://terminology.hl7.org/CodeSystem/observation-category';
+
+function looksLikeLabObservation(resource: unknown): boolean {
+  const r = resource as { category?: { coding?: { system?: string; code?: string }[] }[] };
+  const cats = r?.category;
+  if (!Array.isArray(cats)) return false;
+  return cats.some((cat) =>
+    (cat?.coding ?? []).some((c) => c?.system === SYS_OBS_CATEGORY && c?.code === 'laboratory'),
+  );
 }
 
 export {

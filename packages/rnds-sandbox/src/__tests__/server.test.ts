@@ -148,12 +148,12 @@ describe('createSandboxServer (HTTP, validateSubmissions)', () => {
     });
     expect(res.status).toBe(422);
     const oo = (await res.json()) as {
-      issue: { code: string; location?: string[] }[];
+      issue: { code: string; expression?: string[] }[];
       resourceType: string;
     };
     expect(oo.resourceType).toBe('OperationOutcome');
     expect(oo.issue.length).toBeGreaterThanOrEqual(3);
-    expect(oo.issue.every((i) => i.location?.[0]?.startsWith('Bundle.entry[0].resource.'))).toBe(
+    expect(oo.issue.every((i) => i.expression?.[0]?.startsWith('Bundle.entry[0].resource.'))).toBe(
       true,
     );
   });

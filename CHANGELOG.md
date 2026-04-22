@@ -1,3 +1,9 @@
+## [0.13.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.12.0...v0.13.0) (2026-04-22)
+
+### Features
+
+* **rnds:** validar Bundles contra perfis BR* do IG fhir-brasil ([b388039](https://github.com/Precisa-Saude/fhir-brasil/commit/b388039edcd93b75be888ccd46daa738c1d96c53)), closes [#5](https://github.com/Precisa-Saude/fhir-brasil/issues/5)
+
 ## [0.12.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.11.0...v0.12.0) (2026-04-22)
 
 ### Features

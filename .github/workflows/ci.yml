@@ -89,11 +89,19 @@ jobs:
             );
             core.setOutput('packages_changed', packageChanged ? 'true' : 'false');
 
+      - name: Generate GitHub App token
+        id: app-token
+        if: steps.changes.outputs.packages_changed == 'true'
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+
       - uses: actions/checkout@v6
         if: steps.changes.outputs.packages_changed == 'true'
         with:
           fetch-depth: 0
-          token: ${{ secrets.PAT_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
 
       - uses: pnpm/action-setup@v4
         if: steps.changes.outputs.packages_changed == 'true'
@@ -117,7 +125,7 @@ jobs:
         id: semantic
         if: steps.changes.outputs.packages_changed == 'true'
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           HUSKY: 0
         run: |
           OUTPUT=$(npx semantic-release 2>&1) || true

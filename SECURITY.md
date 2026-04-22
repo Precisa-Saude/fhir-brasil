@@ -9,6 +9,7 @@ Se você descobrir uma vulnerabilidade de segurança neste projeto, por favor re
 Envie um e-mail para: **security@precisa-saude.com.br**
 
 Inclua:
+
 - Descrição da vulnerabilidade
 - Passos para reproduzir
 - Impacto potencial
@@ -19,6 +20,7 @@ Confirmaremos o recebimento em até 48 horas e forneceremos um cronograma para r
 ## Escopo
 
 Este projeto contém definições de biomarcadores, faixas de referência e calculadoras clínicas. Preocupações de segurança podem incluir:
+
 - Dados médicos incorretos que possam levar a interpretações errôneas
 - Erros lógicos em calculadoras clínicas
 - Vulnerabilidades em dependências

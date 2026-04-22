@@ -54,48 +54,46 @@ export function Footer() {
           width: '100%',
         }}
       >
-      <div className="col-span-full md:col-span-12 md:col-start-2 3xl:col-start-3">
-        <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-between">
-          <div className="flex flex-col items-center gap-2 sm:items-start">
-            <span className="font-margem text-xs tracking-wide text-ps-violet-dark/40">
-              Mantido por
-            </span>
-            <a
-              href="https://precisa-saude.com.br"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center transition-opacity hover:opacity-80"
-            >
-              <PrecisaLogo />
-              <span className="font-pausa text-xl text-ps-violet-light">
-                Precisa Saúde
+        <div className="col-span-full md:col-span-12 md:col-start-2 3xl:col-start-3">
+          <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-between">
+            <div className="flex flex-col items-center gap-2 sm:items-start">
+              <span className="font-margem text-xs tracking-wide text-ps-violet-dark/40">
+                Mantido por
               </span>
-            </a>
-          </div>
-
-          <nav className="flex items-center gap-3">
-            {SOCIAL_LINKS.map((link) => (
               <a
-                key={link.label}
-                href={link.href}
+                href="https://precisa-saude.com.br"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={link.label}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-ps-violet-dark/5 text-ps-violet-dark/50 transition-colors hover:bg-ps-violet-dark/10 hover:text-ps-violet-dark"
+                className="flex items-center transition-opacity hover:opacity-80"
               >
-                {link.icon}
+                <PrecisaLogo />
+                <span className="font-pausa text-xl text-ps-violet-light">Precisa Saúde</span>
               </a>
-            ))}
-          </nav>
-        </div>
+            </div>
 
-        <p className="mt-8 border-t border-ps-violet-dark/8 pt-6 text-justify font-margem text-xs leading-relaxed text-ps-violet-dark/30 [text-align-last:left]">
-          Este software é fornecido exclusivamente para fins informativos e educacionais. Não
-          constitui aconselhamento médico, diagnóstico ou recomendação de tratamento. Os dados e
-          cálculos fornecidos não substituem a avaliação de um profissional de saúde qualificado.
-          Consulte sempre seu médico antes de tomar decisões baseadas em resultados laboratoriais.
-        </p>
-      </div>
+            <nav className="flex items-center gap-3">
+              {SOCIAL_LINKS.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={link.label}
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-ps-violet-dark/5 text-ps-violet-dark/50 transition-colors hover:bg-ps-violet-dark/10 hover:text-ps-violet-dark"
+                >
+                  {link.icon}
+                </a>
+              ))}
+            </nav>
+          </div>
+
+          <p className="mt-8 border-t border-ps-violet-dark/8 pt-6 text-justify font-margem text-xs leading-relaxed text-ps-violet-dark/30 [text-align-last:left]">
+            Este software é fornecido exclusivamente para fins informativos e educacionais. Não
+            constitui aconselhamento médico, diagnóstico ou recomendação de tratamento. Os dados e
+            cálculos fornecidos não substituem a avaliação de um profissional de saúde qualificado.
+            Consulte sempre seu médico antes de tomar decisões baseadas em resultados laboratoriais.
+          </p>
+        </div>
       </div>
     </footer>
   );

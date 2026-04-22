@@ -22,15 +22,12 @@ npm install @precisa-saude/fhir-ocr-utils
 ## Exemplo 1: Consultar faixa de referência
 
 ```typescript
-import {
-  getReferenceRange,
-  getDefinitionByCode,
-} from '@precisa-saude/fhir';
+import { getReferenceRange, getDefinitionByCode } from '@precisa-saude/fhir';
 
 // Consultar a definição do biomarcador
 const hdl = getDefinitionByCode('HDL');
 console.log(hdl?.names.pt[0]); // "Colesterol HDL"
-console.log(hdl?.loinc);       // "2085-9"
+console.log(hdl?.loinc); // "2085-9"
 
 // Obter faixa de referência padrão
 const faixa = getReferenceRange('HDL');
@@ -111,16 +108,16 @@ import { phenoage } from '@precisa-saude/fhir-calculators';
 
 // Valores em unidades SI (como esperado pelo algoritmo)
 const resultado = phenoage.calculatePhenoAge({
-  albumin: 42,              // g/L
-  creatinine: 80,           // μmol/L
-  glucose: 5.2,             // mmol/L
-  crp: 1.5,                 // mg/L
-  lymphocytePercent: 30,    // %
-  mcv: 88,                  // fL
-  rdw: 12.5,                // %
-  alkalinePhosphatase: 65,  // U/L
-  wbc: 6.2,                 // 10^9/L
-  chronologicalAge: 45,     // anos
+  albumin: 42, // g/L
+  creatinine: 80, // μmol/L
+  glucose: 5.2, // mmol/L
+  crp: 1.5, // mg/L
+  lymphocytePercent: 30, // %
+  mcv: 88, // fL
+  rdw: 12.5, // %
+  alkalinePhosphatase: 65, // U/L
+  wbc: 6.2, // 10^9/L
+  chronologicalAge: 45, // anos
 });
 
 console.log(`Idade biológica: ${resultado.phenoAge} anos`);

@@ -9,12 +9,12 @@
  */
 
 import {
-  labResultToFHIRBundle,
-  labObservationToFHIR,
-  userProfileToFHIR,
-  type LabReportData,
   type LabObservationData,
+  labObservationToFHIR,
+  type LabReportData,
+  labResultToFHIRBundle,
   type UserProfileData,
+  userProfileToFHIR,
 } from '@precisa-saude/fhir';
 
 // =============================================================================
@@ -22,13 +22,13 @@ import {
 // =============================================================================
 
 const laudo: LabReportData = {
-  reportId: 'laudo-2025-001',
-  userId: 'paciente-abc-123',
   collectionDate: '2025-03-15',
   createdAt: '2025-03-16T10:30:00Z',
+  laboratoryName: 'Laboratório São Paulo',
   overallStatus: 'ANORMAL', // Pelo menos um resultado fora da faixa
   processingStatus: 'complete',
-  laboratoryName: 'Laboratório São Paulo',
+  reportId: 'laudo-2025-001',
+  userId: 'paciente-abc-123',
 };
 
 // =============================================================================
@@ -37,54 +37,54 @@ const laudo: LabReportData = {
 
 const observacoes: LabObservationData[] = [
   {
-    reportId: 'laudo-2025-001',
     biomarkerCode: 'Glucose',
     biomarkerName: 'Glicose',
-    value: 92,
-    unit: 'mg/dL',
     flag: '', // Normal
-    referenceMin: 70,
     referenceMax: 99,
+    referenceMin: 70,
+    reportId: 'laudo-2025-001',
+    unit: 'mg/dL',
+    value: 92,
   },
   {
-    reportId: 'laudo-2025-001',
     biomarkerCode: 'HbA1c',
     biomarkerName: 'Hemoglobina Glicada',
-    value: 5.4,
-    unit: '%',
     flag: '', // Normal
-    referenceMin: 4.0,
     referenceMax: 5.6,
+    referenceMin: 4.0,
+    reportId: 'laudo-2025-001',
+    unit: '%',
+    value: 5.4,
   },
   {
-    reportId: 'laudo-2025-001',
     biomarkerCode: 'LDL',
     biomarkerName: 'Colesterol LDL',
-    value: 165,
-    unit: 'mg/dL',
     flag: 'H', // Alto
-    referenceMin: 0,
     referenceMax: 130,
+    referenceMin: 0,
+    reportId: 'laudo-2025-001',
+    unit: 'mg/dL',
+    value: 165,
   },
   {
-    reportId: 'laudo-2025-001',
     biomarkerCode: 'HDL',
     biomarkerName: 'Colesterol HDL',
-    value: 55,
-    unit: 'mg/dL',
     flag: '', // Normal
-    referenceMin: 40,
     referenceMax: 60,
+    referenceMin: 40,
+    reportId: 'laudo-2025-001',
+    unit: 'mg/dL',
+    value: 55,
   },
   {
-    // Exemplo de resultado qualitativo (texto em vez de número)
-    reportId: 'laudo-2025-001',
     biomarkerCode: 'BloodType',
     biomarkerName: 'Tipo Sanguíneo',
-    value: 'A+',
-    unit: '',
     flag: '',
     isQualitative: true,
+    // Exemplo de resultado qualitativo (texto em vez de número)
+    reportId: 'laudo-2025-001',
+    unit: '',
+    value: 'A+',
   },
 ];
 
@@ -93,22 +93,22 @@ const observacoes: LabObservationData[] = [
 // =============================================================================
 
 const paciente: UserProfileData = {
-  userId: 'paciente-abc-123',
-  name: 'Maria da Silva Santos',
-  birthDate: '1990-05-20',
-  gender: 'female',
-  email: 'maria@exemplo.com',
-  phone: '+5511999998888',
   address: {
-    street: 'Rua das Flores',
-    number: '123',
-    complement: 'Apto 45',
-    neighborhood: 'Jardim Paulista',
     city: 'São Paulo',
-    state: 'SP',
-    postalCode: '01401-000',
+    complement: 'Apto 45',
     country: 'BR',
+    neighborhood: 'Jardim Paulista',
+    number: '123',
+    postalCode: '01401-000',
+    state: 'SP',
+    street: 'Rua das Flores',
   },
+  birthDate: '1990-05-20',
+  email: 'maria@exemplo.com',
+  gender: 'female',
+  name: 'Maria da Silva Santos',
+  phone: '+5511999998888',
+  userId: 'paciente-abc-123',
 };
 
 // =============================================================================
@@ -161,11 +161,7 @@ for (const entry of bundle.entry) {
 console.log('\n=== Conversão individual de recursos ===\n');
 
 // Converter apenas uma observação
-const obsIndividual = labObservationToFHIR(
-  observacoes[0],
-  paciente.userId,
-  laudo.laboratoryName,
-);
+const obsIndividual = labObservationToFHIR(observacoes[0], paciente.userId, laudo.laboratoryName);
 console.log('Observation individual:');
 console.log(`  LOINC: ${obsIndividual.code.coding[0].code}`);
 console.log(`  Código interno: ${obsIndividual.code.coding[1]?.code}`);

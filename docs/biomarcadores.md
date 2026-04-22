@@ -8,18 +8,18 @@ Cada biomarcador é definido pela interface `BiomarkerDefinition`:
 
 ```typescript
 interface BiomarkerDefinition {
-  code: string;              // Código interno canônico (ex: "HDL", "HbA1c")
-  loinc?: string;            // Código LOINC principal (ex: "2085-9")
-  loincAliases?: string[];   // Códigos LOINC alternativos
-  codeAliases?: string[];    // Aliases do código interno (ex: "HDL_Cholesterol")
+  code: string; // Código interno canônico (ex: "HDL", "HbA1c")
+  loinc?: string; // Código LOINC principal (ex: "2085-9")
+  loincAliases?: string[]; // Códigos LOINC alternativos
+  codeAliases?: string[]; // Aliases do código interno (ex: "HDL_Cholesterol")
   names: {
-    pt: string[];            // Nomes em português (primeiro = nome principal)
-    en: string[];            // Nomes em inglês
+    pt: string[]; // Nomes em português (primeiro = nome principal)
+    en: string[]; // Nomes em inglês
   };
-  category: string | string[];  // Categoria(s) clínica(s)
-  unit?: string;             // Unidade padrão (ex: "mg/dL")
-  sex?: 'male' | 'female' | 'both';  // Relevância por sexo
-  hidden?: boolean;          // Se true, extraído mas não exibido na UI
+  category: string | string[]; // Categoria(s) clínica(s)
+  unit?: string; // Unidade padrão (ex: "mg/dL")
+  sex?: 'male' | 'female' | 'both'; // Relevância por sexo
+  hidden?: boolean; // Se true, extraído mas não exibido na UI
 }
 ```
 
@@ -29,28 +29,28 @@ O campo `code` é a chave canônica usada em todo o sistema. Os campos `codeAlia
 
 Os biomarcadores são organizados nas seguintes categorias clínicas:
 
-| Categoria | Chave | Exemplos |
-|-----------|-------|----------|
-| Coração | `coracao` | HDL, LDL, ApoB, CRP, Triglicerídeos, Lp(a) |
-| Tireoide | `tireoide` | TSH, T3 Livre, T4 Livre, Anti-TPO |
-| Autoimunidade | `autoimunidade` | FAN, Anti-TPO, FR, Anti-CCP |
-| Regulação imunológica | `regulacao-imunologica` | Leucócitos, Linfócitos, Neutrófilos, Hemoglobina |
-| Saúde feminina | `saude-feminina` | Estradiol, FSH, Progesterona |
-| Saúde masculina | `saude-masculina` | Testosterona Total, PSA |
-| Hormônios | `hormonios` | Cortisol, DHEA-S, IGF-1 |
-| Metabólico | `metabolico` | Glicose, HbA1c, Insulina, HOMA-IR, Ácido Úrico |
-| Toxinas ambientais | `toxinas-ambientais` | Chumbo, Mercúrio |
-| Nutrientes | `nutrientes` | Vitamina D, B12, Ferro, Zinco, Magnésio, Folato |
-| Estresse e envelhecimento | `estresse-envelhecimento` | 8-OHdG |
-| Fígado | `figado` | ALT, AST, GGT, Bilirrubina, Fosfatase Alcalina |
-| Sangue | `sangue` | Hemácias, Hemoglobina, Hematócrito, VCM, RDW, Plaquetas |
-| Rins | `rins` | Creatinina, Ureia, TFG, Cistatina C, Ácido Úrico |
-| Pâncreas | `pancreas` | Amilase, Lipase |
-| Eletrólitos | `eletrolitos` | Sódio, Potássio |
-| Urina | `urina` | EAS (elementos e sedimentos), pH, Proteínas |
-| Marcadores tumorais | `marcadores-tumorais` | PSA, CEA, AFP |
-| Composição corporal | `composicao-corporal` | IMC, Gordura Corporal, Massa Magra (DEXA) |
-| Densidade óssea | `densidade-ossea` | T-Score, Z-Score, BMD, BMC |
+| Categoria                 | Chave                     | Exemplos                                                |
+| ------------------------- | ------------------------- | ------------------------------------------------------- |
+| Coração                   | `coracao`                 | HDL, LDL, ApoB, CRP, Triglicerídeos, Lp(a)              |
+| Tireoide                  | `tireoide`                | TSH, T3 Livre, T4 Livre, Anti-TPO                       |
+| Autoimunidade             | `autoimunidade`           | FAN, Anti-TPO, FR, Anti-CCP                             |
+| Regulação imunológica     | `regulacao-imunologica`   | Leucócitos, Linfócitos, Neutrófilos, Hemoglobina        |
+| Saúde feminina            | `saude-feminina`          | Estradiol, FSH, Progesterona                            |
+| Saúde masculina           | `saude-masculina`         | Testosterona Total, PSA                                 |
+| Hormônios                 | `hormonios`               | Cortisol, DHEA-S, IGF-1                                 |
+| Metabólico                | `metabolico`              | Glicose, HbA1c, Insulina, HOMA-IR, Ácido Úrico          |
+| Toxinas ambientais        | `toxinas-ambientais`      | Chumbo, Mercúrio                                        |
+| Nutrientes                | `nutrientes`              | Vitamina D, B12, Ferro, Zinco, Magnésio, Folato         |
+| Estresse e envelhecimento | `estresse-envelhecimento` | 8-OHdG                                                  |
+| Fígado                    | `figado`                  | ALT, AST, GGT, Bilirrubina, Fosfatase Alcalina          |
+| Sangue                    | `sangue`                  | Hemácias, Hemoglobina, Hematócrito, VCM, RDW, Plaquetas |
+| Rins                      | `rins`                    | Creatinina, Ureia, TFG, Cistatina C, Ácido Úrico        |
+| Pâncreas                  | `pancreas`                | Amilase, Lipase                                         |
+| Eletrólitos               | `eletrolitos`             | Sódio, Potássio                                         |
+| Urina                     | `urina`                   | EAS (elementos e sedimentos), pH, Proteínas             |
+| Marcadores tumorais       | `marcadores-tumorais`     | PSA, CEA, AFP                                           |
+| Composição corporal       | `composicao-corporal`     | IMC, Gordura Corporal, Massa Magra (DEXA)               |
+| Densidade óssea           | `densidade-ossea`         | T-Score, Z-Score, BMD, BMC                              |
 
 ## Consultando definições
 
@@ -62,9 +62,9 @@ import { getDefinitionByCode, normalizeCode } from '@precisa-saude/fhir';
 // Busca direta pelo código canônico
 const def = getDefinitionByCode('HDL');
 console.log(def?.names.pt[0]); // "Colesterol HDL"
-console.log(def?.loinc);       // "2085-9"
-console.log(def?.category);    // "coracao"
-console.log(def?.unit);        // "mg/dL"
+console.log(def?.loinc); // "2085-9"
+console.log(def?.category); // "coracao"
+console.log(def?.unit); // "mg/dL"
 ```
 
 ### Por código LOINC
@@ -73,7 +73,7 @@ console.log(def?.unit);        // "mg/dL"
 import { getDefinitionByLoinc } from '@precisa-saude/fhir';
 
 const def = getDefinitionByLoinc('2085-9');
-console.log(def?.code);        // "HDL"
+console.log(def?.code); // "HDL"
 console.log(def?.names.pt[0]); // "Colesterol HDL"
 ```
 
@@ -85,7 +85,7 @@ Diferentes laboratórios podem usar variações do mesmo código. A função `no
 import { normalizeCode } from '@precisa-saude/fhir';
 
 normalizeCode('HDL_Cholesterol'); // "HDL"
-normalizeCode('HDL');             // "HDL" (já é canônico)
+normalizeCode('HDL'); // "HDL" (já é canônico)
 normalizeCode('DesconhecidoXYZ'); // "DesconhecidoXYZ" (retorna sem alteração)
 ```
 
@@ -96,9 +96,9 @@ normalizeCode('DesconhecidoXYZ'); // "DesconhecidoXYZ" (retorna sem alteração)
 ```typescript
 import { codeToLoinc } from '@precisa-saude/fhir';
 
-codeToLoinc('HDL');    // "2085-9"
-codeToLoinc('HbA1c');  // "4548-4"
-codeToLoinc('XYZ');    // undefined (código desconhecido)
+codeToLoinc('HDL'); // "2085-9"
+codeToLoinc('HbA1c'); // "4548-4"
+codeToLoinc('XYZ'); // undefined (código desconhecido)
 ```
 
 ### Listar todos os biomarcadores
@@ -132,23 +132,24 @@ As faixas de referência são definidas pela interface `BiomarkerRangeDefinition
 
 ```typescript
 interface BiomarkerReferenceRange {
-  min?: number;          // Limite inferior da faixa normal
-  max?: number;          // Limite superior da faixa normal
-  optimalMin?: number;   // Limite inferior da faixa ótima
-  optimalMax?: number;   // Limite superior da faixa ótima
-  warningMax?: number;   // Limite superior de alerta
-  unit: string;          // Unidade da faixa
+  min?: number; // Limite inferior da faixa normal
+  max?: number; // Limite superior da faixa normal
+  optimalMin?: number; // Limite inferior da faixa ótima
+  optimalMax?: number; // Limite superior da faixa ótima
+  warningMax?: number; // Limite superior de alerta
+  unit: string; // Unidade da faixa
 }
 
 interface BiomarkerRangeDefinition {
-  default: BiomarkerReferenceRange;       // Faixa padrão (fallback)
-  variants?: RangeVariant[];              // Variantes por sexo/idade
+  default: BiomarkerReferenceRange; // Faixa padrão (fallback)
+  variants?: RangeVariant[]; // Variantes por sexo/idade
   direction?: 'range' | 'higher-better' | 'lower-better';
-  source?: string;                        // Referência bibliográfica
+  source?: string; // Referência bibliográfica
 }
 ```
 
 O campo `direction` indica a interpretação clínica:
+
 - `range` (padrão): acima do máximo **e** abaixo do mínimo são anormais
 - `higher-better`: acima do máximo é normal (ex: HDL, BMC)
 - `lower-better`: abaixo do mínimo é normal (ex: LDL, CRP)

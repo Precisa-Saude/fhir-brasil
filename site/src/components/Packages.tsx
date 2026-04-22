@@ -84,8 +84,12 @@ export function Packages() {
                 className="flex flex-col gap-4 rounded-xl border border-ps-violet-dark/8 bg-white/50 p-6 backdrop-blur-sm lg:flex-row lg:items-center lg:justify-between"
               >
                 <div className="min-w-0 flex-1">
-                  <h3 className="font-mono text-sm font-semibold text-ps-violet-dark">{pkg.name}</h3>
-                  <p className="mt-1 font-pausa text-base text-ps-violet-dark/60">{pkg.description}</p>
+                  <h3 className="font-mono text-sm font-semibold text-ps-violet-dark">
+                    {pkg.name}
+                  </h3>
+                  <p className="mt-1 font-pausa text-base text-ps-violet-dark/60">
+                    {pkg.description}
+                  </p>
                 </div>
                 <div className="flex shrink-0 items-center gap-2 rounded-lg bg-ps-neutral px-3 py-2 font-mono text-xs text-ps-violet-dark/70">
                   <span>{pkg.install}</span>

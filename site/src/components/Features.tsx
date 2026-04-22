@@ -30,9 +30,7 @@ const FEATURES: Feature[] = [
     title: 'Faixas de Referência',
     description:
       'Variantes por sexo biológico e faixa etária, baseadas em diretrizes SBPC/ML, SBC e SBD. Inclui faixas ótimas e de alerta.',
-    links: [
-      { label: 'SBPC/ML', href: 'https://www.sbpc.org.br/' },
-    ],
+    links: [{ label: 'SBPC/ML', href: 'https://www.sbpc.org.br/' }],
   },
   {
     icon: <FlaskConical className="h-6 w-6" />,
@@ -45,9 +43,7 @@ const FEATURES: Feature[] = [
     title: 'Cliente RNDS',
     description:
       'Integração com a Rede Nacional de Dados em Saúde (DATASUS). Autenticação mTLS com certificado ICP-Brasil, zero dependências externas. Testado contra mock RNDS — validação contra infraestrutura real requer certificado ICP-Brasil.',
-    links: [
-      { label: 'RNDS', href: 'https://rnds.saude.gov.br/' },
-    ],
+    links: [{ label: 'RNDS', href: 'https://rnds.saude.gov.br/' }],
   },
 ];
 
@@ -74,7 +70,8 @@ export function Features() {
           className="col-span-full mb-8 text-center text-pretty font-pausa text-lg text-ps-violet-dark/60"
           style={col(4, 8)}
         >
-          Infraestrutura de código aberto que transforma dados fragmentados em recursos FHIR R4 padronizados.
+          Infraestrutura de código aberto que transforma dados fragmentados em recursos FHIR R4
+          padronizados.
         </p>
 
         {FEATURES.map((feature, i) => (

@@ -71,23 +71,23 @@ export function OpenSource() {
         </p>
 
         {PILLARS.map((pillar, i) => (
-            <div
-              key={pillar.title}
-              className="col-span-full flex gap-4 rounded-xl border border-ps-violet-dark/8 bg-white/50 p-6 outline outline-1 outline-ps-violet-dark/5 backdrop-blur-sm transition-colors hover:border-ps-violet-dark/15"
-              style={col(PILLAR_COLS_14[i]!.start, PILLAR_COLS_14[i]!.span)}
-            >
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ps-mint/30 text-ps-violet-dark">
-                {pillar.icon}
-              </div>
-              <div>
-                <h3 className="font-margem text-base font-semibold text-ps-violet-dark">
-                  {pillar.title}
-                </h3>
-                <p className="mt-1 font-pausa text-base leading-relaxed text-ps-violet-dark/60">
-                  {pillar.description}
-                </p>
-              </div>
+          <div
+            key={pillar.title}
+            className="col-span-full flex gap-4 rounded-xl border border-ps-violet-dark/8 bg-white/50 p-6 outline outline-1 outline-ps-violet-dark/5 backdrop-blur-sm transition-colors hover:border-ps-violet-dark/15"
+            style={col(PILLAR_COLS_14[i]!.start, PILLAR_COLS_14[i]!.span)}
+          >
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ps-mint/30 text-ps-violet-dark">
+              {pillar.icon}
             </div>
+            <div>
+              <h3 className="font-margem text-base font-semibold text-ps-violet-dark">
+                {pillar.title}
+              </h3>
+              <p className="mt-1 font-pausa text-base leading-relaxed text-ps-violet-dark/60">
+                {pillar.description}
+              </p>
+            </div>
+          </div>
         ))}
 
         <a

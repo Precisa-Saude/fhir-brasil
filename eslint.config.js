@@ -11,6 +11,16 @@ export default [
     },
   },
   {
+    // Example scripts intentionally use console.log to demo behavior.
+    files: ['examples/**/*.ts'],
+    languageOptions: {
+      parserOptions: { project: false },
+    },
+    rules: {
+      'no-console': 'off',
+    },
+  },
+  {
     // Large definition arrays — disable object sorting and line limits so the
     // medical-data tables stay readable.
     files: [

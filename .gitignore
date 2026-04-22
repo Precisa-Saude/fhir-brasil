@@ -8,3 +8,6 @@ coverage/
 ig/output/
 ig/fsh-generated/
 ig/scripts/data/
+
+# Claude Code session artifacts
+.claude/scheduled_tasks.lock

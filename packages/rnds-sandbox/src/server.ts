@@ -53,15 +53,19 @@ export function createSandboxServer(options: SandboxOptions = {}): SandboxServer
     handleRequest(req, res, { keys: signingKeys, log, store, strict, useMtls }).catch(
       (err: unknown) => {
         log(`erro inesperado: ${err instanceof Error ? err.message : String(err)}`);
-        if (!res.headersSent) {
-          res.writeHead(500, { 'Content-Type': 'application/json' });
-          res.end(
-            JSON.stringify({
-              issue: [{ code: 'exception', diagnostics: String(err), severity: 'fatal' }],
-              resourceType: 'OperationOutcome',
-            }),
-          );
+        if (res.headersSent) {
+          // Headers já foram para o socket — só garante que o response feche
+          // para o cliente não pendurar. Sem body novo.
+          if (!res.writableEnded) res.end();
+          return;
         }
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(
+          JSON.stringify({
+            issue: [{ code: 'exception', diagnostics: String(err), severity: 'fatal' }],
+            resourceType: 'OperationOutcome',
+          }),
+        );
       },
     );
   };

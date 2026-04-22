@@ -110,8 +110,8 @@ export class SandboxStore {
     const cns = stripFormatting(patientCns);
     const candidates = [`Patient/${cns}`, cns];
     return this.listResourcesByType(resourceType).filter((resource) => {
-      const subjectRef = readReference(resource.subject);
-      const patientRef = readReference(resource.patient);
+      const subjectRef = resource.subject?.reference;
+      const patientRef = resource.patient?.reference;
       return (
         (subjectRef && referenceMatches(subjectRef, candidates)) ||
         (patientRef && referenceMatches(patientRef, candidates))
@@ -154,14 +154,6 @@ function findIdentifier(
 
 function stripFormatting(value: string): string {
   return value.replace(/[^0-9A-Za-z]/g, '');
-}
-
-function readReference(value: unknown): string | undefined {
-  if (!value || typeof value !== 'object') {
-    return undefined;
-  }
-  const ref = (value as { reference?: unknown }).reference;
-  return typeof ref === 'string' ? ref : undefined;
 }
 
 function referenceMatches(ref: string, candidates: readonly string[]): boolean {

@@ -31,22 +31,36 @@ const sandbox = createSandboxServer({
 const { host: sbHost, port: sbPort } = await sandbox.start();
 const sandboxBase = `http://${sbHost}:${sbPort}`;
 
-// 2. Busca um token logo no boot — em produção um job recurrente faria isso
-//    antes da expiração; aqui simplificamos.
+// 2. Token bearer com auto-refresh.
+//    O sandbox emite tokens com TTL de 30 min. Renovamos antes de expirar
+//    (margem de 60s) para que sessões longas de demo não falhem com 401.
+const TOKEN_REFRESH_MARGIN_MS = 60_000;
+let token = '';
+let tokenExpiresAt = 0;
+
 async function fetchToken() {
   const res = await fetch(`${sandboxBase}/api/token`, { method: 'POST' });
   if (!res.ok) {
     throw new Error(`Falha ao obter token: ${res.status}`);
   }
   const body = await res.json();
-  return body.access_token;
+  token = body.access_token;
+  tokenExpiresAt = Date.now() + body.expires_in * 1000;
+  console.log(`[backend] token obtido (exp em ~${Math.round(body.expires_in / 60)}min)`);
 }
-let token = await fetchToken();
-console.log(`[backend] token obtido (${token.slice(0, 24)}...)`);
+
+async function ensureToken() {
+  if (!token || Date.now() >= tokenExpiresAt - TOKEN_REFRESH_MARGIN_MS) {
+    await fetchToken();
+  }
+}
+
+await fetchToken();
 
 // 3. Helper que faz proxy ao sandbox usando bearer + CNS, igual a um
-//    cliente RNDS real faria.
+//    cliente RNDS real faria. Garante token válido antes de cada chamada.
 async function rndsFetch(pathSuffix, init = {}) {
+  await ensureToken();
   const headers = {
     'X-Authorization-Server': `Bearer ${token}`,
     Authorization: PROFISSIONAL_CNS,

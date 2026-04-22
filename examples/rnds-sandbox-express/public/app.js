@@ -87,18 +87,44 @@ function setBusy(busy, title) {
   }
 }
 
-// Carrega info do backend ao abrir a página
+// Carrega info do backend ao abrir a página.
+// Construído via DOM API + textContent para evitar XSS caso algum campo
+// contenha caracteres HTML (paranoia defensiva — backend é nosso, mas
+// o hábito vale).
 fetch('/api/info')
   .then((r) => r.json())
   .then((info) => {
     const banner = document.getElementById('info-banner');
-    banner.innerHTML = `
-      <strong>backend:</strong> ${info.backend} ·
-      <strong>cenário:</strong> ${info.scenario} ·
-      <strong>profissional:</strong> CNS ${info.profissionalCns} ·
-      <strong>token:</strong> <code>${info.tokenPreview}</code>
-    `;
+    banner.replaceChildren(
+      labeled('backend:', info.backend),
+      sep(),
+      labeled('cenário:', info.scenario),
+      sep(),
+      labeled('profissional:', `CNS ${info.profissionalCns}`),
+      sep(),
+      labeled('token:', info.tokenPreview, { mono: true }),
+    );
   })
   .catch((err) => {
     document.getElementById('info-banner').textContent = `erro ao carregar /api/info: ${err}`;
   });
+
+function labeled(label, value, opts = {}) {
+  const wrap = document.createElement('span');
+  const k = document.createElement('strong');
+  k.textContent = label;
+  wrap.appendChild(k);
+  wrap.appendChild(document.createTextNode(' '));
+  if (opts.mono) {
+    const code = document.createElement('code');
+    code.textContent = value;
+    wrap.appendChild(code);
+  } else {
+    wrap.appendChild(document.createTextNode(value));
+  }
+  return wrap;
+}
+
+function sep() {
+  return document.createTextNode(' · ');
+}

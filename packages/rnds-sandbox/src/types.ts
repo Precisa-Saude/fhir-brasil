@@ -6,9 +6,16 @@
  * cenários incluem Encounter, Condition, Immunization, etc.
  */
 
+/**
+ * Recurso FHIR genérico armazenado pelo sandbox. `resourceType` é
+ * obrigatório; `subject`/`patient` são tipados explicitamente porque o
+ * store usa o `.reference` deles em buscas. Demais campos ficam livres.
+ */
 export interface SandboxResource {
   [key: string]: unknown;
+  patient?: { reference?: string };
   resourceType: string;
+  subject?: { reference?: string };
 }
 
 export interface SandboxBundleEntry {

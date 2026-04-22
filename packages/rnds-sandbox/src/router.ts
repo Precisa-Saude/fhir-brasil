@@ -290,6 +290,10 @@ function handleSubmitBundle(ctx: RouteContext): RouteResponse {
 
   ctx.store.recordBundle(bundle);
 
+  // As `location`s retornadas são puramente sintéticas — servem só para
+  // imitar o formato de transaction-response da RNDS. O sandbox não
+  // resolve esses IDs de volta; os recursos submetidos são consultados
+  // via `GET /{ResourceType}?subject=Patient/{cns}` (ou similar).
   const responseEntries: SandboxBundleEntry[] = (bundle.entry ?? []).map(() => ({
     response: {
       location: `Resource/sandbox-${ctx.store.nextResourceId()}`,

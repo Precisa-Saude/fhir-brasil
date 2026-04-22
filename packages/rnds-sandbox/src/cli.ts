@@ -5,6 +5,7 @@
  * Sobe um mock local da RNDS para desenvolvimento.
  */
 
+import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 import { SCENARIOS } from './scenarios';
@@ -191,13 +192,25 @@ export async function main(argv: string[] = process.argv.slice(2)): Promise<numb
   return 0;
 }
 
-// Só executa quando este arquivo é o entry-point (via `node dist/cli.js` ou
-// via shebang). Permite importar `parseArgs`/`main` em testes sem efeito
-// colateral.
-const isEntryPoint =
-  typeof process.argv[1] === 'string' && fileURLToPath(import.meta.url) === process.argv[1];
+// Só executa quando este arquivo é o entry-point. Comparamos via realpath
+// (ambos os lados) porque `process.argv[1]` pode ser um symlink criado pelo
+// npm em `node_modules/.bin/` enquanto `import.meta.url` resolve para o
+// arquivo bundled real. Sem realpath, importar este módulo em teste acaba
+// disparando `main()` em alguns ambientes / o oposto: o bin não roda quando
+// invocado via npx.
+function isCliEntryPoint(): boolean {
+  const argv1 = process.argv[1];
+  if (typeof argv1 !== 'string' || argv1.length === 0) return false;
+  try {
+    const here = fs.realpathSync(fileURLToPath(import.meta.url));
+    const invoked = fs.realpathSync(argv1);
+    return here === invoked;
+  } catch {
+    return false;
+  }
+}
 
-if (isEntryPoint) {
+if (isCliEntryPoint()) {
   main().catch((err: unknown) => {
     process.stderr.write(`erro fatal: ${err instanceof Error ? err.message : String(err)}\n`);
     process.exit(1);

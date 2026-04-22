@@ -1,7 +1,11 @@
 import base from '@precisa-saude/eslint-config/base';
+import reactConfig from '@precisa-saude/eslint-config/react';
 
 export default [
   ...base,
+  // React rules for site/** (Astro/Vite frontend). The preset's
+  // REACT_PATHS already includes `site/**/*.{ts,tsx,jsx}`.
+  ...reactConfig,
   {
     // Test files are excluded from package tsconfigs (to keep tsc --noEmit tight),
     // so disable type-aware parsing for them or ESLint errors trying to locate a project.
@@ -27,9 +31,18 @@ export default [
       'packages/core/src/biomarkers.ts',
       'packages/core/src/dexa-zone-data.ts',
       'packages/core/src/reference-ranges.ts',
+      'packages/core/src/units.ts',
     ],
     rules: {
       'perfectionist/sort-objects': 'off',
+      'max-lines': 'off',
+    },
+  },
+  {
+    // Tests data-driven (biomarkers, conversores, reference ranges) naturalmente
+    // ultrapassam 400 linhas por cobrirem tabelas. Não vale fragmentar.
+    files: ['**/__tests__/**/*.ts', '**/*.test.ts'],
+    rules: {
       'max-lines': 'off',
     },
   },

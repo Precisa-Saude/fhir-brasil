@@ -102,8 +102,14 @@ app.get('/api/practitioner/:cns', async (req, res) => {
   res.status(r.status).json(await r.json());
 });
 
+app.get('/api/observations/:cns', async (req, res) => {
+  const subject = `Patient/${encodeURIComponent(req.params.cns)}`;
+  const r = await rndsFetch(`/api/fhir/r4/Observation?subject=${encodeURIComponent(subject)}`);
+  res.status(r.status).json(await r.json());
+});
+
 app.post('/api/bundle', async (req, res) => {
-  const bundle = req.body ?? sampleBundle();
+  const bundle = req.body && req.body.resourceType === 'Bundle' ? req.body : sampleBundle();
   const r = await rndsFetch(`/api/fhir/r4/Bundle`, {
     body: JSON.stringify(bundle),
     headers: { 'Content-Type': 'application/fhir+json' },

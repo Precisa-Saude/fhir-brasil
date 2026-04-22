@@ -128,7 +128,9 @@ describe('dispatch — modo permissivo', () => {
   });
 
   it('rejeita método não suportado em endpoint FHIR', () => {
-    const res = dispatch(makeCtx({ method: 'DELETE', path: '/api/fhir/r4/Patient/700000000000001' }));
+    const res = dispatch(
+      makeCtx({ method: 'DELETE', path: '/api/fhir/r4/Patient/700000000000001' }),
+    );
     expect(res.status).toBe(405);
   });
 
@@ -138,11 +140,121 @@ describe('dispatch — modo permissivo', () => {
   });
 });
 
+describe('dispatch — busca por paciente', () => {
+  it('retorna searchset Bundle com Observations pré-carregadas', () => {
+    const res = dispatch(
+      makeCtx({
+        path: '/api/fhir/r4/Observation',
+        query: new URLSearchParams({ subject: 'Patient/700000000000001' }),
+      }),
+    );
+    expect(res.status).toBe(200);
+    const bundle = res.body as {
+      entry: { resource: { code: { coding: { code: string }[] } } }[];
+      total: number;
+      type: string;
+    };
+    expect(bundle.type).toBe('searchset');
+    expect(bundle.total).toBe(4);
+    expect(bundle.entry).toHaveLength(4);
+    const codes = bundle.entry.map((e) => e.resource.code.coding[0]?.code);
+    expect(codes).toEqual(expect.arrayContaining(['2093-3', '2089-1', '2085-9', '2345-7']));
+  });
+
+  it('inclui Observations submetidas após o load', () => {
+    const store = makeStore();
+    store.recordBundle({
+      entry: [
+        {
+          request: { method: 'POST', url: 'Observation' },
+          resource: {
+            code: { coding: [{ code: '2160-0', system: 'http://loinc.org' }] },
+            resourceType: 'Observation',
+            subject: { reference: 'Patient/700000000000001' },
+          },
+        },
+      ],
+      resourceType: 'Bundle',
+      type: 'transaction',
+    });
+    const res = dispatch(
+      makeCtx({
+        path: '/api/fhir/r4/Observation',
+        query: new URLSearchParams({ subject: 'Patient/700000000000001' }),
+        store,
+      }),
+    );
+    expect(res.status).toBe(200);
+    expect((res.body as { total: number }).total).toBe(5);
+  });
+
+  it('aceita CNS sem prefixo Patient/', () => {
+    const res = dispatch(
+      makeCtx({
+        path: '/api/fhir/r4/Observation',
+        query: new URLSearchParams({ subject: '700000000000001' }),
+      }),
+    );
+    expect(res.status).toBe(200);
+    expect((res.body as { total: number }).total).toBe(4);
+  });
+
+  it('retorna searchset vazio quando paciente não tem recursos', () => {
+    const res = dispatch(
+      makeCtx({
+        path: '/api/fhir/r4/Observation',
+        query: new URLSearchParams({ subject: 'Patient/000000000000000' }),
+      }),
+    );
+    expect(res.status).toBe(200);
+    const body = res.body as { entry: unknown[]; total: number };
+    expect(body.total).toBe(0);
+    expect(body.entry).toEqual([]);
+  });
+
+  it('exige parâmetro subject ou patient', () => {
+    const res = dispatch(
+      makeCtx({ path: '/api/fhir/r4/Observation', query: new URLSearchParams() }),
+    );
+    expect(res.status).toBe(400);
+  });
+
+  it('busca Immunization usando ?patient=', () => {
+    const store = new SandboxStore();
+    store.load(resolveScenario('vacina'));
+    const res = dispatch(
+      makeCtx({
+        path: '/api/fhir/r4/Immunization',
+        query: new URLSearchParams({ patient: 'Patient/700000000000040' }),
+        store,
+      }),
+    );
+    expect(res.status).toBe(200);
+    expect((res.body as { total: number }).total).toBe(3);
+  });
+
+  it('busca Condition do cenário internação', () => {
+    const store = new SandboxStore();
+    store.load(resolveScenario('internacao'));
+    const res = dispatch(
+      makeCtx({
+        path: '/api/fhir/r4/Condition',
+        query: new URLSearchParams({ subject: 'Patient/700000000000020' }),
+        store,
+      }),
+    );
+    expect(res.status).toBe(200);
+    expect((res.body as { total: number }).total).toBe(1);
+  });
+});
+
 describe('dispatch — JWKS', () => {
   it('serve /.well-known/jwks.json com a chave RSA', () => {
     const res = dispatch(makeCtx({ path: '/.well-known/jwks.json' }));
     expect(res.status).toBe(200);
-    const jwks = res.body as { keys: { alg: string; kty: string; kid: string; n: string; e: string }[] };
+    const jwks = res.body as {
+      keys: { alg: string; kty: string; kid: string; n: string; e: string }[];
+    };
     expect(jwks.keys).toHaveLength(1);
     expect(jwks.keys[0]).toMatchObject({
       alg: 'RS256',
@@ -160,9 +272,7 @@ describe('dispatch — modo strict', () => {
   const VALID_CNS = '700000000000001';
 
   it('rejeita FHIR sem header X-Authorization-Server', () => {
-    const res = dispatch(
-      makeCtx({ path: '/api/fhir/r4/Patient/700000000000001', strict: true }),
-    );
+    const res = dispatch(makeCtx({ path: '/api/fhir/r4/Patient/700000000000001', strict: true }));
     expect(res.status).toBe(401);
   });
 
@@ -178,7 +288,7 @@ describe('dispatch — modo strict', () => {
   });
 
   it('rejeita token com assinatura inválida', () => {
-    const tampered = validToken.split('.').slice(0, 2).join('.') + '.invalidsig';
+    const tampered = `${validToken.split('.').slice(0, 2).join('.')}.invalidsig`;
     const res = dispatch(
       makeCtx({
         headers: {

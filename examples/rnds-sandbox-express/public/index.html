@@ -66,6 +66,20 @@
         </fieldset>
 
         <fieldset>
+          <legend>Observations por paciente</legend>
+          <p class="muted">
+            Lista todas as Observations já submetidas para o CNS abaixo
+            (incluindo as pré-carregadas pelo cenário). Submeta uma nova
+            acima e clique de novo para ver o total subir.
+          </p>
+          <label>
+            CNS (15 dígitos)
+            <input id="cns-obs" type="text" value="700000000000001" />
+          </label>
+          <button data-action="observations">Buscar Observations</button>
+        </fieldset>
+
+        <fieldset>
           <legend>Infra de auth</legend>
           <button data-action="info">/api/info (token + cenário)</button>
           <button data-action="jwks">/.well-known/jwks.json</button>

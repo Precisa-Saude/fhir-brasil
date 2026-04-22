@@ -23,8 +23,14 @@ const ACTIONS = {
     const cns = document.getElementById('cns-pract').value.trim();
     return fetchAndRender(`/api/practitioner/${encodeURIComponent(cns)}`, `Practitioner ${cns}`);
   },
-  bundle: () =>
-    fetchAndRender(`/api/bundle`, 'POST /api/fhir/r4/Bundle', { method: 'POST' }),
+  observations: () => {
+    const cns = document.getElementById('cns-obs').value.trim();
+    return fetchAndRender(
+      `/api/observations/${encodeURIComponent(cns)}`,
+      `Observation?subject=Patient/${cns}`,
+    );
+  },
+  bundle: () => fetchAndRender(`/api/bundle`, 'POST /api/fhir/r4/Bundle', { method: 'POST' }),
   info: () => fetchAndRender(`/api/info`, 'GET /api/info'),
   jwks: () => fetchAndRender(`/api/jwks`, 'GET /.well-known/jwks.json'),
 };

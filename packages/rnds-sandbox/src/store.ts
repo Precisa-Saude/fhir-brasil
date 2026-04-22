@@ -7,16 +7,17 @@
  */
 
 import type {
-  Scenario,
   SandboxBundle,
   SandboxOrganization,
   SandboxPatient,
   SandboxPractitioner,
+  SandboxResource,
+  Scenario,
 } from './types';
 
 const NS = {
-  cns: 'http://rnds.saude.gov.br/fhir/r4/NamingSystem/cns',
   cnes: 'http://rnds.saude.gov.br/fhir/r4/NamingSystem/cnes',
+  cns: 'http://rnds.saude.gov.br/fhir/r4/NamingSystem/cns',
   cpf: 'http://rnds.saude.gov.br/fhir/r4/NamingSystem/cpf',
 } as const;
 
@@ -75,6 +76,41 @@ export class SandboxStore {
     return this.submittedBundles;
   }
 
+  /**
+   * Lista todos os recursos de um tipo presentes nos bundles submetidos
+   * (incluindo os pré-carregados pelo cenário). Usado pelos endpoints
+   * de busca FHIR (`GET /Observation?subject=...`, etc.).
+   */
+  listResourcesByType(resourceType: string): SandboxResource[] {
+    const out: SandboxResource[] = [];
+    for (const bundle of this.submittedBundles) {
+      for (const entry of bundle.entry ?? []) {
+        if (entry.resource && entry.resource.resourceType === resourceType) {
+          out.push(entry.resource);
+        }
+      }
+    }
+    return out;
+  }
+
+  /**
+   * Filtra recursos cujo `subject.reference` ou `patient.reference`
+   * aponta para o paciente indicado (aceita tanto `Patient/{cns}` quanto
+   * apenas o CNS sem prefixo).
+   */
+  searchResourcesByPatient(resourceType: string, patientCns: string): SandboxResource[] {
+    const cns = stripFormatting(patientCns);
+    const candidates = [`Patient/${cns}`, cns];
+    return this.listResourcesByType(resourceType).filter((resource) => {
+      const subjectRef = readReference(resource.subject);
+      const patientRef = readReference(resource.patient);
+      return (
+        (subjectRef && referenceMatches(subjectRef, candidates)) ||
+        (patientRef && referenceMatches(patientRef, candidates))
+      );
+    });
+  }
+
   private indexPatient(patient: SandboxPatient): void {
     const cns = patient.id ?? findIdentifier(patient.identifier, NS.cns);
     if (cns) {
@@ -110,4 +146,21 @@ function findIdentifier(
 
 function stripFormatting(value: string): string {
   return value.replace(/[^0-9A-Za-z]/g, '');
+}
+
+function readReference(value: unknown): string | undefined {
+  if (!value || typeof value !== 'object') {
+    return undefined;
+  }
+  const ref = (value as { reference?: unknown }).reference;
+  return typeof ref === 'string' ? ref : undefined;
+}
+
+function referenceMatches(ref: string, candidates: readonly string[]): boolean {
+  // Aceita "Patient/{cns}" exato OU apenas o CNS no final do reference.
+  for (const candidate of candidates) {
+    if (ref === candidate) return true;
+    if (ref.endsWith(`/${candidate}`)) return true;
+  }
+  return false;
 }

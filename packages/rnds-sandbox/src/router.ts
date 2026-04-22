@@ -164,6 +164,19 @@ function enforceFhirAuth(ctx: RouteContext): RouteResponse | null {
   return null;
 }
 
+/**
+ * Tipos cuja busca por paciente o sandbox suporta. Cada um aceita
+ * `?subject=Patient/{cns}` ou `?patient=Patient/{cns}` (também tolera
+ * só o CNS sem prefixo).
+ */
+const SEARCHABLE_BY_PATIENT = new Set([
+  'Observation',
+  'DiagnosticReport',
+  'Immunization',
+  'Condition',
+  'Encounter',
+]);
+
 function handleFhirGet(fhirPath: string, ctx: RouteContext): RouteResponse {
   if (fhirPath === '/Patient') {
     return handlePatientSearch(ctx);
@@ -180,9 +193,7 @@ function handleFhirGet(fhirPath: string, ctx: RouteContext): RouteResponse {
   if (orgMatch) {
     const cnes = decodeURIComponent(orgMatch[1]!);
     const org = ctx.store.findOrganizationByCnes(cnes);
-    return org
-      ? { body: org, status: 200 }
-      : notFound(`Organização CNES ${cnes} não encontrada`);
+    return org ? { body: org, status: 200 } : notFound(`Organização CNES ${cnes} não encontrada`);
   }
   const practMatch = /^\/Practitioner\/([^/]+)$/.exec(fhirPath);
   if (practMatch) {
@@ -192,18 +203,47 @@ function handleFhirGet(fhirPath: string, ctx: RouteContext): RouteResponse {
       ? { body: pract, status: 200 }
       : notFound(`Profissional CNS ${cns} não encontrado`);
   }
+  const searchMatch = /^\/([A-Z][A-Za-z]+)$/.exec(fhirPath);
+  if (searchMatch) {
+    const resourceType = searchMatch[1]!;
+    if (SEARCHABLE_BY_PATIENT.has(resourceType)) {
+      return handleResourceSearch(resourceType, ctx);
+    }
+  }
   return notFound(`Recurso FHIR não suportado: ${fhirPath}`);
+}
+
+function handleResourceSearch(resourceType: string, ctx: RouteContext): RouteResponse {
+  const ref = ctx.query.get('subject') ?? ctx.query.get('patient');
+  if (!ref) {
+    return {
+      body: operationOutcome(
+        'error',
+        'required',
+        `${resourceType} search exige ?subject=Patient/{cns} ou ?patient=Patient/{cns}`,
+      ),
+      status: 400,
+    };
+  }
+  const cns = ref.startsWith('Patient/') ? ref.slice('Patient/'.length) : ref;
+  const matches = ctx.store.searchResourcesByPatient(resourceType, cns);
+  const entry: SandboxBundleEntry[] = matches.map((resource) => ({ resource }));
+  return {
+    body: {
+      entry,
+      resourceType: 'Bundle',
+      total: matches.length,
+      type: 'searchset',
+    },
+    status: 200,
+  };
 }
 
 function handlePatientSearch(ctx: RouteContext): RouteResponse {
   const identifier = ctx.query.get('identifier');
   if (!identifier) {
     return {
-      body: operationOutcome(
-        'error',
-        'required',
-        'parâmetro identifier é obrigatório em /Patient',
-      ),
+      body: operationOutcome('error', 'required', 'parâmetro identifier é obrigatório em /Patient'),
       status: 400,
     };
   }

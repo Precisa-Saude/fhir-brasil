@@ -26,10 +26,10 @@ Abra <http://127.0.0.1:3000>.
 
 Variáveis de ambiente opcionais:
 
-| Variável  | Padrão                | Efeito                                                   |
-| --------- | --------------------- | -------------------------------------------------------- |
-| `PORT`    | `3000`                | Porta do Express                                         |
-| `SCENARIO`| `paciente-com-exames` | Cenário do sandbox (`internacao`, `vacina`, `vazio`)     |
+| Variável   | Padrão                | Efeito                                               |
+| ---------- | --------------------- | ---------------------------------------------------- |
+| `PORT`     | `3000`                | Porta do Express                                     |
+| `SCENARIO` | `paciente-com-exames` | Cenário do sandbox (`internacao`, `vacina`, `vazio`) |
 
 ## Arquitetura
 
@@ -69,6 +69,10 @@ O frontend é HTML/CSS/JS puro — `<script>` tradicional, sem build.
 - **API programática** do sandbox: como bootar e parar via código.
 - **Forma das chamadas RNDS**: paths, headers, body — exatamente o
   que um cliente em produção envia/recebe.
+- **Round-trip submit→search**: clique em "Buscar Observations"
+  para ver o histórico, depois "Submeter" e clique de novo — o total
+  sobe e o novo código LOINC aparece na lista (mesma semântica que a
+  RNDS expõe via `GET /Observation?subject=...`).
 - **Renderização de respostas FHIR**: o `<pre>` mostra Patient,
   Organization, Practitioner, Bundle e OperationOutcome cruas, sem
   abstração — útil para inspeção e ensino.

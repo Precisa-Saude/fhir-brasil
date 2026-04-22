@@ -68,20 +68,20 @@ await sandbox.stop();
 
 ## Cenários
 
-| Nome | Descrição |
-| ---- | --------- |
-| `paciente-com-exames` | Joana da Silva, 42 anos, com lipidograma + glicemia codificados em LOINC. (padrão) |
-| `internacao` | Carlos Souza, 67, internado por insuficiência cardíaca (CID I50.0), com NT-proBNP e troponina. |
-| `vacina` | Pedro Almeida, 8 anos, com calendário vacinal aplicado (BCG, hepatite B, tríplice viral). |
-| `vazio` | Estado limpo. Útil para testar fluxos do zero. |
+| Nome                  | Descrição                                                                                      |
+| --------------------- | ---------------------------------------------------------------------------------------------- |
+| `paciente-com-exames` | Joana da Silva, 42 anos, com lipidograma + glicemia codificados em LOINC. (padrão)             |
+| `internacao`          | Carlos Souza, 67, internado por insuficiência cardíaca (CID I50.0), com NT-proBNP e troponina. |
+| `vacina`              | Pedro Almeida, 8 anos, com calendário vacinal aplicado (BCG, hepatite B, tríplice viral).      |
+| `vazio`               | Estado limpo. Útil para testar fluxos do zero.                                                 |
 
 Identificadores sintéticos usados nos cenários:
 
-| CPF | CNS | Cenário |
-| --- | --- | ------- |
+| CPF           | CNS               | Cenário             |
+| ------------- | ----------------- | ------------------- |
 | `12345678901` | `700000000000001` | paciente-com-exames |
-| `98765432100` | `700000000000020` | internacao |
-| _(sem CPF)_ | `700000000000040` | vacina |
+| `98765432100` | `700000000000020` | internacao          |
+| _(sem CPF)_   | `700000000000040` | vacina              |
 
 CNES dos estabelecimentos: `2345678` (lab), `3456789` (hospital), `4567890` (UBS).
 
@@ -122,12 +122,12 @@ $ curl -s "http://127.0.0.1:8080/api/fhir/r4/Patient?identifier=$(printf 'http:/
 Histórico pré-carregado (Bundle de lipidograma + glicemia, todas as
 Observations codificadas em LOINC):
 
-| LOINC | Biomarcador | Valor |
-| ----- | ----------- | ----- |
+| LOINC    | Biomarcador      | Valor     |
+| -------- | ---------------- | --------- |
 | `2093-3` | Colesterol total | 198 mg/dL |
-| `2089-1` | LDL-Colesterol | 124 mg/dL |
-| `2085-9` | HDL-Colesterol | 56 mg/dL |
-| `2345-7` | Glicose | 96 mg/dL |
+| `2089-1` | LDL-Colesterol   | 124 mg/dL |
+| `2085-9` | HDL-Colesterol   | 56 mg/dL  |
+| `2345-7` | Glicose          | 96 mg/dL  |
 
 Submeter um novo Bundle (resposta abaixo):
 
@@ -191,12 +191,12 @@ $ curl -s http://127.0.0.1:8080/api/fhir/r4/Organization/3456789
 
 Histórico pré-carregado:
 
-| Recurso | Detalhe |
-| ------- | ------- |
-| `Encounter` | classe `IMP` (inpatient), iniciado em 2026-04-15 |
-| `Condition` | CID-10 `I50.0` (Insuficiência cardíaca congestiva) |
-| `Observation` LOINC `33762-6` | NT-proBNP — 4820 pg/mL |
-| `Observation` LOINC `49563-0` | Troponina I — 0.08 ng/mL |
+| Recurso                       | Detalhe                                            |
+| ----------------------------- | -------------------------------------------------- |
+| `Encounter`                   | classe `IMP` (inpatient), iniciado em 2026-04-15   |
+| `Condition`                   | CID-10 `I50.0` (Insuficiência cardíaca congestiva) |
+| `Observation` LOINC `33762-6` | NT-proBNP — 4820 pg/mL                             |
+| `Observation` LOINC `49563-0` | Troponina I — 0.08 ng/mL                           |
 
 #### `vacina`
 
@@ -226,11 +226,11 @@ $ curl -s http://127.0.0.1:8080/api/fhir/r4/Patient/700000000000040
 Histórico pré-carregado (3 `Immunization`, sistema PNI/CVP
 `urn:oid:2.16.840.1.113883.6.59`):
 
-| Vacina | Código | Data |
-| ------ | ------ | ---- |
-| BCG | `BCG` | 2017-11-05 |
-| Hepatite B (RN) | `HBV` | 2017-11-05 |
-| Tríplice viral (SCR) | `MMR` | 2018-12-12 |
+| Vacina               | Código | Data       |
+| -------------------- | ------ | ---------- |
+| BCG                  | `BCG`  | 2017-11-05 |
+| Hepatite B (RN)      | `HBV`  | 2017-11-05 |
+| Tríplice viral (SCR) | `MMR`  | 2018-12-12 |
 
 #### `vazio`
 
@@ -263,15 +263,16 @@ HTTP/1.1 404 Not Found
 
 Compatível com o subset usado por `@precisa-saude/fhir-rnds`:
 
-| Método | Path | Auth (modo strict) | Descrição |
-| ------ | ---- | ------------------ | --------- |
-| `POST` | `/api/token` | mTLS (cert do cliente) | Emite token JWT assinado em RS256. |
-| `GET`  | `/.well-known/jwks.json` | público | Chave pública (JWK) usada para verificar a assinatura do token. |
-| `GET`  | `/api/fhir/r4/Patient?identifier={system}\|{value}` | bearer + CNS | Busca por CPF (`.../cpf`) ou CNS (`.../cns`). |
-| `GET`  | `/api/fhir/r4/Patient/{cns}` | bearer + CNS | Lê paciente por CNS. |
-| `GET`  | `/api/fhir/r4/Organization/{cnes}` | bearer + CNS | Lê estabelecimento por CNES. |
-| `GET`  | `/api/fhir/r4/Practitioner/{cns}` | bearer + CNS | Lê profissional por CNS. |
-| `POST` | `/api/fhir/r4/Bundle` | bearer + CNS | Aceita Bundle transaction/batch e retorna transaction-response. |
+| Método | Path                                                                                                     | Auth (modo strict)     | Descrição                                                                                                                |
+| ------ | -------------------------------------------------------------------------------------------------------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `POST` | `/api/token`                                                                                             | mTLS (cert do cliente) | Emite token JWT assinado em RS256.                                                                                       |
+| `GET`  | `/.well-known/jwks.json`                                                                                 | público                | Chave pública (JWK) usada para verificar a assinatura do token.                                                          |
+| `GET`  | `/api/fhir/r4/Patient?identifier={system}\|{value}`                                                      | bearer + CNS           | Busca por CPF (`.../cpf`) ou CNS (`.../cns`).                                                                            |
+| `GET`  | `/api/fhir/r4/Patient/{cns}`                                                                             | bearer + CNS           | Lê paciente por CNS.                                                                                                     |
+| `GET`  | `/api/fhir/r4/Organization/{cnes}`                                                                       | bearer + CNS           | Lê estabelecimento por CNES.                                                                                             |
+| `GET`  | `/api/fhir/r4/Practitioner/{cns}`                                                                        | bearer + CNS           | Lê profissional por CNS.                                                                                                 |
+| `POST` | `/api/fhir/r4/Bundle`                                                                                    | bearer + CNS           | Aceita Bundle transaction/batch e retorna transaction-response.                                                          |
+| `GET`  | `/api/fhir/r4/{Observation\|DiagnosticReport\|Immunization\|Condition\|Encounter}?subject=Patient/{cns}` | bearer + CNS           | Retorna searchset Bundle com recursos pré-carregados + submetidos. Aceita também `?patient=...` ou só o CNS sem prefixo. |
 
 Em modo **permissivo** (padrão sem flags) nenhum auth é exigido — qualquer
 curl entra. Recursos não encontrados retornam `404` com `OperationOutcome`.
@@ -285,11 +286,11 @@ Endpoints FHIR exigem dois headers em modo strict (igual à API real):
 O sandbox tem três modos. Escolha o que combina com o que você quer
 demonstrar/testar:
 
-| Modo | Como ativar | Comportamento |
-| ---- | ----------- | ------------- |
-| **Permissivo** | (sem flags) | HTTP puro, qualquer chamada aceita. Útil para curl, aulas e iteração rápida. |
-| **Strict** | `--strict` | HTTP, mas /api/fhir/r4/* exige bearer + CNS, e /api/token exige cert mTLS apresentado (rejeita sem). Útil para validar a lógica de auth do cliente sem precisar configurar TLS. |
-| **mTLS** | `--mtls` (implica strict) | HTTPS com handshake mTLS opcional do cliente. Réplica fiel da RNDS: cert exigido em /api/token; FHIR API exige bearer. |
+| Modo           | Como ativar               | Comportamento                                                                                                                                                                    |
+| -------------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Permissivo** | (sem flags)               | HTTP puro, qualquer chamada aceita. Útil para curl, aulas e iteração rápida.                                                                                                     |
+| **Strict**     | `--strict`                | HTTP, mas /api/fhir/r4/\* exige bearer + CNS, e /api/token exige cert mTLS apresentado (rejeita sem). Útil para validar a lógica de auth do cliente sem precisar configurar TLS. |
+| **mTLS**       | `--mtls` (implica strict) | HTTPS com handshake mTLS opcional do cliente. Réplica fiel da RNDS: cert exigido em /api/token; FHIR API exige bearer.                                                           |
 
 ### JWT — RS256 com JWKS
 

@@ -31,13 +31,13 @@ O sistema de saúde brasileiro opera como redes paralelas com troca mínima de d
 
 ## Pacotes
 
-| Pacote                                                     | Descrição                                                                                     | Deps                  |
-| ---------------------------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------- |
-| [`@precisa-saude/fhir`](packages/core/)                       | Tipos FHIR R4, 200+ biomarcadores, faixas de referência, conversores, normalização de aliases | 0 runtime deps        |
-| [`@precisa-saude/fhir-calculators`](packages/calculators/)    | PhenoAge, BrDMrisc, HOMA-IR, VLDL, IMC                                                        | `@precisa-saude/fhir` |
-| [`@precisa-saude/fhir-ocr-utils`](packages/ocr-utils/)        | Ancoragem OCR para extração de biomarcadores                                                  | `@precisa-saude/fhir` |
-| [`@precisa-saude/fhir-rnds`](packages/rnds/)                  | Cliente HTTP para a RNDS (DATASUS) — autenticação mTLS, FHIR R4                               | `@precisa-saude/fhir` |
-| [`@precisa-saude/fhir-rnds-sandbox`](packages/rnds-sandbox/)  | Mock local da RNDS — endpoints FHIR R4 e cenários sintéticos para dev/ensino                  | `@precisa-saude/fhir` |
+| Pacote                                                       | Descrição                                                                                     | Deps                  |
+| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------- | --------------------- |
+| [`@precisa-saude/fhir`](packages/core/)                      | Tipos FHIR R4, 200+ biomarcadores, faixas de referência, conversores, normalização de aliases | 0 runtime deps        |
+| [`@precisa-saude/fhir-calculators`](packages/calculators/)   | PhenoAge, BrDMrisc, HOMA-IR, VLDL, IMC                                                        | `@precisa-saude/fhir` |
+| [`@precisa-saude/fhir-ocr-utils`](packages/ocr-utils/)       | Ancoragem OCR para extração de biomarcadores                                                  | `@precisa-saude/fhir` |
+| [`@precisa-saude/fhir-rnds`](packages/rnds/)                 | Cliente HTTP para a RNDS (DATASUS) — autenticação mTLS, FHIR R4                               | `@precisa-saude/fhir` |
+| [`@precisa-saude/fhir-rnds-sandbox`](packages/rnds-sandbox/) | Mock local da RNDS — endpoints FHIR R4 e cenários sintéticos para dev/ensino                  | `@precisa-saude/fhir` |
 
 ---
 

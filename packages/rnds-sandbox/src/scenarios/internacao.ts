@@ -14,9 +14,6 @@ const CNES_HOSPITAL = '3456789';
 const CNS_PROFISSIONAL = '700000000000030';
 
 export const internacao: Scenario = {
-  description:
-    'Carlos Henrique Souza (CPF 987.654.321-00, CNS 700 0000 0000 0020), 67 anos, internado por insuficiência cardíaca descompensada (CID I50.0). Hospital CNES 3456789.',
-  name: 'internacao',
   data: {
     organizations: [
       {
@@ -58,8 +55,6 @@ export const internacao: Scenario = {
     ],
     submittedBundles: [
       {
-        resourceType: 'Bundle',
-        type: 'transaction',
         entry: [
           {
             request: { method: 'POST', url: 'Encounter' },
@@ -111,9 +106,7 @@ export const internacao: Scenario = {
             request: { method: 'POST', url: 'Observation' },
             resource: {
               code: {
-                coding: [
-                  { code: '49563-0', display: 'Troponina I', system: 'http://loinc.org' },
-                ],
+                coding: [{ code: '49563-0', display: 'Troponina I', system: 'http://loinc.org' }],
               },
               effectiveDateTime: '2026-04-15T11:15:00-03:00',
               resourceType: 'Observation',
@@ -128,7 +121,12 @@ export const internacao: Scenario = {
             },
           },
         ],
+        resourceType: 'Bundle',
+        type: 'transaction',
       },
     ],
   },
+  description:
+    'Carlos Henrique Souza (CPF 987.654.321-00, CNS 700 0000 0000 0020), 67 anos, internado por insuficiência cardíaca descompensada (CID I50.0). Hospital CNES 3456789.',
+  name: 'internacao',
 };

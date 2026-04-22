@@ -12,9 +12,6 @@ const CNES_UBS = '4567890';
 const CNS_PROFISSIONAL = '700000000000050';
 
 export const vacina: Scenario = {
-  description:
-    'Pedro Lima Almeida (CNS 700 0000 0000 0040), 8 anos, com calendário vacinal aplicado em UBS CNES 4567890.',
-  name: 'vacina',
   data: {
     organizations: [
       {
@@ -53,8 +50,6 @@ export const vacina: Scenario = {
     ],
     submittedBundles: [
       {
-        resourceType: 'Bundle',
-        type: 'transaction',
         entry: [
           {
             request: { method: 'POST', url: 'Immunization' },
@@ -64,9 +59,7 @@ export const vacina: Scenario = {
               resourceType: 'Immunization',
               status: 'completed',
               vaccineCode: {
-                coding: [
-                  { code: 'BCG', display: 'BCG', system: 'urn:oid:2.16.840.1.113883.6.59' },
-                ],
+                coding: [{ code: 'BCG', display: 'BCG', system: 'urn:oid:2.16.840.1.113883.6.59' }],
               },
             },
           },
@@ -107,7 +100,12 @@ export const vacina: Scenario = {
             },
           },
         ],
+        resourceType: 'Bundle',
+        type: 'transaction',
       },
     ],
   },
+  description:
+    'Pedro Lima Almeida (CNS 700 0000 0000 0040), 8 anos, com calendário vacinal aplicado em UBS CNES 4567890.',
+  name: 'vacina',
 };

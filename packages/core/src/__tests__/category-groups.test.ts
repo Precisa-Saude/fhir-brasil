@@ -1,11 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { BIOMARKER_DEFINITIONS } from '../biomarkers';
-import {
-  CATEGORY_GROUPS,
-  getCategoryGroup,
-  listMappedSubcategories,
-} from '../category-groups';
+import { CATEGORY_GROUPS, getCategoryGroup, listMappedSubcategories } from '../category-groups';
 
 describe('agrupamento de categorias (10 buckets)', () => {
   it('expõe exatamente 10 grupos', () => {

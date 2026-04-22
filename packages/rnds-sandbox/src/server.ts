@@ -8,8 +8,8 @@
  */
 
 import fs from 'node:fs';
-import http from 'node:http';
 import type { IncomingMessage, ServerResponse } from 'node:http';
+import http from 'node:http';
 import https from 'node:https';
 import type { TLSSocket } from 'node:tls';
 
@@ -24,15 +24,16 @@ export interface SandboxServer {
   server: http.Server | https.Server;
   /** Chaves RSA usadas para assinar/validar tokens. */
   signingKeys: SigningKeys;
-  /** Store em memória — útil para inspeção em testes. */
-  store: SandboxStore;
   /** Inicia o servidor. Retorna quando estiver escutando. */
   start: () => Promise<{ host: string; port: number }>;
   /** Encerra o servidor. */
   stop: () => Promise<void>;
+  /** Store em memória — útil para inspeção em testes. */
+  store: SandboxStore;
 }
 
 export function createSandboxServer(options: SandboxOptions = {}): SandboxServer {
+  // eslint-disable-next-line no-console
   const log = options.log ?? ((msg: string) => console.log(`[rnds-sandbox] ${msg}`));
   const useMtls = options.mtls === true;
   const strict = options.strict ?? useMtls;
@@ -72,7 +73,6 @@ export function createSandboxServer(options: SandboxOptions = {}): SandboxServer
   return {
     server,
     signingKeys,
-    store,
     start: () =>
       new Promise<{ host: string; port: number }>((resolve, reject) => {
         const onError = (err: Error) => {
@@ -95,6 +95,7 @@ export function createSandboxServer(options: SandboxOptions = {}): SandboxServer
       new Promise<void>((resolve, reject) => {
         server.close((err) => (err ? reject(err) : resolve()));
       }),
+    store,
   };
 }
 
@@ -194,9 +195,7 @@ function extractCnesFromCn(cn: string): string | undefined {
   return match ? match[1] : undefined;
 }
 
-function lowercaseHeaders(
-  headers: http.IncomingHttpHeaders,
-): Record<string, string | undefined> {
+function lowercaseHeaders(headers: http.IncomingHttpHeaders): Record<string, string | undefined> {
   const out: Record<string, string | undefined> = {};
   for (const [key, value] of Object.entries(headers)) {
     if (Array.isArray(value)) {
@@ -222,9 +221,7 @@ function buildTlsOptions(options: SandboxOptions): https.ServerOptions {
     tlsOptions.key = resolveBuffer(options.serverKey);
     tlsOptions.cert = resolveBuffer(options.serverCert);
   } else {
-    throw new Error(
-      'mTLS requer --pfx + --pfx-password OU --server-key + --server-cert (PEM)',
-    );
+    throw new Error('mTLS requer --pfx + --pfx-password OU --server-key + --server-cert (PEM)');
   }
   return tlsOptions;
 }

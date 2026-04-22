@@ -16,9 +16,6 @@ const CNES_LAB = '2345678';
 const CNS_PROFISSIONAL = '700000000000010';
 
 export const pacienteComExames: Scenario = {
-  description:
-    'Joana Maria da Silva (CPF 123.456.789-01, CNS 700 0000 0000 0001), 42 anos, com histórico de lipidograma e glicemia. Laboratório CNES 2345678. Profissional Dr(a). Pereira (CNS 700 0000 0000 0010).',
-  name: 'paciente-com-exames',
   data: {
     organizations: [
       {
@@ -63,8 +60,6 @@ export const pacienteComExames: Scenario = {
     ],
     submittedBundles: [
       {
-        resourceType: 'Bundle',
-        type: 'transaction',
         entry: [
           {
             request: { method: 'POST', url: 'Observation' },
@@ -94,9 +89,7 @@ export const pacienteComExames: Scenario = {
             request: { method: 'POST', url: 'Observation' },
             resource: {
               code: {
-                coding: [
-                  { code: '2089-1', display: 'LDL-Colesterol', system: 'http://loinc.org' },
-                ],
+                coding: [{ code: '2089-1', display: 'LDL-Colesterol', system: 'http://loinc.org' }],
               },
               effectiveDateTime: '2025-09-10',
               resourceType: 'Observation',
@@ -114,9 +107,7 @@ export const pacienteComExames: Scenario = {
             request: { method: 'POST', url: 'Observation' },
             resource: {
               code: {
-                coding: [
-                  { code: '2085-9', display: 'HDL-Colesterol', system: 'http://loinc.org' },
-                ],
+                coding: [{ code: '2085-9', display: 'HDL-Colesterol', system: 'http://loinc.org' }],
               },
               effectiveDateTime: '2025-09-10',
               resourceType: 'Observation',
@@ -149,7 +140,12 @@ export const pacienteComExames: Scenario = {
             },
           },
         ],
+        resourceType: 'Bundle',
+        type: 'transaction',
       },
     ],
   },
+  description:
+    'Joana Maria da Silva (CPF 123.456.789-01, CNS 700 0000 0000 0001), 42 anos, com histórico de lipidograma e glicemia. Laboratório CNES 2345678. Profissional Dr(a). Pereira (CNS 700 0000 0000 0010).',
+  name: 'paciente-com-exames',
 };

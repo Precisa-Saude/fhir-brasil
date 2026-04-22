@@ -77,9 +77,7 @@ app.get('/api/jwks', async (_req, res) => {
 
 app.get('/api/patient/cpf/:cpf', async (req, res) => {
   const id = `http://rnds.saude.gov.br/fhir/r4/NamingSystem/cpf|${req.params.cpf}`;
-  const r = await rndsFetch(
-    `/api/fhir/r4/Patient?identifier=${encodeURIComponent(id)}`,
-  );
+  const r = await rndsFetch(`/api/fhir/r4/Patient?identifier=${encodeURIComponent(id)}`);
   res.status(r.status).json(await r.json());
 });
 
@@ -89,16 +87,12 @@ app.get('/api/patient/cns/:cns', async (req, res) => {
 });
 
 app.get('/api/organization/:cnes', async (req, res) => {
-  const r = await rndsFetch(
-    `/api/fhir/r4/Organization/${encodeURIComponent(req.params.cnes)}`,
-  );
+  const r = await rndsFetch(`/api/fhir/r4/Organization/${encodeURIComponent(req.params.cnes)}`);
   res.status(r.status).json(await r.json());
 });
 
 app.get('/api/practitioner/:cns', async (req, res) => {
-  const r = await rndsFetch(
-    `/api/fhir/r4/Practitioner/${encodeURIComponent(req.params.cns)}`,
-  );
+  const r = await rndsFetch(`/api/fhir/r4/Practitioner/${encodeURIComponent(req.params.cns)}`);
   res.status(r.status).json(await r.json());
 });
 

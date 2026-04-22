@@ -108,13 +108,12 @@ export class SandboxStore {
    */
   searchResourcesByPatient(resourceType: string, patientCns: string): SandboxResource[] {
     const cns = stripFormatting(patientCns);
-    const candidates = [`Patient/${cns}`, cns];
     return this.listResourcesByType(resourceType).filter((resource) => {
       const subjectRef = resource.subject?.reference;
       const patientRef = resource.patient?.reference;
       return (
-        (subjectRef && referenceMatches(subjectRef, candidates)) ||
-        (patientRef && referenceMatches(patientRef, candidates))
+        (subjectRef && referenceMatchesCns(subjectRef, cns)) ||
+        (patientRef && referenceMatchesCns(patientRef, cns))
       );
     });
   }
@@ -156,14 +155,16 @@ function stripFormatting(value: string): string {
   return value.replace(/[^0-9A-Za-z]/g, '');
 }
 
-function referenceMatches(ref: string, candidates: readonly string[]): boolean {
-  // Compara o último segmento do path para evitar false-match por sufixo
-  // (ex.: "Patient/1700000000000001" não deve casar com candidato
-  // "700000000000001"). Aceita o reference inteiro ou só o CNS.
+/**
+ * Casa um reference FHIR contra um CNS. Aceita:
+ *  - `"700000000000001"` (CNS puro)
+ *  - `"Patient/700000000000001"` (relative reference)
+ *  - `"http://example.com/Patient/700000000000001"` (absolute URL)
+ *
+ * Compara o último segmento estritamente para evitar false-match por sufixo
+ * (ex.: `Patient/1700000000000001` não deve casar com `700000000000001`).
+ */
+function referenceMatchesCns(ref: string, cns: string): boolean {
   const lastSegment = ref.includes('/') ? ref.slice(ref.lastIndexOf('/') + 1) : ref;
-  for (const candidate of candidates) {
-    if (ref === candidate) return true;
-    if (lastSegment === candidate) return true;
-  }
-  return false;
+  return lastSegment === cns;
 }

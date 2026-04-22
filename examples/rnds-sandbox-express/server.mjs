@@ -194,15 +194,21 @@ function sampleBundle() {
 }
 
 const PORT = Number(process.env.PORT ?? 3000);
-app.listen(PORT, () => {
+const httpServer = app.listen(PORT, () => {
   console.log(`[backend] http://127.0.0.1:${PORT}`);
 });
 
-// Graceful shutdown
+// Graceful shutdown — fecha primeiro o Express (para de aceitar
+// requisições novas), depois o sandbox em-processo.
 const shutdown = async (sig) => {
   console.log(`[backend] recebido ${sig}, encerrando...`);
+  await new Promise((resolve) => httpServer.close(() => resolve()));
   await sandbox.stop();
   process.exit(0);
 };
-process.on('SIGINT', () => void shutdown('SIGINT'));
-process.on('SIGTERM', () => void shutdown('SIGTERM'));
+process.on('SIGINT', () => {
+  void shutdown('SIGINT');
+});
+process.on('SIGTERM', () => {
+  void shutdown('SIGTERM');
+});

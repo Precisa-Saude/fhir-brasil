@@ -79,13 +79,25 @@ export function issueToken(keys: SigningKeys, options: IssueTokenOptions = {}): 
 
 export type VerifyResult =
   | { valid: true; claims: JwtClaims }
-  | { valid: false; reason: 'malformed' | 'bad-signature' | 'expired' | 'wrong-key' };
+  | {
+      valid: false;
+      reason: 'malformed' | 'bad-signature' | 'expired' | 'wrong-key' | 'wrong-audience';
+    };
+
+export interface VerifyOptions {
+  /** Audience esperada — falha quando claim `aud` não casa. Padrão: 'rnds-sandbox' */
+  audience?: string;
+  /** Override de tempo para testes */
+  now?: number;
+}
 
 export function verifyToken(
   token: string,
   keys: SigningKeys,
-  now: number = Date.now(),
+  options: VerifyOptions = {},
 ): VerifyResult {
+  const now = options.now ?? Date.now();
+  const expectedAudience = options.audience ?? 'rnds-sandbox';
   const parts = token.split('.');
   if (parts.length !== 3) {
     return { reason: 'malformed', valid: false };
@@ -117,6 +129,10 @@ export function verifyToken(
 
   if (payload.exp * 1000 < now) {
     return { reason: 'expired', valid: false };
+  }
+
+  if (payload.aud !== expectedAudience) {
+    return { reason: 'wrong-audience', valid: false };
   }
 
   return { claims: payload, valid: true };

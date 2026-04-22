@@ -5,12 +5,18 @@
  * Sem certificado ICP-Brasil. Sem credenciamento DATASUS.
  */
 
-export type { IssueTokenOptions, JwtClaims, TokenPayload, VerifyResult } from './auth';
+export type {
+  IssueTokenOptions,
+  JwtClaims,
+  TokenPayload,
+  VerifyOptions,
+  VerifyResult,
+} from './auth';
 export { issueToken, verifyToken } from './auth';
 export type { Jwk, JwksDocument } from './jwks';
 export { buildJwks } from './jwks';
 export type { KeyOptions, SigningKeys } from './keys';
-export { resolveSigningKeys } from './keys';
+export { resetSigningKeysCache, resolveSigningKeys } from './keys';
 export type { PeerCertInfo, RouteContext, RouteResponse } from './router';
 export { dispatch } from './router';
 export { internacao, pacienteComExames, resolveScenario, SCENARIOS, vacina } from './scenarios';

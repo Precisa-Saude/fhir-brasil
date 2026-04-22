@@ -35,6 +35,13 @@ export interface KeyOptions {
 
 const DEFAULT_KEY_ID = 'rnds-sandbox-1';
 
+// Singleton lazy do par RSA gerado — caro (~50ms) e não-determinístico.
+// Cacheamos pra que múltiplos `resolveSigningKeys()` sem opções (caso
+// típico de testes que rodam à parte) compartilhem o mesmo par e o
+// `kid`. Quem precisar de chaves distintas passa `keyId` ou `privateKey`
+// diferentes.
+let cachedDefaultKeys: SigningKeys | undefined;
+
 export function resolveSigningKeys(options: KeyOptions = {}): SigningKeys {
   const keyId = options.keyId ?? DEFAULT_KEY_ID;
 
@@ -47,12 +54,27 @@ export function resolveSigningKeys(options: KeyOptions = {}): SigningKeys {
     return { keyId, privateKey, publicKey };
   }
 
+  // Cache atinge somente o caminho default (sem PEM, com keyId padrão).
+  // Qualquer override de keyId exige par novo (testes podem querer kids distintos).
+  if (keyId === DEFAULT_KEY_ID && cachedDefaultKeys) {
+    return cachedDefaultKeys;
+  }
+
   const generated = generateKeyPairSync('rsa', { modulusLength: 2048 });
-  return {
+  const result: SigningKeys = {
     keyId,
     privateKey: generated.privateKey,
     publicKey: generated.publicKey,
   };
+  if (keyId === DEFAULT_KEY_ID) {
+    cachedDefaultKeys = result;
+  }
+  return result;
+}
+
+/** Limpa o cache do par default — útil em testes que precisam reset. */
+export function resetSigningKeysCache(): void {
+  cachedDefaultKeys = undefined;
 }
 
 function readPem(value: Buffer | string): Buffer | string {

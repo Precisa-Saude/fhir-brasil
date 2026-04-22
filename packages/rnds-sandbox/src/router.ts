@@ -270,8 +270,15 @@ function handlePatientSearch(ctx: RouteContext): RouteResponse {
 }
 
 function handleSubmitBundle(ctx: RouteContext): RouteResponse {
+  if (typeof ctx.body === 'symbol') {
+    // sentinela INVALID_BODY de readBody — JSON malformado
+    return {
+      body: operationOutcome('error', 'structure', 'corpo da requisição não é JSON válido'),
+      status: 400,
+    };
+  }
   const bundle = ctx.body as SandboxBundle | undefined;
-  if (!bundle || bundle.resourceType !== 'Bundle') {
+  if (!bundle || typeof bundle !== 'object' || bundle.resourceType !== 'Bundle') {
     return {
       body: operationOutcome('error', 'structure', 'corpo da requisição não é um Bundle FHIR'),
       status: 400,

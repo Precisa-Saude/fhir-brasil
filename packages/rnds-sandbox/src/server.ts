@@ -59,7 +59,7 @@ export function createSandboxServer(options: SandboxOptions = {}): SandboxServer
           if (!res.writableEnded) res.end();
           return;
         }
-        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.writeHead(500, { 'Content-Type': 'application/fhir+json; charset=utf-8' });
         res.end(
           JSON.stringify({
             issue: [{ code: 'exception', diagnostics: String(err), severity: 'fatal' }],
@@ -145,6 +145,9 @@ async function handleRequest(
   res.end(JSON.stringify(response.body));
 }
 
+/** Sentinela retornada quando o corpo da requisição não é JSON válido. */
+const INVALID_BODY = Symbol.for('rnds-sandbox.invalidBody');
+
 async function readBody(req: IncomingMessage): Promise<unknown> {
   if (req.method !== 'POST' && req.method !== 'PUT') {
     return undefined;
@@ -163,8 +166,16 @@ async function readBody(req: IncomingMessage): Promise<unknown> {
   try {
     return JSON.parse(text);
   } catch {
-    return text;
+    // JSON malformado — retorna sentinela. Handler de POST detecta e
+    // devolve OperationOutcome com `code: 'structure'` em vez de tentar
+    // tratar a string como Bundle.
+    return INVALID_BODY;
   }
+}
+
+/** True quando o body é a sentinela INVALID_BODY (JSON malformado). */
+export function isInvalidBody(body: unknown): boolean {
+  return body === INVALID_BODY;
 }
 
 function extractPeerCert(req: IncomingMessage): PeerCertInfo {

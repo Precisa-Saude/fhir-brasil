@@ -80,4 +80,16 @@ describe('auth — issueToken / verifyToken (RS256)', () => {
     const result = verifyToken(access_token, KEYS);
     expect(result).toEqual({ reason: 'wrong-key', valid: false });
   });
+
+  it('rejeita audience diferente da esperada', () => {
+    const { access_token } = issueToken(KEYS, { audience: 'outro-publico' });
+    const result = verifyToken(access_token, KEYS);
+    expect(result).toEqual({ reason: 'wrong-audience', valid: false });
+  });
+
+  it('aceita audience customizada via VerifyOptions', () => {
+    const { access_token } = issueToken(KEYS, { audience: 'meu-app' });
+    const result = verifyToken(access_token, KEYS, { audience: 'meu-app' });
+    expect(result.valid).toBe(true);
+  });
 });

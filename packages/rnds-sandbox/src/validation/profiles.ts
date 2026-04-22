@@ -134,13 +134,22 @@ export function validateBRLabObservation(resource: unknown, path: string): Valid
       ...requireField(get(value, 'unit'), 'valueQuantity.unit', `${path}.valueQuantity.unit`),
     );
     issues.push(
-      ...requireField(get(value, 'system'), 'valueQuantity.system', `${path}.valueQuantity.system`),
-    );
-    issues.push(
       ...requireField(get(value, 'code'), 'valueQuantity.code', `${path}.valueQuantity.code`),
     );
+    // `system` é simultaneamente obrigatório (1..1) e fixo em UCUM. Tratamos
+    // os dois casos explicitamente em vez de empilhar checagens — fica
+    // claro que ausente vira `required` e errado vira `invalid`.
     const sys = get(value, 'system');
-    if (sys !== undefined && sys !== SYS_UCUM) {
+    if (sys === undefined) {
+      issues.push(
+        issue(
+          'error',
+          'required',
+          'valueQuantity.system é obrigatório',
+          `${path}.valueQuantity.system`,
+        ),
+      );
+    } else if (sys !== SYS_UCUM) {
       issues.push(
         issue(
           'error',

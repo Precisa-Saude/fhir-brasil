@@ -69,9 +69,17 @@ export function validateResource(resource: ResourceLike, path: string): Validati
       return validateBRPatient(resource, path);
     case 'Observation':
       // BRLabObservation só se aplica a observações laboratoriais. Vital-signs,
-      // social-history etc. usam outros perfis e seriam rejeitados injustamente.
-      // Heurística: aplicar a regra do perfil BR apenas quando o recurso já se
-      // declara `laboratory` em algum `category.coding`. Caso contrário, passa.
+      // social-history etc. usam outros perfis e seriam rejeitados injustamente
+      // se forçados ao perfil BR.
+      //
+      // Heurística: aplicar BR apenas quando `category.coding` contém o código
+      // `laboratory`. Caso contrário (categoria diferente, OU sem categoria
+      // alguma — possível em dados legados), o recurso passa sem checagem de
+      // perfil. Esse silêncio é deliberado: rejeitar Observations sem
+      // category implicaria adivinhar a intenção do cliente.
+      //
+      // Para garantir conformidade estrita em ambos os casos, declare
+      // `meta.profile` apontando para `br-lab-observation`.
       return looksLikeLabObservation(resource) ? validateBRLabObservation(resource, path) : [];
     case 'DiagnosticReport':
       return validateBRDiagnosticReport(resource, path);

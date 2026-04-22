@@ -38,12 +38,4 @@ export default [
       'max-lines': 'off',
     },
   },
-  {
-    // Tests data-driven (biomarkers, conversores, reference ranges) naturalmente
-    // ultrapassam 400 linhas por cobrirem tabelas. Não vale fragmentar.
-    files: ['**/__tests__/**/*.ts', '**/*.test.ts'],
-    rules: {
-      'max-lines': 'off',
-    },
-  },
 ];

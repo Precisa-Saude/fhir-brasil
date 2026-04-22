@@ -37,6 +37,7 @@ export function createSandboxServer(options: SandboxOptions = {}): SandboxServer
   const log = options.log ?? ((msg: string) => console.log(`[rnds-sandbox] ${msg}`));
   const useMtls = options.mtls === true;
   const strict = options.strict ?? useMtls;
+  const validateProfiles = options.validateSubmissions ?? true;
   const port = options.port ?? (useMtls ? 8443 : 8080);
   const host = options.host ?? '127.0.0.1';
 
@@ -50,24 +51,29 @@ export function createSandboxServer(options: SandboxOptions = {}): SandboxServer
   });
 
   const handler = (req: IncomingMessage, res: ServerResponse) => {
-    handleRequest(req, res, { keys: signingKeys, log, store, strict, useMtls }).catch(
-      (err: unknown) => {
-        log(`erro inesperado: ${err instanceof Error ? err.message : String(err)}`);
-        if (res.headersSent) {
-          // Headers já foram para o socket — só garante que o response feche
-          // para o cliente não pendurar. Sem body novo.
-          if (!res.writableEnded) res.end();
-          return;
-        }
-        res.writeHead(500, { 'Content-Type': 'application/fhir+json; charset=utf-8' });
-        res.end(
-          JSON.stringify({
-            issue: [{ code: 'exception', diagnostics: String(err), severity: 'fatal' }],
-            resourceType: 'OperationOutcome',
-          }),
-        );
-      },
-    );
+    handleRequest(req, res, {
+      keys: signingKeys,
+      log,
+      store,
+      strict,
+      useMtls,
+      validateProfiles,
+    }).catch((err: unknown) => {
+      log(`erro inesperado: ${err instanceof Error ? err.message : String(err)}`);
+      if (res.headersSent) {
+        // Headers já foram para o socket — só garante que o response feche
+        // para o cliente não pendurar. Sem body novo.
+        if (!res.writableEnded) res.end();
+        return;
+      }
+      res.writeHead(500, { 'Content-Type': 'application/fhir+json; charset=utf-8' });
+      res.end(
+        JSON.stringify({
+          issue: [{ code: 'exception', diagnostics: String(err), severity: 'fatal' }],
+          resourceType: 'OperationOutcome',
+        }),
+      );
+    });
   };
 
   const server: http.Server | https.Server = useMtls
@@ -90,7 +96,8 @@ export function createSandboxServer(options: SandboxOptions = {}): SandboxServer
           const actualPort = typeof address === 'object' && address ? address.port : port;
           log(
             `${useMtls ? 'HTTPS+mTLS' : 'HTTP'} ouvindo em ${host}:${actualPort} ` +
-              `(cenário: ${options.scenario ?? 'paciente-com-exames'}, strict=${strict}, kid=${signingKeys.keyId})`,
+              `(cenário: ${options.scenario ?? 'paciente-com-exames'}, ` +
+              `strict=${strict}, validate=${validateProfiles}, kid=${signingKeys.keyId})`,
           );
           resolve({ host, port: actualPort });
         });
@@ -112,6 +119,7 @@ interface HandlerContext {
   store: SandboxStore;
   strict: boolean;
   useMtls: boolean;
+  validateProfiles: boolean;
 }
 
 async function handleRequest(
@@ -134,6 +142,7 @@ async function handleRequest(
     query: url.searchParams,
     store: ctx.store,
     strict: ctx.strict,
+    validateProfiles: ctx.validateProfiles,
   };
 
   const response = dispatch(routeCtx);

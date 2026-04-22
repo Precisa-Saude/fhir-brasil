@@ -326,6 +326,79 @@ $ curl -s http://127.0.0.1:8080/.well-known/jwks.json | jq
 }
 ```
 
+### Validação contra perfis do IG
+
+Por padrão o sandbox valida cada `Bundle.entry[i].resource` enviado em
+`POST /api/fhir/r4/Bundle` contra os perfis `BR*` do IG `fhir-brasil`
+(`BRPatient`, `BRLabObservation`, `BRDiagnosticReport`). Bundles que
+violam restrições são rejeitados com `422 OperationOutcome` listando
+todas as issues — formato e códigos espelham o que a RNDS real
+retorna.
+
+```bash
+# Patient sem campos obrigatórios — o sandbox responde 422 com a lista
+$ curl -s -X POST http://127.0.0.1:8080/api/fhir/r4/Bundle \
+    -H 'Content-Type: application/fhir+json' \
+    -d '{"resourceType":"Bundle","type":"transaction","entry":[
+        {"request":{"method":"POST","url":"Patient"},
+         "resource":{"resourceType":"Patient"}}
+      ]}'
+```
+
+```json
+{
+  "resourceType": "OperationOutcome",
+  "issue": [
+    {
+      "severity": "error",
+      "code": "required",
+      "diagnostics": "Patient.identifier requer pelo menos 1 elemento(s); recebido 0",
+      "location": ["Bundle.entry[0].resource.identifier"]
+    },
+    {
+      "severity": "error",
+      "code": "required",
+      "diagnostics": "Patient.name requer pelo menos 1 elemento(s); recebido 0",
+      "location": ["Bundle.entry[0].resource.name"]
+    },
+    {
+      "severity": "error",
+      "code": "required",
+      "diagnostics": "Patient.birthDate é obrigatório",
+      "location": ["Bundle.entry[0].resource.birthDate"]
+    },
+    {
+      "severity": "error",
+      "code": "required",
+      "diagnostics": "Patient.gender é obrigatório",
+      "location": ["Bundle.entry[0].resource.gender"]
+    }
+  ]
+}
+```
+
+O resolver de perfil usa `meta.profile` quando presente; caso contrário
+seleciona pelo `resourceType` (`Patient` → BRPatient, `Observation` →
+BRLabObservation, `DiagnosticReport` → BRDiagnosticReport). Outros
+tipos passam sem checagem de perfil — declare `meta.profile` se quiser
+conformidade estrita para tipos fora desse conjunto.
+
+Para desligar (e voltar ao comportamento "aceita qualquer Bundle
+estruturalmente válido", útil em aulas):
+
+```bash
+rnds-sandbox start --no-validate
+# ou programaticamente:
+createSandboxServer({ validateSubmissions: false });
+```
+
+As regras espelham as restrições FSH em `ig/input/fsh/profiles/`. São
+implementadas em pure TS (zero deps novas) e cobrem o subset que a
+RNDS real rejeita na prática (cardinalidade, identifiers brasileiros,
+coding LOINC/UCUM, value sets de status). Não pretendem ser FHIR
+validation completa — slicing complexo, value-set binding contra
+terminologias externas e algumas invariantes FHIRPath ficam de fora.
+
 ### mTLS na prática
 
 Você precisa de um cert para o **servidor**. Qualquer cert auto-assinado

@@ -14,18 +14,18 @@
 
 ### Features
 
-* rnds-sandbox + 200 biomarcadores + taxonomia de 10 categorias ([09b0148](https://github.com/Precisa-Saude/fhir-brasil/commit/09b0148dfd27b4578ebff8544a8925afc6b6e89b))
+- rnds-sandbox + 200 biomarcadores + taxonomia de 10 categorias ([09b0148](https://github.com/Precisa-Saude/fhir-brasil/commit/09b0148dfd27b4578ebff8544a8925afc6b6e89b))
 
 ### Bug Fixes
 
-* **ci:** trocar PAT_TOKEN por GitHub App token no Release ([#26](https://github.com/Precisa-Saude/fhir-brasil/issues/26)) ([7fcff27](https://github.com/Precisa-Saude/fhir-brasil/commit/7fcff27c07885bc40dce63d239f961c0303fb13c))
-* **core:** realinhar códigos TUSS do BRTUSSProcedimentosLabVS com tabela ANS oficial ([#24](https://github.com/Precisa-Saude/fhir-brasil/issues/24)) ([4c316f2](https://github.com/Precisa-Saude/fhir-brasil/commit/4c316f2c64fc2e80f73b6bad1699f41524c8b5b9))
+- **ci:** trocar PAT_TOKEN por GitHub App token no Release ([#26](https://github.com/Precisa-Saude/fhir-brasil/issues/26)) ([7fcff27](https://github.com/Precisa-Saude/fhir-brasil/commit/7fcff27c07885bc40dce63d239f961c0303fb13c))
+- **core:** realinhar códigos TUSS do BRTUSSProcedimentosLabVS com tabela ANS oficial ([#24](https://github.com/Precisa-Saude/fhir-brasil/issues/24)) ([4c316f2](https://github.com/Precisa-Saude/fhir-brasil/commit/4c316f2c64fc2e80f73b6bad1699f41524c8b5b9))
 
 ### Chores
 
-* **deps:** adotar @precisa-saude/ui e @precisa-saude/themes no site ([#22](https://github.com/Precisa-Saude/fhir-brasil/issues/22)) ([0a61d8c](https://github.com/Precisa-Saude/fhir-brasil/commit/0a61d8c534c9d3084d3f4e754acdece41a5de417))
-* **deps:** adotar configs compartilhadas [@precisa-saude](https://github.com/precisa-saude) ([#21](https://github.com/Precisa-Saude/fhir-brasil/issues/21)) ([25b487e](https://github.com/Precisa-Saude/fhir-brasil/commit/25b487ed6b89603953bc0adb095fc72e11871502))
-* **deps:** sync dotfiles + add pre-push hook ([#25](https://github.com/Precisa-Saude/fhir-brasil/issues/25)) ([819e37e](https://github.com/Precisa-Saude/fhir-brasil/commit/819e37e5af8e76546872ead1eb91499308bdc918))
+- **deps:** adotar @precisa-saude/ui e @precisa-saude/themes no site ([#22](https://github.com/Precisa-Saude/fhir-brasil/issues/22)) ([0a61d8c](https://github.com/Precisa-Saude/fhir-brasil/commit/0a61d8c534c9d3084d3f4e754acdece41a5de417))
+- **deps:** adotar configs compartilhadas [@precisa-saude](https://github.com/precisa-saude) ([#21](https://github.com/Precisa-Saude/fhir-brasil/issues/21)) ([25b487e](https://github.com/Precisa-Saude/fhir-brasil/commit/25b487ed6b89603953bc0adb095fc72e11871502))
+- **deps:** sync dotfiles + add pre-push hook ([#25](https://github.com/Precisa-Saude/fhir-brasil/issues/25)) ([819e37e](https://github.com/Precisa-Saude/fhir-brasil/commit/819e37e5af8e76546872ead1eb91499308bdc918))
 
 ## [0.10.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.10.0...v0.10.1) (2026-04-18)
 

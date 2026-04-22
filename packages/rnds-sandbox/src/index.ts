@@ -31,3 +31,11 @@ export type {
   ScenarioData,
   ScenarioName,
 } from './types';
+export type { IssueSeverity, ValidationIssue, ValidationResult } from './validation';
+export {
+  validateBRDiagnosticReport,
+  validateBRLabObservation,
+  validateBRPatient,
+  validateBundle,
+  validateResource,
+} from './validation';

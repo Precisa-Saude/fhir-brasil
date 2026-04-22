@@ -1,0 +1,69 @@
+{
+  "name": "@precisa-saude/fhir-rnds-sandbox",
+  "version": "0.1.0",
+  "description": "Mock local da RNDS (Rede Nacional de Dados em Saúde) — endpoints FHIR R4 com cenários sintéticos para desenvolvimento e ensino",
+  "keywords": [
+    "fhir",
+    "rnds",
+    "datasus",
+    "sus",
+    "saude",
+    "brasil",
+    "mock",
+    "sandbox",
+    "fhir-r4"
+  ],
+  "homepage": "https://github.com/Precisa-Saude/fhir-brasil/tree/main/packages/rnds-sandbox#readme",
+  "bugs": "https://github.com/Precisa-Saude/fhir-brasil/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Precisa-Saude/fhir-brasil.git",
+    "directory": "packages/rnds-sandbox"
+  },
+  "license": "Apache-2.0",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "rnds-sandbox": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "clean": "rm -rf dist .turbo",
+    "lint": "eslint src/ --max-warnings 0",
+    "test": "vitest run --passWithNoTests",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@precisa-saude/fhir": "workspace:^"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.5",
+    "typescript": "~5.7.3",
+    "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

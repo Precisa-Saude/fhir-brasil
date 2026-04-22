@@ -1,0 +1,175 @@
+/**
+ * Roteador HTTP do sandbox.
+ *
+ * Mapeia o subset de endpoints da RNDS consumidos por
+ * @precisa-saude/fhir-rnds. Não cobre o protocolo FHIR completo.
+ */
+
+import { issueToken } from './auth';
+import type { SandboxStore } from './store';
+import type { SandboxBundle, SandboxBundleEntry } from './types';
+
+const FHIR_PREFIX = '/api/fhir/r4';
+const TOKEN_PATH = '/api/token';
+
+const NS = {
+  cns: 'http://rnds.saude.gov.br/fhir/r4/NamingSystem/cns',
+  cpf: 'http://rnds.saude.gov.br/fhir/r4/NamingSystem/cpf',
+} as const;
+
+export interface RouteContext {
+  body?: unknown;
+  method: string;
+  path: string;
+  query: URLSearchParams;
+  store: SandboxStore;
+}
+
+export interface RouteResponse {
+  body: unknown;
+  status: number;
+}
+
+export function dispatch(ctx: RouteContext): RouteResponse {
+  if (ctx.method === 'POST' && ctx.path === TOKEN_PATH) {
+    return { body: issueToken(), status: 200 };
+  }
+
+  if (!ctx.path.startsWith(FHIR_PREFIX)) {
+    return notFound(`Recurso não encontrado: ${ctx.path}`);
+  }
+
+  const fhirPath = ctx.path.slice(FHIR_PREFIX.length);
+
+  if (ctx.method === 'GET') {
+    return handleFhirGet(fhirPath, ctx);
+  }
+  if (ctx.method === 'POST' && fhirPath === '/Bundle') {
+    return handleSubmitBundle(ctx);
+  }
+
+  return {
+    body: operationOutcome('error', 'not-supported', `${ctx.method} ${ctx.path} não suportado`),
+    status: 405,
+  };
+}
+
+function handleFhirGet(fhirPath: string, ctx: RouteContext): RouteResponse {
+  if (fhirPath === '/Patient') {
+    return handlePatientSearch(ctx);
+  }
+  const patientMatch = /^\/Patient\/([^/]+)$/.exec(fhirPath);
+  if (patientMatch) {
+    const cns = decodeURIComponent(patientMatch[1]!);
+    const patient = ctx.store.findPatientByCns(cns);
+    return patient
+      ? { body: patient, status: 200 }
+      : notFound(`Paciente CNS ${cns} não encontrado`);
+  }
+  const orgMatch = /^\/Organization\/([^/]+)$/.exec(fhirPath);
+  if (orgMatch) {
+    const cnes = decodeURIComponent(orgMatch[1]!);
+    const org = ctx.store.findOrganizationByCnes(cnes);
+    return org
+      ? { body: org, status: 200 }
+      : notFound(`Organização CNES ${cnes} não encontrada`);
+  }
+  const practMatch = /^\/Practitioner\/([^/]+)$/.exec(fhirPath);
+  if (practMatch) {
+    const cns = decodeURIComponent(practMatch[1]!);
+    const pract = ctx.store.findPractitionerByCns(cns);
+    return pract
+      ? { body: pract, status: 200 }
+      : notFound(`Profissional CNS ${cns} não encontrado`);
+  }
+  return notFound(`Recurso FHIR não suportado: ${fhirPath}`);
+}
+
+function handlePatientSearch(ctx: RouteContext): RouteResponse {
+  const identifier = ctx.query.get('identifier');
+  if (!identifier) {
+    return {
+      body: operationOutcome(
+        'error',
+        'required',
+        'parâmetro identifier é obrigatório em /Patient',
+      ),
+      status: 400,
+    };
+  }
+  const [system, value] = identifier.split('|');
+  if (!system || !value) {
+    return {
+      body: operationOutcome('error', 'invalid', 'identifier deve ser no formato system|value'),
+      status: 400,
+    };
+  }
+
+  let patient = undefined;
+  if (system === NS.cpf) {
+    patient = ctx.store.findPatientByCpf(value);
+  } else if (system === NS.cns) {
+    patient = ctx.store.findPatientByCns(value);
+  } else {
+    return notFound(`NamingSystem não suportado: ${system}`);
+  }
+
+  // RNDS retorna o Patient direto (não searchset) quando há match único.
+  // Se não houver, retorna 404 — o cliente trata como null.
+  return patient
+    ? { body: patient, status: 200 }
+    : notFound(`Paciente ${system}|${value} não encontrado`);
+}
+
+function handleSubmitBundle(ctx: RouteContext): RouteResponse {
+  const bundle = ctx.body as SandboxBundle | undefined;
+  if (!bundle || bundle.resourceType !== 'Bundle') {
+    return {
+      body: operationOutcome('error', 'structure', 'corpo da requisição não é um Bundle FHIR'),
+      status: 400,
+    };
+  }
+  if (bundle.type !== 'transaction' && bundle.type !== 'batch') {
+    return {
+      body: operationOutcome(
+        'error',
+        'invalid',
+        `Bundle.type "${String(bundle.type)}" não suportado — use transaction ou batch`,
+      ),
+      status: 400,
+    };
+  }
+
+  ctx.store.recordBundle(bundle);
+
+  const responseEntries: SandboxBundleEntry[] = (bundle.entry ?? []).map((_, index) => ({
+    response: {
+      location: `Resource/sandbox-${index + 1}`,
+      status: '201 Created',
+    },
+  }));
+  const response: SandboxBundle = {
+    entry: responseEntries,
+    resourceType: 'Bundle',
+    type: 'transaction-response',
+  };
+  return { body: response, status: 200 };
+}
+
+function notFound(diagnostics: string): RouteResponse {
+  return {
+    body: operationOutcome('error', 'not-found', diagnostics),
+    status: 404,
+  };
+}
+
+function operationOutcome(
+  severity: 'fatal' | 'error' | 'warning' | 'information',
+  code: string,
+  diagnostics: string,
+): unknown {
+  return {
+    issue: [{ code, diagnostics, severity }],
+    resourceType: 'OperationOutcome',
+  };
+}

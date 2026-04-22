@@ -23,14 +23,14 @@ export type CategoryGroup =
   | 'composicao-envelhecimento';
 
 export interface CategoryGroupInfo {
-  /** Sub-categorias da fonte agrupadas neste bucket */
-  subcategories: readonly string[];
-  /** Slug (kebab-case, sem acento) */
-  slug: CategoryGroup;
-  /** Rótulo em português */
-  pt: string;
   /** Rótulo em inglês */
   en: string;
+  /** Rótulo em português */
+  pt: string;
+  /** Slug (kebab-case, sem acento) */
+  slug: CategoryGroup;
+  /** Sub-categorias da fonte agrupadas neste bucket */
+  subcategories: readonly string[];
 }
 
 export const CATEGORY_GROUPS: Record<CategoryGroup, CategoryGroupInfo> = {
@@ -40,23 +40,11 @@ export const CATEGORY_GROUPS: Record<CategoryGroup, CategoryGroupInfo> = {
     slug: 'cardiovascular',
     subcategories: ['coracao'],
   },
-  'metabolico-endocrino': {
-    en: 'Metabolic & Endocrine',
-    pt: 'Metabólico e Endócrino',
-    slug: 'metabolico-endocrino',
-    subcategories: ['metabolico', 'pancreas', 'hormonios', 'tireoide'],
-  },
-  'renal-eletrolitico': {
-    en: 'Renal & Electrolytes',
-    pt: 'Renal e Eletrolítico',
-    slug: 'renal-eletrolitico',
-    subcategories: ['rins', 'urina', 'eletrolitos'],
-  },
-  'hepatico-biliar': {
-    en: 'Hepatic & Biliary',
-    pt: 'Hepático e Biliar',
-    slug: 'hepatico-biliar',
-    subcategories: ['figado'],
+  'composicao-envelhecimento': {
+    en: 'Body Composition & Aging',
+    pt: 'Composição Corporal e Envelhecimento',
+    slug: 'composicao-envelhecimento',
+    subcategories: ['composicao-corporal', 'densidade-ossea', 'estresse-envelhecimento'],
   },
   hematologico: {
     en: 'Hematology',
@@ -64,17 +52,23 @@ export const CATEGORY_GROUPS: Record<CategoryGroup, CategoryGroupInfo> = {
     slug: 'hematologico',
     subcategories: ['sangue'],
   },
+  'hepatico-biliar': {
+    en: 'Hepatic & Biliary',
+    pt: 'Hepático e Biliar',
+    slug: 'hepatico-biliar',
+    subcategories: ['figado'],
+  },
   imunologico: {
     en: 'Immunology',
     pt: 'Imunológico',
     slug: 'imunologico',
     subcategories: ['autoimunidade', 'regulacao-imunologica'],
   },
-  oncologico: {
-    en: 'Oncology',
-    pt: 'Oncológico',
-    slug: 'oncologico',
-    subcategories: ['marcadores-tumorais'],
+  'metabolico-endocrino': {
+    en: 'Metabolic & Endocrine',
+    pt: 'Metabólico e Endócrino',
+    slug: 'metabolico-endocrino',
+    subcategories: ['metabolico', 'pancreas', 'hormonios', 'tireoide'],
   },
   'nutricional-ambiental': {
     en: 'Nutrition & Environmental Exposure',
@@ -82,17 +76,23 @@ export const CATEGORY_GROUPS: Record<CategoryGroup, CategoryGroupInfo> = {
     slug: 'nutricional-ambiental',
     subcategories: ['nutrientes', 'toxinas-ambientais'],
   },
+  oncologico: {
+    en: 'Oncology',
+    pt: 'Oncológico',
+    slug: 'oncologico',
+    subcategories: ['marcadores-tumorais'],
+  },
+  'renal-eletrolitico': {
+    en: 'Renal & Electrolytes',
+    pt: 'Renal e Eletrolítico',
+    slug: 'renal-eletrolitico',
+    subcategories: ['rins', 'urina', 'eletrolitos'],
+  },
   'saude-reprodutiva': {
     en: 'Reproductive Health',
     pt: 'Saúde Reprodutiva',
     slug: 'saude-reprodutiva',
     subcategories: ['saude-feminina', 'saude-masculina'],
-  },
-  'composicao-envelhecimento': {
-    en: 'Body Composition & Aging',
-    pt: 'Composição Corporal e Envelhecimento',
-    slug: 'composicao-envelhecimento',
-    subcategories: ['composicao-corporal', 'densidade-ossea', 'estresse-envelhecimento'],
   },
 };
 

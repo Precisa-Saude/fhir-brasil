@@ -1,3 +1,15 @@
+## [0.12.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.11.0...v0.12.0) (2026-04-22)
+
+### Features
+
+* **ci:** adotar workflows canônicos split + doctor + publish-tag ([27bd465](https://github.com/Precisa-Saude/fhir-brasil/commit/27bd465e52a1ac842843dcb221e509d1a7f7a431))
+* consumir @precisa-saude/agent-instructions + worktree-cli ([b49c199](https://github.com/Precisa-Saude/fhir-brasil/commit/b49c1997cbe8a1b415ef2d6b007f1f6d9c2066ef))
+
+### Chores
+
+* alinhar hooks husky, turbo.json e prettierignore ([e14e0a4](https://github.com/Precisa-Saude/fhir-brasil/commit/e14e0a4836384e96502e3aa7be4a34aafd414f29))
+* **lint:** overrides para units.ts e testes data-driven ([02f91a5](https://github.com/Precisa-Saude/fhir-brasil/commit/02f91a560f9b4b0122f263e392e2a84bd96739c3))
+
 ## [0.11.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.10.1...v0.11.0) (2026-04-22)
 
 ### Features

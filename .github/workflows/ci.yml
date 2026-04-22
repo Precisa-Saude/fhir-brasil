@@ -1,5 +1,10 @@
 name: CI/CD
 
+# Orchestrator — wires reusable workflows. See
+# tooling/templates/github/workflows/ci.yml for the canonical shape.
+# fhir-specific: extra `publish-ig` step wired after release.
+# Manual recovery from interrupted publish: publish-tag.yml (standalone).
+
 on:
   push:
     branches: [main]
@@ -8,404 +13,67 @@ on:
   workflow_dispatch:
 
 permissions:
+  # `contents: write` porque _release.yml (reusable) precisa criar
+  # commits e tags via semantic-release. Workflows reusáveis só
+  # conseguem pedir permissões que o caller também concede.
   contents: write
   issues: write
   pull-requests: write
   deployments: write
   id-token: write
+  # `models: read` pelo mesmo motivo: review.yml chama GitHub Models
+  # via GITHUB_TOKEN no fallback de providers.
+  models: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  # ── CI Checks ──────────────────────────────────────────────
-  build-and-test:
-    name: Build & Test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
+  checks:
+    uses: ./.github/workflows/_checks.yml
+    secrets: inherit
 
-      - uses: pnpm/action-setup@v4
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 22
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build
-        run: pnpm turbo run build
-
-      - name: Lint
-        run: pnpm turbo run lint
-
-      - name: Typecheck
-        run: pnpm turbo run typecheck
-
-      - name: Test
-        run: pnpm turbo run test
-
-      - name: Test FHIR IG terminologies
-        run: pnpm exec vitest run ig/scripts/__tests__/
-
-      - name: Compile FHIR IG (SUSHI)
-        run: pnpm exec sushi build ig/ -o ig/output
-
-  # ── PR only: Claude code review ────────────────────────────
   review:
-    name: Code Review
-    needs: build-and-test
+    needs: checks
     if: github.event_name == 'pull_request'
     uses: ./.github/workflows/review.yml
     with:
       pr_number: ${{ github.event.pull_request.number }}
     secrets: inherit
 
-  # ── Release (main only, after checks pass, skip site-only) ──
   release:
-    name: Release
-    needs: build-and-test
+    needs: checks
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    runs-on: ubuntu-latest
-    outputs:
-      released: ${{ steps.semantic.outputs.released }}
-      version: ${{ steps.semantic.outputs.version }}
-    steps:
-      - name: Check for package changes
-        id: changes
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const { data: commit } = await github.rest.repos.getCommit({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: context.sha,
-            });
-            const packageChanged = commit.files?.some(
-              f => f.filename.startsWith('packages/') || f.filename === 'package.json'
-            );
-            core.setOutput('packages_changed', packageChanged ? 'true' : 'false');
+    uses: ./.github/workflows/_release.yml
+    secrets: inherit
 
-      - name: Generate GitHub App token
-        id: app-token
-        if: steps.changes.outputs.packages_changed == 'true'
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.RELEASE_APP_ID }}
-          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
-
-      - uses: actions/checkout@v6
-        if: steps.changes.outputs.packages_changed == 'true'
-        with:
-          fetch-depth: 0
-          token: ${{ steps.app-token.outputs.token }}
-
-      - uses: pnpm/action-setup@v4
-        if: steps.changes.outputs.packages_changed == 'true'
-
-      - uses: actions/setup-node@v6
-        if: steps.changes.outputs.packages_changed == 'true'
-        with:
-          node-version: 22
-          cache: 'pnpm'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Install dependencies
-        if: steps.changes.outputs.packages_changed == 'true'
-        run: pnpm install --frozen-lockfile
-
-      - name: Build
-        if: steps.changes.outputs.packages_changed == 'true'
-        run: pnpm turbo run build
-
-      - name: Run semantic-release
-        id: semantic
-        if: steps.changes.outputs.packages_changed == 'true'
-        env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-          HUSKY: 0
-        run: |
-          OUTPUT=$(npx semantic-release 2>&1) || true
-          echo "$OUTPUT"
-          if echo "$OUTPUT" | grep -q "Published release"; then
-            VERSION=$(echo "$OUTPUT" | grep -oP "The next release version is \K[0-9]+\.[0-9]+\.[0-9]+")
-            echo "released=true" >> $GITHUB_OUTPUT
-            echo "version=$VERSION" >> $GITHUB_OUTPUT
-          else
-            echo "released=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Skip release (site-only changes)
-        id: skip
-        if: steps.changes.outputs.packages_changed != 'true'
-        run: echo "Somente alterações no site detectadas — release ignorado"
-
-  # ── Publish to npm (only after release) ────────────────────
   publish:
-    name: Publish to npm
     needs: release
     if: needs.release.outputs.released == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          ref: main
+    uses: ./.github/workflows/_publish.yml
+    with:
+      release_sha: ${{ needs.release.outputs.release_sha }}
+      packages: |
+        packages/core
+        packages/calculators
+        packages/ocr-utils
+        packages/rnds
+    secrets: inherit
 
-      - uses: pnpm/action-setup@v4
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 22
-          cache: 'pnpm'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build
-        run: pnpm turbo run build
-
-      - name: Publish packages
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          publish_if_needed() {
-            local dir="$1"
-            local pkg_name pkg_version
-            pkg_name=$(node -p "require('./$dir/package.json').name")
-            pkg_version=$(node -p "require('./$dir/package.json').version")
-
-            if npm view "$pkg_name@$pkg_version" version 2>/dev/null; then
-              echo "Skipping $pkg_name@$pkg_version (already published)"
-            else
-              echo "Publishing $pkg_name@$pkg_version..."
-              cd "$dir"
-              pnpm publish --provenance --access public --no-git-checks
-              cd "$GITHUB_WORKSPACE"
-            fi
-          }
-
-          publish_if_needed packages/core
-          publish_if_needed packages/calculators
-          publish_if_needed packages/ocr-utils
-          publish_if_needed packages/rnds
-
-  # ── Publicar FHIR IG no Simplifier ──────────────────────────
   publish-ig:
-    name: Publish FHIR IG
     needs: release
     if: needs.release.outputs.released == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Verificar se API key está configurada
-        id: has-key
-        run: |
-          if [ -z "${{ secrets.SIMPLIFIER_API_KEY }}" ]; then
-            echo "configured=false" >> "$GITHUB_OUTPUT"
-            echo "SIMPLIFIER_API_KEY não configurada — pulando publicação"
-          else
-            echo "configured=true" >> "$GITHUB_OUTPUT"
-          fi
-
-      - uses: actions/checkout@v6
-        if: steps.has-key.outputs.configured == 'true'
-        with:
-          ref: main
-
-      - uses: pnpm/action-setup@v4
-        if: steps.has-key.outputs.configured == 'true'
-
-      - uses: actions/setup-node@v6
-        if: steps.has-key.outputs.configured == 'true'
-        with:
-          node-version: 22
-          cache: 'pnpm'
-
-      - name: Instalar dependências
-        if: steps.has-key.outputs.configured == 'true'
-        run: pnpm install --frozen-lockfile
-
-      - name: Compilar IG (SUSHI)
-        if: steps.has-key.outputs.configured == 'true'
-        run: pnpm exec sushi ig/ -o ig/output
-
-      - name: Montar pacote FHIR (.tgz)
-        if: steps.has-key.outputs.configured == 'true'
-        run: node ig/scripts/build-package-tgz.js
-
-      - name: Verificar se versão já foi publicada
-        if: steps.has-key.outputs.configured == 'true'
-        id: check
-        run: |
-          VERSION=$(node -p "JSON.parse(require('fs').readFileSync('ig/output/package/package.json','utf8')).version")
-          PKG_NAME=$(node -p "JSON.parse(require('fs').readFileSync('ig/output/package/package.json','utf8')).name")
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
-            "https://packages.simplifier.net/${PKG_NAME}/${VERSION}")
-          if [ "$STATUS" = "200" ]; then
-            echo "exists=true" >> "$GITHUB_OUTPUT"
-            echo "Versão ${PKG_NAME}@${VERSION} já publicada — pulando upload"
-          elif [ "$STATUS" = "404" ]; then
-            echo "exists=false" >> "$GITHUB_OUTPUT"
-            echo "Versão ${PKG_NAME}@${VERSION} não encontrada — publicando"
-          else
-            echo "::error::Status inesperado do Simplifier: HTTP ${STATUS}"
-            exit 1
-          fi
-
-      - name: Publicar no Simplifier
-        if: steps.has-key.outputs.configured == 'true' && steps.check.outputs.exists == 'false'
-        run: |
-          curl -X POST "https://packages.simplifier.net" \
-            -H "Authorization: Bearer ${{ secrets.SIMPLIFIER_API_KEY }}" \
-            -F "file=@ig/output/package.tgz" \
-            --fail --silent --show-error
-
-  # ── Deploy site (main only, after checks pass) ─────────────
-  build-site:
-    name: Build Site
-    needs: build-and-test
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
-    outputs:
-      site_changed: ${{ steps.changes.outputs.site_changed }}
-    steps:
-      - name: Check for site changes
-        id: changes
-        uses: actions/github-script@v7
-        with:
-          script: |
-            if (context.eventName === 'workflow_dispatch') {
-              core.setOutput('site_changed', 'true');
-              return;
-            }
-            const { data: commit } = await github.rest.repos.getCommit({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: context.sha,
-            });
-            const siteChanged = commit.files?.some(f => f.filename.startsWith('site/'));
-            core.setOutput('site_changed', siteChanged ? 'true' : 'false');
-
-      - uses: actions/checkout@v6
-        if: steps.changes.outputs.site_changed == 'true'
-
-      - uses: pnpm/action-setup@v4
-        if: steps.changes.outputs.site_changed == 'true'
-
-      - uses: actions/setup-node@v6
-        if: steps.changes.outputs.site_changed == 'true'
-        with:
-          node-version: 22
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        if: steps.changes.outputs.site_changed == 'true'
-        run: pnpm install --frozen-lockfile
-
-      - name: Build site
-        if: steps.changes.outputs.site_changed == 'true'
-        run: cd site && pnpm build
-
-      - uses: actions/upload-artifact@v6
-        if: steps.changes.outputs.site_changed == 'true'
-        with:
-          name: site-dist
-          path: site/dist
-          retention-days: 1
+    uses: ./.github/workflows/_publish-ig.yml
+    with:
+      release_sha: ${{ needs.release.outputs.release_sha }}
+    secrets: inherit
 
   deploy-site:
-    name: Deploy Site
-    needs: build-site
-    if: always() && !cancelled() && needs.build-site.outputs.site_changed == 'true' && needs.build-site.result == 'success'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v7
-        with:
-          name: site-dist
-          path: site/dist
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 22
-
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          packageManager: npm
-          command: pages deploy site/dist --project-name=fhir-brasil --branch=main --commit-hash=${{ github.sha }} --commit-message="${{ github.sha }}"
-
-      - name: Purge Cloudflare cache
-        run: |
-          curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
-            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            --data '{"purge_everything":true}'
-
-  # ── Slack notification ─────────────────────────────────────
-  notify:
-    name: Notify
-    needs: [build-and-test, build-site, deploy-site]
-    if: always() && github.event_name != 'pull_request' && needs.deploy-site.result != 'skipped'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Build notification
-        id: notify
-        run: |
-          SHORT_SHA="${{ github.sha }}"
-          SHORT_SHA="${SHORT_SHA:0:7}"
-          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          DEPLOY_RESULT="${{ needs.deploy-site.result }}"
-
-          if [ "$DEPLOY_RESULT" = "success" ]; then
-            HEADER=":rocket: fhir-brasil site deployed"
-            RESULT_LINE=":white_check_mark: *Site* — deployed to Cloudflare Pages"
-            TEXT="Deploy successful"
-          else
-            HEADER=":rotating_light: fhir-brasil site deploy failed"
-            RESULT_LINE=":x: *Site* — deploy failed"
-            TEXT="Deploy failed"
-          fi
-
-          cat > /tmp/slack-payload.json << PAYLOAD
-          {
-            "text": "${TEXT}",
-            "blocks": [
-              {
-                "type": "header",
-                "text": {
-                  "type": "plain_text",
-                  "text": "${HEADER}",
-                  "emoji": true
-                }
-              },
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "${RESULT_LINE}"
-                }
-              },
-              {
-                "type": "context",
-                "elements": [
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Commit:* <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${SHORT_SHA}> | *Run:* <${RUN_URL}|View logs>"
-                  }
-                ]
-              }
-            ]
-          }
-          PAYLOAD
-
-      - name: Send Slack notification
-        uses: slackapi/slack-github-action@v2.1.0
-        with:
-          webhook: ${{ secrets.SLACK_DEPLOY_WEBHOOK_URL }}
-          webhook-type: incoming-webhook
-          payload-file-path: /tmp/slack-payload.json
+    needs: checks
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    uses: ./.github/workflows/_deploy-site.yml
+    with:
+      project_name: fhir-brasil
+      site_filter: '@fhir-brasil/site'
+    secrets: inherit

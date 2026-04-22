@@ -1,0 +1,84 @@
+name: Publish FHIR IG
+
+# Reusable workflow — publishes the FHIR Implementation Guide to
+# Simplifier after a successful release. Idempotent: skips if the
+# version is already there. No-op if SIMPLIFIER_API_KEY isn't set.
+#
+# fhir-brasil-specific: no template version of this one lives in
+# tooling/ — IG publishing is unique to this repo.
+
+on:
+  workflow_call:
+    inputs:
+      release_sha:
+        description: 'Commit SHA to check out'
+        type: string
+        required: true
+
+jobs:
+  publish-ig:
+    name: Publish IG
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Simplifier API key is configured
+        id: has-key
+        run: |
+          if [ -z "${{ secrets.SIMPLIFIER_API_KEY }}" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "SIMPLIFIER_API_KEY not configured — skipping publish"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v6
+        if: steps.has-key.outputs.configured == 'true'
+        with:
+          ref: ${{ inputs.release_sha }}
+
+      - uses: pnpm/action-setup@v4
+        if: steps.has-key.outputs.configured == 'true'
+
+      - uses: actions/setup-node@v6
+        if: steps.has-key.outputs.configured == 'true'
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        if: steps.has-key.outputs.configured == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Compile IG (SUSHI)
+        if: steps.has-key.outputs.configured == 'true'
+        run: pnpm exec sushi ig/ -o ig/output
+
+      - name: Build FHIR package (.tgz)
+        if: steps.has-key.outputs.configured == 'true'
+        run: node ig/scripts/build-package-tgz.js
+
+      - name: Check if version already published
+        if: steps.has-key.outputs.configured == 'true'
+        id: check
+        run: |
+          VERSION=$(node -p "JSON.parse(require('fs').readFileSync('ig/output/package/package.json','utf8')).version")
+          PKG_NAME=$(node -p "JSON.parse(require('fs').readFileSync('ig/output/package/package.json','utf8')).name")
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            "https://packages.simplifier.net/${PKG_NAME}/${VERSION}")
+          if [ "$STATUS" = "200" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "Version ${PKG_NAME}@${VERSION} already published — skipping"
+          elif [ "$STATUS" = "404" ]; then
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "Version ${PKG_NAME}@${VERSION} not found — publishing"
+          else
+            echo "::error::Unexpected Simplifier status: HTTP ${STATUS}"
+            exit 1
+          fi
+
+      - name: Publish to Simplifier
+        if: steps.has-key.outputs.configured == 'true' && steps.check.outputs.exists == 'false'
+        run: |
+          curl -X POST "https://packages.simplifier.net" \
+            -H "Authorization: Bearer ${{ secrets.SIMPLIFIER_API_KEY }}" \
+            -F "file=@ig/output/package.tgz" \
+            --fail --silent --show-error

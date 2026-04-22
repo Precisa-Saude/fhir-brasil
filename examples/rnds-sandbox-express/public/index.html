@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>rnds-sandbox — exemplo Express</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>rnds-sandbox · exemplo Express</h1>
+      <p>
+        Backend Node/Express boota o
+        <code>@precisa-saude/fhir-rnds-sandbox</code> em-processo, busca um
+        token e age como cliente RNDS para o frontend. Dispare uma das
+        ações abaixo — a resposta JSON da RNDS aparece no painel à direita.
+      </p>
+      <div id="info-banner">carregando informações do backend...</div>
+    </header>
+
+    <main>
+      <section class="actions">
+        <fieldset>
+          <legend>Paciente por CPF</legend>
+          <label>
+            CPF
+            <input id="cpf" type="text" value="12345678901" />
+          </label>
+          <button data-action="patient-cpf">Buscar</button>
+        </fieldset>
+
+        <fieldset>
+          <legend>Paciente por CNS</legend>
+          <label>
+            CNS (15 dígitos)
+            <input id="cns-patient" type="text" value="700000000000001" />
+          </label>
+          <button data-action="patient-cns">Buscar</button>
+        </fieldset>
+
+        <fieldset>
+          <legend>Estabelecimento por CNES</legend>
+          <label>
+            CNES (7 dígitos)
+            <input id="cnes" type="text" value="2345678" />
+          </label>
+          <button data-action="organization">Buscar</button>
+        </fieldset>
+
+        <fieldset>
+          <legend>Profissional por CNS</legend>
+          <label>
+            CNS (15 dígitos)
+            <input id="cns-pract" type="text" value="700000000000010" />
+          </label>
+          <button data-action="practitioner">Buscar</button>
+        </fieldset>
+
+        <fieldset>
+          <legend>Submeter Bundle (LOINC 2345-7)</legend>
+          <p class="muted">
+            Envia um Observation FHIR R4 com glicemia para a paciente Joana,
+            codificado em LOINC. A RNDS responde com transaction-response.
+          </p>
+          <button data-action="bundle">Submeter</button>
+        </fieldset>
+
+        <fieldset>
+          <legend>Infra de auth</legend>
+          <button data-action="info">/api/info (token + cenário)</button>
+          <button data-action="jwks">/.well-known/jwks.json</button>
+        </fieldset>
+      </section>
+
+      <section class="result">
+        <div class="result-header">
+          <h2 id="result-title">Resposta</h2>
+          <span id="result-status"></span>
+        </div>
+        <pre id="result-body">Aguardando ação...</pre>
+      </section>
+    </main>
+
+    <footer>
+      <small>
+        Apache-2.0 ·
+        <a href="https://github.com/Precisa-Saude/fhir-brasil/tree/main/packages/rnds-sandbox"
+          >fhir-brasil/packages/rnds-sandbox</a
+        >
+      </small>
+    </footer>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

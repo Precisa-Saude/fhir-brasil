@@ -3,19 +3,18 @@
  */
 
 import type { Scenario, ScenarioName } from '../types';
-
 import { internacao } from './internacao';
 import { pacienteComExames } from './paciente-com-exames';
 import { vacina } from './vacina';
 
 export const SCENARIOS: Record<ScenarioName, Scenario> = {
-  'paciente-com-exames': pacienteComExames,
   internacao,
+  'paciente-com-exames': pacienteComExames,
   vacina,
   vazio: {
+    data: { organizations: [], patients: [], practitioners: [] },
     description: 'Estado limpo. Útil para testar fluxos do zero.',
     name: 'vazio',
-    data: { organizations: [], patients: [], practitioners: [] },
   },
 };
 

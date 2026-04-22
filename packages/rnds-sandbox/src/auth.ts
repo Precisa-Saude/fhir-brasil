@@ -27,10 +27,10 @@ export interface TokenPayload {
 export interface JwtClaims {
   /** Audience — identifica quem deve consumir o token */
   aud: string;
-  /** CNES extraído do certificado mTLS apresentado, se houver */
-  cnes?: string;
   /** Common Name do certificado mTLS, se houver */
   cn?: string;
+  /** CNES extraído do certificado mTLS apresentado, se houver */
+  cnes?: string;
   /** Expiração (epoch seconds) */
   exp: number;
   /** Issued at (epoch seconds) */
@@ -42,10 +42,10 @@ export interface JwtClaims {
 }
 
 export interface IssueTokenOptions {
-  /** Identidade extraída do certificado mTLS, se aplicável */
-  identity?: { cn?: string; cnes?: string };
   /** Audience — padrão 'rnds-sandbox' */
   audience?: string;
+  /** Identidade extraída do certificado mTLS, se aplicável */
+  identity?: { cn?: string; cnes?: string };
   /** Issuer — padrão 'https://rnds-sandbox.local' */
   issuer?: string;
   /** Override de tempo (testes) */

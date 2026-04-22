@@ -5,14 +5,14 @@
  * Sobe um mock local da RNDS para desenvolvimento.
  */
 
-import { createSandboxServer } from './server';
 import { SCENARIOS } from './scenarios';
-import type { ScenarioName, SandboxOptions } from './types';
+import { createSandboxServer } from './server';
+import type { SandboxOptions, ScenarioName } from './types';
 
 interface ParsedArgs {
   command?: 'start' | 'help' | 'scenarios';
-  options: SandboxOptions;
   errors: string[];
+  options: SandboxOptions;
 }
 
 const HELP = `rnds-sandbox — mock local da RNDS
@@ -56,17 +56,8 @@ const STRING_ARGS: Record<string, (options: SandboxOptions, value: string) => vo
   '--host': (o, v) => {
     o.host = v;
   },
-  '--pfx': (o, v) => {
-    o.serverPfx = v;
-  },
-  '--pfx-password': (o, v) => {
-    o.serverPfxPassword = v;
-  },
-  '--server-key': (o, v) => {
-    o.serverKey = v;
-  },
-  '--server-cert': (o, v) => {
-    o.serverCert = v;
+  '--jwt-key-id': (o, v) => {
+    o.jwtKeyId = v;
   },
   '--jwt-private-key': (o, v) => {
     o.jwtPrivateKey = v;
@@ -74,8 +65,17 @@ const STRING_ARGS: Record<string, (options: SandboxOptions, value: string) => vo
   '--jwt-public-key': (o, v) => {
     o.jwtPublicKey = v;
   },
-  '--jwt-key-id': (o, v) => {
-    o.jwtKeyId = v;
+  '--pfx': (o, v) => {
+    o.serverPfx = v;
+  },
+  '--pfx-password': (o, v) => {
+    o.serverPfxPassword = v;
+  },
+  '--server-cert': (o, v) => {
+    o.serverCert = v;
+  },
+  '--server-key': (o, v) => {
+    o.serverKey = v;
   },
 };
 
@@ -147,7 +147,7 @@ export async function main(argv: string[] = process.argv.slice(2)): Promise<numb
     for (const err of parsed.errors) {
       process.stderr.write(`erro: ${err}\n`);
     }
-    process.stderr.write('\n' + HELP);
+    process.stderr.write(`\n${HELP}`);
     return 1;
   }
 

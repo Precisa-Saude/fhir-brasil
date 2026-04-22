@@ -7,8 +7,8 @@
  */
 
 export interface SandboxResource {
-  resourceType: string;
   [key: string]: unknown;
+  resourceType: string;
 }
 
 export interface SandboxBundleEntry {
@@ -66,27 +66,10 @@ export interface Scenario {
 }
 
 export interface SandboxOptions {
-  /**
-   * Habilita HTTPS com mTLS. Cliente é solicitado a apresentar certificado;
-   * /api/token o exige (igual à RNDS real). Padrão: false (HTTP puro).
-   */
-  mtls?: boolean;
-  /**
-   * Modo estrito — exige bearer token assinado + header `Authorization: <CNS>`
-   * em todos os endpoints `/api/fhir/r4/*`. Implícito quando `mtls = true`.
-   * Padrão: igual a `mtls`.
-   */
-  strict?: boolean;
-  /**
-   * Certificado PFX do servidor (Buffer ou caminho). Use isso OU `serverKey`+`serverCert`.
-   */
-  serverPfx?: Buffer | string;
-  /** Senha do PFX do servidor */
-  serverPfxPassword?: string;
-  /** PEM da chave privada do servidor (alternativa a `serverPfx`) */
-  serverKey?: Buffer | string;
-  /** PEM do certificado do servidor (alternativa a `serverPfx`) */
-  serverCert?: Buffer | string;
+  /** Hostname para bind. Padrão: '127.0.0.1' */
+  host?: string;
+  /** Identificador da chave (claim `kid` + `kid` no JWKS). Padrão: 'rnds-sandbox-1' */
+  jwtKeyId?: string;
   /**
    * PEM da chave privada usada para assinar JWTs (RS256). Se omitido,
    * é gerada uma chave RSA-2048 no boot.
@@ -94,16 +77,33 @@ export interface SandboxOptions {
   jwtPrivateKey?: Buffer | string;
   /** PEM da chave pública correspondente — opcional (derivada da privada) */
   jwtPublicKey?: Buffer | string;
-  /** Identificador da chave (claim `kid` + `kid` no JWKS). Padrão: 'rnds-sandbox-1' */
-  jwtKeyId?: string;
-  /** Porta para escutar. Padrão: 8443 (mtls) ou 8080 (sem mtls) */
-  port?: number;
-  /** Hostname para bind. Padrão: '127.0.0.1' */
-  host?: string;
-  /** Cenário a carregar. Padrão: 'paciente-com-exames' */
-  scenario?: ScenarioName;
   /** Logger opcional. Padrão: console.log */
   log?: (msg: string) => void;
+  /**
+   * Habilita HTTPS com mTLS. Cliente é solicitado a apresentar certificado;
+   * /api/token o exige (igual à RNDS real). Padrão: false (HTTP puro).
+   */
+  mtls?: boolean;
+  /** Porta para escutar. Padrão: 8443 (mtls) ou 8080 (sem mtls) */
+  port?: number;
+  /** Cenário a carregar. Padrão: 'paciente-com-exames' */
+  scenario?: ScenarioName;
+  /** PEM do certificado do servidor (alternativa a `serverPfx`) */
+  serverCert?: Buffer | string;
+  /** PEM da chave privada do servidor (alternativa a `serverPfx`) */
+  serverKey?: Buffer | string;
+  /**
+   * Certificado PFX do servidor (Buffer ou caminho). Use isso OU `serverKey`+`serverCert`.
+   */
+  serverPfx?: Buffer | string;
+  /** Senha do PFX do servidor */
+  serverPfxPassword?: string;
+  /**
+   * Modo estrito — exige bearer token assinado + header `Authorization: <CNS>`
+   * em todos os endpoints `/api/fhir/r4/*`. Implícito quando `mtls = true`.
+   * Padrão: igual a `mtls`.
+   */
+  strict?: boolean;
   /** Validar bundles submetidos contra perfis da IG (best-effort). Padrão: true */
   validateSubmissions?: boolean;
 }

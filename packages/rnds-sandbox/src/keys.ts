@@ -7,13 +7,13 @@
  * (PEM) — útil em CI ou em demos onde o token é capturado e reutilizado.
  */
 
-import fs from 'node:fs';
 import {
   createPrivateKey,
   createPublicKey,
   generateKeyPairSync,
   type KeyObject,
 } from 'node:crypto';
+import fs from 'node:fs';
 
 export interface SigningKeys {
   /** Identificador da chave (claim `kid` no JWT, `kid` no JWKS) */
@@ -25,12 +25,12 @@ export interface SigningKeys {
 }
 
 export interface KeyOptions {
+  /** Identificador da chave. Padrão: 'rnds-sandbox-1' */
+  keyId?: string;
   /** PEM da chave privada (Buffer ou caminho). Se omitido, gera-se um par novo. */
   privateKey?: Buffer | string;
   /** PEM da chave pública (Buffer ou caminho). Opcional — derivada da privada quando omitida. */
   publicKey?: Buffer | string;
-  /** Identificador da chave. Padrão: 'rnds-sandbox-1' */
-  keyId?: string;
 }
 
 const DEFAULT_KEY_ID = 'rnds-sandbox-1';

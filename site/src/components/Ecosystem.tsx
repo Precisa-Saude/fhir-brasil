@@ -85,26 +85,26 @@ export function Ecosystem() {
         </p>
 
         {ACTORS.map((actor, i) => (
-            <div
-              key={actor.name}
-              className="col-span-full rounded-xl border border-ps-violet-dark/8 bg-white/50 p-6 outline outline-1 outline-ps-violet-dark/5 backdrop-blur-sm transition-colors hover:border-ps-violet-dark/15"
-              style={col(CARD_COLS_14[i]!.start, CARD_COLS_14[i]!.span)}
-            >
-              <div className="mb-3 flex items-center gap-3">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ps-sand text-ps-violet-dark">
-                  {actor.icon}
-                </div>
-                <h3 className="font-margem text-base font-semibold text-ps-violet-dark">
-                  {actor.name}
-                </h3>
+          <div
+            key={actor.name}
+            className="col-span-full rounded-xl border border-ps-violet-dark/8 bg-white/50 p-6 outline outline-1 outline-ps-violet-dark/5 backdrop-blur-sm transition-colors hover:border-ps-violet-dark/15"
+            style={col(CARD_COLS_14[i]!.start, CARD_COLS_14[i]!.span)}
+          >
+            <div className="mb-3 flex items-center gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ps-sand text-ps-violet-dark">
+                {actor.icon}
               </div>
-              <p className="font-pausa text-sm leading-relaxed text-ps-violet-dark/50">
-                {actor.problem}
-              </p>
-              <p className="mt-2 font-pausa text-sm font-medium leading-relaxed text-ps-violet-dark/80">
-                → {actor.role}
-              </p>
+              <h3 className="font-margem text-base font-semibold text-ps-violet-dark">
+                {actor.name}
+              </h3>
             </div>
+            <p className="font-pausa text-sm leading-relaxed text-ps-violet-dark/50">
+              {actor.problem}
+            </p>
+            <p className="mt-2 font-pausa text-sm font-medium leading-relaxed text-ps-violet-dark/80">
+              → {actor.role}
+            </p>
+          </div>
         ))}
       </div>
     </section>

@@ -10,7 +10,7 @@
  *   npx tsx examples/calculators-example.ts
  */
 
-import { phenoage, brdmrisc, computeDerivedBiomarkers } from '@precisa-saude/fhir-calculators';
+import { brdmrisc, computeDerivedBiomarkers, phenoage } from '@precisa-saude/fhir-calculators';
 
 // =============================================================================
 // 1. PhenoAge — Idade biológica
@@ -21,21 +21,23 @@ console.log('=== PhenoAge — Idade Biológica ===\n');
 // Cenário: paciente de 45 anos com exames de rotina
 // Valores já em unidades SI (como esperado pelo algoritmo)
 const resultadoPhenoAge = phenoage.calculatePhenoAge({
-  albumin: 42,              // g/L
-  creatinine: 80,           // μmol/L
-  glucose: 5.2,             // mmol/L
-  crp: 1.5,                 // mg/L
-  lymphocytePercent: 30,    // %
-  mcv: 88,                  // fL
-  rdw: 12.5,                // %
-  alkalinePhosphatase: 65,  // U/L
-  wbc: 6.2,                 // 10^9/L
-  chronologicalAge: 45,     // anos
+  albumin: 42, // g/L
+  alkalinePhosphatase: 65, // U/L
+  chronologicalAge: 45, // anos
+  creatinine: 80, // μmol/L
+  crp: 1.5, // mg/L
+  glucose: 5.2, // mmol/L
+  lymphocytePercent: 30, // %
+  mcv: 88, // fL
+  rdw: 12.5, // %
+  wbc: 6.2, // 10^9/L
 });
 
 console.log(`Idade cronológica: ${resultadoPhenoAge.chronologicalAge} anos`);
 console.log(`Idade biológica (PhenoAge): ${resultadoPhenoAge.phenoAge} anos`);
-console.log(`Diferença: ${resultadoPhenoAge.ageDifference > 0 ? '+' : ''}${resultadoPhenoAge.ageDifference} anos`);
+console.log(
+  `Diferença: ${resultadoPhenoAge.ageDifference > 0 ? '+' : ''}${resultadoPhenoAge.ageDifference} anos`,
+);
 console.log(`Escore de mortalidade: ${resultadoPhenoAge.mortalityScore}`);
 console.log(`Preditor linear: ${resultadoPhenoAge.linearPredictor}`);
 
@@ -50,7 +52,9 @@ if (resultadoPhenoAge.ageDifference < 0) {
 console.log('\nContribuição de cada biomarcador:');
 for (const item of resultadoPhenoAge.breakdown) {
   const sinal = item.contribution >= 0 ? '+' : '';
-  console.log(`  ${item.name.padEnd(20)} ${item.valueWithUnit.padEnd(15)} ${sinal}${item.contribution.toFixed(4)}`);
+  console.log(
+    `  ${item.name.padEnd(20)} ${item.valueWithUnit.padEnd(15)} ${sinal}${item.contribution.toFixed(4)}`,
+  );
 }
 
 // =============================================================================
@@ -61,18 +65,19 @@ console.log('\n=== PhenoAge — Conversão de unidades ===\n');
 
 // Laboratórios brasileiros tipicamente reportam nestas unidades:
 const conversoes = [
-  { biomarcador: 'albumin', valor: 4.2, unidade: 'g/dL', desc: 'Albumina' },
-  { biomarcador: 'creatinine', valor: 0.9, unidade: 'mg/dL', desc: 'Creatinina' },
-  { biomarcador: 'glucose', valor: 92, unidade: 'mg/dL', desc: 'Glicose' },
-  { biomarcador: 'crp', valor: 0.15, unidade: 'mg/dL', desc: 'PCR' },
-  { biomarcador: 'wbc', valor: 6200, unidade: '/μL', desc: 'Leucócitos' },
+  { biomarcador: 'albumin', desc: 'Albumina', unidade: 'g/dL', valor: 4.2 },
+  { biomarcador: 'creatinine', desc: 'Creatinina', unidade: 'mg/dL', valor: 0.9 },
+  { biomarcador: 'glucose', desc: 'Glicose', unidade: 'mg/dL', valor: 92 },
+  { biomarcador: 'crp', desc: 'PCR', unidade: 'mg/dL', valor: 0.15 },
+  { biomarcador: 'wbc', desc: 'Leucócitos', unidade: '/μL', valor: 6200 },
 ];
 
-for (const { biomarcador, valor, unidade, desc } of conversoes) {
+for (const { biomarcador, desc, unidade, valor } of conversoes) {
   const convertido = phenoage.autoConvertToSI(biomarcador, valor, unidade);
   console.log(
-    `${desc}: ${valor} ${unidade} → ${convertido.value.toFixed(2)} ${convertido.unit}` +
-    (convertido.wasConverted ? ' (convertido)' : ' (sem conversão)'),
+    `${desc}: ${valor} ${unidade} → ${convertido.value.toFixed(2)} ${convertido.unit}${
+      convertido.wasConverted ? ' (convertido)' : ' (sem conversão)'
+    }`,
   );
 }
 
@@ -81,19 +86,21 @@ console.log('\nCálculo completo a partir de unidades convencionais:');
 
 const inputConvertido = {
   albumin: phenoage.autoConvertToSI('albumin', 4.2, 'g/dL').value,
+  alkalinePhosphatase: 65,
+  chronologicalAge: 45,
   creatinine: phenoage.autoConvertToSI('creatinine', 0.9, 'mg/dL').value,
-  glucose: phenoage.autoConvertToSI('glucose', 92, 'mg/dL').value,
   crp: phenoage.autoConvertToSI('crp', 1.5, 'mg/L').value,
+  glucose: phenoage.autoConvertToSI('glucose', 92, 'mg/dL').value,
   lymphocytePercent: 30,
   mcv: 88,
   rdw: 12.5,
-  alkalinePhosphatase: 65,
   wbc: phenoage.autoConvertToSI('wbc', 6200, '/μL').value,
-  chronologicalAge: 45,
 };
 
 const resultadoConvertido = phenoage.calculatePhenoAge(inputConvertido);
-console.log(`PhenoAge: ${resultadoConvertido.phenoAge} anos (diferença: ${resultadoConvertido.ageDifference > 0 ? '+' : ''}${resultadoConvertido.ageDifference})`);
+console.log(
+  `PhenoAge: ${resultadoConvertido.phenoAge} anos (diferença: ${resultadoConvertido.ageDifference > 0 ? '+' : ''}${resultadoConvertido.ageDifference})`,
+);
 
 // =============================================================================
 // 3. PhenoAge — Validação de biomarcadores
@@ -104,31 +111,31 @@ console.log('\n=== PhenoAge — Validação ===\n');
 // Valores válidos
 const validacaoOk = phenoage.validateBiomarkers({
   albumin: 42,
+  alkalinePhosphatase: 65,
+  chronologicalAge: 45,
   creatinine: 80,
-  glucose: 5.2,
   crp: 1.5,
+  glucose: 5.2,
   lymphocytePercent: 30,
   mcv: 88,
   rdw: 12.5,
-  alkalinePhosphatase: 65,
   wbc: 6.2,
-  chronologicalAge: 45,
 });
 console.log(`Válido: ${validacaoOk.isValid}`);
 console.log(`Erros: ${validacaoOk.errors.length === 0 ? 'nenhum' : validacaoOk.errors.join(', ')}`);
 
 // Valores com problemas
 const validacaoErro = phenoage.validateBiomarkers({
-  albumin: 2,        // Muito baixo para g/L
+  albumin: 2, // Muito baixo para g/L
+  alkalinePhosphatase: 65,
+  chronologicalAge: 45,
   creatinine: 80,
-  glucose: 50,       // Muito alto para mmol/L (provavelmente em mg/dL)
-  crp: -1,           // Negativo (inválido)
+  crp: -1, // Negativo (inválido)
+  glucose: 50, // Muito alto para mmol/L (provavelmente em mg/dL)
   lymphocytePercent: 30,
   mcv: 88,
   rdw: 12.5,
-  alkalinePhosphatase: 65,
   wbc: 6.2,
-  chronologicalAge: 45,
 });
 console.log(`\nVálido: ${validacaoErro.isValid}`);
 for (const erro of validacaoErro.errors) {
@@ -143,10 +150,10 @@ console.log('\n=== BrDMrisc — Risco de Diabetes Tipo 2 ===\n');
 
 // Cenário 1: Todos os 4 biomarcadores disponíveis (modelo 6, AUC 0.813)
 const risco1 = brdmrisc.calculateBrDMrisc({
-  fpg: 102,            // Glicemia de jejum (mg/dL)
-  hba1c: 5.8,          // Hemoglobina glicada (%)
-  triglycerides: 180,  // Triglicerídeos (mg/dL)
-  hdlc: 42,            // HDL-colesterol (mg/dL)
+  fpg: 102, // Glicemia de jejum (mg/dL)
+  hba1c: 5.8, // Hemoglobina glicada (%)
+  hdlc: 42, // HDL-colesterol (mg/dL)
+  triglycerides: 180, // Triglicerídeos (mg/dL)
 });
 
 console.log('Cenário 1 — Todos os biomarcadores:');
@@ -157,7 +164,9 @@ console.log(`  Categoria: ${risco1.riskCategory}`);
 console.log('  Contribuição de cada biomarcador:');
 for (const item of risco1.breakdown) {
   const sinal = item.contribution >= 0 ? '+' : '';
-  console.log(`    ${item.name.padEnd(25)} ${item.valueWithUnit.padEnd(12)} ${sinal}${item.contribution.toFixed(4)}`);
+  console.log(
+    `    ${item.name.padEnd(25)} ${item.valueWithUnit.padEnd(12)} ${sinal}${item.contribution.toFixed(4)}`,
+  );
 }
 
 // Cenário 2: Apenas glicemia disponível (modelo 1)
@@ -181,15 +190,15 @@ console.log(`  Categoria: ${risco3.riskCategory}`);
 console.log('\n=== BrDMrisc — Seleção de modelo ===\n');
 
 const cenariosSeleção = [
-  { input: { fpg: 100 }, desc: 'Apenas FPG' },
-  { input: { hba1c: 5.5 }, desc: 'Apenas HbA1c' },
-  { input: { fpg: 100, hba1c: 5.5 }, desc: 'FPG + HbA1c' },
-  { input: { fpg: 100, triglycerides: 150 }, desc: 'FPG + Triglicerídeos' },
-  { input: { fpg: 100, triglycerides: 150, hdlc: 50 }, desc: 'FPG + Lipídios' },
-  { input: { fpg: 100, hba1c: 5.5, triglycerides: 150, hdlc: 50 }, desc: 'Todos' },
+  { desc: 'Apenas FPG', input: { fpg: 100 } },
+  { desc: 'Apenas HbA1c', input: { hba1c: 5.5 } },
+  { desc: 'FPG + HbA1c', input: { fpg: 100, hba1c: 5.5 } },
+  { desc: 'FPG + Triglicerídeos', input: { fpg: 100, triglycerides: 150 } },
+  { desc: 'FPG + Lipídios', input: { fpg: 100, hdlc: 50, triglycerides: 150 } },
+  { desc: 'Todos', input: { fpg: 100, hba1c: 5.5, hdlc: 50, triglycerides: 150 } },
 ];
 
-for (const { input, desc } of cenariosSeleção) {
+for (const { desc, input } of cenariosSeleção) {
   const modelo = brdmrisc.selectModel(input);
   if (modelo) {
     console.log(`${desc.padEnd(25)} → Modelo ${modelo.id}: ${modelo.namePt} (AUC: ${modelo.auc})`);
@@ -206,19 +215,27 @@ console.log('\n=== BrDMrisc — Conversão de unidades ===\n');
 
 // Glicose em mmol/L → mg/dL
 const fpg = brdmrisc.autoConvertToTarget('fpg', 5.5, 'mmol/L');
-console.log(`Glicose: 5.5 mmol/L → ${fpg.value.toFixed(1)} ${fpg.unit} (convertido: ${fpg.wasConverted})`);
+console.log(
+  `Glicose: 5.5 mmol/L → ${fpg.value.toFixed(1)} ${fpg.unit} (convertido: ${fpg.wasConverted})`,
+);
 
 // HbA1c em mmol/mol (IFCC) → % (NGSP)
 const hba1c = brdmrisc.autoConvertToTarget('hba1c', 42, 'mmol/mol');
-console.log(`HbA1c: 42 mmol/mol → ${hba1c.value.toFixed(2)} ${hba1c.unit} (convertido: ${hba1c.wasConverted})`);
+console.log(
+  `HbA1c: 42 mmol/mol → ${hba1c.value.toFixed(2)} ${hba1c.unit} (convertido: ${hba1c.wasConverted})`,
+);
 
 // Triglicerídeos em mmol/L → mg/dL
 const tg = brdmrisc.autoConvertToTarget('triglycerides', 2.0, 'mmol/L');
-console.log(`Triglicerídeos: 2.0 mmol/L → ${tg.value.toFixed(1)} ${tg.unit} (convertido: ${tg.wasConverted})`);
+console.log(
+  `Triglicerídeos: 2.0 mmol/L → ${tg.value.toFixed(1)} ${tg.unit} (convertido: ${tg.wasConverted})`,
+);
 
 // HDL em mmol/L → mg/dL
 const hdl = brdmrisc.autoConvertToTarget('hdlc', 1.3, 'mmol/L');
-console.log(`HDL: 1.3 mmol/L → ${hdl.value.toFixed(1)} ${hdl.unit} (convertido: ${hdl.wasConverted})`);
+console.log(
+  `HDL: 1.3 mmol/L → ${hdl.value.toFixed(1)} ${hdl.unit} (convertido: ${hdl.wasConverted})`,
+);
 
 // =============================================================================
 // 7. Biomarcadores derivados
@@ -229,9 +246,9 @@ console.log('\n=== Biomarcadores Derivados ===\n');
 // Cenário 1: HOMA-IR e VLDL
 console.log('Cenário 1 — HOMA-IR e VLDL:');
 const extraidos1 = [
-  { code: 'Glucose', value: 92 as number | string, unit: 'mg/dL' },
-  { code: 'Insulin', value: 8.5 as number | string, unit: 'μUI/mL' },
-  { code: 'Triglycerides', value: 150 as number | string, unit: 'mg/dL' },
+  { code: 'Glucose', unit: 'mg/dL', value: 92 as number | string },
+  { code: 'Insulin', unit: 'μUI/mL', value: 8.5 as number | string },
+  { code: 'Triglycerides', unit: 'mg/dL', value: 150 as number | string },
 ];
 
 const derivados1 = computeDerivedBiomarkers(extraidos1);
@@ -241,9 +258,7 @@ for (const d of derivados1) {
 
 // Cenário 2: IMC com contexto do usuário
 console.log('\nCenário 2 — IMC (requer altura do usuário):');
-const extraidos2 = [
-  { code: 'TotalMass', value: 72 as number | string, unit: 'kg' },
-];
+const extraidos2 = [{ code: 'TotalMass', unit: 'kg', value: 72 as number | string }];
 
 const derivados2 = computeDerivedBiomarkers(extraidos2, {
   userContext: { heightCm: 170 },
@@ -255,8 +270,8 @@ for (const d of derivados2) {
 // Cenário 3: Biomarcador já existente não é recalculado
 console.log('\nCenário 3 — VLDL já presente (não recalcula):');
 const extraidos3 = [
-  { code: 'Triglycerides', value: 150 as number | string, unit: 'mg/dL' },
-  { code: 'VLDL', value: 28 as number | string, unit: 'mg/dL' },  // Já existe no laudo
+  { code: 'Triglycerides', unit: 'mg/dL', value: 150 as number | string },
+  { code: 'VLDL', unit: 'mg/dL', value: 28 as number | string }, // Já existe no laudo
 ];
 
 const derivados3 = computeDerivedBiomarkers(extraidos3);
@@ -266,7 +281,7 @@ console.log(`  (VLDL já existe no laudo, portanto não foi recalculado)`);
 // Cenário 4: Biomarcadores insuficientes para HOMA-IR
 console.log('\nCenário 4 — Glicose sem Insulina (HOMA-IR não calculado):');
 const extraidos4 = [
-  { code: 'Glucose', value: 92 as number | string, unit: 'mg/dL' },
+  { code: 'Glucose', unit: 'mg/dL', value: 92 as number | string },
   // Insulina ausente — HOMA-IR não pode ser calculado
 ];
 

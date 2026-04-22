@@ -21,19 +21,19 @@ import { phenoage } from '@precisa-saude/fhir-calculators';
 
 const result = phenoage.calculatePhenoAge({
   chronologicalAge: 45,
-  albumin: 42,             // g/L
-  creatinine: 80,          // μmol/L
-  glucose: 5.2,            // mmol/L
-  crp: 1.5,                // mg/L
+  albumin: 42, // g/L
+  creatinine: 80, // μmol/L
+  glucose: 5.2, // mmol/L
+  crp: 1.5, // mg/L
   lymphocytePercent: 30,
-  mcv: 88,                 // fL
-  rdw: 13.2,               // %
+  mcv: 88, // fL
+  rdw: 13.2, // %
   alkalinePhosphatase: 65, // U/L
-  wbc: 6.0,                // 10^9/L
+  wbc: 6.0, // 10^9/L
 });
 
-console.log(result.phenoAge);       // 42.3 (idade biológica)
-console.log(result.ageDifference);  // -2.7 (anos mais jovem)
+console.log(result.phenoAge); // 42.3 (idade biológica)
+console.log(result.ageDifference); // -2.7 (anos mais jovem)
 ```
 
 ### BrDMrisc — Risco de diabetes tipo 2
@@ -44,13 +44,13 @@ Implementação do modelo BrDMrisc (Bracco et al. 2023) para estimativa de risco
 import { brdmrisc } from '@precisa-saude/fhir-calculators';
 
 const result = brdmrisc.calculateBrDMrisc({
-  fpg: 105,           // mg/dL — glicemia de jejum
-  hba1c: 5.8,         // %
-  triglycerides: 180,  // mg/dL
-  hdlc: 42,           // mg/dL
+  fpg: 105, // mg/dL — glicemia de jejum
+  hba1c: 5.8, // %
+  triglycerides: 180, // mg/dL
+  hdlc: 42, // mg/dL
 });
 
-console.log(result.riskPercent);  // 18.5 (% risco em 10 anos)
+console.log(result.riskPercent); // 18.5 (% risco em 10 anos)
 console.log(result.riskCategory); // 'moderate'
 console.log(result.modelUsed.name); // 'FPG + HbA1c + Lipids'
 ```
@@ -69,17 +69,17 @@ const derived = computeDerivedBiomarkers([
 ]);
 
 // Retorna: HOMA-IR = (95 × 12) / 405, VLDL = 150 / 5
-derived.forEach(d => console.log(`${d.code}: ${d.value} ${d.unit}`));
+derived.forEach((d) => console.log(`${d.code}: ${d.value} ${d.unit}`));
 ```
 
 ## Referências acadêmicas
 
-| Calculadora     | Referência                                                                                     |
-| --------------- | ---------------------------------------------------------------------------------------------- |
-| PhenoAge        | Levine ME et al. (2018). An epigenetic biomarker of aging. *Aging* 10(4):573-591               |
-| BrDMrisc        | Bracco PA et al. (2023). BrDMrisc model for type 2 diabetes risk in Brazilians                 |
-| HOMA-IR         | Matthews DR et al. (1985). Homeostasis model assessment. *Diabetologia* 28(7):412-419          |
-| VLDL            | Friedewald WT et al. (1972). Estimation of LDL cholesterol. *Clin Chem* 18(6):499-502          |
+| Calculadora | Referência                                                                            |
+| ----------- | ------------------------------------------------------------------------------------- |
+| PhenoAge    | Levine ME et al. (2018). An epigenetic biomarker of aging. _Aging_ 10(4):573-591      |
+| BrDMrisc    | Bracco PA et al. (2023). BrDMrisc model for type 2 diabetes risk in Brazilians        |
+| HOMA-IR     | Matthews DR et al. (1985). Homeostasis model assessment. _Diabetologia_ 28(7):412-419 |
+| VLDL        | Friedewald WT et al. (1972). Estimation of LDL cholesterol. _Clin Chem_ 18(6):499-502 |
 
 ## Aviso médico
 

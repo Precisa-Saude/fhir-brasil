@@ -189,73 +189,78 @@ export function CodeExamples() {
           width: '100%',
         }}
       >
-      <div className="col-span-full text-center md:col-span-12 md:col-start-2 3xl:col-start-3">
-        <h2 className="font-margem text-3xl font-bold tracking-tight text-ps-violet-dark sm:text-4xl">
-          Comece em minutos
-        </h2>
-      </div>
-      <p className="col-span-full mb-8 text-center text-pretty font-pausa text-lg text-ps-violet-dark/60 md:col-span-8 md:col-start-4 3xl:col-start-5">
-        TypeScript-first, com tipagem completa e autocompletar no editor.
-      </p>
-
-      <div className="col-span-full md:col-span-10 md:col-start-3 3xl:col-start-4">
-        <div className="mt-8 mb-4 lg:hidden">
-          <Select value={TABS[activeTab].label} onValueChange={(v) => setActiveTab(TABS.findIndex((t) => t.label === v))}>
-            <SelectTrigger className="w-full border-ps-violet-dark/15 bg-white/80 font-margem text-sm text-ps-violet-dark">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {TABS.map((tab) => (
-                <SelectItem key={tab.label} value={tab.label} className="font-margem text-sm">{tab.label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="col-span-full text-center md:col-span-12 md:col-start-2 3xl:col-start-3">
+          <h2 className="font-margem text-3xl font-bold tracking-tight text-ps-violet-dark sm:text-4xl">
+            Comece em minutos
+          </h2>
         </div>
-        <div className="mt-8 mb-4 hidden justify-center lg:flex">
-        <div
-          className="relative inline-grid min-w-max rounded-full border border-ps-violet-dark/10 bg-ps-sand/50 p-1"
-          role="tablist"
-          style={{ gridTemplateColumns: `repeat(${TABS.length}, 1fr)` }}
-        >
-          <div
-            className="absolute top-1 bottom-1 rounded-full bg-ps-violet-dark transition-all duration-300 ease-out"
-            style={{
-              left: `calc(4px + ${activeTab} * ((100% - 8px) / ${TABS.length}))`,
-              width: `calc((100% - 8px) / ${TABS.length})`,
-            }}
-          />
-          {TABS.map((tab, i) => (
-            <button
-              key={tab.label}
-              role="tab"
-              aria-selected={activeTab === i}
-              onClick={() => setActiveTab(i)}
-              className={cn(
-                'relative z-10 whitespace-nowrap rounded-full px-4 py-2 font-margem text-sm font-medium transition-colors duration-300',
-                activeTab === i
-                  ? 'text-white'
-                  : 'text-ps-violet-dark/60 hover:text-ps-violet-dark',
-              )}
+        <p className="col-span-full mb-8 text-center text-pretty font-pausa text-lg text-ps-violet-dark/60 md:col-span-8 md:col-start-4 3xl:col-start-5">
+          TypeScript-first, com tipagem completa e autocompletar no editor.
+        </p>
+
+        <div className="col-span-full md:col-span-10 md:col-start-3 3xl:col-start-4">
+          <div className="mt-8 mb-4 lg:hidden">
+            <Select
+              value={TABS[activeTab].label}
+              onValueChange={(v) => setActiveTab(TABS.findIndex((t) => t.label === v))}
             >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-        </div>
-
-        <div className="overflow-hidden rounded-xl border border-ps-violet-dark/10 bg-[#282a36]">
-          {highlightedCode.length > 0 ? (
+              <SelectTrigger className="w-full border-ps-violet-dark/15 bg-white/80 font-margem text-sm text-ps-violet-dark">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {TABS.map((tab) => (
+                  <SelectItem key={tab.label} value={tab.label} className="font-margem text-sm">
+                    {tab.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="mt-8 mb-4 hidden justify-center lg:flex">
             <div
-              className="overflow-x-auto p-6 text-sm leading-relaxed [&_pre]:!bg-transparent"
-              dangerouslySetInnerHTML={{ __html: highlightedCode[activeTab] }}
-            />
-          ) : (
-            <pre className="overflow-x-auto p-6 text-sm leading-relaxed text-white/80">
-              <code>{TABS[activeTab].code}</code>
-            </pre>
-          )}
+              className="relative inline-grid min-w-max rounded-full border border-ps-violet-dark/10 bg-ps-sand/50 p-1"
+              role="tablist"
+              style={{ gridTemplateColumns: `repeat(${TABS.length}, 1fr)` }}
+            >
+              <div
+                className="absolute top-1 bottom-1 rounded-full bg-ps-violet-dark transition-all duration-300 ease-out"
+                style={{
+                  left: `calc(4px + ${activeTab} * ((100% - 8px) / ${TABS.length}))`,
+                  width: `calc((100% - 8px) / ${TABS.length})`,
+                }}
+              />
+              {TABS.map((tab, i) => (
+                <button
+                  key={tab.label}
+                  role="tab"
+                  aria-selected={activeTab === i}
+                  onClick={() => setActiveTab(i)}
+                  className={cn(
+                    'relative z-10 whitespace-nowrap rounded-full px-4 py-2 font-margem text-sm font-medium transition-colors duration-300',
+                    activeTab === i
+                      ? 'text-white'
+                      : 'text-ps-violet-dark/60 hover:text-ps-violet-dark',
+                  )}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="overflow-hidden rounded-xl border border-ps-violet-dark/10 bg-[#282a36]">
+            {highlightedCode.length > 0 ? (
+              <div
+                className="overflow-x-auto p-6 text-sm leading-relaxed [&_pre]:!bg-transparent"
+                dangerouslySetInnerHTML={{ __html: highlightedCode[activeTab] }}
+              />
+            ) : (
+              <pre className="overflow-x-auto p-6 text-sm leading-relaxed text-white/80">
+                <code>{TABS[activeTab].code}</code>
+              </pre>
+            )}
+          </div>
         </div>
-      </div>
       </div>
     </section>
   );

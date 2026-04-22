@@ -86,26 +86,33 @@ export function Problem() {
           style={col(2, 6)}
         >
           O sistema de saúde brasileiro opera como duas redes paralelas com troca mínima de dados.
-          Laboratórios privados entregam resultados como PDFs sem formato padrão. Laboratórios do SUS
-          usam sistemas internos cada vez mais conectados à RNDS — mas nenhum sistema enxerga o outro.
+          Laboratórios privados entregam resultados como PDFs sem formato padrão. Laboratórios do
+          SUS usam sistemas internos cada vez mais conectados à RNDS — mas nenhum sistema enxerga o
+          outro.
         </p>
         <p
           className="col-span-full mb-8 text-pretty font-pausa text-lg leading-relaxed text-ps-violet-dark/70"
           style={col(8, 6)}
         >
-          Resultado: exames duplicados. O mesmo hemograma é solicitado pelo endocrinologista (privado)
-          e pela UBS (SUS) em questão de semanas, porque não existe uma visão longitudinal do paciente.
+          Resultado: exames duplicados. O mesmo hemograma é solicitado pelo endocrinologista
+          (privado) e pela UBS (SUS) em questão de semanas, porque não existe uma visão longitudinal
+          do paciente.
         </p>
 
         <div className="col-span-full md:col-span-10 md:col-start-3 3xl:col-start-4">
           <div className="mb-4 md:hidden">
-            <Select value={TABS[activeTab].label} onValueChange={(v) => setActiveTab(TABS.findIndex((t) => t.label === v))}>
+            <Select
+              value={TABS[activeTab].label}
+              onValueChange={(v) => setActiveTab(TABS.findIndex((t) => t.label === v))}
+            >
               <SelectTrigger className="w-full border-ps-violet-dark/15 bg-white/80 font-margem text-sm text-ps-violet-dark">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {TABS.map((tab) => (
-                  <SelectItem key={tab.label} value={tab.label} className="font-margem text-sm">{tab.label}</SelectItem>
+                  <SelectItem key={tab.label} value={tab.label} className="font-margem text-sm">
+                    {tab.label}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>

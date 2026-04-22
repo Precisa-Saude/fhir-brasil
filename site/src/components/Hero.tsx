@@ -3,12 +3,7 @@ import { useState } from 'react';
 
 const INSTALL_CMD = 'npm install @precisa-saude/fhir';
 
-const TRUST_BADGES = [
-  'FHIR R4',
-  'LOINC',
-  'SBPC/ML',
-  'Apache-2.0',
-] as const;
+const TRUST_BADGES = ['FHIR R4', 'LOINC', 'SBPC/ML', 'Apache-2.0'] as const;
 
 const gridStyle = {
   gridTemplateColumns: 'repeat(var(--grid-cols), 1fr)',
@@ -31,7 +26,6 @@ export function Hero() {
 
   return (
     <section className="relative min-h-[60svh] pt-16">
-
       <div
         className="relative z-10 mx-auto grid gap-4 px-4 py-10 sm:py-32 md:px-0 lg:py-40"
         style={gridStyle}

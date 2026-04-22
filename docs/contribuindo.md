@@ -148,6 +148,7 @@ describe('getReferenceRange', () => {
 ```
 
 **Boas práticas**:
+
 - Nomes de testes em português, descritivos
 - Testar o caminho feliz **e** os edge cases
 - Testar códigos desconhecidos, campos ausentes, valores limítrofes
@@ -173,6 +174,7 @@ Em `packages/core/src/biomarkers.ts`, adicione uma entrada no array `BIOMARKER_D
 ```
 
 **Regras**:
+
 - O `code` deve ser `PascalCase` com underscores para nomes compostos (ex: `LDL_Peak_Size`)
 - O `loinc` é obrigatório quando o código LOINC existe (alguns biomarcadores DEXA regionais não possuem)
 - `names.pt[0]` é o nome principal exibido na interface
@@ -337,25 +339,25 @@ tipo(escopo): descrição em pt-BR
 
 ### Tipos
 
-| Tipo | Descrição |
-|------|-----------|
-| `feat` | Nova funcionalidade |
-| `fix` | Correção de bug |
+| Tipo       | Descrição                                |
+| ---------- | ---------------------------------------- |
+| `feat`     | Nova funcionalidade                      |
+| `fix`      | Correção de bug                          |
 | `refactor` | Refatoração sem mudança de comportamento |
-| `test` | Adição ou atualização de testes |
-| `docs` | Documentação |
-| `chore` | Manutenção, configuração, dependências |
-| `ci` | Integração contínua |
+| `test`     | Adição ou atualização de testes          |
+| `docs`     | Documentação                             |
+| `chore`    | Manutenção, configuração, dependências   |
+| `ci`       | Integração contínua                      |
 
 ### Escopos
 
-| Escopo | Pacote |
-|--------|--------|
-| `core` | `@precisa-saude/fhir` |
+| Escopo        | Pacote                            |
+| ------------- | --------------------------------- |
+| `core`        | `@precisa-saude/fhir`             |
 | `calculators` | `@precisa-saude/fhir-calculators` |
-| `ocr-utils` | `@precisa-saude/fhir-ocr-utils` |
-| `docs` | Documentação |
-| `ci` | CI/CD |
+| `ocr-utils`   | `@precisa-saude/fhir-ocr-utils`   |
+| `docs`        | Documentação                      |
+| `ci`          | CI/CD                             |
 
 ### Exemplos
 
@@ -369,6 +371,7 @@ chore: atualizar dependências do monorepo
 ```
 
 **Regras**:
+
 - Mensagens no imperativo: "adicionar", "corrigir", "atualizar" (não "adicionado", "corrigindo")
 - Concisas e descritivas
 - Em português brasileiro

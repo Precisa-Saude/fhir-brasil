@@ -17,9 +17,9 @@ interface Feature {
 const FEATURES: Feature[] = [
   {
     icon: <HeartPulse className="h-6 w-6" />,
-    title: '180+ Biomarcadores',
+    title: '200+ Biomarcadores',
     description:
-      'Códigos LOINC, nomes em pt-BR e en-US, unidades UCUM e 20 categorias clínicas. Catalogo completo com normalização de aliases.',
+      'Códigos LOINC, nomes em pt-BR e en-US, unidades UCUM, organizados em 10 categorias clínicas (20 sub-categorias). Catálogo completo com normalização de aliases.',
     links: [
       { label: 'LOINC', href: 'https://loinc.org/' },
       { label: 'UCUM', href: 'https://ucum.org/' },

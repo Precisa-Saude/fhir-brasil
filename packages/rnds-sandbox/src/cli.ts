@@ -35,6 +35,8 @@ Modos de fidelidade RNDS:
                           (implícito quando --mtls está ativo)
   --mtls                  HTTPS + handshake mTLS (cliente apresenta cert).
                           /api/token exige cert; FHIR API exige bearer.
+  --no-validate           Desabilita validação contra perfis BR* do IG em POST /Bundle
+                          (default: validação ON, retorna 422 OperationOutcome em falha)
 
 Cert do servidor (use uma forma OU outra):
   --pfx <caminho>         PFX do servidor
@@ -125,6 +127,10 @@ export function parseArgs(argv: string[]): ParsedArgs {
     }
     if (token === '--strict') {
       options.strict = true;
+      continue;
+    }
+    if (token === '--no-validate') {
+      options.validateSubmissions = false;
       continue;
     }
     const stringSetter = STRING_ARGS[token];

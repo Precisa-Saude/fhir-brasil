@@ -7,7 +7,14 @@ describe('createSandboxServer (HTTP)', () => {
   let baseUrl: string;
 
   beforeEach(async () => {
-    sandbox = createSandboxServer({ log: () => {}, port: 0, scenario: 'paciente-com-exames' });
+    sandbox = createSandboxServer({
+      log: () => {},
+      port: 0,
+      scenario: 'paciente-com-exames',
+      // Esses testes exercitam o roteamento HTTP, não validação de perfil.
+      // Validação é coberta em `validation.test.ts`.
+      validateSubmissions: false,
+    });
     const { host, port } = await sandbox.start();
     baseUrl = `http://${host}:${port}`;
   });
@@ -106,6 +113,89 @@ describe('createSandboxServer (HTTP)', () => {
     const b1 = (await r1.json()) as { entry: { response: { location: string } }[] };
     const b2 = (await r2.json()) as { entry: { response: { location: string } }[] };
     expect(b1.entry[0]?.response.location).not.toBe(b2.entry[0]?.response.location);
+  });
+});
+
+describe('createSandboxServer (HTTP, validateSubmissions)', () => {
+  let sandbox: SandboxServer;
+  let baseUrl: string;
+
+  beforeEach(async () => {
+    sandbox = createSandboxServer({ log: () => {}, port: 0 }); // validateSubmissions default = true
+    const { host, port } = await sandbox.start();
+    baseUrl = `http://${host}:${port}`;
+  });
+
+  afterEach(async () => {
+    await sandbox.stop();
+  });
+
+  it('rejeita Bundle inválido com 422 + OperationOutcome multi-issue', async () => {
+    const res = await fetch(`${baseUrl}/api/fhir/r4/Bundle`, {
+      body: JSON.stringify({
+        entry: [
+          {
+            request: { method: 'POST', url: 'Patient' },
+            // Patient sem identifier/name/birthDate/gender → várias issues
+            resource: { resourceType: 'Patient' },
+          },
+        ],
+        resourceType: 'Bundle',
+        type: 'transaction',
+      }),
+      headers: { 'Content-Type': 'application/fhir+json' },
+      method: 'POST',
+    });
+    expect(res.status).toBe(422);
+    const oo = (await res.json()) as {
+      issue: { code: string; location?: string[] }[];
+      resourceType: string;
+    };
+    expect(oo.resourceType).toBe('OperationOutcome');
+    expect(oo.issue.length).toBeGreaterThanOrEqual(3);
+    expect(oo.issue.every((i) => i.location?.[0]?.startsWith('Bundle.entry[0].resource.'))).toBe(
+      true,
+    );
+  });
+
+  it('aceita Bundle válido em modo validate', async () => {
+    const res = await fetch(`${baseUrl}/api/fhir/r4/Bundle`, {
+      body: JSON.stringify({
+        entry: [
+          {
+            request: { method: 'POST', url: 'Observation' },
+            resource: {
+              category: [
+                {
+                  coding: [
+                    {
+                      code: 'laboratory',
+                      system: 'http://terminology.hl7.org/CodeSystem/observation-category',
+                    },
+                  ],
+                },
+              ],
+              code: { coding: [{ code: '2345-7', system: 'http://loinc.org' }] },
+              effectiveDateTime: '2025-09-10',
+              resourceType: 'Observation',
+              status: 'final',
+              subject: { reference: 'Patient/700000000000001' },
+              valueQuantity: {
+                code: 'mg/dL',
+                system: 'http://unitsofmeasure.org',
+                unit: 'mg/dL',
+                value: 96,
+              },
+            },
+          },
+        ],
+        resourceType: 'Bundle',
+        type: 'transaction',
+      }),
+      headers: { 'Content-Type': 'application/fhir+json' },
+      method: 'POST',
+    });
+    expect(res.status).toBe(200);
   });
 });
 

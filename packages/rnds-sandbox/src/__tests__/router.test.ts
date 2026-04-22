@@ -24,6 +24,9 @@ function makeCtx(overrides: Partial<RouteContext> = {}): RouteContext {
     query: new URLSearchParams(),
     store: makeStore(),
     strict: false,
+    // Testes de roteamento usam Bundles minimalistas; validação tem
+    // suite própria em `validation.test.ts`.
+    validateProfiles: false,
     ...overrides,
   };
 }

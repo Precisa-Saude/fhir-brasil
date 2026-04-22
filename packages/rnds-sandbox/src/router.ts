@@ -18,6 +18,7 @@ import { buildJwks } from './jwks';
 import type { SigningKeys } from './keys';
 import type { SandboxStore } from './store';
 import type { SandboxBundle, SandboxBundleEntry } from './types';
+import { validateBundle } from './validation';
 
 const FHIR_PREFIX = '/api/fhir/r4';
 const TOKEN_PATH = '/api/token';
@@ -50,6 +51,12 @@ export interface RouteContext {
   store: SandboxStore;
   /** Quando true, /api/token requer cert apresentado e FHIR exige bearer + CNS */
   strict: boolean;
+  /**
+   * Quando true (padrão), `POST /Bundle` valida cada entry contra os perfis
+   * BR* do IG fhir-brasil e rejeita com 422 se houver erros. Em modo
+   * permissivo (`false`), aceita qualquer Bundle com estrutura mínima.
+   */
+  validateProfiles: boolean;
 }
 
 export interface RouteResponse {
@@ -293,6 +300,28 @@ function handleSubmitBundle(ctx: RouteContext): RouteResponse {
       ),
       status: 400,
     };
+  }
+
+  // Valida cada entry contra os perfis BR* do IG. Erros disparam 422
+  // (FHIR-canônico para validation failure) com OperationOutcome
+  // multi-issue, igual à RNDS real.
+  if (ctx.validateProfiles) {
+    const result = validateBundle(bundle);
+    if (!result.valid) {
+      return {
+        body: {
+          issue: result.issues.map((i) => ({
+            code: i.code,
+            diagnostics: i.diagnostics,
+            expression: i.expression,
+            location: i.location,
+            severity: i.severity,
+          })),
+          resourceType: 'OperationOutcome',
+        },
+        status: 422,
+      };
+    }
   }
 
   ctx.store.recordBundle(bundle);

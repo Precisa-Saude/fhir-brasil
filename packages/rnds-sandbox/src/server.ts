@@ -93,6 +93,9 @@ export function createSandboxServer(options: SandboxOptions = {}): SandboxServer
       }),
     stop: () =>
       new Promise<void>((resolve, reject) => {
+        // server.close() para de aceitar novas conexões mas não derruba
+        // keep-alive existentes — em testes isso pode prender o vitest.
+        server.closeAllConnections?.();
         server.close((err) => (err ? reject(err) : resolve()));
       }),
     store,

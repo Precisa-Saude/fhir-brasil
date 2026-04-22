@@ -71,7 +71,7 @@ export function issueToken(keys: SigningKeys, options: IssueTokenOptions = {}): 
 
   return {
     access_token: accessToken,
-    expires_in: TOKEN_TTL_MS,
+    expires_in: Math.floor(TOKEN_TTL_MS / 1000),
     scope: 'rnds:read rnds:write',
     token_type: 'Bearer',
   };

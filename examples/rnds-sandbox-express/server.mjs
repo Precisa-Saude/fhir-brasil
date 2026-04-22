@@ -60,6 +60,11 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Wrapper que repassa erros para o middleware de erro do Express,
+// evitando unhandled promise rejection se o sandbox cair ou a resposta
+// não for JSON válido.
+const wrap = (handler) => (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next);
+
 app.get('/api/info', (_req, res) => {
   res.json({
     backend: 'express',
@@ -70,46 +75,83 @@ app.get('/api/info', (_req, res) => {
   });
 });
 
-app.get('/api/jwks', async (_req, res) => {
-  const r = await fetch(`${sandboxBase}/.well-known/jwks.json`);
-  res.status(r.status).json(await r.json());
-});
+app.get(
+  '/api/jwks',
+  wrap(async (_req, res) => {
+    const r = await fetch(`${sandboxBase}/.well-known/jwks.json`);
+    res.status(r.status).json(await r.json());
+  }),
+);
 
-app.get('/api/patient/cpf/:cpf', async (req, res) => {
-  const id = `http://rnds.saude.gov.br/fhir/r4/NamingSystem/cpf|${req.params.cpf}`;
-  const r = await rndsFetch(`/api/fhir/r4/Patient?identifier=${encodeURIComponent(id)}`);
-  res.status(r.status).json(await r.json());
-});
+app.get(
+  '/api/patient/cpf/:cpf',
+  wrap(async (req, res) => {
+    const id = `http://rnds.saude.gov.br/fhir/r4/NamingSystem/cpf|${req.params.cpf}`;
+    const r = await rndsFetch(`/api/fhir/r4/Patient?identifier=${encodeURIComponent(id)}`);
+    res.status(r.status).json(await r.json());
+  }),
+);
 
-app.get('/api/patient/cns/:cns', async (req, res) => {
-  const r = await rndsFetch(`/api/fhir/r4/Patient/${encodeURIComponent(req.params.cns)}`);
-  res.status(r.status).json(await r.json());
-});
+app.get(
+  '/api/patient/cns/:cns',
+  wrap(async (req, res) => {
+    const r = await rndsFetch(`/api/fhir/r4/Patient/${encodeURIComponent(req.params.cns)}`);
+    res.status(r.status).json(await r.json());
+  }),
+);
 
-app.get('/api/organization/:cnes', async (req, res) => {
-  const r = await rndsFetch(`/api/fhir/r4/Organization/${encodeURIComponent(req.params.cnes)}`);
-  res.status(r.status).json(await r.json());
-});
+app.get(
+  '/api/organization/:cnes',
+  wrap(async (req, res) => {
+    const r = await rndsFetch(`/api/fhir/r4/Organization/${encodeURIComponent(req.params.cnes)}`);
+    res.status(r.status).json(await r.json());
+  }),
+);
 
-app.get('/api/practitioner/:cns', async (req, res) => {
-  const r = await rndsFetch(`/api/fhir/r4/Practitioner/${encodeURIComponent(req.params.cns)}`);
-  res.status(r.status).json(await r.json());
-});
+app.get(
+  '/api/practitioner/:cns',
+  wrap(async (req, res) => {
+    const r = await rndsFetch(`/api/fhir/r4/Practitioner/${encodeURIComponent(req.params.cns)}`);
+    res.status(r.status).json(await r.json());
+  }),
+);
 
-app.get('/api/observations/:cns', async (req, res) => {
-  const subject = `Patient/${encodeURIComponent(req.params.cns)}`;
-  const r = await rndsFetch(`/api/fhir/r4/Observation?subject=${encodeURIComponent(subject)}`);
-  res.status(r.status).json(await r.json());
-});
+app.get(
+  '/api/observations/:cns',
+  wrap(async (req, res) => {
+    const subject = `Patient/${encodeURIComponent(req.params.cns)}`;
+    const r = await rndsFetch(`/api/fhir/r4/Observation?subject=${encodeURIComponent(subject)}`);
+    res.status(r.status).json(await r.json());
+  }),
+);
 
-app.post('/api/bundle', async (req, res) => {
-  const bundle = req.body && req.body.resourceType === 'Bundle' ? req.body : sampleBundle();
-  const r = await rndsFetch(`/api/fhir/r4/Bundle`, {
-    body: JSON.stringify(bundle),
-    headers: { 'Content-Type': 'application/fhir+json' },
-    method: 'POST',
+app.post(
+  '/api/bundle',
+  wrap(async (req, res) => {
+    const bundle = req.body && req.body.resourceType === 'Bundle' ? req.body : sampleBundle();
+    const r = await rndsFetch(`/api/fhir/r4/Bundle`, {
+      body: JSON.stringify(bundle),
+      headers: { 'Content-Type': 'application/fhir+json' },
+      method: 'POST',
+    });
+    res.status(r.status).json(await r.json());
+  }),
+);
+
+// Middleware de erro — devolve OperationOutcome FHIR com o motivo da falha.
+// eslint-disable-next-line no-unused-vars
+app.use((err, _req, res, _next) => {
+  console.error('[backend] erro no handler:', err);
+  res.status(502).json({
+    issue: [
+      {
+        code: 'transient',
+        diagnostics: `Backend Express falhou ao falar com o sandbox: ${err?.message ?? err}`,
+        severity: 'error',
+      },
+    ],
+    resourceType: 'OperationOutcome',
   });
-  res.status(r.status).json(await r.json());
 });
 
 function sampleBundle() {

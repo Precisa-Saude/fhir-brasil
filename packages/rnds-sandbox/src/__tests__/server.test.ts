@@ -76,6 +76,37 @@ describe('createSandboxServer (HTTP)', () => {
     expect(jwks.keys[0]?.kty).toBe('RSA');
     expect(jwks.keys[0]?.kid).toBe(sandbox.signingKeys.keyId);
   });
+
+  it('locations do transaction-response são únicas entre POSTs (regression)', async () => {
+    const bundlePayload = JSON.stringify({
+      entry: [
+        {
+          request: { method: 'POST', url: 'Observation' },
+          resource: {
+            code: { coding: [{ code: '2345-7' }] },
+            resourceType: 'Observation',
+            status: 'final',
+          },
+        },
+      ],
+      resourceType: 'Bundle',
+      type: 'transaction',
+    });
+    const headers = { 'Content-Type': 'application/fhir+json' };
+    const r1 = await fetch(`${baseUrl}/api/fhir/r4/Bundle`, {
+      body: bundlePayload,
+      headers,
+      method: 'POST',
+    });
+    const r2 = await fetch(`${baseUrl}/api/fhir/r4/Bundle`, {
+      body: bundlePayload,
+      headers,
+      method: 'POST',
+    });
+    const b1 = (await r1.json()) as { entry: { response: { location: string } }[] };
+    const b2 = (await r2.json()) as { entry: { response: { location: string } }[] };
+    expect(b1.entry[0]?.response.location).not.toBe(b2.entry[0]?.response.location);
+  });
 });
 
 describe('createSandboxServer (HTTP, --strict)', () => {

@@ -5,11 +5,13 @@
  * Sobe um mock local da RNDS para desenvolvimento.
  */
 
+import { fileURLToPath } from 'node:url';
+
 import { SCENARIOS } from './scenarios';
 import { createSandboxServer } from './server';
 import type { SandboxOptions, ScenarioName } from './types';
 
-interface ParsedArgs {
+export interface ParsedArgs {
   command?: 'start' | 'help' | 'scenarios';
   errors: string[];
   options: SandboxOptions;
@@ -79,7 +81,7 @@ const STRING_ARGS: Record<string, (options: SandboxOptions, value: string) => vo
   },
 };
 
-function parseArgs(argv: string[]): ParsedArgs {
+export function parseArgs(argv: string[]): ParsedArgs {
   const errors: string[] = [];
   const options: SandboxOptions = {};
   let command: ParsedArgs['command'];
@@ -189,7 +191,15 @@ export async function main(argv: string[] = process.argv.slice(2)): Promise<numb
   return 0;
 }
 
-main().catch((err: unknown) => {
-  process.stderr.write(`erro fatal: ${err instanceof Error ? err.message : String(err)}\n`);
-  process.exit(1);
-});
+// Só executa quando este arquivo é o entry-point (via `node dist/cli.js` ou
+// via shebang). Permite importar `parseArgs`/`main` em testes sem efeito
+// colateral.
+const isEntryPoint =
+  typeof process.argv[1] === 'string' && fileURLToPath(import.meta.url) === process.argv[1];
+
+if (isEntryPoint) {
+  main().catch((err: unknown) => {
+    process.stderr.write(`erro fatal: ${err instanceof Error ? err.message : String(err)}\n`);
+    process.exit(1);
+  });
+}

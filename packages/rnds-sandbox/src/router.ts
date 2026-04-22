@@ -290,9 +290,9 @@ function handleSubmitBundle(ctx: RouteContext): RouteResponse {
 
   ctx.store.recordBundle(bundle);
 
-  const responseEntries: SandboxBundleEntry[] = (bundle.entry ?? []).map((_, index) => ({
+  const responseEntries: SandboxBundleEntry[] = (bundle.entry ?? []).map(() => ({
     response: {
-      location: `Resource/sandbox-${index + 1}`,
+      location: `Resource/sandbox-${ctx.store.nextResourceId()}`,
       status: '201 Created',
     },
   }));

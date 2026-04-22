@@ -27,6 +27,7 @@ export class SandboxStore {
   private organizationsByCnes = new Map<string, SandboxOrganization>();
   private practitionersByCns = new Map<string, SandboxPractitioner>();
   private submittedBundles: SandboxBundle[] = [];
+  private resourceSeq = 0;
 
   load(scenario: Scenario): void {
     this.reset();
@@ -50,6 +51,13 @@ export class SandboxStore {
     this.organizationsByCnes.clear();
     this.practitionersByCns.clear();
     this.submittedBundles = [];
+    this.resourceSeq = 0;
+  }
+
+  /** Próximo número de sequência global para gerar `Resource/sandbox-N`. */
+  nextResourceId(): number {
+    this.resourceSeq += 1;
+    return this.resourceSeq;
   }
 
   findPatientByCpf(cpf: string): SandboxPatient | undefined {
@@ -157,10 +165,13 @@ function readReference(value: unknown): string | undefined {
 }
 
 function referenceMatches(ref: string, candidates: readonly string[]): boolean {
-  // Aceita "Patient/{cns}" exato OU apenas o CNS no final do reference.
+  // Compara o último segmento do path para evitar false-match por sufixo
+  // (ex.: "Patient/1700000000000001" não deve casar com candidato
+  // "700000000000001"). Aceita o reference inteiro ou só o CNS.
+  const lastSegment = ref.includes('/') ? ref.slice(ref.lastIndexOf('/') + 1) : ref;
   for (const candidate of candidates) {
     if (ref === candidate) return true;
-    if (ref.endsWith(`/${candidate}`)) return true;
+    if (lastSegment === candidate) return true;
   }
   return false;
 }

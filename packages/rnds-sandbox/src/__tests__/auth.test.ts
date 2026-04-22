@@ -12,6 +12,12 @@ describe('auth — issueToken / verifyToken (RS256)', () => {
     expect(result.valid).toBe(true);
   });
 
+  it('expressa expires_in em segundos (OAuth2 spec), não em milissegundos', () => {
+    const { expires_in } = issueToken(KEYS);
+    expect(expires_in).toBe(1800); // 30 min em segundos
+    expect(expires_in).toBeLessThan(3600); // sanity: < 1h
+  });
+
   it('inclui kid no header e claims básicas no payload', () => {
     const { access_token } = issueToken(KEYS);
     const [headerB64, payloadB64] = access_token.split('.');

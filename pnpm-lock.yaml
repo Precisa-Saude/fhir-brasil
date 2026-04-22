@@ -18,8 +18,8 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2(@commitlint/cli@20.5.0(@types/node@22.19.17)(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)(typescript@5.7.3))
       '@precisa-saude/eslint-config':
-        specifier: ^1.1.2
-        version: 1.1.2(eslint@10.1.0(jiti@2.6.1))(jiti@2.6.1)(prettier@3.8.1)(tailwindcss@4.2.2)(typescript@5.7.3)
+        specifier: ^1.2.0
+        version: 1.2.0(eslint@10.1.0(jiti@2.6.1))(jiti@2.6.1)(prettier@3.8.1)(tailwindcss@4.2.2)(typescript@5.7.3)
       '@precisa-saude/prettier-config':
         specifier: ^1.1.2
         version: 1.1.2(prettier-plugin-packagejson@3.0.2(prettier@3.8.1))(prettier@3.8.1)
@@ -1277,8 +1277,8 @@ packages:
     peerDependencies:
       '@commitlint/cli': '>=19'
 
-  '@precisa-saude/eslint-config@1.1.2':
-    resolution: {integrity: sha512-Z1HJaTXuLfTvRNeTFcz/TBbi6vJt1Y4L7UhHEpDDl7dooPZGhTY/Sn7sNBLnGlJ4N59f5GkIuaMq5FaLPz+fyA==}
+  '@precisa-saude/eslint-config@1.2.0':
+    resolution: {integrity: sha512-ZT/2lacpVSNpfhaBt7HBL4NIf6JjE5S0iWh1XUvAgzHgikLx9AtOdQvsFHLlwBarhjr8fCZCbdWSOK5gwpfY9g==}
     engines: {node: '>=22.0.0'}
     peerDependencies:
       eslint: ^9.0.0 || ^10.0.0
@@ -6626,7 +6626,7 @@ snapshots:
       '@commitlint/cli': 20.5.0(@types/node@22.19.17)(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)(typescript@5.7.3)
       '@commitlint/config-conventional': 20.5.0
 
-  '@precisa-saude/eslint-config@1.1.2(eslint@10.1.0(jiti@2.6.1))(jiti@2.6.1)(prettier@3.8.1)(tailwindcss@4.2.2)(typescript@5.7.3)':
+  '@precisa-saude/eslint-config@1.2.0(eslint@10.1.0(jiti@2.6.1))(jiti@2.6.1)(prettier@3.8.1)(tailwindcss@4.2.2)(typescript@5.7.3)':
     dependencies:
       '@eslint/js': 9.39.4
       '@html-eslint/eslint-plugin': 0.52.1(eslint@10.1.0(jiti@2.6.1))(jiti@2.6.1)

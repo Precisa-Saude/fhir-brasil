@@ -263,35 +263,112 @@ HTTP/1.1 404 Not Found
 
 Compatível com o subset usado por `@precisa-saude/fhir-rnds`:
 
-| Método | Path | Descrição |
-| ------ | ---- | --------- |
-| `POST` | `/api/token` | Emite token JWT (sem assinatura criptográfica real). |
-| `GET` | `/api/fhir/r4/Patient?identifier={system}\|{value}` | Busca por CPF (`.../cpf`) ou CNS (`.../cns`). |
-| `GET` | `/api/fhir/r4/Patient/{cns}` | Lê paciente por CNS. |
-| `GET` | `/api/fhir/r4/Organization/{cnes}` | Lê estabelecimento por CNES. |
-| `GET` | `/api/fhir/r4/Practitioner/{cns}` | Lê profissional por CNS. |
-| `POST` | `/api/fhir/r4/Bundle` | Aceita Bundle transaction/batch e retorna transaction-response. |
+| Método | Path | Auth (modo strict) | Descrição |
+| ------ | ---- | ------------------ | --------- |
+| `POST` | `/api/token` | mTLS (cert do cliente) | Emite token JWT assinado em RS256. |
+| `GET`  | `/.well-known/jwks.json` | público | Chave pública (JWK) usada para verificar a assinatura do token. |
+| `GET`  | `/api/fhir/r4/Patient?identifier={system}\|{value}` | bearer + CNS | Busca por CPF (`.../cpf`) ou CNS (`.../cns`). |
+| `GET`  | `/api/fhir/r4/Patient/{cns}` | bearer + CNS | Lê paciente por CNS. |
+| `GET`  | `/api/fhir/r4/Organization/{cnes}` | bearer + CNS | Lê estabelecimento por CNES. |
+| `GET`  | `/api/fhir/r4/Practitioner/{cns}` | bearer + CNS | Lê profissional por CNS. |
+| `POST` | `/api/fhir/r4/Bundle` | bearer + CNS | Aceita Bundle transaction/batch e retorna transaction-response. |
 
-Recursos não encontrados retornam `404` com `OperationOutcome`.
+Em modo **permissivo** (padrão sem flags) nenhum auth é exigido — qualquer
+curl entra. Recursos não encontrados retornam `404` com `OperationOutcome`.
+Endpoints FHIR exigem dois headers em modo strict (igual à API real):
 
-## mTLS opcional
+- `X-Authorization-Server: Bearer <jwt>` — token RS256 emitido pelo sandbox
+- `Authorization: <CNS>` — CNS de 15 dígitos do profissional requisitante
 
-Por padrão o sandbox usa HTTP sem certificado — basta cURL/fetch. Para
-exercitar o handshake mTLS que a RNDS exige em produção (incluindo o
-caminho de autenticação), suba com `--mtls`. Você precisa de um PFX para o
-servidor (qualquer cert auto-assinado serve para dev).
+## Modos de fidelidade
+
+O sandbox tem três modos. Escolha o que combina com o que você quer
+demonstrar/testar:
+
+| Modo | Como ativar | Comportamento |
+| ---- | ----------- | ------------- |
+| **Permissivo** | (sem flags) | HTTP puro, qualquer chamada aceita. Útil para curl, aulas e iteração rápida. |
+| **Strict** | `--strict` | HTTP, mas /api/fhir/r4/* exige bearer + CNS, e /api/token exige cert mTLS apresentado (rejeita sem). Útil para validar a lógica de auth do cliente sem precisar configurar TLS. |
+| **mTLS** | `--mtls` (implica strict) | HTTPS com handshake mTLS opcional do cliente. Réplica fiel da RNDS: cert exigido em /api/token; FHIR API exige bearer. |
+
+### JWT — RS256 com JWKS
+
+O token é um JWT RS256 real, assinado com uma chave RSA-2048. Por padrão
+a chave é gerada **efêmera** no boot — bom para devs que rodam o sandbox
+em sessões curtas. Em CI/demos onde você quer reusar o mesmo token entre
+restarts, passe `--jwt-private-key`:
 
 ```bash
-# gera cert auto-assinado para teste local (uma vez)
-openssl req -newkey rsa:2048 -nodes -keyout dev.key -x509 \
-  -days 365 -out dev.crt -subj "/CN=rnds-sandbox.local"
-openssl pkcs12 -export -out dev.pfx -inkey dev.key -in dev.crt -password pass:dev
+# gere uma chave estável (uma vez)
+openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out jwt.pem
 
-rnds-sandbox start --mtls --pfx ./dev.pfx --pfx-password dev
+rnds-sandbox start --strict --jwt-private-key ./jwt.pem
 ```
 
-O sandbox aceita certificados não confiáveis (`rejectUnauthorized: false`)
-para que clientes possam testar o fluxo sem PKI completa.
+A chave pública é exposta via `/.well-known/jwks.json`. Bibliotecas de JWT
+(`jose`, `jsonwebtoken`, `jwt.io` com a URL do JWKS) podem verificar a
+assinatura sem configuração fora-de-banda:
+
+```bash
+$ curl -s http://127.0.0.1:8080/.well-known/jwks.json | jq
+{
+  "keys": [
+    {
+      "alg": "RS256",
+      "e": "AQAB",
+      "kid": "rnds-sandbox-1",
+      "kty": "RSA",
+      "n": "qdg8rAyVCT0s7UA4YM_j6fjjLt_-0huK7sQyLT...",
+      "use": "sig"
+    }
+  ]
+}
+```
+
+### mTLS na prática
+
+Você precisa de um cert para o **servidor**. Qualquer cert auto-assinado
+serve, ou use o que já tiver (cert ICP-Brasil de homologação, por
+exemplo). O sandbox aceita certs de cliente sem validar a CA
+(`rejectUnauthorized: false`) — propósito: dev, não produção.
+
+```bash
+# 1. Gere cert auto-assinado para o servidor (uma vez)
+openssl req -newkey rsa:2048 -nodes -keyout srv.key -x509 \
+  -days 365 -out srv.crt -subj "/CN=rnds-sandbox.local"
+
+# 2. Suba com mTLS — aceita PFX OU key+cert PEM
+rnds-sandbox start --mtls --server-key ./srv.key --server-cert ./srv.crt
+
+# (alternativa) PFX:
+openssl pkcs12 -export -out srv.pfx -inkey srv.key -in srv.crt -password pass:dev
+rnds-sandbox start --mtls --pfx ./srv.pfx --pfx-password dev
+```
+
+Para apresentar um cert de cliente no curl (e receber CN/CNES embutidos
+no token):
+
+```bash
+# Gere um cert de cliente que embute CNES "1234567" no CN
+openssl req -newkey rsa:2048 -nodes -keyout client.key -x509 \
+  -days 365 -out client.crt \
+  -subj "/CN=PRECISA SAUDE LTDA:1234567"
+
+# Pega token via mTLS — note --cacert + --cert
+TOKEN=$(curl -sk \
+  --cert client.crt --key client.key \
+  -X POST https://127.0.0.1:8443/api/token | jq -r .access_token)
+
+# Decodifique para conferir cn/cnes nas claims (jwt.io ou jq):
+echo "$TOKEN" | cut -d. -f2 | base64 -d 2>/dev/null | jq
+# → { "iss": "...", "sub": "PRECISA SAUDE LTDA:1234567",
+#     "cnes": "1234567", "cn": "PRECISA SAUDE LTDA:1234567", ... }
+
+# Use o token + CNS do profissional na chamada FHIR:
+curl -sk https://127.0.0.1:8443/api/fhir/r4/Patient/700000000000001 \
+  -H "X-Authorization-Server: Bearer $TOKEN" \
+  -H "Authorization: 700000000000010"
+```
 
 ## Docker
 
@@ -309,9 +386,11 @@ docker run --rm -p 9000:9000 ghcr.io/precisa-saude/fhir-rnds-sandbox:latest \
 ## Aviso de produção
 
 Este pacote é estritamente para **desenvolvimento, testes e ensino**.
-Tokens emitidos não têm assinatura criptográfica válida. Dados são
-sintéticos. Não submeta dados de pacientes reais a este servidor — ele
-apenas armazena em memória e perde o estado quando reinicia.
+Tokens são RS256-assinados, mas com chave gerada localmente (não da RNDS)
+— a assinatura é cryptograficamente válida no escopo do sandbox e nada
+mais. Dados são sintéticos. Não submeta dados de pacientes reais a este
+servidor — ele apenas armazena em memória e perde o estado quando
+reinicia.
 
 ## Aviso médico
 

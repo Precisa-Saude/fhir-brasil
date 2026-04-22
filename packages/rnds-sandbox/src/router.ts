@@ -2,27 +2,54 @@
  * Roteador HTTP do sandbox.
  *
  * Mapeia o subset de endpoints da RNDS consumidos por
- * @precisa-saude/fhir-rnds. Não cobre o protocolo FHIR completo.
+ * @precisa-saude/fhir-rnds. Aplica autenticação por rota:
+ *
+ *  - /api/token: exige certificado mTLS quando o sandbox roda em modo
+ *    `--mtls` (RNDS de fato exige nesse endpoint).
+ *  - /api/fhir/r4/*: em modo `strict`, exige bearer token assinado +
+ *    header `Authorization: <CNS>` (igual à API real). Em modo
+ *    permissivo (padrão sem flags), aceita sem auth — útil para
+ *    curl / aulas sem fricção.
+ *  - /.well-known/jwks.json: público sempre.
  */
 
-import { issueToken } from './auth';
+import { issueToken, verifyToken } from './auth';
+import { buildJwks } from './jwks';
+import type { SigningKeys } from './keys';
 import type { SandboxStore } from './store';
 import type { SandboxBundle, SandboxBundleEntry } from './types';
 
 const FHIR_PREFIX = '/api/fhir/r4';
 const TOKEN_PATH = '/api/token';
+const JWKS_PATH = '/.well-known/jwks.json';
 
 const NS = {
   cns: 'http://rnds.saude.gov.br/fhir/r4/NamingSystem/cns',
   cpf: 'http://rnds.saude.gov.br/fhir/r4/NamingSystem/cpf',
 } as const;
 
+export interface PeerCertInfo {
+  /** Common Name (subject.CN) do cert apresentado, se houver */
+  cn?: string;
+  /** CNES de 7 dígitos extraído do CN (heurística), se encontrado */
+  cnes?: string;
+  /** True quando o cliente apresentou um certificado válido (qualquer CA) */
+  presented: boolean;
+}
+
 export interface RouteContext {
   body?: unknown;
+  /** Cabeçalhos HTTP recebidos (chaves em lowercase) */
+  headers: Record<string, string | undefined>;
+  keys: SigningKeys;
   method: string;
   path: string;
+  /** Informação extraída do certificado mTLS, quando o servidor está em modo mtls */
+  peerCert?: PeerCertInfo;
   query: URLSearchParams;
   store: SandboxStore;
+  /** Quando true, /api/token requer cert apresentado e FHIR exige bearer + CNS */
+  strict: boolean;
 }
 
 export interface RouteResponse {
@@ -31,12 +58,23 @@ export interface RouteResponse {
 }
 
 export function dispatch(ctx: RouteContext): RouteResponse {
+  if (ctx.method === 'GET' && ctx.path === JWKS_PATH) {
+    return { body: buildJwks(ctx.keys), status: 200 };
+  }
+
   if (ctx.method === 'POST' && ctx.path === TOKEN_PATH) {
-    return { body: issueToken(), status: 200 };
+    return handleToken(ctx);
   }
 
   if (!ctx.path.startsWith(FHIR_PREFIX)) {
     return notFound(`Recurso não encontrado: ${ctx.path}`);
+  }
+
+  if (ctx.strict) {
+    const authError = enforceFhirAuth(ctx);
+    if (authError) {
+      return authError;
+    }
   }
 
   const fhirPath = ctx.path.slice(FHIR_PREFIX.length);
@@ -52,6 +90,78 @@ export function dispatch(ctx: RouteContext): RouteResponse {
     body: operationOutcome('error', 'not-supported', `${ctx.method} ${ctx.path} não suportado`),
     status: 405,
   };
+}
+
+function handleToken(ctx: RouteContext): RouteResponse {
+  if (ctx.strict && !ctx.peerCert?.presented) {
+    return {
+      body: operationOutcome(
+        'error',
+        'security',
+        'Certificado mTLS é obrigatório em /api/token quando o sandbox está em modo --mtls',
+      ),
+      status: 401,
+    };
+  }
+  const tokenPayload = issueToken(ctx.keys, {
+    identity: ctx.peerCert?.presented
+      ? { cn: ctx.peerCert.cn, cnes: ctx.peerCert.cnes }
+      : undefined,
+  });
+  return { body: tokenPayload, status: 200 };
+}
+
+function enforceFhirAuth(ctx: RouteContext): RouteResponse | null {
+  const bearerHeader = ctx.headers['x-authorization-server'];
+  if (!bearerHeader) {
+    return {
+      body: operationOutcome(
+        'error',
+        'security',
+        'header X-Authorization-Server: Bearer <token> é obrigatório',
+      ),
+      status: 401,
+    };
+  }
+  const match = /^Bearer\s+(.+)$/i.exec(bearerHeader);
+  if (!match) {
+    return {
+      body: operationOutcome(
+        'error',
+        'security',
+        'X-Authorization-Server deve usar o esquema "Bearer <token>"',
+      ),
+      status: 401,
+    };
+  }
+  const token = match[1]!.trim();
+  const verification = verifyToken(token, ctx.keys);
+  if (!verification.valid) {
+    return {
+      body: operationOutcome('error', 'security', `Token inválido (${verification.reason})`),
+      status: 401,
+    };
+  }
+
+  const cnsHeader = ctx.headers['authorization'];
+  if (!cnsHeader) {
+    return {
+      body: operationOutcome(
+        'error',
+        'required',
+        'header Authorization: <CNS-do-profissional> é obrigatório',
+      ),
+      status: 400,
+    };
+  }
+  if (!/^\d{15}$/.test(cnsHeader.trim())) {
+    return {
+      body: operationOutcome('error', 'invalid', 'Authorization deve conter um CNS de 15 dígitos'),
+      status: 400,
+    };
+  }
+
+  return null;
 }
 
 function handleFhirGet(fhirPath: string, ctx: RouteContext): RouteResponse {
@@ -114,8 +224,6 @@ function handlePatientSearch(ctx: RouteContext): RouteResponse {
     return notFound(`NamingSystem não suportado: ${system}`);
   }
 
-  // RNDS retorna o Patient direto (não searchset) quando há match único.
-  // Se não houver, retorna 404 — o cliente trata como null.
   return patient
     ? { body: patient, status: 200 }
     : notFound(`Paciente ${system}|${value} não encontrado`);

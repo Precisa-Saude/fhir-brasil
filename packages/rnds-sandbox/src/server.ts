@@ -1,16 +1,20 @@
 /**
  * Servidor HTTP(S) do sandbox.
  *
- * Cria um http.Server (ou https.Server com mTLS) que despacha
- * requisições para o roteador.
+ * Cria um http.Server (sem mTLS) ou https.Server (com mTLS opcional)
+ * que despacha requisições para o roteador. Em modo mTLS, o cert do
+ * cliente apresentado no handshake é repassado ao roteador para que
+ * /api/token possa exigir + extrair identidade dele.
  */
 
 import fs from 'node:fs';
 import http from 'node:http';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import https from 'node:https';
+import type { TLSSocket } from 'node:tls';
 
-import { dispatch, type RouteContext } from './router';
+import { resolveSigningKeys, type SigningKeys } from './keys';
+import { dispatch, type PeerCertInfo, type RouteContext } from './router';
 import { resolveScenario } from './scenarios';
 import { SandboxStore } from './store';
 import type { SandboxOptions } from './types';
@@ -18,6 +22,8 @@ import type { SandboxOptions } from './types';
 export interface SandboxServer {
   /** Servidor HTTP(S) subjacente. */
   server: http.Server | https.Server;
+  /** Chaves RSA usadas para assinar/validar tokens. */
+  signingKeys: SigningKeys;
   /** Store em memória — útil para inspeção em testes. */
   store: SandboxStore;
   /** Inicia o servidor. Retorna quando estiver escutando. */
@@ -29,41 +35,43 @@ export interface SandboxServer {
 export function createSandboxServer(options: SandboxOptions = {}): SandboxServer {
   const log = options.log ?? ((msg: string) => console.log(`[rnds-sandbox] ${msg}`));
   const useMtls = options.mtls === true;
+  const strict = options.strict ?? useMtls;
   const port = options.port ?? (useMtls ? 8443 : 8080);
   const host = options.host ?? '127.0.0.1';
 
   const store = new SandboxStore();
   store.load(resolveScenario(options.scenario));
 
+  const signingKeys = resolveSigningKeys({
+    keyId: options.jwtKeyId,
+    privateKey: options.jwtPrivateKey,
+    publicKey: options.jwtPublicKey,
+  });
+
   const handler = (req: IncomingMessage, res: ServerResponse) => {
-    handleRequest(req, res, store, log).catch((err: unknown) => {
-      log(`erro inesperado: ${err instanceof Error ? err.message : String(err)}`);
-      if (!res.headersSent) {
-        res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(
-          JSON.stringify({
-            issue: [{ code: 'exception', diagnostics: String(err), severity: 'fatal' }],
-            resourceType: 'OperationOutcome',
-          }),
-        );
-      }
-    });
+    handleRequest(req, res, { keys: signingKeys, log, store, strict, useMtls }).catch(
+      (err: unknown) => {
+        log(`erro inesperado: ${err instanceof Error ? err.message : String(err)}`);
+        if (!res.headersSent) {
+          res.writeHead(500, { 'Content-Type': 'application/json' });
+          res.end(
+            JSON.stringify({
+              issue: [{ code: 'exception', diagnostics: String(err), severity: 'fatal' }],
+              resourceType: 'OperationOutcome',
+            }),
+          );
+        }
+      },
+    );
   };
 
   const server: http.Server | https.Server = useMtls
-    ? https.createServer(
-        {
-          pfx: resolvePfx(options.serverPfx),
-          passphrase: options.serverPfxPassword,
-          requestCert: true,
-          rejectUnauthorized: false,
-        },
-        handler,
-      )
+    ? https.createServer(buildTlsOptions(options), handler)
     : http.createServer(handler);
 
   return {
     server,
+    signingKeys,
     store,
     start: () =>
       new Promise<{ host: string; port: number }>((resolve, reject) => {
@@ -78,7 +86,7 @@ export function createSandboxServer(options: SandboxOptions = {}): SandboxServer
           const actualPort = typeof address === 'object' && address ? address.port : port;
           log(
             `${useMtls ? 'HTTPS+mTLS' : 'HTTP'} ouvindo em ${host}:${actualPort} ` +
-              `(cenário: ${options.scenario ?? 'paciente-com-exames'})`,
+              `(cenário: ${options.scenario ?? 'paciente-com-exames'}, strict=${strict}, kid=${signingKeys.keyId})`,
           );
           resolve({ host, port: actualPort });
         });
@@ -90,24 +98,38 @@ export function createSandboxServer(options: SandboxOptions = {}): SandboxServer
   };
 }
 
+interface HandlerContext {
+  keys: SigningKeys;
+  log: (msg: string) => void;
+  store: SandboxStore;
+  strict: boolean;
+  useMtls: boolean;
+}
+
 async function handleRequest(
   req: IncomingMessage,
   res: ServerResponse,
-  store: SandboxStore,
-  log: (msg: string) => void,
+  ctx: HandlerContext,
 ): Promise<void> {
   const url = new URL(req.url ?? '/', 'http://sandbox.local');
   const body = await readBody(req);
-  const ctx: RouteContext = {
+  const peerCert = ctx.useMtls ? extractPeerCert(req) : undefined;
+  const headers = lowercaseHeaders(req.headers);
+
+  const routeCtx: RouteContext = {
     body,
+    headers,
+    keys: ctx.keys,
     method: req.method ?? 'GET',
     path: url.pathname,
+    peerCert,
     query: url.searchParams,
-    store,
+    store: ctx.store,
+    strict: ctx.strict,
   };
 
-  const response = dispatch(ctx);
-  log(`${ctx.method} ${ctx.path} → ${response.status}`);
+  const response = dispatch(routeCtx);
+  ctx.log(`${routeCtx.method} ${routeCtx.path} → ${response.status}`);
 
   res.writeHead(response.status, {
     'Content-Type': 'application/fhir+json; charset=utf-8',
@@ -137,12 +159,82 @@ async function readBody(req: IncomingMessage): Promise<unknown> {
   }
 }
 
-function resolvePfx(pfx: Buffer | string | undefined): Buffer | undefined {
-  if (!pfx) {
+function extractPeerCert(req: IncomingMessage): PeerCertInfo {
+  const socket = req.socket as TLSSocket;
+  if (typeof socket.getPeerCertificate !== 'function') {
+    return { presented: false };
+  }
+  const cert = socket.getPeerCertificate();
+  if (!cert || Object.keys(cert).length === 0) {
+    return { presented: false };
+  }
+  const cn = readCommonName(cert.subject);
+  return {
+    cn,
+    cnes: cn ? extractCnesFromCn(cn) : undefined,
+    presented: true,
+  };
+}
+
+function readCommonName(subject: unknown): string | undefined {
+  if (!subject || typeof subject !== 'object') {
     return undefined;
   }
-  if (typeof pfx === 'string') {
-    return fs.readFileSync(pfx);
+  const cnValue = (subject as Record<string, unknown>).CN;
+  if (typeof cnValue === 'string') {
+    return cnValue;
   }
-  return pfx;
+  return undefined;
+}
+
+function extractCnesFromCn(cn: string): string | undefined {
+  // Heurística: CN de cert ICP-Brasil PJ frequentemente embute CNES como
+  // sequência de 7 dígitos; se não for o caso, simplesmente não retorna nada.
+  const match = /\b(\d{7})\b/.exec(cn);
+  return match ? match[1] : undefined;
+}
+
+function lowercaseHeaders(
+  headers: http.IncomingHttpHeaders,
+): Record<string, string | undefined> {
+  const out: Record<string, string | undefined> = {};
+  for (const [key, value] of Object.entries(headers)) {
+    if (Array.isArray(value)) {
+      out[key.toLowerCase()] = value.join(', ');
+    } else {
+      out[key.toLowerCase()] = value;
+    }
+  }
+  return out;
+}
+
+function buildTlsOptions(options: SandboxOptions): https.ServerOptions {
+  const tlsOptions: https.ServerOptions = {
+    rejectUnauthorized: false,
+    requestCert: true,
+  };
+  if (options.serverPfx) {
+    tlsOptions.pfx = resolveBuffer(options.serverPfx);
+    if (options.serverPfxPassword) {
+      tlsOptions.passphrase = options.serverPfxPassword;
+    }
+  } else if (options.serverKey && options.serverCert) {
+    tlsOptions.key = resolveBuffer(options.serverKey);
+    tlsOptions.cert = resolveBuffer(options.serverCert);
+  } else {
+    throw new Error(
+      'mTLS requer --pfx + --pfx-password OU --server-key + --server-cert (PEM)',
+    );
+  }
+  return tlsOptions;
+}
+
+function resolveBuffer(value: Buffer | string): Buffer {
+  if (typeof value !== 'string') {
+    return value;
+  }
+  if (value.includes('-----BEGIN')) {
+    return Buffer.from(value);
+  }
+  return fs.readFileSync(value);
 }

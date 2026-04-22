@@ -17,12 +17,13 @@ Documentação completa e contexto do projeto em [fhir-brasil.dev.br](https://fh
 
 O sistema de saúde brasileiro opera como redes paralelas com troca mínima de dados — laboratórios privados entregam PDFs sem padrão, laboratórios do SUS usam sistemas internos, e nenhum enxerga o outro. O **fhir-brasil** fornece a infraestrutura de código aberto para resolver essa fragmentação via FHIR R4:
 
-- **180+ biomarcadores** com códigos LOINC, nomes em pt-BR/en-US, categorias e unidades UCUM
-- **180+ faixas de referência** com variantes por sexo/idade, baseadas em diretrizes SBPC/ML, SBC e SBD
+- **200+ biomarcadores** com códigos LOINC, nomes em pt-BR/en-US, unidades UCUM, organizados em 10 categorias clínicas
+- **200+ faixas de referência** com variantes por sexo/idade, baseadas em diretrizes SBPC/ML, SBC e SBD
 - **Normalização de aliases** — cada laboratório usa nomes diferentes para o mesmo exame; `normalizeCode('colesterol HDL')` retorna `'HDL'`
 - **Calculadoras clínicas** — PhenoAge (idade biológica), BrDMrisc (risco de diabetes), HOMA-IR, VLDL, IMC
 - **Utilitários OCR** — ancoragem de texto para extração de biomarcadores de PDFs de resultados de laboratório
 - **Cliente RNDS** — cliente HTTP para a Rede Nacional de Dados em Saúde (DATASUS), com autenticação mTLS e zero dependências externas
+- **Sandbox RNDS** — mock local da RNDS para desenvolvimento, ensino e demos sem certificado ICP-Brasil
 
 > 580+ testes automatizados, cobertura acima de 80%, revisão contínua de faixas de referência.
 
@@ -30,12 +31,13 @@ O sistema de saúde brasileiro opera como redes paralelas com troca mínima de d
 
 ## Pacotes
 
-| Pacote                                                     | Descrição                                                                                     | Deps                  |
-| ---------------------------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------- |
-| [`@precisa-saude/fhir`](packages/core/)                    | Tipos FHIR R4, 180+ biomarcadores, faixas de referência, conversores, normalização de aliases | 0 runtime deps        |
-| [`@precisa-saude/fhir-calculators`](packages/calculators/) | PhenoAge, BrDMrisc, HOMA-IR, VLDL, IMC                                                        | `@precisa-saude/fhir` |
-| [`@precisa-saude/fhir-ocr-utils`](packages/ocr-utils/)     | Ancoragem OCR para extração de biomarcadores                                                  | `@precisa-saude/fhir` |
-| [`@precisa-saude/fhir-rnds`](packages/rnds/)               | Cliente HTTP para a RNDS (DATASUS) — autenticação mTLS, FHIR R4                               | `@precisa-saude/fhir` |
+| Pacote                                                       | Descrição                                                                                     | Deps                  |
+| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------- | --------------------- |
+| [`@precisa-saude/fhir`](packages/core/)                      | Tipos FHIR R4, 200+ biomarcadores, faixas de referência, conversores, normalização de aliases | 0 runtime deps        |
+| [`@precisa-saude/fhir-calculators`](packages/calculators/)   | PhenoAge, BrDMrisc, HOMA-IR, VLDL, IMC                                                        | `@precisa-saude/fhir` |
+| [`@precisa-saude/fhir-ocr-utils`](packages/ocr-utils/)       | Ancoragem OCR para extração de biomarcadores                                                  | `@precisa-saude/fhir` |
+| [`@precisa-saude/fhir-rnds`](packages/rnds/)                 | Cliente HTTP para a RNDS (DATASUS) — autenticação mTLS, FHIR R4                               | `@precisa-saude/fhir` |
+| [`@precisa-saude/fhir-rnds-sandbox`](packages/rnds-sandbox/) | Mock local da RNDS — endpoints FHIR R4 e cenários sintéticos para dev/ensino                  | `@precisa-saude/fhir` |
 
 ---
 

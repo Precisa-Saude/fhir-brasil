@@ -2442,6 +2442,219 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     },
     unit: 'score',
   },
+
+  // ============================================================================
+  // CARDIOVASCULAR MARKERS — Insuficiência cardíaca e dano miocárdico
+  // ============================================================================
+  {
+    category: 'coracao',
+    code: 'NTproBNP',
+    loinc: '33762-6',
+    names: {
+      en: ['NT-proBNP', 'N-Terminal pro B-Type Natriuretic Peptide', 'NT-pro-BNP'],
+      pt: ['NT-proBNP', 'Peptídeo Natriurético Tipo B N-Terminal', 'Pró-BNP N-Terminal'],
+    },
+    unit: 'pg/mL',
+  },
+  {
+    category: 'coracao',
+    code: 'BNP',
+    loinc: '30934-4',
+    names: {
+      en: ['BNP', 'B-Type Natriuretic Peptide', 'Brain Natriuretic Peptide'],
+      pt: ['BNP', 'Peptídeo Natriurético Tipo B', 'Peptídeo Natriurético Cerebral'],
+    },
+    unit: 'pg/mL',
+  },
+  {
+    category: 'coracao',
+    code: 'TroponinI',
+    loinc: '49563-0',
+    names: {
+      en: ['Troponin I', 'cTnI', 'Cardiac Troponin I', 'hs-TnI', 'High-Sensitivity Troponin I'],
+      pt: ['Troponina I', 'cTnI', 'Troponina I Cardíaca', 'Troponina I Ultrassensível'],
+    },
+    unit: 'ng/mL',
+  },
+  {
+    category: 'coracao',
+    code: 'TroponinT',
+    loinc: '6598-7',
+    names: {
+      en: ['Troponin T', 'cTnT', 'Cardiac Troponin T', 'hs-TnT', 'High-Sensitivity Troponin T'],
+      pt: ['Troponina T', 'cTnT', 'Troponina T Cardíaca', 'Troponina T Ultrassensível'],
+    },
+    unit: 'ng/mL',
+  },
+
+  // ============================================================================
+  // COAGULATION — Coagulação
+  // ============================================================================
+  {
+    category: 'sangue',
+    code: 'DDimer',
+    loinc: '48066-5',
+    names: {
+      en: ['D-Dimer', 'D Dimer', 'Fibrin D-Dimer'],
+      pt: ['Dímero-D', 'Dímero D', 'D-Dímero'],
+    },
+    unit: 'ng/mL',
+  },
+  {
+    category: 'sangue',
+    code: 'Fibrinogen',
+    loinc: '3255-7',
+    names: {
+      en: ['Fibrinogen', 'Fibrinogen Activity'],
+      pt: ['Fibrinogênio', 'Atividade do Fibrinogênio'],
+    },
+    unit: 'mg/dL',
+  },
+
+  // ============================================================================
+  // HEMATOLOGY — Hematologia adicional
+  // ============================================================================
+  {
+    category: 'figado',
+    code: 'LDH',
+    loinc: '2532-0',
+    names: {
+      en: ['Lactate Dehydrogenase', 'LDH', 'LD'],
+      pt: ['Desidrogenase Lática', 'DHL', 'LDH', 'Lactato Desidrogenase'],
+    },
+    unit: 'U/L',
+  },
+
+  // ============================================================================
+  // ENDOCRINE — Eixo cálcio/fósforo
+  // ============================================================================
+  {
+    category: 'hormonios',
+    code: 'PTH',
+    loinc: '2731-8',
+    names: {
+      en: ['Parathyroid Hormone', 'PTH', 'Intact PTH'],
+      pt: ['Paratormônio', 'PTH', 'Hormônio da Paratireoide', 'PTH Intacto'],
+    },
+    unit: 'pg/mL',
+  },
+
+  // ============================================================================
+  // IMMUNOLOGY — Complemento e imunoglobulinas
+  // ============================================================================
+  {
+    category: 'autoimunidade',
+    code: 'IgM',
+    loinc: '2472-9',
+    names: {
+      en: ['Immunoglobulin M', 'IgM', 'Total IgM'],
+      pt: ['Imunoglobulina M', 'IgM', 'IgM Total'],
+    },
+    unit: 'mg/dL',
+  },
+  {
+    category: 'autoimunidade',
+    code: 'C3',
+    loinc: '4485-3',
+    names: {
+      en: ['Complement C3', 'C3'],
+      pt: ['Complemento C3', 'C3', 'Fração C3 do Complemento'],
+    },
+    unit: 'mg/dL',
+  },
+  {
+    category: 'autoimunidade',
+    code: 'C4',
+    loinc: '4498-6',
+    names: {
+      en: ['Complement C4', 'C4'],
+      pt: ['Complemento C4', 'C4', 'Fração C4 do Complemento'],
+    },
+    unit: 'mg/dL',
+  },
+
+  // ============================================================================
+  // TUMOR MARKERS — Marcadores tumorais adicionais
+  // ============================================================================
+  {
+    category: 'marcadores-tumorais',
+    code: 'CA199',
+    loinc: '24108-3',
+    names: {
+      en: ['CA 19-9', 'Carbohydrate Antigen 19-9', 'CA19-9'],
+      pt: ['CA 19-9', 'Antígeno Carboidrato 19-9', 'CA19-9'],
+    },
+    unit: 'U/mL',
+  },
+  {
+    category: 'marcadores-tumorais',
+    code: 'CA153',
+    loinc: '6875-9',
+    names: {
+      en: ['CA 15-3', 'Cancer Antigen 15-3', 'CA15-3'],
+      pt: ['CA 15-3', 'Antígeno Câncer 15-3', 'CA15-3'],
+    },
+    sex: 'female',
+    unit: 'U/mL',
+  },
+  {
+    category: ['saude-feminina', 'marcadores-tumorais'],
+    code: 'BetaHCG',
+    loinc: '19080-1',
+    names: {
+      en: ['Beta-hCG', 'Beta Human Chorionic Gonadotropin', 'β-hCG Quantitative', 'hCG'],
+      pt: [
+        'Beta-hCG',
+        'Beta Gonadotrofina Coriônica Humana',
+        'β-hCG Quantitativo',
+        'hCG',
+        'Gonadotrofina Coriônica',
+      ],
+    },
+    unit: 'mIU/mL',
+  },
+
+  // ============================================================================
+  // RENAL — Filtração glomerular alternativa
+  // ============================================================================
+  {
+    category: 'rins',
+    code: 'CystatinC',
+    loinc: '33863-2',
+    names: {
+      en: ['Cystatin C', 'Cystatin-C'],
+      pt: ['Cistatina C', 'Cistatina-C'],
+    },
+    unit: 'mg/L',
+  },
+
+  // ============================================================================
+  // NUTRIENTS — Oligoelementos adicionais
+  // ============================================================================
+  {
+    category: 'nutrientes',
+    code: 'Selenium',
+    loinc: '5697-7',
+    names: {
+      en: ['Selenium', 'Se'],
+      pt: ['Selênio', 'Se'],
+    },
+    unit: 'µg/L',
+  },
+
+  // ============================================================================
+  // METABOLIC — Cetonas séricas
+  // ============================================================================
+  {
+    category: 'pancreas',
+    code: 'BetaHydroxybutyrate',
+    loinc: '53060-0',
+    names: {
+      en: ['Beta-Hydroxybutyrate', 'β-Hydroxybutyrate', 'BHB', 'Ketone Bodies'],
+      pt: ['Beta-Hidroxibutirato', 'β-Hidroxibutirato', 'BHB', 'Corpos Cetônicos'],
+    },
+    unit: 'mmol/L',
+  },
 ];
 
 // ============================================================================

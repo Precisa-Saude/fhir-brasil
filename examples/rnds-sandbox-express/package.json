@@ -1,0 +1,14 @@
+{
+  "name": "@fhir-brasil-examples/rnds-sandbox-express",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Exemplo: backend Express que consome o rnds-sandbox + frontend HTML/JS que renderiza as respostas",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "@precisa-saude/fhir-rnds-sandbox": "workspace:^",
+    "express": "^4.21.2"
+  }
+}

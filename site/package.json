@@ -9,8 +9,8 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.3.0",
-    "@precisa-saude/themes": "^1.5.0",
-    "@precisa-saude/ui": "^1.5.0",
+    "@precisa-saude/themes": "^1.6.0",
+    "@precisa-saude/ui": "^1.6.0",
     "lucide-react": "^0.562.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

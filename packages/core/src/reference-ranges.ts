@@ -1881,21 +1881,9 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   VATVolume: {
-    default: { max: 1500, min: 0, optimalMax: 800, optimalMin: 0, unit: 'cm³' },
+    default: { max: 852, min: 0, optimalMax: 600, optimalMin: 0, unit: 'cm³' },
     direction: 'lower-better',
-    source: 'ofenheimer-vat-2020',
-    variants: [
-      {
-        ageMin: 18,
-        range: { max: 1500, min: 0, optimalMax: 1000, optimalMin: 0, unit: 'cm³' },
-        sex: 'M',
-      },
-      {
-        ageMin: 18,
-        range: { max: 1000, min: 0, optimalMax: 500, optimalMin: 0, unit: 'cm³' },
-        sex: 'F',
-      },
-    ],
+    source: 'ge-corescan',
   },
 
   BMD_Total: {

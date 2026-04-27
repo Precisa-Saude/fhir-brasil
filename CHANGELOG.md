@@ -1,3 +1,9 @@
+## [0.14.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.14.0...v0.14.1) (2026-04-27)
+
+### Bug Fixes
+
+* **core:** adicionar warningMax em VATVolume para 3 faixas no gauge ([#35](https://github.com/Precisa-Saude/fhir-brasil/issues/35)) ([50d4d9c](https://github.com/Precisa-Saude/fhir-brasil/commit/50d4d9ca0fa0510656f1955313111db10ed51d4f))
+
 ## [0.14.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.13.0...v0.14.0) (2026-04-27)
 
 ### Features

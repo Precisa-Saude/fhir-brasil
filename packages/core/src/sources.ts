@@ -81,6 +81,12 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     url: 'https://pubmed.ncbi.nlm.nih.gov/10966886/',
   },
 
+  'ge-corescan': {
+    abnt: 'GE HEALTHCARE. enCORE Software CoreScan: Visceral Adipose Tissue (VAT) assessment. Madison: GE Medical Systems Lunar, [s. d.]. (Documentação do fabricante do DEXA Lunar Prodigy; classificação Healthy 0–52 in³, Increased Risk 52,15–112,10 in³, At Risk 112,10+ in³, equivalente a 0–852 cm³, 854–1.837 cm³, 1.837+ cm³.)',
+    key: 'ge-corescan',
+    url: 'https://www.gehealthcare.com/products/bone-and-metabolic-health/encore',
+  },
+
   'geloneze-brams-2009': {
     abnt: 'GELONEZE, B. et al. HOMA1-IR and HOMA2-IR indexes in identifying insulin resistance and metabolic syndrome — Brazilian Metabolic Syndrome Study (BRAMS). Arquivos Brasileiros de Endocrinologia & Metabologia, v. 53, n. 2, p. 281-287, 2009.',
     doi: '10.1590/S0004-27302009000200020',

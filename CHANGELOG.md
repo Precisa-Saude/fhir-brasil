@@ -1,3 +1,22 @@
+## [0.14.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.13.0...v0.14.0) (2026-04-27)
+
+### Features
+
+* consumir Header e OpenFooter compartilhados do @precisa-saude/ui no site ([#32](https://github.com/Precisa-Saude/fhir-brasil/issues/32)) ([8b2e5a4](https://github.com/Precisa-Saude/fhir-brasil/commit/8b2e5a49e268684aa3f5340146b1befbab317095))
+
+### Bug Fixes
+
+* **core:** alinhar VATVolume aos limiares do GE Lunar CoreScan ([#34](https://github.com/Precisa-Saude/fhir-brasil/issues/34)) ([15ddaf8](https://github.com/Precisa-Saude/fhir-brasil/commit/15ddaf87f5304488db4c292ee1557d924a720ba5))
+
+### CI/CD
+
+* bump pnpm/action-setup para v5 (Node.js 24) ([#33](https://github.com/Precisa-Saude/fhir-brasil/issues/33)) ([6380659](https://github.com/Precisa-Saude/fhir-brasil/commit/638065929f57570a1f3b89fe971944b631303dc4))
+
+### Chores
+
+* **deps:** bump @precisa-saude/* para ^1.5.0 ([#31](https://github.com/Precisa-Saude/fhir-brasil/issues/31)) ([f761865](https://github.com/Precisa-Saude/fhir-brasil/commit/f7618658f064154350724c08605ab3b3c24acc8c))
+* **lint:** remover override local redundante — test max-lines agora no preset compartilhado ([9feba5a](https://github.com/Precisa-Saude/fhir-brasil/commit/9feba5a9786068a99df694d4c26331cd4d6f1e05)), closes [#18](https://github.com/Precisa-Saude/fhir-brasil/issues/18) [#19](https://github.com/Precisa-Saude/fhir-brasil/issues/19)
+
 ## [0.13.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.12.0...v0.13.0) (2026-04-22)
 
 ### Features

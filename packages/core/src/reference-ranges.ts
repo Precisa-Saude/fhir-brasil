@@ -1881,7 +1881,14 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   VATVolume: {
-    default: { max: 852, min: 0, optimalMax: 600, optimalMin: 0, unit: 'cm³' },
+    default: {
+      max: 852,
+      min: 0,
+      optimalMax: 600,
+      optimalMin: 0,
+      unit: 'cm³',
+      warningMax: 1837,
+    },
     direction: 'lower-better',
     source: 'ge-corescan',
   },

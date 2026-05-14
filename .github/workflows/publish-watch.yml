@@ -83,9 +83,11 @@ jobs:
       - name: Open issue on mismatch
         if: steps.check.outputs.mismatches != ''
         uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7.1.0
+        env:
+          MISMATCHES: ${{ steps.check.outputs.mismatches }}
         with:
           script: |
-            const mismatches = `${{ steps.check.outputs.mismatches }}`;
+            const mismatches = process.env.MISMATCHES;
             const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
 
             // Não duplica: se já existe uma issue aberta com este título,

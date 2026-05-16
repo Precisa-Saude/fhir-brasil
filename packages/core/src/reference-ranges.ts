@@ -323,6 +323,16 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'tietz-7ed-2015',
   },
 
+  // β-Hidroxibutirato (BHB) sérico — corpos cetônicos. Faixa derivada de
+  // amostra populacional não-jejum (German National Cohort, n=304, 20–69 a)
+  // como percentis 2,5–97,5: 0,02–0,28 mmol/L. Em jejum prolongado ou
+  // cetose nutricional, valores acima de 0,5 mmol/L são esperados; o limite
+  // superior aqui reflete estado pós-prandial habitual, não jejum.
+  BetaHydroxybutyrate: {
+    default: { max: 0.28, min: 0.02, optimalMax: 0.28, optimalMin: 0.02, unit: 'mmol/L' },
+    source: 'klee-bhb-2020',
+  },
+
   BilirubinDirect: {
     default: { max: 0.3, min: 0, optimalMax: 0.2, optimalMin: 0, unit: 'mg/dL' },
     source: 'tietz-7ed-2015',
@@ -953,6 +963,30 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   Lactate: {
     default: { max: 2.2, min: 0.5, optimalMax: 1.8, optimalMin: 0.7, unit: 'mmol/L' },
     source: 'tietz-7ed-2015',
+  },
+
+  // DHL/LDH — método IFCC a 37 °C (padrão atual na maioria dos laboratórios
+  // brasileiros). Limites superiores de referência (97,5° percentil) obtidos
+  // por Schumann & Klauke (2002) em indivíduos ≥17 anos: 247 U/L (mulheres)
+  // e 248 U/L (homens). O IFCC publica apenas o limite superior; o limite
+  // inferior é fixado em 0 pois DHL baixa não tem significado clínico.
+  // Não comparar com método Wróblewski-LaDue (faixas mais antigas, ~240–480).
+  LDH: {
+    default: { max: 248, min: 0, optimalMax: 248, optimalMin: 0, unit: 'U/L' },
+    direction: 'lower-better',
+    source: 'schumann-ifcc-ldh-2002',
+    variants: [
+      {
+        ageMin: 17,
+        range: { max: 248, min: 0, optimalMax: 248, optimalMin: 0, unit: 'U/L' },
+        sex: 'M',
+      },
+      {
+        ageMin: 17,
+        range: { max: 247, min: 0, optimalMax: 247, optimalMin: 0, unit: 'U/L' },
+        sex: 'F',
+      },
+    ],
   },
 
   LDL: {

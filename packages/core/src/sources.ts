@@ -147,6 +147,13 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC5018018/',
   },
 
+  'klee-bhb-2020': {
+    abnt: 'KLEE, P. et al. Test validation, method comparison and reference range for the measurement of β-hydroxybutyrate in peripheral blood samples. Practical Laboratory Medicine, v. 18, e00146, 2020.',
+    doi: '10.1016/j.plabm.2019.e00146',
+    key: 'klee-bhb-2020',
+    url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6999181/',
+  },
+
   'maisel-bnp-2002': {
     abnt: 'MAISEL, A. S. et al. Rapid measurement of B-type natriuretic peptide in the emergency diagnosis of heart failure. New England Journal of Medicine, v. 347, n. 3, p. 161-167, 2002.',
     doi: '10.1056/NEJMoa020233',
@@ -273,7 +280,6 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     key: 'sbem-vitamind-2014',
     url: 'https://pubmed.ncbi.nlm.nih.gov/25166032/',
   },
-
   // ---------------------------------------------------------------------------
   // Sociedade Brasileira de Patologia Clínica / Medicina Laboratorial
   // ---------------------------------------------------------------------------
@@ -285,6 +291,14 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     key: 'sbpc-ml-2021',
     url: 'https://bibliotecasbpc.org.br/index.php?P=4&C=0.2.443',
   },
+
+  'schumann-ifcc-ldh-2002': {
+    abnt: 'SCHUMANN, G.; KLAUKE, R. New IFCC reference procedures for the determination of catalytic activity concentrations of five enzymes in serum: preliminary upper reference limits obtained in hospitalized subjects. Clinica Chimica Acta, v. 327, n. 1-2, p. 69-79, 2003.',
+    doi: '10.1016/S0009-8981(02)00341-8',
+    key: 'schumann-ifcc-ldh-2002',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/12482620/',
+  },
+
   'schwedhelm-sdma-2011': {
     abnt: 'SCHWEDHELM, E. et al. Plasma symmetric dimethylarginine reference limits from the Framingham Offspring Cohort. Clinical Chemistry and Laboratory Medicine, v. 49, n. 11, p. 1907-1910, 2011.',
     doi: '10.1515/CCLM.2011.679',
@@ -324,7 +338,6 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     isbn: '978-1-4557-4165-6',
     key: 'tietz-7ed-2015',
   },
-
   // ---------------------------------------------------------------------------
   // Fontes internacionais — Coagulação
   // ---------------------------------------------------------------------------
@@ -344,6 +357,7 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     key: 'who-iron-2020',
     url: 'https://www.who.int/publications/i/item/9789240000124',
   },
+
   'who-obesity-2000': {
     abnt: 'WORLD HEALTH ORGANIZATION. Obesity: preventing and managing the global epidemic. WHO Technical Report Series, n. 894. Geneva: WHO, 2000.',
     isbn: '92-4-120894-5',

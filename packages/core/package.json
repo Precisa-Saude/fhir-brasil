@@ -1,6 +1,6 @@
 {
   "name": "@precisa-saude/fhir",
-  "version": "0.14.1",
+  "version": "0.15.0",
   "description": "Tipos FHIR R4, definições de biomarcadores, faixas de referência e conversores para o ecossistema de saúde brasileiro",
   "keywords": [
     "fhir",

@@ -1,3 +1,14 @@
+## [0.15.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.14.1...v0.15.0) (2026-05-16)
+
+### Features
+
+* **core:** adicionar faixas de referência para DHL/LDH e β-hidroxibutirato ([#40](https://github.com/Precisa-Saude/fhir-brasil/issues/40)) ([6f39b7a](https://github.com/Precisa-Saude/fhir-brasil/commit/6f39b7ac2733de5f55bf0f25f83cc3662b4c7b2b))
+
+### CI/CD
+
+* passar mismatches via env no publish-watch ([#38](https://github.com/Precisa-Saude/fhir-brasil/issues/38)) ([88a67b1](https://github.com/Precisa-Saude/fhir-brasil/commit/88a67b141442fb98289dcda38f6bb3a5bdf255ea))
+* pin actions e adicionar tripwire publish-watch (postmortem TanStack) ([#37](https://github.com/Precisa-Saude/fhir-brasil/issues/37)) ([f21c1c5](https://github.com/Precisa-Saude/fhir-brasil/commit/f21c1c56ac4bfc960f02d4bae19b4bf1d27ed14e))
+
 ## [0.14.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.14.0...v0.14.1) (2026-04-27)
 
 ### Bug Fixes

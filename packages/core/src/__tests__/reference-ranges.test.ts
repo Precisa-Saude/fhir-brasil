@@ -91,6 +91,24 @@ describe('getReferenceRange', () => {
       const range = getReferenceRange('HDL', context);
       expect(range).toEqual(biomarkerRangeDefinitions.HDL.default);
     });
+
+    it('HDL has no false upper bound at 60 mg/dL (SBC 2025)', () => {
+      // Revisão clínica (issue fhir-brasil#41): HDL alto é cardioprotetor;
+      // não deve marcar valores > 60 mg/dL como anormais.
+      const maleRange = getReferenceRange('HDL', { age: 30, biologicalSex: 'M' });
+      const femaleRange = getReferenceRange('HDL', { age: 30, biologicalSex: 'F' });
+      expect(maleRange?.max ?? 0).toBeGreaterThanOrEqual(100);
+      expect(femaleRange?.max ?? 0).toBeGreaterThanOrEqual(100);
+    });
+
+    it('Progesterone female reproductive-age variant covers luteal phase', () => {
+      // Revisão clínica (issue fhir-brasil#41): faixa feminina ampliada
+      // para abranger fase lútea (até ~20 ng/mL).
+      const range = getReferenceRange('Progesterone', { age: 30, biologicalSex: 'F' });
+      expect(range?.max ?? 0).toBeGreaterThanOrEqual(15);
+      const maleRange = getReferenceRange('Progesterone', { age: 30, biologicalSex: 'M' });
+      expect(maleRange?.max).toBeLessThan(2);
+    });
   });
 
   describe('age-specific variants', () => {

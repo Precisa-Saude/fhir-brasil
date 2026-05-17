@@ -1,3 +1,9 @@
+## [0.15.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.15.1...v0.15.2) (2026-05-17)
+
+### Bug Fixes
+
+* **core:** corrigir LOINC de Omega3_Total para RBC (99620-7) ([dce8314](https://github.com/Precisa-Saude/fhir-brasil/commit/dce8314a85ec4cd172c994fe360c13d0a4b428e6)), closes [#41](https://github.com/Precisa-Saude/fhir-brasil/issues/41)
+
 ## [0.15.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.15.0...v0.15.1) (2026-05-17)
 
 ### Bug Fixes

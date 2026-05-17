@@ -1000,9 +1000,18 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'nmol/L',
   },
   {
+    // LOINC 99620-7 = "Omega 3 fatty acids (w3) [Moles/volume] in RBC.lysate".
+    // Alinha à matriz das entradas irmãs Omega3_EPA (75097-6) e Omega3_DHA
+    // (75095-0), ambas em hemácias. Anteriormente 35178-3 (mesmo analito em
+    // Ser/Plas), incompatível com o uso clínico do Índice Ômega-3 (Harris &
+    // von Schacky 2004), que é definido em membranas de hemácias.
+    // Ressalva: LOINC declara moles/volume; o biomarcador armazena %.
+    // Não há LOINC vigente para "Omega 3 total em % em RBC" — o `Omega3_Index`
+    // (88998-0) cobre apenas EPA+DHA. Mantemos `unit: '%'` por consistência
+    // com EPA/DHA (75095-0/75097-6 são [Entitic substance], também não-%).
     category: 'nutrientes',
     code: 'Omega3_Total',
-    loinc: '35178-3',
+    loinc: '99620-7',
     names: {
       en: ['Omega-3 Total', 'Total Omega-3'],
       pt: ['Ômega-3 Total'],

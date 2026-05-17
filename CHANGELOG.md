@@ -1,3 +1,9 @@
+## [0.15.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.15.0...v0.15.1) (2026-05-17)
+
+### Bug Fixes
+
+* **core:** corrigir faixas clínicas e LOINCs após revisão Gemini 3.1 Pro ([29ef2da](https://github.com/Precisa-Saude/fhir-brasil/commit/29ef2dae6c4f54c8b1ecedfefa4add803921d4eb)), closes [#41](https://github.com/Precisa-Saude/fhir-brasil/issues/41)
+
 ## [0.15.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.14.1...v0.15.0) (2026-05-16)
 
 ### Features

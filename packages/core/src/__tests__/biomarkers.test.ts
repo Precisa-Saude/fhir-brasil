@@ -221,6 +221,22 @@ describe('getDefinitionByCode', () => {
   it('should return undefined for invalid code', () => {
     expect(getDefinitionByCode('InvalidCode')).toBeUndefined();
   });
+
+  it('Urea usa LOINC 3091-6 (Urea, não BUN/3094-0)', () => {
+    // Revisão clínica (issue #41): LOINC 3094-0 é "Urea nitrogen" (BUN).
+    // A entrada brasileira deve usar 3091-6 (Urea em mg/dL) para alinhar
+    // com a faixa de referência de Ureia (15-50 mg/dL).
+    const def = getDefinitionByCode('Urea');
+    expect(def?.loinc).toBe('3091-6');
+    expect(def?.unit).toBe('mg/dL');
+    expect(def?.names.en).not.toContain('BUN');
+  });
+
+  it('Lipoprotein_a usa LOINC 43583-4 (nmol/L, não 10835-7 mg/dL)', () => {
+    const def = getDefinitionByCode('Lipoprotein_a');
+    expect(def?.loinc).toBe('43583-4');
+    expect(def?.unit).toBe('nmol/L');
+  });
 });
 
 describe('getDefinitionByLoinc', () => {

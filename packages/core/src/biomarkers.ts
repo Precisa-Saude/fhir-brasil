@@ -138,9 +138,13 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'nmol/L',
   },
   {
+    // LOINC 43583-4 = "Lipoprotein a [Moles/volume] in Serum or Plasma" (nmol/L).
+    // Anteriormente 10835-7 ("Lipoprotein a [Mass/volume]", mg/dL),
+    // incompatível com a unidade nmol/L declarada. SBC 2025 recomenda
+    // ensaio independente de isoforma reportado em nmol/L.
     category: 'coracao',
     code: 'Lipoprotein_a',
-    loinc: '10835-7',
+    loinc: '43583-4',
     names: {
       en: ['Lipoprotein (a)', 'Lp(a)'],
       pt: ['Lipoproteína (a)', 'Lp(a)'],
@@ -1474,11 +1478,16 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/L',
   },
   {
+    // LOINC 3091-6 = "Urea [Mass/volume] in Serum or Plasma" (mg/dL).
+    // Anteriormente 3094-0 ("Urea nitrogen", BUN), inconsistente com a faixa
+    // de referência brasileira (15-50 mg/dL) e com os nomes pt-BR (Ureia).
+    // Aliases 'BUN' e 'Blood Urea Nitrogen' removidos para evitar matching
+    // de relatórios de BUN contra faixas de Ureia (BUN ≈ Ureia / 2,14).
     category: 'rins',
     code: 'Urea',
-    loinc: '3094-0',
+    loinc: '3091-6',
     names: {
-      en: ['Blood Urea Nitrogen', 'BUN', 'Urea'],
+      en: ['Urea'],
       pt: ['Ureia', 'Uréia'],
     },
     unit: 'mg/dL',

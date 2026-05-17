@@ -237,6 +237,14 @@ describe('getDefinitionByCode', () => {
     expect(def?.loinc).toBe('43583-4');
     expect(def?.unit).toBe('nmol/L');
   });
+
+  it('Omega3_Total usa LOINC 99620-7 (RBC, não 35178-3 Ser/Plas)', () => {
+    // Revisão clínica (issue #41): Índice Ômega-3 (Harris 2004) é medido
+    // em hemácias; 99620-7 alinha à matriz dos sibling EPA (75097-6) e
+    // DHA (75095-0).
+    const def = getDefinitionByCode('Omega3_Total');
+    expect(def?.loinc).toBe('99620-7');
+  });
 });
 
 describe('getDefinitionByLoinc', () => {

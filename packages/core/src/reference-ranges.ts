@@ -194,8 +194,14 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     ],
   },
 
+  // AMH — fortemente dependente de idade e sexo. As variantes femininas por
+  // faixa etária são a referência clínica; o `default` foi ajustado para
+  // refletir uma faixa adulta conservadora (~18-40 anos, mulheres em idade
+  // reprodutiva geral). optimalMax anterior (6.9 ng/mL) sobrepunha-se a
+  // valores sugestivos de SOP ou risco de OHSS; clinicamente, valores acima
+  // de ~4 ng/mL já merecem investigação.
   AMH: {
-    default: { max: 10.0, min: 1.0, optimalMax: 6.9, optimalMin: 2.0, unit: 'ng/mL' },
+    default: { max: 6.0, min: 1.0, optimalMax: 4.0, optimalMin: 1.5, unit: 'ng/mL' },
     source: 'tietz-7ed-2015',
     variants: [
       {
@@ -354,6 +360,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'sbc-ic-2018',
   },
 
+  // Razão BUN/Creatinina — faixa 10-20 aplica-se ao Nitrogênio Ureico (BUN).
+  // Laboratórios brasileiros que reportam Ureia (e não BUN) usam razão
+  // Ureia/Creatinina, cuja faixa normal é aproximadamente 21-43
+  // (Ureia ≈ BUN × 2,14). O biomarcador atualmente assume a convenção BUN;
+  // consumidores que dosem Ureia devem converter ou reportar como razão
+  // distinta. Ver issue #41 para alinhamento de nomenclatura/LOINC.
   BUN_Creatinine_Ratio: {
     default: { max: 20, min: 10, optimalMax: 18, optimalMin: 12, unit: '' },
     source: 'tietz-7ed-2015',
@@ -437,8 +449,11 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'tietz-7ed-2015',
   },
 
+  // Colesterol total — SBC 2017/2025: valor desejável < 190 mg/dL para adultos,
+  // com ou sem jejum. Limite anterior (200 mg/dL) refletia a diretriz ATP III
+  // (NCEP, 2002), superada pelas atualizações brasileiras.
   Cholesterol: {
-    default: { max: 200, min: 0, optimalMax: 180, optimalMin: 0, unit: 'mg/dL' },
+    default: { max: 190, min: 0, optimalMax: 170, optimalMin: 0, unit: 'mg/dL' },
     source: 'sbc-lipids-2025',
   },
 
@@ -829,19 +844,25 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     ],
   },
 
+  // HDL — SBC 2017/2025: desejável > 40 mg/dL (♂) e > 50 mg/dL (♀).
+  // A diretriz NÃO define teto de normalidade — HDL alto é cardioprotetor.
+  // Limites superiores anteriormente fixados em 60 mg/dL geravam falsos
+  // alertas. Mantém-se `max` apenas como limite técnico do gauge (100 mg/dL),
+  // não como ponto de corte clínico; consumidores devem tratar `direction:
+  // higher-better` como sinal autoritativo.
   HDL: {
-    default: { max: 60, min: 40, optimalMax: 60, optimalMin: 50, unit: 'mg/dL' },
+    default: { max: 100, min: 40, optimalMax: 100, optimalMin: 50, unit: 'mg/dL' },
     direction: 'higher-better',
     source: 'sbc-lipids-2025',
     variants: [
       {
         ageMin: 18,
-        range: { max: 60, min: 40, optimalMax: 60, optimalMin: 45, unit: 'mg/dL' },
+        range: { max: 100, min: 40, optimalMax: 100, optimalMin: 45, unit: 'mg/dL' },
         sex: 'M',
       },
       {
         ageMin: 18,
-        range: { max: 60, min: 50, optimalMax: 60, optimalMin: 55, unit: 'mg/dL' },
+        range: { max: 100, min: 50, optimalMax: 100, optimalMin: 55, unit: 'mg/dL' },
         sex: 'F',
       },
     ],
@@ -1078,8 +1099,14 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'simopoulos-omega-ratio-2002',
   },
 
+  // Lp(a) — SBC 2025 (seção 3.1.1.2.7): níveis ≥ 50 mg/dL ou ≥ 125 nmol/L são
+  // considerados aumentados, com indicação de rastreamento em cascata familiar.
+  // A diretriz recomenda ensaio independente de isoforma medido em nmol/L; a
+  // unidade nmol/L é mantida aqui por refletir o padrão laboratorial atual.
+  // Limites anteriores (max=75) refletiam pontos de corte expressos em mg/dL,
+  // gerando incompatibilidade com a unidade nmol/L declarada.
   Lipoprotein_a: {
-    default: { max: 75, min: 0, optimalMax: 30, optimalMin: 0, unit: 'nmol/L' },
+    default: { max: 125, min: 0, optimalMax: 75, optimalMin: 0, unit: 'nmol/L' },
     direction: 'lower-better',
     source: 'sbc-lipids-2025',
   },
@@ -1193,8 +1220,13 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'harris-omega3-2004',
   },
 
+  // Ômega-3 Total (% de ácidos graxos eritrocitários) — Harris & von Schacky
+  // (2004) propõem ≥ 8% como zona ótima de proteção cardiovascular; valores
+  // entre 4% e 8% representam risco intermediário, < 4% risco alto.
+  // optimalMin anterior (5.5%) ficava em zona intermediária, contradizendo
+  // a literatura e o próprio texto educacional do `platform`.
   Omega3_Total: {
-    default: { max: 12.0, min: 3.0, optimalMax: 10.0, optimalMin: 5.5, unit: '%' },
+    default: { max: 12.0, min: 3.0, optimalMax: 10.0, optimalMin: 8.0, unit: '%' },
     source: 'harris-omega3-2004',
   },
 
@@ -1239,9 +1271,37 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'tietz-7ed-2015',
   },
 
+  // Progesterona — varia drasticamente com a fase do ciclo menstrual.
+  // O schema atual não modela fase do ciclo, então adotamos faixas amplas
+  // por sexo: o `default` cobre homens/fase folicular/pós-menopausa; a
+  // variante feminina expande até a faixa esperada de fase lútea
+  // (~3-20 ng/mL). Interpretação correta exige correlação com a fase do
+  // ciclo, indisponível neste contexto.
   Progesterone: {
     default: { max: 0.9, min: 0.1, optimalMax: 0.7, optimalMin: 0.2, unit: 'ng/mL' },
     source: 'tietz-7ed-2015',
+    variants: [
+      {
+        ageMin: 18,
+        range: { max: 0.9, min: 0.1, optimalMax: 0.6, optimalMin: 0.2, unit: 'ng/mL' },
+        sex: 'M',
+      },
+      // Mulheres em idade reprodutiva: faixa que abarca fases folicular
+      // (0.1-0.9 ng/mL) e lútea (3-20 ng/mL). Sem contexto de fase do ciclo,
+      // valores intermediários (1-3 ng/mL) ficam em zona ambígua.
+      {
+        ageMax: 50,
+        ageMin: 18,
+        range: { max: 20.0, min: 0.1, optimalMax: 15.0, optimalMin: 0.2, unit: 'ng/mL' },
+        sex: 'F',
+      },
+      // Pós-menopausa: valores tipicamente < 0.5 ng/mL (sem ovulação).
+      {
+        ageMin: 51,
+        range: { max: 0.5, min: 0, optimalMax: 0.3, optimalMin: 0, unit: 'ng/mL' },
+        sex: 'F',
+      },
+    ],
   },
 
   Prolactin: {
@@ -1547,8 +1607,13 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     ],
   },
 
+  // Ureia — convenção brasileira (laboratórios reportam Ureia, não BUN).
+  // Faixa adulta de 15-50 mg/dL (Ureia ≈ BUN × 2,14). Limites anteriores
+  // (7-20 mg/dL) refletiam BUN/Nitrogênio Ureico, gerando falsos diagnósticos
+  // de azotemia em pacientes com Ureia normal. LOINC 3094-0 (BUN) também
+  // deve ser revisto em biomarkers.ts — ver issue #41.
   Urea: {
-    default: { max: 20, min: 7, optimalMax: 16, optimalMin: 10, unit: 'mg/dL' },
+    default: { max: 50, min: 15, optimalMax: 40, optimalMin: 20, unit: 'mg/dL' },
     source: 'tietz-7ed-2015',
   },
 

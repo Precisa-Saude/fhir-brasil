@@ -3,11 +3,21 @@ import { describe, expect, it } from 'vitest';
 import {
   applyFallbackReferenceRanges,
   biomarkerRangeDefinitions,
+  type BiomarkerReferenceRange,
   defaultReferenceRanges,
   getFallbackReferenceRange,
   getReferenceRange,
   type ReferenceRangeContext,
 } from '../reference-ranges';
+
+/**
+ * Expected default range with the definition's source key propagated —
+ * mirrors what `getReferenceRange` returns.
+ */
+function expectedDefault(code: keyof typeof biomarkerRangeDefinitions): BiomarkerReferenceRange {
+  const def = biomarkerRangeDefinitions[code];
+  return def.source ? { ...def.default, source: def.source } : def.default;
+}
 
 describe('biomarkerRangeDefinitions', () => {
   it('should contain biomarker range definitions', () => {
@@ -44,17 +54,15 @@ describe('defaultReferenceRanges', () => {
   });
 
   it('should match default values from definitions', () => {
-    expect(defaultReferenceRanges.HDL).toEqual(biomarkerRangeDefinitions.HDL.default);
-    expect(defaultReferenceRanges.Cholesterol).toEqual(
-      biomarkerRangeDefinitions.Cholesterol.default,
-    );
+    expect(defaultReferenceRanges.HDL).toEqual(expectedDefault('HDL'));
+    expect(defaultReferenceRanges.Cholesterol).toEqual(expectedDefault('Cholesterol'));
   });
 });
 
 describe('getReferenceRange', () => {
   it('should return default range when no context provided', () => {
     const range = getReferenceRange('HDL');
-    expect(range).toEqual(biomarkerRangeDefinitions.HDL.default);
+    expect(range).toEqual(expectedDefault('HDL'));
   });
 
   it('should return undefined for unknown biomarker', () => {
@@ -65,7 +73,7 @@ describe('getReferenceRange', () => {
     const context: ReferenceRangeContext = { age: 30, biologicalSex: 'M' };
     const range = getReferenceRange('Cholesterol', context);
     // Cholesterol has no sex-specific variants
-    expect(range).toEqual(biomarkerRangeDefinitions.Cholesterol.default);
+    expect(range).toEqual(expectedDefault('Cholesterol'));
   });
 
   describe('sex-specific variants', () => {
@@ -89,7 +97,7 @@ describe('getReferenceRange', () => {
     it('should return default when sex not provided', () => {
       const context: ReferenceRangeContext = { age: 30 };
       const range = getReferenceRange('HDL', context);
-      expect(range).toEqual(biomarkerRangeDefinitions.HDL.default);
+      expect(range).toEqual(expectedDefault('HDL'));
     });
 
     it('HDL has no false upper bound at 60 mg/dL (SBC 2025)', () => {
@@ -145,7 +153,7 @@ describe('getReferenceRange', () => {
     it('should return default when age not provided', () => {
       const context: ReferenceRangeContext = { biologicalSex: 'M' };
       const range = getReferenceRange('AMH', context);
-      expect(range).toEqual(biomarkerRangeDefinitions.AMH.default);
+      expect(range).toEqual(expectedDefault('AMH'));
     });
   });
 
@@ -280,7 +288,7 @@ describe('getReferenceRange', () => {
       // hasPregnancyVariant is true, so non-pregnancy variants are also
       // skipped → default.
       const range = getReferenceRange('TSH', context);
-      expect(range).toEqual(biomarkerRangeDefinitions.TSH.default);
+      expect(range).toEqual(expectedDefault('TSH'));
     });
 
     it('pregnant=undefined is treated as non-pregnant (conservative fallback)', () => {

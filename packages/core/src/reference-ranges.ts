@@ -44,6 +44,12 @@ export interface BiomarkerReferenceRange {
   min?: number;
   optimalMax?: number;
   optimalMin?: number;
+  /**
+   * Chave de fonte bibliográfica (ex.: `'sbc-lipids-2025'`). Propagada
+   * do `BiomarkerRangeDefinition` no momento da consulta; ausente em
+   * faixas declaradas diretamente sem uma definição completa.
+   */
+  source?: string;
   unit: string;
   warningMax?: number;
 }
@@ -2136,7 +2142,10 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
  * This is derived from biomarkerRangeDefinitions defaults
  */
 export const defaultReferenceRanges: Record<string, BiomarkerReferenceRange> = Object.fromEntries(
-  Object.entries(biomarkerRangeDefinitions).map(([code, def]) => [code, def.default]),
+  Object.entries(biomarkerRangeDefinitions).map(([code, def]) => [
+    code,
+    def.source ? { ...def.default, source: def.source } : def.default,
+  ]),
 );
 
 /**
@@ -2152,9 +2161,12 @@ export function getReferenceRange(
   const definition = biomarkerRangeDefinitions[testCode];
   if (!definition) return undefined;
 
+  const withSource = (range: BiomarkerReferenceRange): BiomarkerReferenceRange =>
+    definition.source ? { ...range, source: definition.source } : range;
+
   // If no context or no variants, return default
   if (!context || !definition.variants || definition.variants.length === 0) {
-    return definition.default;
+    return withSource(definition.default);
   }
 
   const { age, biologicalSex, pregnancyTrimester, pregnant } = context;
@@ -2217,11 +2229,11 @@ export function getReferenceRange(
       continue;
     }
 
-    return variant.range;
+    return withSource(variant.range);
   }
 
   // No matching variant found - return default
-  return definition.default;
+  return withSource(definition.default);
 }
 
 /**

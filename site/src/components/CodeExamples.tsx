@@ -13,8 +13,8 @@ const TABS = [
     label: 'Faixas de Referência',
     code: `import { getReferenceRange, normalizeCode } from '@precisa-saude/fhir'
 
-// Normaliza aliases — "colesterol HDL", "HDL-C" → "HDL"
-const code = normalizeCode('colesterol HDL') // "HDL"
+// Normaliza aliases de código para a forma canônica
+const code = normalizeCode('Tiroxina_T4') // "T4Total"
 
 // Faixa personalizada por sexo e idade
 const range = getReferenceRange('HDL', {
@@ -24,10 +24,12 @@ const range = getReferenceRange('HDL', {
 
 console.log(range)
 // {
-//   min: 40,
-//   optimalMin: 60,
+//   min: 50,
+//   max: 100,
+//   optimalMin: 55,
+//   optimalMax: 100,
 //   unit: 'mg/dL',
-//   source: 'SBC - Atualização da Diretriz de Dislipidemias 2017'
+//   source: 'sbc-lipids-2025',
 // }`,
   },
   {
@@ -36,19 +38,38 @@ console.log(range)
 import type { LabReportData, LabObservationData, UserProfileData } from '@precisa-saude/fhir'
 
 const report: LabReportData = {
+  reportId: 'report-123',
+  userId: 'user-456',
   laboratoryName: 'Laboratório Exemplo',
-  reportDate: '2025-03-15',
+  collectionDate: '2025-03-15T08:00:00.000Z',
+  createdAt: '2025-03-15T14:00:00.000Z',
+  overallStatus: 'NORMAL',
 }
 
 const observations: LabObservationData[] = [
-  { code: 'GLU', value: 92, unit: 'mg/dL' },
-  { code: 'HBA1C', value: 5.4, unit: '%' },
+  {
+    reportId: 'report-123',
+    biomarkerCode: 'Glucose',
+    biomarkerName: 'Glicose',
+    value: 92,
+    unit: 'mg/dL',
+    flag: '',
+  },
+  {
+    reportId: 'report-123',
+    biomarkerCode: 'HbA1c',
+    biomarkerName: 'Hemoglobina Glicada',
+    value: 5.4,
+    unit: '%',
+    flag: '',
+  },
 ]
 
 const profile: UserProfileData = {
+  userId: 'user-456',
   name: 'Maria Silva',
   birthDate: '1980-06-15',
-  biologicalSex: 'F',
+  gender: 'female',
 }
 
 // Retorna FHIR R4 Bundle completo

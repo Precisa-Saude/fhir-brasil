@@ -556,10 +556,27 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'tietz-7ed-2015',
   },
 
-  // D-Dímero: 500 ng/mL é o corte clínico padrão para exclusão de TEV
+  // D-Dímero — exame de exclusão de TEV (tromboembolismo venoso) com
+  // ponto de corte único, não uma faixa graduada. Valores < 500 ng/mL
+  // têm alto valor preditivo negativo; acima disso a investigação
+  // clínica decide. Removidos `optimalMin/optimalMax` porque a
+  // dicotomia clínica (positivo/negativo para exclusão) não é melhor
+  // representada por zonas verde/amarela. Em pacientes > 50 anos,
+  // diretrizes (ESC 2019, ACEP) recomendam corte ajustado pela idade:
+  // idade × 10 ng/mL (até 750 ng/mL aos 75+).
   DDimer: {
-    default: { max: 500, min: 0, optimalMax: 250, optimalMin: 0, unit: 'ng/mL' },
+    default: { max: 500, min: 0, unit: 'ng/mL' },
+    direction: 'lower-better',
     source: 'wells-ddimer-2003',
+    variants: [
+      // Corte ajustado por idade — ESC 2019 (Konstantinides et al.) e
+      // ACEP recomendam em pacientes não gestantes ≥ 50 anos com
+      // probabilidade clínica baixa/intermediária de TEV. Fórmula:
+      // idade × 10 ng/mL. Aproximação por faixas etárias.
+      { ageMax: 59, ageMin: 50, range: { max: 590, min: 0, unit: 'ng/mL' }, sex: 'all' },
+      { ageMax: 69, ageMin: 60, range: { max: 690, min: 0, unit: 'ng/mL' }, sex: 'all' },
+      { ageMin: 70, range: { max: 750, min: 0, unit: 'ng/mL' }, sex: 'all' },
+    ],
   },
 
   Omega3_DHA: {

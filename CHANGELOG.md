@@ -1,3 +1,9 @@
+## [0.15.3](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.15.2...v0.15.3) (2026-05-19)
+
+### Bug Fixes
+
+* **docs:** corrigir exemplos da home + expor source nas faixas ([#44](https://github.com/Precisa-Saude/fhir-brasil/issues/44)) ([daf30b6](https://github.com/Precisa-Saude/fhir-brasil/commit/daf30b643ade5a8c5c466cbe8ed46b8803771af1))
+
 ## [0.15.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.15.1...v0.15.2) (2026-05-17)
 
 ### Bug Fixes

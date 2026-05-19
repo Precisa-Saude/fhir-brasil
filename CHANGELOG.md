@@ -1,3 +1,9 @@
+## [0.15.4](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.15.3...v0.15.4) (2026-05-19)
+
+### Bug Fixes
+
+* **core:** remove zonas ótimas do D-Dímero e adiciona corte ajustado por idade ([#45](https://github.com/Precisa-Saude/fhir-brasil/issues/45)) ([bc750b4](https://github.com/Precisa-Saude/fhir-brasil/commit/bc750b4280d73e9d485dafce17a842b9b9bf7028)), closes [Precisa-Saude/platform#465-468](https://github.com/Precisa-Saude/platform/issues/465-468)
+
 ## [0.15.3](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.15.2...v0.15.3) (2026-05-19)
 
 ### Bug Fixes

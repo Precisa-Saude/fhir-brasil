@@ -11,7 +11,7 @@ import { join } from 'node:path';
 const rootPkg = JSON.parse(readFileSync('package.json', 'utf-8'));
 const version = rootPkg.version;
 
-const packages = ['packages/core', 'packages/calculators', 'packages/ocr-utils'];
+const packages = ['packages/core', 'packages/calculators', 'packages/ocr-utils', 'packages/rnds'];
 
 for (const dir of packages) {
   const pkgPath = join(dir, 'package.json');

@@ -81,6 +81,50 @@ describe('calculatePhenoAge', () => {
   });
 });
 
+describe('calculatePhenoAge — CRP unit handling (mg/L input → mg/dL in formula)', () => {
+  // Reference case verified against the published Liu et al. 2018 (corrected)
+  // formula and the longevity-tools.com calculator. Conventional-unit inputs
+  // from the source URL, converted to the SI units this calculator expects.
+  // hs-CRP stays in mg/L (0.3) — the calculator divides by 10 internally.
+  // Source of truth: NHANES IV `LBXCRP` is mg/dL; `0.0954·ln(CRP[mg/dL])`.
+  const referenceInput: PhenoAgeInput = {
+    albumin: 4.4 * 10, // 4.4 g/dL → 44 g/L
+    alkalinePhosphatase: 59, // U/L
+    chronologicalAge: 46,
+    creatinine: 1.13 * 88.4, // 1.13 mg/dL → 99.892 μmol/L
+    crp: 0.3, // mg/L
+    glucose: 85 / 18.0182, // 85 mg/dL → 4.717 mmol/L
+    lymphocytePercent: 33.6,
+    mcv: 99.8, // fL
+    rdw: 12, // %
+    wbc: 4.5, // 10^9/L
+  };
+
+  it('matches the published / longevity-tools reference value (36.5)', () => {
+    // Before the unit fix this returned 39.0 (CRP wrongly used in mg/L).
+    expect(calculatePhenoAge(referenceInput).phenoAge).toBeCloseTo(36.5, 1);
+  });
+
+  it('logs CRP in mg/dL, not mg/L (0.3 mg/L → ln(0.03 mg/dL))', () => {
+    const crp = calculatePhenoAge(referenceInput).breakdown.find((b) => b.key === 'crp');
+    expect(crp?.valueWithUnit).toBe('ln(0.030)');
+    // 0.0954 × ln(0.3 / 10), rounded to 4 dp
+    expect(crp?.contribution).toBeCloseTo(0.0954 * Math.log(0.03), 4);
+  });
+
+  it('clamps CRP below the limit of detection (0.1 mg/L)', () => {
+    const belowLod = calculatePhenoAge({ ...referenceInput, crp: 0.02 });
+    const atLod = calculatePhenoAge({ ...referenceInput, crp: 0.1 });
+    expect(belowLod.phenoAge).toBe(atLod.phenoAge);
+  });
+
+  it('higher CRP raises PhenoAge monotonically', () => {
+    const low = calculatePhenoAge({ ...referenceInput, crp: 0.5 }).phenoAge;
+    const high = calculatePhenoAge({ ...referenceInput, crp: 5 }).phenoAge;
+    expect(high).toBeGreaterThan(low);
+  });
+});
+
 describe('validateBiomarkers', () => {
   it('should pass for healthy values', () => {
     const result = validateBiomarkers(healthyInput);

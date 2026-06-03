@@ -3,9 +3,26 @@
  *
  * Coefficients from Levine et al. (2018) Table 1
  * Units: albumin (g/L), creatinine (μmol/L), glucose (mmol/L),
- *        CRP (ln of mg/L), lymphocyte (%), MCV (fL), RDW (%),
- *        ALP (U/L), WBC (10^9/L), age (years)
+ *        CRP (mg/dL inside the log term — see note below), lymphocyte (%),
+ *        MCV (fL), RDW (%), ALP (U/L), WBC (10^9/L), age (years)
+ *
+ * CRP unit note: the original model was fit on NHANES IV CRP, which is reported
+ * in **mg/dL** (variable `LBXCRP`). The `logCrp` coefficient therefore expects
+ * `ln(CRP in mg/dL)`. Our public input (`PhenoAgeInput.crp`) stays in **mg/L**
+ * — the unit Brazilian hs-CRP assays report — and the calculator converts
+ * mg/L → mg/dL right before the log. See `CRP_LOD_MG_L` / `MG_L_PER_MG_DL`.
  */
+
+/** Milligrams per litre in one milligram per decilitre (1 mg/dL = 10 mg/L). */
+export const MG_L_PER_MG_DL = 10;
+
+/**
+ * hs-CRP limit of detection used to clamp CRP before the log transform (mg/L).
+ * Matches the NHANES hs-CRP lower limit of detection (~0.11 mg/L); values below
+ * it are not meaningfully measurable and would otherwise push `ln(CRP)` toward
+ * −∞. Expressed in mg/L because that is the unit of the public input.
+ */
+export const CRP_LOD_MG_L = 0.1;
 
 /**
  * Regression coefficients from the Cox proportional hazards model

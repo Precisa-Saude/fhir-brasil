@@ -8,7 +8,9 @@
 import {
   BIOMARKER_NAMES_PT,
   BIOMARKER_RANGES,
+  CRP_LOD_MG_L,
   GOMPERTZ_PARAMS,
+  MG_L_PER_MG_DL,
   PHENOAGE_COEFFICIENTS,
 } from './constants';
 import type { ComponentBreakdown, PhenoAgeInput, PhenoAgeResult } from './types';
@@ -20,7 +22,11 @@ import type { ComponentBreakdown, PhenoAgeInput, PhenoAgeResult } from './types'
 const calculateLinearPredictor = (
   input: PhenoAgeInput,
 ): { xb: number; breakdown: ComponentBreakdown[] } => {
-  const logCrp = Math.log(Math.max(input.crp, 0.1)); // Avoid log(0)
+  // Levine's CRP coefficient was fit on NHANES CRP in mg/dL, but `input.crp` is
+  // in mg/L (the unit Brazilian hs-CRP assays report). Clamp to the hs-CRP limit
+  // of detection (avoids log(0)/log(-)), then convert mg/L → mg/dL for the model.
+  const crpMgDl = Math.max(input.crp, CRP_LOD_MG_L) / MG_L_PER_MG_DL;
+  const logCrp = Math.log(crpMgDl);
 
   const components: Array<{
     key: string;
@@ -49,9 +55,9 @@ const calculateLinearPredictor = (
     },
     {
       coefficient: PHENOAGE_COEFFICIENTS.logCrp,
-      displayValue: `ln(${input.crp.toFixed(2)})`,
+      displayValue: `ln(${crpMgDl.toFixed(3)})`,
       key: 'crp',
-      unit: 'ln(mg/L)',
+      unit: 'ln(mg/dL)',
       value: logCrp,
     },
     {

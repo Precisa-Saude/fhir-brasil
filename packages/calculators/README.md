@@ -24,7 +24,7 @@ const result = phenoage.calculatePhenoAge({
   albumin: 42, // g/L
   creatinine: 80, // μmol/L
   glucose: 5.2, // mmol/L
-  crp: 1.5, // mg/L
+  crp: 1.5, // mg/L (PCR ultrassensível — convertida para mg/dL internamente)
   lymphocytePercent: 30,
   mcv: 88, // fL
   rdw: 13.2, // %
@@ -32,9 +32,15 @@ const result = phenoage.calculatePhenoAge({
   wbc: 6.0, // 10^9/L
 });
 
-console.log(result.phenoAge); // 42.3 (idade biológica)
-console.log(result.ageDifference); // -2.7 (anos mais jovem)
+console.log(result.phenoAge); // 39.5 (idade biológica)
+console.log(result.ageDifference); // -5.5 (anos mais jovem)
 ```
+
+> **Unidade da PCR:** o modelo de Levine foi ajustado sobre dados do NHANES IV,
+> onde a PCR é medida em **mg/dL**. O campo `crp` desta API permanece em
+> **mg/L** — a unidade reportada pelos laboratórios brasileiros (PCR
+> ultrassensível) — e o cálculo converte mg/L → mg/dL antes do termo
+> `0.0954·ln(PCR)`. Não pré-converta a PCR para mg/dL ao chamar a função.
 
 ### BrDMrisc — Risco de diabetes tipo 2
 

@@ -1,3 +1,14 @@
+## [0.15.5](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.15.4...v0.15.5) (2026-06-03)
+
+### Bug Fixes
+
+* **calculators:** corrige unidade da PCR no PhenoAge (mg/L → mg/dL) ([#50](https://github.com/Precisa-Saude/fhir-brasil/issues/50)) ([87ab3d2](https://github.com/Precisa-Saude/fhir-brasil/commit/87ab3d2118169869ea821e28c3980f13b1064423))
+* **ci:** sincronizar versão do pacote rnds com o root ([#46](https://github.com/Precisa-Saude/fhir-brasil/issues/46)) ([21c22a5](https://github.com/Precisa-Saude/fhir-brasil/commit/21c22a5c5b1f5efbd5146e1f10b17ddd408d17f0)), closes [#39](https://github.com/Precisa-Saude/fhir-brasil/issues/39) [#39](https://github.com/Precisa-Saude/fhir-brasil/issues/39)
+
+### Chores
+
+* **ci:** publish-watch passa de cron 15min para diário ([#47](https://github.com/Precisa-Saude/fhir-brasil/issues/47)) ([f26bc31](https://github.com/Precisa-Saude/fhir-brasil/commit/f26bc317a67ad36c6825708839bf2fcdd8ca90cf))
+
 ## [0.15.4](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.15.3...v0.15.4) (2026-05-19)
 
 ### Bug Fixes

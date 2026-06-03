@@ -1,6 +1,6 @@
 {
   "name": "@precisa-saude/fhir-calculators",
-  "version": "0.15.4",
+  "version": "0.15.5",
   "description": "Calculadoras clínicas — PhenoAge, BrDMrisc, biomarcadores derivados (HOMA-IR, VLDL, IMC)",
   "keywords": [
     "fhir",

@@ -53,9 +53,10 @@ export interface BiomarkerReferenceRange {
   unit: string;
   warningMax?: number;
   /**
-   * Limite inferior da zona de atenção (âmbar) para marcadores
-   * `higher-better`: valores entre `warningMin` e `min` são âmbar; abaixo de
-   * `warningMin`, vermelho. Espelha `warningMax` para `lower-better`.
+   * Análogo de `warningMax` para marcadores `higher-better`. Define o limite
+   * inferior da zona de atenção (âmbar): valores entre `warningMin` e `min`
+   * são âmbar e abaixo de `warningMin` são vermelhos. (`warningMax` cobre o
+   * caso `lower-better`, com a zona âmbar acima de `max`.)
    */
   warningMin?: number;
 }
@@ -959,8 +960,6 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
       fastingRequired: 'strict',
       max: 1.5,
       min: 0,
-      optimalMax: 1.5,
-      optimalMin: 0,
       unit: '',
       warningMax: 2.71,
     },

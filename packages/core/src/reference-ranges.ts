@@ -52,6 +52,12 @@ export interface BiomarkerReferenceRange {
   source?: string;
   unit: string;
   warningMax?: number;
+  /**
+   * Limite inferior da zona de atenção (âmbar) para marcadores
+   * `higher-better`: valores entre `warningMin` e `min` são âmbar; abaixo de
+   * `warningMin`, vermelho. Espelha `warningMax` para `lower-better`.
+   */
+  warningMin?: number;
 }
 
 /**
@@ -2078,8 +2084,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'sturgeon-nacb-2008',
   },
 
+  // Relação PSA livre/total — risco de câncer de próstata é inversamente
+  // proporcional: >25% baixo risco (verde), 15–25% intermediário (âmbar),
+  // <15% maior risco (vermelho). `min` (25) delimita o verde e `warningMin`
+  // (15) a faixa de atenção.
   PSA_FreeRatio: {
-    default: { max: 100, min: 25, optimalMax: 100, optimalMin: 30, unit: '%' },
+    default: { max: 100, min: 25, optimalMax: 100, optimalMin: 30, unit: '%', warningMin: 15 },
     source: 'sturgeon-nacb-2008',
   },
 

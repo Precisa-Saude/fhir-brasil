@@ -1,3 +1,9 @@
+## [0.16.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.16.1...v0.16.2) (2026-06-04)
+
+### Bug Fixes
+
+* **core:** corrige faixa da razão AA/EPA (1–15 sem fonte → 3,7–40,7) ([#53](https://github.com/Precisa-Saude/fhir-brasil/issues/53)) ([bc30ed8](https://github.com/Precisa-Saude/fhir-brasil/commit/bc30ed8b1af1d4ae20da510c57c72ee3e77575f3))
+
 ## [0.16.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.16.0...v0.16.1) (2026-06-04)
 
 ### Bug Fixes

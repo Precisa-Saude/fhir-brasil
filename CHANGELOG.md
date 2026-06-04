@@ -1,3 +1,9 @@
+## [0.16.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.15.5...v0.16.0) (2026-06-04)
+
+### Features
+
+* **core:** faixas de atenção (âmbar) — HOMA-IR via warningMax e PSA livre/total via warningMin ([#51](https://github.com/Precisa-Saude/fhir-brasil/issues/51)) ([4313a5d](https://github.com/Precisa-Saude/fhir-brasil/commit/4313a5dcc7be30231ae17d887d62726a30235818))
+
 ## [0.15.5](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.15.4...v0.15.5) (2026-06-03)
 
 ### Bug Fixes

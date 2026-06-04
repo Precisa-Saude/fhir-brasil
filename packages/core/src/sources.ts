@@ -338,6 +338,13 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     isbn: '978-1-4557-4165-6',
     key: 'tietz-7ed-2015',
   },
+
+  'torrissen-omega3-dbs-2025': {
+    abnt: 'TORRISSEN, M. et al. Global variations in omega-3 fatty acid status and omega-6:omega-3 ratios: insights from > 500,000 whole-blood dried blood spot samples. Lipids in Health and Disease, v. 24, n. 1, p. 260, 2025.',
+    doi: '10.1186/s12944-025-02676-6',
+    key: 'torrissen-omega3-dbs-2025',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/40783537/',
+  },
   // ---------------------------------------------------------------------------
   // Fontes internacionais — Coagulação
   // ---------------------------------------------------------------------------

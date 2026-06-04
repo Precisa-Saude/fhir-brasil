@@ -299,10 +299,19 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'simopoulos-omega-ratio-2002',
   },
 
+  // Razão Ácido Araquidônico/EPA (sangue total) — `lower-better`: razão menor =
+  // menos eicosanoides pró-inflamatórios. NÃO há intervalo de referência
+  // validado em periódico para esta razão; o intervalo 3,7–40,7 é o de
+  // referência laboratorial do ensaio Quest/Cleveland HeartLab OmegaCheck®
+  // (população interna do laboratório, sem fonte primária publicada). É
+  // corroborado por Torrissen 2025 (>500 mil amostras de sangue total): a
+  // mediana brasileira (≈18,8) e as ocidentais (EUA ≈22,3; Europa ≈14,2) caem
+  // dentro do intervalo. Sem `optimal*`: não há corte ótimo de AA/EPA com fonte.
+  // Em telas de relatório único, prefira o intervalo impresso pelo laboratório.
   AA_EPA_Ratio: {
-    default: { max: 15.0, min: 1.0, optimalMax: 5.0, optimalMin: 1.5, unit: '' },
+    default: { max: 40.7, min: 3.7, unit: '' },
     direction: 'lower-better',
-    source: 'simopoulos-omega-ratio-2002',
+    source: 'torrissen-omega3-dbs-2025',
   },
 
   Arsenic: {

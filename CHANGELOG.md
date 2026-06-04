@@ -1,3 +1,9 @@
+## [0.16.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.16.0...v0.16.1) (2026-06-04)
+
+### Bug Fixes
+
+* **core:** Relação PSA livre/total como higher-better ([#52](https://github.com/Precisa-Saude/fhir-brasil/issues/52)) ([77adab2](https://github.com/Precisa-Saude/fhir-brasil/commit/77adab2b99edf82acbc50b8e07319e94a47684e1))
+
 ## [0.16.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.15.5...v0.16.0) (2026-06-04)
 
 ### Features

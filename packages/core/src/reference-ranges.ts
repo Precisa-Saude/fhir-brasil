@@ -2084,11 +2084,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   // Relação PSA livre/total — `higher-better`: razão maior = menor risco de
-  // câncer de próstata, logo não há limite superior "ruim". >25% baixo risco
-  // (verde), 15–25% intermediário (âmbar), <15% maior risco (vermelho). `min`
-  // (25) delimita o verde e `warningMin` (15) a faixa de atenção.
+  // câncer de próstata, logo não há limite superior "ruim" (acima do normal é
+  // verde). Faixas alinhadas à tabela clínica: >25% baixo risco (verde),
+  // 10–25% atenção — intermediário/moderado (âmbar), <10% alto risco >50%
+  // (vermelho). `min` (25) delimita o verde e `warningMin` (10) o vermelho.
   PSA_FreeRatio: {
-    default: { max: 100, min: 25, optimalMax: 100, optimalMin: 30, unit: '%', warningMin: 15 },
+    default: { max: 100, min: 25, optimalMax: 100, optimalMin: 30, unit: '%', warningMin: 10 },
     direction: 'higher-better',
     source: 'sturgeon-nacb-2008',
   },

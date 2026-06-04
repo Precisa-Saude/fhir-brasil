@@ -943,17 +943,20 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     ],
   },
 
-  // HOMA-IR — corte 2.71 do estudo BRAMS (Geloneze et al., 2009) validado em
-  // população urbana brasileira; Tietz 7ª ed. não publica corte próprio de
-  // HOMA-IR, então a fonte anterior era citação inadequada.
+  // HOMA-IR — três faixas do estudo BRAMS (Geloneze et al., 2009) validado em
+  // população urbana brasileira: ótimo até 1.5; sensibilidade reduzida (zona de
+  // atenção) entre 1.5 e 2.71; resistência à insulina acima de 2.71. Tietz 7ª
+  // ed. não publica corte próprio de HOMA-IR. `max` (1.5) delimita o verde,
+  // `warningMax` (2.71) o âmbar e acima disso o vermelho.
   HOMA_IR: {
     default: {
       fastingRequired: 'strict',
-      max: 2.71,
+      max: 1.5,
       min: 0,
       optimalMax: 1.5,
       optimalMin: 0,
       unit: '',
+      warningMax: 2.71,
     },
     direction: 'lower-better',
     source: 'geloneze-brams-2009',

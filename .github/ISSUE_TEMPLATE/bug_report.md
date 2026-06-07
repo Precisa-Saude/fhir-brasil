@@ -12,7 +12,6 @@ Descreva o problema de forma clara e concisa.
 ## Pacote afetado
 
 - [ ] `@precisa-saude/fhir`
-- [ ] `@precisa-saude/fhir-calculators`
 - [ ] `@precisa-saude/fhir-ocr-utils`
 
 ## Passos para reproduzir

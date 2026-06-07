@@ -10,9 +10,6 @@ Os pacotes estão disponíveis no npm com o escopo `@precisa-saude`:
 # Pacote principal — definições de biomarcadores, faixas de referência e conversor FHIR
 npm install @precisa-saude/fhir
 
-# Calculadoras clínicas — PhenoAge, BrDMrisc, biomarcadores derivados
-npm install @precisa-saude/fhir-calculators
-
 # Utilitários para OCR — ancoragem de biomarcadores em texto extraído
 npm install @precisa-saude/fhir-ocr-utils
 ```
@@ -101,33 +98,15 @@ console.log(JSON.stringify(bundle, null, 2));
 // Resultado: Bundle com Patient, DiagnosticReport e Observations no formato FHIR R4
 ```
 
-## Exemplo 3: Calcular PhenoAge
+## Calculadoras clínicas
 
-```typescript
-import { phenoage } from '@precisa-saude/fhir-calculators';
+As calculadoras clínicas (PhenoAge, BrDMrisc, biomarcadores derivados e índices
+como FIB-4, ASCVD, eGFR) foram movidas para o pacote
+[`@precisa-saude/calculadoras-clinicas`](https://www.npmjs.com/package/@precisa-saude/calculadoras-clinicas).
+Veja a documentação no [repositório do pacote](https://github.com/Precisa-Saude/calculadoras-clinicas).
 
-// Valores em unidades SI (como esperado pelo algoritmo)
-const resultado = phenoage.calculatePhenoAge({
-  albumin: 42, // g/L
-  creatinine: 80, // μmol/L
-  glucose: 5.2, // mmol/L
-  crp: 1.5, // mg/L
-  lymphocytePercent: 30, // %
-  mcv: 88, // fL
-  rdw: 12.5, // %
-  alkalinePhosphatase: 65, // U/L
-  wbc: 6.2, // 10^9/L
-  chronologicalAge: 45, // anos
-});
-
-console.log(`Idade biológica: ${resultado.phenoAge} anos`);
-console.log(`Diferença: ${resultado.ageDifference} anos`);
-
-// Se os valores estão em unidades brasileiras convencionais,
-// use autoConvertToSI para converter automaticamente:
-const albumina = phenoage.autoConvertToSI('albumin', 4.2, 'g/dL');
-console.log(albumina);
-// { value: 42, unit: 'g/L', wasConverted: true }
+```bash
+npm install @precisa-saude/calculadoras-clinicas
 ```
 
 ## Próximos passos

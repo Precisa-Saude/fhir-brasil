@@ -15,7 +15,7 @@ on:
         type: string
         required: true
       packages:
-        description: 'Newline-separated list of package directories to publish (e.g. "packages/core\npackages/calculators")'
+        description: 'Newline-separated list of package directories to publish (e.g. "packages/core\npackages/ocr-utils")'
         type: string
         required: true
 

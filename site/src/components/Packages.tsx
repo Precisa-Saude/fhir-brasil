@@ -15,11 +15,6 @@ const PACKAGES: PackageInfo[] = [
     install: 'npm i @precisa-saude/fhir',
   },
   {
-    name: '@precisa-saude/fhir-calculators',
-    description: 'PhenoAge, BrDMrisc, derivados (HOMA-IR, VLDL, IMC)',
-    install: 'npm i @precisa-saude/fhir-calculators',
-  },
-  {
     name: '@precisa-saude/fhir-ocr-utils',
     description: 'Ancoragem OCR anti-alucinação para extração de biomarcadores',
     install: 'npm i @precisa-saude/fhir-ocr-utils',
@@ -73,7 +68,7 @@ export function Packages() {
           </h2>
         </div>
         <p className="col-span-full mb-8 text-center text-pretty font-pausa text-lg text-ps-violet-dark/60 md:col-span-8 md:col-start-4 3xl:col-start-5">
-          Quatro pacotes modulares — use só o que precisar.
+          Pacotes modulares — use só o que precisar.
         </p>
 
         <div className="col-span-full md:col-span-10 md:col-start-3 3xl:col-start-4">

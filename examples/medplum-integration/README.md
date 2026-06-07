@@ -9,7 +9,7 @@ Exemplo demonstrando o round-trip completo: converter resultado de laboratório 
 - Pacotes fhir-brasil instalados
 
 ```bash
-npm install @precisa-saude/fhir @precisa-saude/fhir-calculators @medplum/core @medplum/fhirtypes
+npm install @precisa-saude/fhir @precisa-saude/calculadoras-clinicas @medplum/core @medplum/fhirtypes
 ```
 
 ## Fluxo
@@ -29,7 +29,7 @@ Resultado lab (JSON) → labResultToFHIRBundle() → Bundle FHIR R4
 ```typescript
 import { MedplumClient } from '@medplum/core';
 import { labResultToFHIRBundle } from '@precisa-saude/fhir';
-import { phenoage } from '@precisa-saude/fhir-calculators';
+import { phenoage } from '@precisa-saude/calculadoras-clinicas';
 
 // 1. Converter resultado para FHIR
 const bundle = labResultToFHIRBundle(report, observations, profile);
@@ -75,4 +75,4 @@ npx tsx examples/medplum-integration/example.ts
 
 - [Medplum — documentação](https://www.medplum.com/docs)
 - [fhir-brasil — core](../../packages/core/)
-- [fhir-brasil — calculadoras](../../packages/calculators/)
+- [@precisa-saude/calculadoras-clinicas](https://github.com/Precisa-Saude/calculadoras-clinicas)

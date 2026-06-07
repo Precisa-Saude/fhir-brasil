@@ -77,31 +77,6 @@ const bundle = labResultToFHIRBundle(report, observations, profile)
 // → Bundle { Patient, DiagnosticReport, Observation[] }`,
   },
   {
-    label: 'Calcular PhenoAge',
-    code: `import { phenoage } from '@precisa-saude/fhir-calculators'
-
-// Conversão automática de unidades brasileiras → SI
-const albumin = phenoage.autoConvertToSI('albumin', 4.2, 'g/dL')
-const glucose = phenoage.autoConvertToSI('glucose', 95, 'mg/dL')
-const creatinine = phenoage.autoConvertToSI('creatinine', 0.9, 'mg/dL')
-
-const result = phenoage.calculatePhenoAge({
-  albumin: albumin.value,           // 42 g/L
-  alkalinePhosphatase: 65,          // U/L
-  chronologicalAge: 45,
-  creatinine: creatinine.value,     // 79.56 μmol/L
-  crp: 0.5,                         // mg/L
-  glucose: glucose.value,           // 5.27 mmol/L
-  lymphocytePercent: 30,            // %
-  mcv: 88,                          // fL
-  rdw: 12.8,                        // %
-  wbc: 6.2,                         // 10⁹/L
-})
-
-console.log(result.phenoAge)        // 38.2
-console.log(result.ageDifference)   // -6.8 (anos mais jovem)`,
-  },
-  {
     label: 'Cliente RNDS',
     code: `import { RNDSClient } from '@precisa-saude/fhir-rnds'
 

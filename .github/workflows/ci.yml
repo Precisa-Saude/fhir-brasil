@@ -56,7 +56,6 @@ jobs:
       release_sha: ${{ needs.release.outputs.release_sha }}
       packages: |
         packages/core
-        packages/calculators
         packages/ocr-utils
         packages/rnds
     secrets: inherit

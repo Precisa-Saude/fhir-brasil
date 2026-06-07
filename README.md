@@ -3,11 +3,10 @@
 [![CI](https://github.com/precisa-saude/fhir-brasil/actions/workflows/ci.yml/badge.svg)](https://github.com/precisa-saude/fhir-brasil/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![npm @precisa-saude/fhir](https://img.shields.io/npm/v/@precisa-saude/fhir?label=%40precisa-saude%2Ffhir)](https://www.npmjs.com/package/@precisa-saude/fhir)
-[![npm @precisa-saude/fhir-calculators](https://img.shields.io/npm/v/@precisa-saude/fhir-calculators?label=fhir-calculators)](https://www.npmjs.com/package/@precisa-saude/fhir-calculators)
 [![npm @precisa-saude/fhir-ocr-utils](https://img.shields.io/npm/v/@precisa-saude/fhir-ocr-utils?label=fhir-ocr-utils)](https://www.npmjs.com/package/@precisa-saude/fhir-ocr-utils)
 [![npm @precisa-saude/fhir-rnds](https://img.shields.io/npm/v/@precisa-saude/fhir-rnds?label=fhir-rnds)](https://www.npmjs.com/package/@precisa-saude/fhir-rnds)
 
-Toolkit FHIR R4 para o ecossistema de saúde brasileiro — definições de biomarcadores, faixas de referência, calculadoras clínicas, normalização de aliases e cliente RNDS.
+Toolkit FHIR R4 para o ecossistema de saúde brasileiro — definições de biomarcadores, faixas de referência, normalização de aliases e cliente RNDS.
 
 Documentação completa e contexto do projeto em [fhir-brasil.dev.br](https://fhir-brasil.dev.br).
 
@@ -20,7 +19,6 @@ O sistema de saúde brasileiro opera como redes paralelas com troca mínima de d
 - **200+ biomarcadores** com códigos LOINC, nomes em pt-BR/en-US, unidades UCUM, organizados em 10 categorias clínicas
 - **200+ faixas de referência** com variantes por sexo/idade, baseadas em diretrizes SBPC/ML, SBC e SBD
 - **Normalização de aliases** — cada laboratório usa nomes diferentes para o mesmo exame; `normalizeCode('colesterol HDL')` retorna `'HDL'`
-- **Calculadoras clínicas** — PhenoAge (idade biológica), BrDMrisc (risco de diabetes), HOMA-IR, VLDL, IMC
 - **Utilitários OCR** — ancoragem de texto para extração de biomarcadores de PDFs de resultados de laboratório
 - **Cliente RNDS** — cliente HTTP para a Rede Nacional de Dados em Saúde (DATASUS), com autenticação mTLS e zero dependências externas
 - **Sandbox RNDS** — mock local da RNDS para desenvolvimento, ensino e demos sem certificado ICP-Brasil
@@ -34,7 +32,6 @@ O sistema de saúde brasileiro opera como redes paralelas com troca mínima de d
 | Pacote                                                       | Descrição                                                                                     | Deps                  |
 | ------------------------------------------------------------ | --------------------------------------------------------------------------------------------- | --------------------- |
 | [`@precisa-saude/fhir`](packages/core/)                      | Tipos FHIR R4, 200+ biomarcadores, faixas de referência, conversores, normalização de aliases | 0 runtime deps        |
-| [`@precisa-saude/fhir-calculators`](packages/calculators/)   | PhenoAge, BrDMrisc, HOMA-IR, VLDL, IMC                                                        | `@precisa-saude/fhir` |
 | [`@precisa-saude/fhir-ocr-utils`](packages/ocr-utils/)       | Ancoragem OCR para extração de biomarcadores                                                  | `@precisa-saude/fhir` |
 | [`@precisa-saude/fhir-rnds`](packages/rnds/)                 | Cliente HTTP para a RNDS (DATASUS) — autenticação mTLS, FHIR R4                               | `@precisa-saude/fhir` |
 | [`@precisa-saude/fhir-rnds-sandbox`](packages/rnds-sandbox/) | Mock local da RNDS — endpoints FHIR R4 e cenários sintéticos para dev/ensino                  | `@precisa-saude/fhir` |
@@ -46,9 +43,6 @@ O sistema de saúde brasileiro opera como redes paralelas com troca mínima de d
 ```bash
 # Core — tipos, biomarcadores, faixas de referência, conversores
 npm install @precisa-saude/fhir
-
-# Calculadoras clínicas (PhenoAge, BrDMrisc, derivados)
-npm install @precisa-saude/fhir-calculators
 
 # Utilitários OCR
 npm install @precisa-saude/fhir-ocr-utils
@@ -111,25 +105,7 @@ const result = await client.submitBundle(bundle);
 
 > **Nota:** O Cliente RNDS foi testado contra servidor mock abrangente. Validação contra infraestrutura real do RNDS requer certificado ICP-Brasil e ainda não foi realizada. Veja [detalhes no README do pacote](packages/rnds/).
 
-### Calcular PhenoAge
-
-```typescript
-import { phenoage } from '@precisa-saude/fhir-calculators';
-
-const result = phenoage.calculatePhenoAge({
-  chronologicalAge: 45,
-  albumin: 42,
-  creatinine: 80,
-  glucose: 5.2,
-  crp: 1.5,
-  lymphocytePercent: 30,
-  mcv: 88,
-  rdw: 13,
-  alkalinePhosphatase: 70,
-  wbc: 6.5,
-});
-// → { phenoAge: 42.3, ageDifference: -2.7, ... }
-```
+> **Calculadoras clínicas:** PhenoAge, BrDMrisc e biomarcadores derivados foram movidos para o pacote [`@precisa-saude/calculadoras-clinicas`](https://www.npmjs.com/package/@precisa-saude/calculadoras-clinicas) ([repositório](https://github.com/Precisa-Saude/calculadoras-clinicas)).
 
 ---
 
@@ -193,8 +169,8 @@ echo "Hemoglobina 14.5 g/dL Glicose 99 mg/dL" | fhir-ocr codes --json
 ## Roadmap
 
 - [x] `@precisa-saude/fhir` — Core: tipos FHIR R4, biomarcadores, faixas de referência, conversores
-- [x] `@precisa-saude/fhir-calculators` — Calculadoras: PhenoAge, BrDMrisc, derivados
 - [x] `@precisa-saude/fhir-ocr-utils` — Utilitários OCR: ancoragem de biomarcadores em texto
+- [x] Calculadoras clínicas — extraídas para [`@precisa-saude/calculadoras-clinicas`](https://github.com/Precisa-Saude/calculadoras-clinicas)
 - [x] `@precisa-saude/fhir-rnds` — Cliente RNDS: autenticação mTLS, submissão de bundles
 - [x] Implementation Guide FHIR — perfis BRPatient, BRLabObservation, BRDiagnosticReport via SUSHI
 - [x] Terminologias brasileiras — TUSS, TISS, CID-10, SUS raça/cor, IBGE, CNES

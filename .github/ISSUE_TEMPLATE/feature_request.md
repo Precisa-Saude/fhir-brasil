@@ -12,7 +12,6 @@ Descreva a funcionalidade desejada.
 ## Pacote alvo
 
 - [ ] `@precisa-saude/fhir`
-- [ ] `@precisa-saude/fhir-calculators`
 - [ ] `@precisa-saude/fhir-ocr-utils`
 
 ## Motivação

@@ -44,12 +44,6 @@ fhir-brasil/
 │   │       ├── fhir-types.ts         # Tipos FHIR R4
 │   │       ├── i18n.ts               # Internacionalização
 │   │       └── __tests__/            # Testes
-│   ├── calculators/       # @precisa-saude/fhir-calculators
-│   │   └── src/
-│   │       ├── phenoage/             # Calculadora PhenoAge
-│   │       ├── brdmrisc/             # Calculadora BrDMrisc
-│   │       ├── derived/              # Biomarcadores derivados
-│   │       └── __tests__/            # Testes
 │   └── ocr-utils/         # @precisa-saude/fhir-ocr-utils
 │       └── src/
 │           ├── anchor.ts             # Ancoragem de biomarcadores em texto
@@ -94,8 +88,8 @@ Para executar comandos em um pacote específico:
 # Testes apenas do pacote core
 pnpm turbo run test --filter=@precisa-saude/fhir
 
-# Build apenas das calculadoras
-pnpm turbo run build --filter=@precisa-saude/fhir-calculators
+# Build apenas dos utilitários OCR
+pnpm turbo run build --filter=@precisa-saude/fhir-ocr-utils
 ```
 
 ## Testes e cobertura
@@ -256,78 +250,9 @@ Faixa de referência baseada nas diretrizes SBPC/ML 2021.
 LOINC: 32622-8
 ```
 
-## Como adicionar uma nova calculadora
-
-### Passo 1: Criar a estrutura
-
-```
-packages/calculators/src/
-└── minha-calculadora/
-    ├── calculator.ts    # Lógica principal
-    ├── constants.ts     # Coeficientes e constantes
-    ├── types.ts         # Interfaces de entrada/saída
-    ├── unit-converters.ts  # Conversão de unidades (se necessário)
-    └── index.ts         # Barrel export
-```
-
-### Passo 2: Definir tipos
-
-Em `types.ts`, defina as interfaces de entrada e saída:
-
-```typescript
-export interface MinhaCalculadoraInput {
-  biomarcadorA: number;
-  biomarcadorB: number;
-}
-
-export interface MinhaCalculadoraResult {
-  score: number;
-  calculatedAt: string;
-}
-```
-
-### Passo 3: Implementar a lógica
-
-Em `calculator.ts`, implemente a função principal:
-
-```typescript
-import type { MinhaCalculadoraInput, MinhaCalculadoraResult } from './types';
-
-export function calculateMinhaCalc(input: MinhaCalculadoraInput): MinhaCalculadoraResult {
-  // Implementação...
-  return {
-    score: resultado,
-    calculatedAt: new Date().toISOString(),
-  };
-}
-```
-
-### Passo 4: Exportar no índice do pacote
-
-Em `packages/calculators/src/index.ts`:
-
-```typescript
-export * as minhaCalc from './minha-calculadora';
-```
-
-### Passo 5: Escrever testes
-
-Crie `packages/calculators/src/__tests__/minha-calculadora.test.ts` com casos de teste abrangentes, incluindo:
-
-- Valores típicos
-- Valores limítrofes
-- Entradas inválidas
-- Conversão de unidades (se aplicável)
-
-### Passo 6: Documentar
-
-Adicione uma seção em `docs/calculadoras.md` com:
-
-- O que é a calculadora e qual problema resolve
-- Referência bibliográfica (artigo original)
-- Biomarcadores necessários e unidades
-- Exemplo de uso
-- Interpretação dos resultados
+> As calculadoras clínicas foram movidas para o repositório
+> [`@precisa-saude/calculadoras-clinicas`](https://github.com/Precisa-Saude/calculadoras-clinicas).
+> Para adicionar ou alterar uma calculadora, contribua naquele repositório.
 
 ## Padrão de commits
 
@@ -351,22 +276,22 @@ tipo(escopo): descrição em pt-BR
 
 ### Escopos
 
-| Escopo        | Pacote                            |
-| ------------- | --------------------------------- |
-| `core`        | `@precisa-saude/fhir`             |
-| `calculators` | `@precisa-saude/fhir-calculators` |
-| `ocr-utils`   | `@precisa-saude/fhir-ocr-utils`   |
-| `docs`        | Documentação                      |
-| `ci`          | CI/CD                             |
+| Escopo      | Pacote                          |
+| ----------- | ------------------------------- |
+| `core`      | `@precisa-saude/fhir`           |
+| `ocr-utils` | `@precisa-saude/fhir-ocr-utils` |
+| `rnds`      | `@precisa-saude/fhir-rnds`      |
+| `docs`      | Documentação                    |
+| `ci`        | CI/CD                           |
 
 ### Exemplos
 
 ```
 feat(core): adicionar definição do biomarcador Cistatina C
-fix(calculators): corrigir conversão de unidade para creatinina
+fix(core): corrigir conversão de unidade para creatinina
 refactor(core): extrair lógica de normalização para função utilitária
-test(calculators): adicionar testes para BrDMrisc com modelo 6
-docs: atualizar guia de início rápido com exemplo de PhenoAge
+test(ocr-utils): adicionar testes de ancoragem para hemograma
+docs: atualizar guia de início rápido
 chore: atualizar dependências do monorepo
 ```
 

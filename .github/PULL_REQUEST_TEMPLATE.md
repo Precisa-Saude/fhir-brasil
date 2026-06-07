@@ -14,7 +14,6 @@
 ## Pacotes afetados
 
 - [ ] `@precisa-saude/fhir` (core)
-- [ ] `@precisa-saude/fhir-calculators`
 - [ ] `@precisa-saude/fhir-ocr-utils`
 - [ ] `@precisa-saude/fhir-rnds`
 - [ ] Implementation Guide (ig/)

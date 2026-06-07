@@ -15,14 +15,15 @@
 ## Overview
 
 Open-source monorepo `fhir-brasil` — a Brazilian FHIR R4 toolkit with
-biomarker definitions, reference ranges, and clinical calculators.
+biomarker definitions, reference ranges, OCR utilities, and an RNDS client.
+(Clinical calculators were extracted to the standalone
+`@precisa-saude/calculadoras-clinicas` package — see ADR 001.)
 
 ## Structure
 
 ```
 packages/
   core/          — FHIR R4 types, 200+ biomarkers (10 categorias), reference ranges, converters
-  calculators/   — PhenoAge, BrDMRisc, HOMA-IR, VLDL, BMI
   ocr-utils/     — OCR anchoring for biomarker extraction
   rnds/          — HTTP client for RNDS (DATASUS), mTLS auth
   rnds-sandbox/  — Mock local da RNDS para dev/ensino (FHIR R4, cenários sintéticos)
@@ -32,13 +33,12 @@ site/            — Public site (Cloudflare Pages)
 
 ## Commit scopes
 
-Valid scopes: `core`, `calculators`, `ocr-utils`, `rnds`, `rnds-sandbox`,
+Valid scopes: `core`, `ocr-utils`, `rnds`, `rnds-sandbox`,
 `docs`, `ci`, `deps`, `lint`.
 
 ## Dependency rules
 
 - `@precisa-saude/fhir` has **zero runtime dependencies** — enforced
-- `@precisa-saude/fhir-calculators` depends only on `@precisa-saude/fhir`
 - `@precisa-saude/fhir-ocr-utils` depends only on `@precisa-saude/fhir`
 - `@precisa-saude/fhir-rnds` depends only on `@precisa-saude/fhir`
 - `@precisa-saude/fhir-rnds-sandbox` depends only on `@precisa-saude/fhir`

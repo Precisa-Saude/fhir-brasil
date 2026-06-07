@@ -8,7 +8,7 @@ module.exports = {
     'scope-enum': [
       2,
       'always',
-      ['core', 'calculators', 'ocr-utils', 'rnds', 'docs', 'ci', 'deps', 'lint', 'config'],
+      ['core', 'ocr-utils', 'rnds', 'docs', 'ci', 'deps', 'lint', 'config'],
     ],
   },
 };

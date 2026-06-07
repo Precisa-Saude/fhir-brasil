@@ -1,8 +1,19 @@
 # ADR-001: Manter calculadoras clínicas no monorepo fhir-brasil
 
 **Data:** 2026-04-07
-**Status:** Aceito
+**Status:** Substituído (2026-06-07) — ver nota abaixo
 **Revisão:** Outubro 2026
+
+> **Nota de substituição (2026-06-07, PRE-203):** esta decisão foi revertida.
+> As calculadoras clínicas foram extraídas para o repositório/pacote
+> standalone [`@precisa-saude/calculadoras-clinicas`](https://github.com/Precisa-Saude/calculadoras-clinicas),
+> que consolida PhenoAge, BrDMrisc e biomarcadores derivados (antes aqui) com
+> os índices clínicos antes embutidos no app web. O acoplamento com
+> `@precisa-saude/fhir` era de uma única função (`codeToLoinc`, agora inlined),
+> e o pacote passou a ter cadência de release e público próprios. O
+> `@precisa-saude/fhir-calculators` foi descontinuado no npm apontando para o
+> novo pacote. O conteúdo original do ADR é mantido abaixo como registro
+> histórico.
 
 ## Contexto
 

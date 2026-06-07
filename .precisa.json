@@ -6,17 +6,7 @@
   "hasSite": true,
   "hasPackages": true,
   "publishesToNpm": true,
-  "commitScopes": [
-    "core",
-    "calculators",
-    "ocr-utils",
-    "rnds",
-    "docs",
-    "ci",
-    "deps",
-    "lint",
-    "config"
-  ],
+  "commitScopes": ["core", "ocr-utils", "rnds", "docs", "ci", "deps", "lint", "config"],
   "contactEmails": {
     "security": "security@precisa-saude.com.br",
     "conduct": "conduct@precisa-saude.com.br"

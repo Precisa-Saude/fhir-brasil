@@ -93,22 +93,6 @@ importers:
         specifier: ^4.21.2
         version: 4.22.1
 
-  packages/calculators:
-    dependencies:
-      '@precisa-saude/fhir':
-        specifier: workspace:^
-        version: link:../core
-    devDependencies:
-      tsup:
-        specifier: ^8.3.5
-        version: 8.5.1(jiti@2.6.1)(postcss@8.5.10)(typescript@5.7.3)(yaml@2.8.3)
-      typescript:
-        specifier: ~5.7.3
-        version: 5.7.3
-      vitest:
-        specifier: ^2.1.8
-        version: 2.1.9(@types/node@22.19.17)(lightningcss@1.32.0)(msw@2.13.0(@types/node@22.19.17)(typescript@5.7.3))
-
   packages/core:
     devDependencies:
       tsup:

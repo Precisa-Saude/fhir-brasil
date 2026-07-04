@@ -1,3 +1,13 @@
+## [0.16.3](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.16.2...v0.16.3) (2026-07-04)
+
+### Bug Fixes
+
+* **core:** alinhar faixas da eAG aos cortes diagnósticos da HbA1c ([#56](https://github.com/Precisa-Saude/fhir-brasil/issues/56)) ([4f1afc7](https://github.com/Precisa-Saude/fhir-brasil/commit/4f1afc718aef37ff451f0a46b65e3f6bc1f686a1))
+
+### Chores
+
+* **config:** remove @precisa-saude/fhir-calculators (extraído para repo próprio) ([#54](https://github.com/Precisa-Saude/fhir-brasil/issues/54)) ([4c9d722](https://github.com/Precisa-Saude/fhir-brasil/commit/4c9d7225b6218a332f9a24d4a3030ee0a9643099))
+
 ## [0.16.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.16.1...v0.16.2) (2026-06-04)
 
 ### Bug Fixes

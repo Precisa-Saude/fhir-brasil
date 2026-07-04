@@ -2111,10 +2111,24 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'who-obesity-2000',
   },
 
-  // eAG - Estimated Average Glucose, derived from HbA1c (ADAG study)
+  // eAG — Estimated Average Glucose, derivada da HbA1c pela fórmula ADAG:
+  // eAG (mg/dL) = 28,7 × HbA1c(%) − 46,7 (NATHAN, D. M. et al. Translating the
+  // A1C assay into estimated average glucose values. Diabetes Care, v. 31, n. 8,
+  // p. 1473-1478, 2008. DOI: 10.2337/dc08-0545).
+  //
+  // As faixas espelham os cortes diagnósticos de HbA1c da SBD (ver entrada
+  // `HbA1c`) convertidos por essa fórmula, mantendo a eAG coerente com o
+  // marcador de origem:
+  //   optimalMax 105  ← HbA1c 5,3 % (teto do controle ótimo)
+  //   max        117  ← HbA1c 5,7 % (teto do não diabético → início do pré-diabetes)
+  //   warningMax 137  ← HbA1c 6,4 % (teto do pré-diabetes → acima disso, diabetes)
+  //
+  // Substitui a faixa anterior (optimalMax 126 = corte de glicemia de jejum;
+  // max 154 = meta terapêutica do diabético, HbA1c 7 %), que classificava como
+  // "Normal" valores já pré-diabéticos e diabéticos.
   eAG: {
-    default: { max: 154, min: 70, optimalMax: 126, optimalMin: 70, unit: 'mg/dL' },
-    source: 'tietz-7ed-2015',
+    default: { max: 117, min: 70, optimalMax: 105, optimalMin: 70, unit: 'mg/dL', warningMax: 137 },
+    source: 'sbd-diabetes-2024',
   },
 
   // INR - International Normalized Ratio (non-anticoagulated patients)

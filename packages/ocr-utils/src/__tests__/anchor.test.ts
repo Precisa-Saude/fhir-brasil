@@ -124,10 +124,12 @@ describe('findBiomarkersInText — falsos positivos (issue #59)', () => {
   });
 
   it('should require a token boundary instead of matching inside a word', () => {
-    const condition = findBiomarkersInText('Familial Hypercholesterolemia');
+    // Linhas com número e sem marcador genético: o único mecanismo capaz de
+    // barrar a âncora aqui é a fronteira de token.
+    const condition = findBiomarkersInText('Hipercolesterolemia familiar: risco 12 pontos');
     expect(condition.matches.some((m) => m.code === 'Cholesterol')).toBe(false);
 
-    const cancer = findBiomarkersInText('Colorectal, Endocrine, Gastric Cancer');
+    const cancer = findBiomarkersInText('Colorectal cancer screening: 3 exames solicitados');
     expect(cancer.matches.some((m) => m.code === 'Color_Urine')).toBe(false);
   });
 
@@ -154,6 +156,11 @@ describe('findBiomarkersInText — falsos positivos (issue #59)', () => {
 
     const lipids = findBiomarkersInText('Apolipoproteína B: 85 mg/dL');
     expect(lipids.matches.some((m) => m.code === 'ApoB')).toBe(true);
+
+    // O token que colide com o símbolo do gene é justamente a abreviação:
+    // fora de contexto genético ela precisa continuar ancorando.
+    const abbreviated = findBiomarkersInText('ApoB: 85 mg/dL');
+    expect(abbreviated.matches.some((m) => m.code === 'ApoB')).toBe(true);
   });
 
   it('should suppress matches inside HGVS and dbSNP notation', () => {

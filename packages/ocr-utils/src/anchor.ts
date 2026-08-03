@@ -384,6 +384,12 @@ function collectCandidates(normalizedText: string): Candidate[] {
  * Longest match wins: drop a match fully contained in a longer one, so
  * `Cholesterol` doesn't anchor inside `HDL Cholesterol` and `Blood` doesn't
  * anchor inside `Blood Glucose`.
+ *
+ * Strictly longer, not longer-or-equal: containment plus equal length means an
+ * identical span, which only happens when two distinct catalog names match the
+ * same text (a singular and its plural form, say). Dropping one of those by
+ * catalog order would silently lose a code, and losing an anchor is worse than
+ * keeping both — `findBiomarkersInText` dedups per code anyway.
  */
 function resolveOverlaps(candidates: Candidate[]): Candidate[] {
   const sorted = [...candidates].sort(

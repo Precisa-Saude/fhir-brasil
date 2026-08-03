@@ -2914,20 +2914,28 @@ export function toBiomarkerTests(): Record<
  * Biomarker search pattern for OCR text anchoring
  */
 export interface BiomarkerSearchPattern {
+  category: string | string[];
   code: string;
   loinc?: string;
   names: string[]; // All names (EN + PT) for this biomarker
+  unit?: string; // Absent for qualitative biomarkers (urine dipstick, etc.)
 }
 
 /**
  * Get all biomarker search patterns for OCR text anchoring
  * Returns a flat list of all biomarker codes with their searchable names
+ *
+ * `category` and `unit` are exposed so anchoring consumers can tell
+ * quantitative biomarkers from qualitative ones (which need different
+ * matching rules — a qualitative marker has no number next to it).
  */
 export function getAllSearchPatterns(): BiomarkerSearchPattern[] {
   return BIOMARKER_DEFINITIONS.map((def) => ({
+    category: def.category,
     code: def.code,
     ...(def.loinc && { loinc: def.loinc }),
     names: [...def.names.en, ...def.names.pt],
+    ...(def.unit && { unit: def.unit }),
   }));
 }
 

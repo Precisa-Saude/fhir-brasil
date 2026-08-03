@@ -20,5 +20,6 @@
     "packages/rnds-sandbox"
   ],
   "siteFilter": "@fhir-brasil/site",
-  "siteProjectName": "fhir-brasil"
+  "siteProjectName": "fhir-brasil",
+  "ignoreTemplates": [".commitlintrc.cjs", "eslint.config.js"]
 }

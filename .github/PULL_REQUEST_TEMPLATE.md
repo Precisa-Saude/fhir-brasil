@@ -1,27 +1,18 @@
+<!-- Obrigado pela contribuição. Por favor preencha as seções abaixo. -->
+
 ## Resumo
 
-<!-- Descreva as alterações em 1-3 frases -->
+<!-- Uma ou duas frases sobre o que muda e por quê. -->
 
 ## Tipo de alteração
 
-- [ ] Correção de bug (`fix`)
-- [ ] Nova funcionalidade (`feat`)
-- [ ] Refatoração (`refactor`)
-- [ ] Documentação (`docs`)
-- [ ] Testes (`test`)
-- [ ] CI/CD (`ci`)
+- [ ] Correção de bug (`fix` — patch)
+- [ ] Nova funcionalidade (`feat` — minor)
+- [ ] Breaking change (major — inclua um footer `BREAKING CHANGE:` no commit)
+- [ ] Apenas docs / CI (sem bump de versão esperado)
 
-## Pacotes afetados
+## Plano de teste
 
-- [ ] `@precisa-saude/fhir` (core)
-- [ ] `@precisa-saude/fhir-ocr-utils`
-- [ ] `@precisa-saude/fhir-rnds`
-- [ ] Implementation Guide (ig/)
-- [ ] Site (site/)
+<!-- Como um revisor pode verificar essa mudança. -->
 
-## Checklist
-
-- [ ] Lint e typecheck passam (`pnpm turbo run lint typecheck`)
-- [ ] Testes passam (`pnpm turbo run test`)
-- [ ] Documentação atualizada (se aplicável)
-- [ ] Dados médicos citam fontes (SBPC/ML, SBC, PubMed, etc.)
+- [ ]

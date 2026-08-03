@@ -1,14 +1,14 @@
 # Suporte
 
-## Obtendo Ajuda
+## Como obter ajuda
 
-- **Reportar bugs**: [GitHub Issues](https://github.com/precisa-saude/fhir-brasil/issues)
-- **Solicitar funcionalidades**: [GitHub Issues](https://github.com/precisa-saude/fhir-brasil/issues)
-- **Perguntas e discussões**: [GitHub Discussions](https://github.com/precisa-saude/fhir-brasil/discussions)
+- **Reportar bugs**: [GitHub Issues](https://github.com/Precisa-Saude/fhir-brasil/issues)
+- **Solicitar features**: [GitHub Issues](https://github.com/Precisa-Saude/fhir-brasil/issues)
+- **Perguntas e discussões**: [GitHub Discussions](https://github.com/Precisa-Saude/fhir-brasil/discussions)
 
-## Antes de Abrir uma Issue
+## Antes de abrir uma issue
 
 1. Pesquise issues existentes para evitar duplicatas
 2. Inclua um exemplo mínimo reproduzível
-3. Especifique o pacote e versão (`@precisa-saude/fhir@0.1.0`)
-4. Para questões sobre dados médicos, inclua a referência clínica/diretriz relevante
+3. Especifique o pacote e a versão
+4. Inclua versões de Node/pnpm e o sistema operacional

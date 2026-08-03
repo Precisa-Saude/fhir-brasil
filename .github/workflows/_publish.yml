@@ -15,7 +15,7 @@ on:
         type: string
         required: true
       packages:
-        description: 'Newline-separated list of package directories to publish (e.g. "packages/core\npackages/ocr-utils")'
+        description: 'Newline-separated list of package directories to publish (e.g. "packages/core\npackages/calculators")'
         type: string
         required: true
 
@@ -23,6 +23,14 @@ jobs:
   publish:
     name: Publish
     runs-on: ubuntu-latest
+    # `environment: npm-publish` puts a human-in-the-loop gate in front
+    # of every npm publish to `@precisa-saude/*`. Configure required
+    # reviewers in each consumer repo's Settings → Environments →
+    # npm-publish; without reviewers configured the gate is informational
+    # only (deployment marker shows in Actions UI but doesn't block).
+    # The job pauses on "waiting" until approved.
+    environment:
+      name: npm-publish
     # `id-token: write` is for Sigstore attestations (`--provenance`),
     # NOT for npm auth. Auth uses `NPM_TOKEN` org-secret — OIDC trusted
     # publishing was evaluated and rejected because it requires manual

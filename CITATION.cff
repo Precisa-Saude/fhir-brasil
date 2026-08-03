@@ -1,20 +1,8 @@
 cff-version: 1.2.0
-title: fhir-brasil
-message: >-
-  Se você utilizar este software em pesquisa acadêmica,
-  por favor cite-o usando os metadados abaixo.
+title: 'fhir-brasil'
+message: 'Se você utilizar este software, por favor cite-o conforme abaixo.'
 type: software
 authors:
-  - name: Precisa Saúde
-    website: https://precisa-saude.com.br
-repository-code: https://github.com/Precisa-Saude/fhir-brasil
-url: https://fhir-brasil.dev.br
-keywords:
-  - fhir
-  - r4
-  - brasil
-  - biomarcadores
-  - loinc
-  - saúde
-  - interoperabilidade
+  - name: 'Precisa-Saude'
+repository-code: 'https://github.com/Precisa-Saude/fhir-brasil'
 license: Apache-2.0

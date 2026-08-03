@@ -1,3 +1,14 @@
+## [0.16.4](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.16.3...v0.16.4) (2026-08-03)
+
+### Bug Fixes
+
+* **ci:** completa o .precisa.json para o doctor voltar a auditar ([#61](https://github.com/Precisa-Saude/fhir-brasil/issues/61)) ([b72e90f](https://github.com/Precisa-Saude/fhir-brasil/commit/b72e90ff53962cbc81801c3b84d463fabe38b4fa)), closes [Precisa-Saude/tooling#42](https://github.com/Precisa-Saude/tooling/issues/42)
+* **ocr-utils:** exigir fronteira de token e contexto de valor na ancoragem ([#60](https://github.com/Precisa-Saude/fhir-brasil/issues/60)) ([60313f8](https://github.com/Precisa-Saude/fhir-brasil/commit/60313f8142f3e2ac6fafbd857b677326e35073f9)), closes [#59](https://github.com/Precisa-Saude/fhir-brasil/issues/59) [#59](https://github.com/Precisa-Saude/fhir-brasil/issues/59)
+
+### CI/CD
+
+* atualizar GitHub Actions para o runtime Node 24 ([#57](https://github.com/Precisa-Saude/fhir-brasil/issues/57)) ([ae4f932](https://github.com/Precisa-Saude/fhir-brasil/commit/ae4f932b2fd8ec75d24f101064529b2097c1f22b))
+
 ## [0.16.3](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.16.2...v0.16.3) (2026-07-04)
 
 ### Bug Fixes

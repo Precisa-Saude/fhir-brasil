@@ -17,10 +17,6 @@ Inclua:
 
 Confirmaremos o recebimento em até 48 horas e forneceremos um cronograma para resolução.
 
-## Escopo
+## Divulgação
 
-Este projeto contém definições de biomarcadores, faixas de referência e calculadoras clínicas. Preocupações de segurança podem incluir:
-
-- Dados médicos incorretos que possam levar a interpretações errôneas
-- Erros lógicos em calculadoras clínicas
-- Vulnerabilidades em dependências
+A divulgação é coordenada de forma privada. Correções são lançadas no(s) pacote(s) afetado(s) e registradas no CHANGELOG.

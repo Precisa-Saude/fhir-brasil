@@ -1,38 +1,33 @@
 ---
-name: Bug report
-about: Reporte um problema com os pacotes fhir-brasil
-title: '[BUG] '
-labels: bug
+name: Reporte de bug
+about: Algo está quebrado
+title: '[bug] '
+labels: [bug]
 ---
 
-## Descrição
+## O que aconteceu
 
-Descreva o problema de forma clara e concisa.
+<!-- Descrição curta do comportamento inesperado. -->
 
-## Pacote afetado
+## Reprodução
 
-- [ ] `@precisa-saude/fhir`
-- [ ] `@precisa-saude/fhir-ocr-utils`
+<!-- Passos mínimos. Inclua o comando exato executado, pacote + versão, versões do Node/pnpm. -->
 
-## Passos para reproduzir
+```bash
+# comando(s)
+```
 
-1. ...
-2. ...
-3. ...
+## Esperado
 
-## Comportamento esperado
+<!-- O que você esperava que acontecesse. -->
 
-O que deveria acontecer.
+## Ambiente
 
-## Comportamento atual
-
-O que realmente acontece.
-
-## Versão
-
-- Pacote: `@precisa-saude/fhir@x.x.x`
-- Node: `vX.X.X`
+- Pacote + versão:
+- Node: `node --version`
+- pnpm: `pnpm --version`
+- SO: macOS / Linux / Windows
 
 ## Contexto adicional
 
-Se o bug envolve dados clínicos, inclua a referência bibliográfica relevante.
+<!-- Stack trace, logs de CI, etc. -->

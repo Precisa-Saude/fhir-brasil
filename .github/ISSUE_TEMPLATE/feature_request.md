@@ -1,27 +1,18 @@
 ---
-name: Feature request
-about: Sugira uma nova funcionalidade ou biomarcador
-title: '[FEATURE] '
-labels: enhancement
+name: Solicitação de feature
+about: Proponha uma nova funcionalidade ou melhoria
+title: '[feat] '
+labels: [enhancement]
 ---
 
-## Descrição
+## Problema
 
-Descreva a funcionalidade desejada.
+<!-- Qual limitação ou fricção você está enfrentando? -->
 
-## Pacote alvo
+## Solução proposta
 
-- [ ] `@precisa-saude/fhir`
-- [ ] `@precisa-saude/fhir-ocr-utils`
+<!-- Esboce a API / comportamento. Exemplos concretos preferíveis a prosa. -->
 
-## Motivação
+## Alternativas consideradas
 
-Por que essa funcionalidade seria útil?
-
-## Referências
-
-Para novos biomarcadores ou faixas de referência, inclua:
-
-- Código LOINC (se aplicável)
-- Referência bibliográfica (PubMed, SBPC/ML, SBC, etc.)
-- Faixas de referência com fonte
+<!-- Outras abordagens que você considerou e por que descartou. -->

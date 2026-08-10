@@ -86,6 +86,27 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm turbo run build
 
+  valueset:
+    name: ValueSet do IG
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 22
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      # Regenera o BRLabTestVS.fsh a partir do catálogo e falha se o arquivo
+      # versionado divergir. Sem rede e sem credencial, então roda em todo PR.
+      #
+      # É o que impede o ValueSet de congelar de novo: ele ficou parado em 160
+      # códigos enquanto o catálogo chegava a 177, e manteve o LOINC antigo da
+      # Lipoproteína (a), porque o gerador existia e não era chamado por nada.
+      - name: ValueSet está sincronizado com o catálogo
+        run: pnpm valueset:check
+
   test:
     name: Test
     runs-on: ubuntu-latest

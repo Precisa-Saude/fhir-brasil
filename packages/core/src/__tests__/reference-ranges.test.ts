@@ -61,13 +61,26 @@ describe('biomarkerRangeDefinitions', () => {
     expect(semFonte).toEqual([]);
   });
 
+  // `source` é `'chave'` ou `'chave:localizador'` (ver sources.ts). O teste
+  // valida a chave e a forma:
+  //
+  // - `Object.hasOwn` em vez de `in`, que enxerga a cadeia de protótipos: com
+  //   `in`, um `source: 'toString'` passaria como se existisse no registro.
+  // - chave vazia (`':p15'`, ou `source` só com espaços) é malformada e precisa
+  //   falhar, em vez de sumir num filtro de falsy.
   it('should only cite sources that exist in the registry', () => {
-    const desconhecidas = Object.entries(biomarkerRangeDefinitions)
-      .map(([code, def]) => [code, def.source?.split(':')[0]] as const)
-      .filter(([, chave]) => chave && !(chave in SOURCE_REGISTRY))
-      .map(([code, chave]) => `${code} -> ${chave}`);
+    const problemas = Object.entries(biomarkerRangeDefinitions)
+      .filter(([, def]) => def.source)
+      .map(([code, def]) => {
+        const chave = String(def.source).split(':')[0]?.trim() ?? '';
+        if (!chave) return `${code} -> fonte malformada: ${JSON.stringify(def.source)}`;
+        if (!Object.hasOwn(SOURCE_REGISTRY, chave))
+          return `${code} -> chave desconhecida: ${chave}`;
+        return null;
+      })
+      .filter((x): x is string => x !== null);
 
-    expect(desconhecidas).toEqual([]);
+    expect(problemas).toEqual([]);
   });
 });
 

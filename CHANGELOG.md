@@ -1,3 +1,10 @@
+## [0.17.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.17.0...v0.17.1) (2026-08-10)
+
+### Bug Fixes
+
+* **ci:** separa código inexistente de resposta sem display name ([#66](https://github.com/Precisa-Saude/fhir-brasil/issues/66)) ([d622c7a](https://github.com/Precisa-Saude/fhir-brasil/commit/d622c7a34d0550eea159bdbb778efb7f2b59bd47))
+* **core:** sobe o teto masculino de CK para o limite populacional ([#67](https://github.com/Precisa-Saude/fhir-brasil/issues/67)) ([9670348](https://github.com/Precisa-Saude/fhir-brasil/commit/9670348ebe84d8b3980912bfe1e33a9a9adb545a)), closes [#3](https://github.com/Precisa-Saude/fhir-brasil/issues/3)
+
 ## [0.17.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.16.6...v0.17.0) (2026-08-10)
 
 ### Features

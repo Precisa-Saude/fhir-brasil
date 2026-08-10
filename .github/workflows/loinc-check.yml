@@ -98,7 +98,13 @@ jobs:
           fi
           branch="chore/loinc-snapshot-$(date -u +%Y%m%d%H%M)"
           git checkout -b "$branch"
-          git commit -m "chore(core): atualiza o snapshot de códigos LOINC" \
-            -m "Gerado por workflow_dispatch em modo update. Conferir cada mudança de nome ou status antes de aprovar: nome novo pode significar que o código deixou de servir para o analito."
+          # Cada -m vira um parágrafo. Precisam caber em menos de 100 colunas:
+          # o commit-msg roda commitlint aqui também, e `body-max-line-length`
+          # recusa parágrafo numa linha só — foi o que derrubou o bootstrap.
+          git commit \
+            -m "chore(core): atualiza o snapshot de códigos LOINC" \
+            -m "Gerado pelo workflow LOINC em modo update." \
+            -m "Conferir cada mudança de nome ou status antes de aprovar." \
+            -m "Nome novo pode significar que o código deixou de servir para o analito."
           git push -u origin "$branch"
           gh pr create --fill --base main --head "$branch"

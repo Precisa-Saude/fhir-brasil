@@ -80,6 +80,31 @@ interface LookupResult {
   version?: string;
 }
 
+/**
+ * `Retry-After` tem duas formas na RFC 9110: segundos, ou HTTP-date. Só tratar
+ * a primeira faz o servidor mandar a data e a gente cair no backoff genérico
+ * sem perceber.
+ *
+ * Devolve `null` para valor ausente, malformado, ou data já passada — nesses
+ * casos quem chama volta para o backoff exponencial, que é o comportamento
+ * seguro.
+ */
+function segundosDeRetryAfter(header: string | null): number | null {
+  if (!header) return null;
+  const bruto = header.trim();
+
+  const segundos = Number(bruto);
+  if (Number.isFinite(segundos)) return segundos > 0 ? segundos : null;
+
+  const quando = Date.parse(bruto);
+  if (Number.isNaN(quando)) {
+    console.error(`  (Retry-After em formato inesperado: ${JSON.stringify(bruto)})`);
+    return null;
+  }
+  const delta = Math.ceil((quando - Date.now()) / 1000);
+  return delta > 0 ? delta : null;
+}
+
 /** Parâmetro `property` do $lookup vem como par code/value dentro de `part`. */
 function lerPropriedade(parameters: unknown[], nome: string): string | undefined {
   for (const p of parameters) {
@@ -117,9 +142,9 @@ async function lookup(code: string): Promise<LookupResult> {
       if (res.status === 429 || res.status >= 500) {
         // Se o servidor disser quanto esperar, obedecer é melhor que chutar
         // backoff: evita tanto voltar cedo demais quanto dormir à toa.
-        const retryAfter = Number(res.headers.get('retry-after'));
-        if (Number.isFinite(retryAfter) && retryAfter > 0 && attempt < ATTEMPTS) {
-          await sleep(Math.min(retryAfter, 60) * 1000);
+        const espera = segundosDeRetryAfter(res.headers.get('retry-after'));
+        if (espera != null && attempt < ATTEMPTS) {
+          await sleep(Math.min(espera, 60) * 1000);
           continue;
         }
         throw new Error(`LOINC respondeu ${res.status}`);
@@ -185,7 +210,11 @@ async function main() {
     String(a.loinc).localeCompare(String(b.loinc)),
   );
 
-  console.error(`Consultando ${comLoinc.length} códigos LOINC…`);
+  const unicosDoCatalogo = new Set(comLoinc.map((b) => String(b.loinc)));
+
+  console.error(
+    `Consultando ${unicosDoCatalogo.size} códigos LOINC únicos (${comLoinc.length} biomarcadores)…`,
+  );
 
   const vivos = new Map<string, LookupResult>();
   let indisponibilidade: string | null = null;
@@ -227,12 +256,16 @@ async function main() {
       process.exitCode = EXIT_FINDINGS;
       return;
     }
-    // Snapshot com menos códigos do que foi consultado significa que alguma
-    // coisa se perdeu no caminho. Gravar assim seria pior que não gravar: o
-    // check seguinte passaria sem conferir o que sumiu.
-    if (Object.keys(codes).length !== vivos.size) {
+    // A invariante que importa é contra o catálogo, não contra `vivos`: toda
+    // entrada de `vivos` já cai em `codes` ou em `semNome`, e `semNome` sai
+    // antes daqui, então comparar com `vivos.size` seria sempre verdadeiro.
+    //
+    // Snapshot cobrindo menos códigos do que o catálogo declara é pior que
+    // snapshot nenhum: o check seguinte passaria verde sem conferir o que ficou
+    // de fora.
+    if (Object.keys(codes).length !== unicosDoCatalogo.size) {
       console.error(
-        `\nNão dá para gravar snapshot: consultei ${vivos.size} códigos e montei ${Object.keys(codes).length}.`,
+        `\nNão dá para gravar snapshot: o catálogo declara ${unicosDoCatalogo.size} códigos únicos e eu montei ${Object.keys(codes).length}.`,
       );
       process.exitCode = EXIT_FINDINGS;
       return;
@@ -305,15 +338,15 @@ async function main() {
     console.error(`DERIVA        ${d.code} ${d.campo}: "${d.de}" → "${d.para}"`);
   }
   for (const c of novos) {
-    console.error(`FORA DO SNAP  ${c} — código novo no catálogo, ainda não conferido`);
+    console.error(`FORA DO SNAP  ${c} — resolveu agora, mas não está no snapshot`);
   }
   console.error(
     '\nAceitar qualquer uma destas mudanças é PR revisado: rode o workflow LOINC em' +
       '\nworkflow_dispatch com update: true.' +
-      '\n\nCódigo novo aparece aqui de propósito. Ele entrou no catálogo sem nunca ter' +
-      '\nsido conferido contra o LOINC, e é justamente aí que erro de digitação ou' +
-      '\ncódigo aposentado passa batido — a revisão do PR do snapshot é o momento de' +
-      '\nolhar se o código serve para o analito.',
+      '\n\nCódigo fora do snapshot aparece aqui de propósito. Ele resolveu nesta execução,' +
+      '\nentão existe — o que falta é ter passado por revisão humana: entrou no catálogo' +
+      '\nsem ninguém conferir se serve para o analito que medimos, e existir no LOINC não' +
+      '\nquer dizer ser o código certo. O PR do snapshot é onde esse olhar acontece.',
   );
   process.exitCode = EXIT_FINDINGS;
 }

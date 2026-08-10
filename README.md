@@ -197,6 +197,22 @@ Este software é fornecido para fins informativos e educacionais. **Não substit
 
 [Apache License 2.0](LICENSE)
 
+O código deste repositório é Apache-2.0. O catálogo de biomarcadores incorpora
+códigos LOINC, que têm licença própria — permissiva e sem custo, mas com aviso
+exigido:
+
+> This material contains content from LOINC (http://loinc.org). LOINC is
+> copyright © Regenstrief Institute, Inc. and the Logical Observation
+> Identifiers Names and Codes (LOINC) Committee and is available at no cost
+> under the license at http://loinc.org/license. LOINC® is a registered United
+> States trademark of Regenstrief Institute, Inc.
+
+O nome oficial de cada código fica em
+[`scripts/loinc-snapshot.json`](scripts/loinc-snapshot.json), que a seção 10.3
+da licença exige acompanhar o código sempre que ele é redistribuído. O
+`pnpm loinc:check` confere esse arquivo contra o servidor oficial — veja
+[`scripts/README.md`](scripts/README.md).
+
 ---
 
 Mantido por [Precisa Saúde](https://precisa-saude.com.br)

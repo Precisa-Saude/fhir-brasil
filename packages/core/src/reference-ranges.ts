@@ -288,12 +288,6 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'khetarpal-apociii-2016',
   },
 
-  // ApoCIII/ApoA1 Ratio: derivado de ApoCIII (~10 mg/dL) e ApoA1 (~100-150 mg/dL)
-  // NOTA: corte de 0.15 sem fonte publicada — valor calculado, não validado clinicamente
-  ApoCIII_ApoA1_Ratio: {
-    default: { max: 0.15, min: 0, optimalMax: 0.1, optimalMin: 0, unit: '' },
-  },
-
   Omega6_AA: {
     default: { max: 15.0, min: 5.0, optimalMax: 12.0, optimalMin: 7.0, unit: '%' },
     source: 'simopoulos-omega-ratio-2002',

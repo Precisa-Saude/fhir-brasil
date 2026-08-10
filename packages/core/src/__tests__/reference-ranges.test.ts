@@ -9,6 +9,7 @@ import {
   getReferenceRange,
   type ReferenceRangeContext,
 } from '../reference-ranges';
+import { SOURCE_REGISTRY } from '../sources';
 
 /**
  * Expected default range with the definition's source key propagated —
@@ -43,6 +44,48 @@ describe('biomarkerRangeDefinitions', () => {
       // Suppress unused variable warning
       void code;
     }
+  });
+
+  // Faixa sem fonte é um corte clínico que ninguém publicou, e ele decide o que
+  // a pessoa vê como "alterado". O `ApoCIII_ApoA1_Ratio` foi a última assim
+  // (issue #3): o corte de 0.15 era derivado das faixas individuais, sem
+  // validação, e seis buscas no PubMed não acharam publicação nenhuma.
+  //
+  // Com o catálogo em 100% de cobertura, este teste trava a regressão — é mais
+  // fácil impedir a primeira entrada sem fonte do que caçá-la depois.
+  it('should cite a source for every range definition', () => {
+    const semFonte = Object.entries(biomarkerRangeDefinitions)
+      .filter(([, def]) => !def.source)
+      .map(([code]) => code);
+
+    expect(semFonte).toEqual([]);
+  });
+
+  // `source` é `'chave'` ou `'chave:localizador'` (ver sources.ts).
+  //
+  // A chave é usada crua, sem `trim()`, de propósito: `getReferenceRange`
+  // devolve `source` verbatim, então uma chave com espaço sobrando (`' sbc-...'`)
+  // não resolveria no registro em runtime. Normalizar aqui faria o teste passar
+  // um caso que quebra em produção.
+  //
+  // `Object.hasOwn` em vez de `in`, que enxerga a cadeia de protótipos: com
+  // `in`, um `source: 'toString'` passaria como se existisse no registro.
+  it('should only cite sources that exist in the registry', () => {
+    const chaveDe = (source: string): string => source.split(':')[0] ?? '';
+
+    const problemas = Object.entries(biomarkerRangeDefinitions)
+      .filter(([, def]) => def.source)
+      .map(([code, def]) => {
+        const chave = chaveDe(String(def.source));
+        if (chave === '') return `${code} -> fonte sem chave: ${JSON.stringify(def.source)}`;
+        if (!Object.hasOwn(SOURCE_REGISTRY, chave)) {
+          return `${code} -> chave desconhecida: ${JSON.stringify(chave)}`;
+        }
+        return null;
+      })
+      .filter((x): x is string => x !== null);
+
+    expect(problemas).toEqual([]);
   });
 });
 

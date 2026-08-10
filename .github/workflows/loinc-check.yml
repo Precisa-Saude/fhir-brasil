@@ -107,4 +107,22 @@ jobs:
             -m "Conferir cada mudança de nome ou status antes de aprovar." \
             -m "Nome novo pode significar que o código deixou de servir para o analito."
           git push -u origin "$branch"
-          gh pr create --fill --base main --head "$branch"
+          # A branch com o snapshot já está publicada aqui — o trabalho não se
+          # perde a partir deste ponto.
+          #
+          # Abrir o PR pode não ser permitido: o repositório mantém
+          # `can_approve_pull_request_reviews: false`, que também bloqueia
+          # criação de PR pelo GITHUB_TOKEN. Isso é postura de segurança
+          # deliberada, então o workflow se adapta a ela em vez de exigir que
+          # ela mude — cai para imprimir o link pronto.
+          if gh pr create --fill --base main --head "$branch"; then
+            exit 0
+          fi
+          url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/compare/main...${branch}?expand=1"
+          echo "::notice::Branch publicada: $branch"
+          echo "::notice::Abrir PR manualmente: $url"
+          {
+            echo "### Snapshot de LOINC pronto para revisão"
+            echo ""
+            echo "Branch \`$branch\` publicada. [Abrir PR]($url)"
+          } >> "$GITHUB_STEP_SUMMARY"

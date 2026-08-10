@@ -1,3 +1,9 @@
+## [0.17.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.16.6...v0.17.0) (2026-08-10)
+
+### Features
+
+* **ci:** confere os códigos LOINC contra a fonte oficial ([#65](https://github.com/Precisa-Saude/fhir-brasil/issues/65)) ([a630361](https://github.com/Precisa-Saude/fhir-brasil/commit/a6303614d9e966687b10bd19c9b329379f7afcdb))
+
 ## [0.16.6](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.16.5...v0.16.6) (2026-08-10)
 
 ### Bug Fixes

@@ -83,15 +83,21 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if git diff --quiet -- scripts/loinc-snapshot.json; then
+          set -euo pipefail
+          SNAP=scripts/loinc-snapshot.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # `git add` antes de comparar, e comparar contra o índice.
+          # `git diff --quiet -- <arquivo>` ignora arquivo não rastreado e sai 0,
+          # então o primeiro snapshot de todos — que é justamente o caso do
+          # bootstrap — era gerado, dado como "sem mudança" e descartado.
+          git add "$SNAP"
+          if git diff --cached --quiet -- "$SNAP"; then
             echo "::notice::Snapshot já estava atualizado; nada a propor."
             exit 0
           fi
           branch="chore/loinc-snapshot-$(date -u +%Y%m%d%H%M)"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -b "$branch"
-          git add scripts/loinc-snapshot.json
           git commit -m "chore(core): atualiza o snapshot de códigos LOINC" \
             -m "Gerado por workflow_dispatch em modo update. Conferir cada mudança de nome ou status antes de aprovar: nome novo pode significar que o código deixou de servir para o analito."
           git push -u origin "$branch"

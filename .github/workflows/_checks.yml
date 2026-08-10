@@ -104,8 +104,19 @@ jobs:
       # É o que impede o ValueSet de congelar de novo: ele ficou parado em 160
       # códigos enquanto o catálogo chegava a 177, e manteve o LOINC antigo da
       # Lipoproteína (a), porque o gerador existia e não era chamado por nada.
+      # Separa os dois modos de falha em vez de deixar os dois saírem como um
+      # `git diff` mudo: gerador quebrado e ValueSet desatualizado pedem ações
+      # diferentes de quem for consertar.
       - name: ValueSet está sincronizado com o catálogo
-        run: pnpm valueset:check
+        run: |
+          if ! pnpm valueset:generate; then
+            echo "::error::O gerador do ValueSet falhou. Veja o log acima."
+            exit 1
+          fi
+          if ! git diff --exit-code -- ig/input/fsh/valuesets/BRLabTestVS.fsh; then
+            echo "::error::BRLabTestVS.fsh está fora de sincronia com o catálogo. Rode 'pnpm valueset:generate' e commite o resultado."
+            exit 1
+          fi
 
   test:
     name: Test

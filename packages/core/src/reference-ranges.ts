@@ -1056,7 +1056,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   LDL_Medium: {
     // LDL Medium (LDL Média): lower is better
     // Quest Ion Mobility reference: Male 167-485, Female 121-397 nmol/L, optimal <215
-    default: { max: 485, min: 0, optimalMax: 215, optimalMin: 121, unit: 'nmol/L' },
+    default: { max: 485, min: 121, optimalMax: 215, optimalMin: 121, unit: 'nmol/L' },
     direction: 'lower-better',
     source: 'caulfield-ionmobility-2008',
   },
@@ -1064,7 +1064,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   LDL_ParticleNumber: {
     // LDL Particle Number: lower is better
     // Quest Ion Mobility reference: 1016-2185 nmol/L, optimal <1138
-    default: { max: 2185, min: 0, optimalMax: 1138, optimalMin: 1016, unit: 'nmol/L' },
+    default: { max: 2185, min: 1016, optimalMax: 1138, optimalMin: 1016, unit: 'nmol/L' },
     direction: 'lower-better',
     source: 'caulfield-ionmobility-2008',
   },
@@ -1080,7 +1080,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   LDL_Small: {
     // LDL Small (LDL Pequena): lower is better (small dense LDL is most atherogenic)
     // Quest Ion Mobility reference: Male 123-441, Female 126-382 nmol/L, optimal <142
-    default: { max: 441, min: 0, optimalMax: 142, optimalMin: 123, unit: 'nmol/L' },
+    default: { max: 441, min: 123, optimalMax: 142, optimalMin: 123, unit: 'nmol/L' },
     direction: 'lower-better',
     source: 'caulfield-ionmobility-2008',
   },
@@ -1273,7 +1273,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   Omega6_Omega3_Ratio: {
-    default: { max: 10.0, min: 0, optimalMax: 4.0, optimalMin: 1.0, unit: '' },
+    default: { max: 10.0, min: 1.0, optimalMax: 4.0, optimalMin: 1.0, unit: '' },
     direction: 'lower-better',
     source: 'simopoulos-omega-ratio-2002',
   },
@@ -2104,7 +2104,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   // BMI - WHO classification: 18.5–24.9 normal, 25–29.9 overweight, ≥30 obese
   BMI: {
-    default: { max: 24.9, min: 18.5, optimalMax: 24.9, optimalMin: 18.5, unit: 'kg/m2' },
+    default: { max: 30, min: 18.5, optimalMax: 24.9, optimalMin: 18.5, unit: 'kg/m2' },
     source: 'who-obesity-2000',
   },
 

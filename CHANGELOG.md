@@ -1,3 +1,9 @@
+## [0.16.6](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.16.5...v0.16.6) (2026-08-10)
+
+### Bug Fixes
+
+* **ci:** regenera o ValueSet e liga o gerador ao CI ([#64](https://github.com/Precisa-Saude/fhir-brasil/issues/64)) ([a43ea6d](https://github.com/Precisa-Saude/fhir-brasil/commit/a43ea6de2ee4763806c462ead328bdf5584a0662))
+
 ## [0.16.5](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.16.4...v0.16.5) (2026-08-10)
 
 ### Bug Fixes

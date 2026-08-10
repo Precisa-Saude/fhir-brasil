@@ -1,6 +1,6 @@
 {
   "name": "@precisa-saude/fhir-rnds",
-  "version": "0.16.5",
+  "version": "0.16.6",
   "description": "Cliente HTTP para a RNDS (Rede Nacional de Dados em Saúde) — API FHIR R4 do DATASUS",
   "keywords": [
     "fhir",

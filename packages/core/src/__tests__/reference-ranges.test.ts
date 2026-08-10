@@ -61,21 +61,26 @@ describe('biomarkerRangeDefinitions', () => {
     expect(semFonte).toEqual([]);
   });
 
-  // `source` é `'chave'` ou `'chave:localizador'` (ver sources.ts). O teste
-  // valida a chave e a forma:
+  // `source` é `'chave'` ou `'chave:localizador'` (ver sources.ts).
   //
-  // - `Object.hasOwn` em vez de `in`, que enxerga a cadeia de protótipos: com
-  //   `in`, um `source: 'toString'` passaria como se existisse no registro.
-  // - chave vazia (`':p15'`, ou `source` só com espaços) é malformada e precisa
-  //   falhar, em vez de sumir num filtro de falsy.
+  // A chave é usada crua, sem `trim()`, de propósito: `getReferenceRange`
+  // devolve `source` verbatim, então uma chave com espaço sobrando (`' sbc-...'`)
+  // não resolveria no registro em runtime. Normalizar aqui faria o teste passar
+  // um caso que quebra em produção.
+  //
+  // `Object.hasOwn` em vez de `in`, que enxerga a cadeia de protótipos: com
+  // `in`, um `source: 'toString'` passaria como se existisse no registro.
   it('should only cite sources that exist in the registry', () => {
+    const chaveDe = (source: string): string => source.split(':')[0] ?? '';
+
     const problemas = Object.entries(biomarkerRangeDefinitions)
       .filter(([, def]) => def.source)
       .map(([code, def]) => {
-        const chave = String(def.source).split(':')[0]?.trim() ?? '';
-        if (!chave) return `${code} -> fonte malformada: ${JSON.stringify(def.source)}`;
-        if (!Object.hasOwn(SOURCE_REGISTRY, chave))
-          return `${code} -> chave desconhecida: ${chave}`;
+        const chave = chaveDe(String(def.source));
+        if (chave === '') return `${code} -> fonte sem chave: ${JSON.stringify(def.source)}`;
+        if (!Object.hasOwn(SOURCE_REGISTRY, chave)) {
+          return `${code} -> chave desconhecida: ${JSON.stringify(chave)}`;
+        }
         return null;
       })
       .filter((x): x is string => x !== null);

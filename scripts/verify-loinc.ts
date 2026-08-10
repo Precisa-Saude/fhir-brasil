@@ -212,6 +212,14 @@ async function main() {
 
   const unicosDoCatalogo = new Set(comLoinc.map((b) => String(b.loinc)));
 
+  // Código sozinho não diz nada a quem for consertar: o catálogo é indexado por
+  // biomarcador, não por LOINC.
+  const biomarcadoresDe = (loinc: string) =>
+    comLoinc
+      .filter((b) => String(b.loinc) === loinc)
+      .map((b) => b.code)
+      .join(', ') || '?';
+
   console.error(
     `Consultando ${unicosDoCatalogo.size} códigos LOINC únicos (${comLoinc.length} biomarcadores)…`,
   );
@@ -241,18 +249,39 @@ async function main() {
 
   if (UPDATE) {
     const codes: Snapshot['codes'] = {};
-    const semNome: string[] = [];
+    // Os dois casos pedem ações opostas e não podem sair no mesmo balde:
+    // código que não resolve é dado errado nosso, e vai para PR corrigindo o
+    // catálogo. Código que resolve sem display é resposta inesperada do
+    // servidor, e vai para investigação do lado deles.
+    const naoResolvem: string[] = [];
+    const semDisplay: string[] = [];
     for (const [code, r] of [...vivos].sort((a, b) => a[0].localeCompare(b[0]))) {
-      if (r.ausente || !r.display) {
-        semNome.push(code);
+      if (r.ausente) {
+        naoResolvem.push(code);
+        continue;
+      }
+      if (!r.display) {
+        semDisplay.push(code);
         continue;
       }
       codes[code] = { display: r.display, status: r.status ?? null };
     }
+    const semNome = [...naoResolvem, ...semDisplay];
     if (semNome.length) {
       console.error(`\nNão dá para gravar snapshot: ${semNome.length} código(s) sem nome oficial.`);
-      for (const c of semNome) console.error(`  - ${c}`);
-      console.error('A licença (10.3) exige o display name junto do código.');
+      if (naoResolvem.length) {
+        console.error(`\nNÃO RESOLVEM no LOINC (${naoResolvem.length}) — dado errado no catálogo:`);
+        for (const c of naoResolvem) console.error(`  - ${c}  (${biomarcadoresDe(c)})`);
+        console.error('  Conferir o código na fonte e corrigir o catálogo.');
+      }
+      if (semDisplay.length) {
+        console.error(
+          `\nRESOLVEM mas sem display name (${semDisplay.length}) — resposta inesperada:`,
+        );
+        for (const c of semDisplay) console.error(`  - ${c}  (${biomarcadoresDe(c)})`);
+        console.error('  O código existe; o servidor é que não devolveu nome.');
+      }
+      console.error('\nA licença (10.3) exige o display name junto do código.');
       process.exitCode = EXIT_FINDINGS;
       return;
     }

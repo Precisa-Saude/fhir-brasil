@@ -18,6 +18,13 @@ on:
 permissions:
   contents: read
 
+# Uma execução por vez. O modo update não escreve na main — abre PR — então
+# duas execuções simultâneas não corrompem nada, mas abririam dois PRs com o
+# mesmo conteúdo e gastariam o dobro de chamadas ao LOINC à toa.
+concurrency:
+  group: loinc-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   check:
     name: Códigos LOINC

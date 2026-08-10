@@ -115,6 +115,13 @@ async function lookup(code: string): Promise<LookupResult> {
         return { indisponivel: `autenticação recusada (HTTP ${res.status})` };
       }
       if (res.status === 429 || res.status >= 500) {
+        // Se o servidor disser quanto esperar, obedecer é melhor que chutar
+        // backoff: evita tanto voltar cedo demais quanto dormir à toa.
+        const retryAfter = Number(res.headers.get('retry-after'));
+        if (Number.isFinite(retryAfter) && retryAfter > 0 && attempt < ATTEMPTS) {
+          await sleep(Math.min(retryAfter, 60) * 1000);
+          continue;
+        }
         throw new Error(`LOINC respondeu ${res.status}`);
       }
 
@@ -125,10 +132,16 @@ async function lookup(code: string): Promise<LookupResult> {
       };
 
       if (data.resourceType === 'OperationOutcome') {
-        const erro = data.issue?.some((i) => i.severity === 'error');
+        // FHIR define fatal | error | warning | information. As duas primeiras
+        // são o servidor dizendo que a consulta não resolveu.
+        const erro = data.issue?.some((i) => i.severity === 'error' || i.severity === 'fatal');
         // Resposta legítima do servidor: o código não existe.
         if (erro) return { ausente: true };
-        return { indisponivel: 'OperationOutcome sem issue de erro' };
+        // OperationOutcome só com warning/information é forma inesperada.
+        // Tratar como ausente acusaria o código de inexistente e derrubaria o
+        // build sobre um dado que talvez esteja certo; "não deu para conferir"
+        // é a leitura honesta.
+        return { indisponivel: 'OperationOutcome sem issue de erro nem fatal' };
       }
 
       if (!Array.isArray(data.parameter)) {
@@ -214,6 +227,16 @@ async function main() {
       process.exitCode = EXIT_FINDINGS;
       return;
     }
+    // Snapshot com menos códigos do que foi consultado significa que alguma
+    // coisa se perdeu no caminho. Gravar assim seria pior que não gravar: o
+    // check seguinte passaria sem conferir o que sumiu.
+    if (Object.keys(codes).length !== vivos.size) {
+      console.error(
+        `\nNão dá para gravar snapshot: consultei ${vivos.size} códigos e montei ${Object.keys(codes).length}.`,
+      );
+      process.exitCode = EXIT_FINDINGS;
+      return;
+    }
     const versao = [...vivos.values()].find((r) => r.version)?.version ?? null;
     const snapshot: Snapshot = {
       _checkedAt: new Date().toISOString().slice(0, 10),
@@ -281,9 +304,16 @@ async function main() {
   for (const d of derivas) {
     console.error(`DERIVA        ${d.code} ${d.campo}: "${d.de}" → "${d.para}"`);
   }
-  for (const c of novos) console.error(`FORA DO SNAP  ${c} — rode o modo update`);
+  for (const c of novos) {
+    console.error(`FORA DO SNAP  ${c} — código novo no catálogo, ainda não conferido`);
+  }
   console.error(
-    '\nAceitar mudança de nome ou status é PR revisado: rode o workflow em modo update.',
+    '\nAceitar qualquer uma destas mudanças é PR revisado: rode o workflow LOINC em' +
+      '\nworkflow_dispatch com update: true.' +
+      '\n\nCódigo novo aparece aqui de propósito. Ele entrou no catálogo sem nunca ter' +
+      '\nsido conferido contra o LOINC, e é justamente aí que erro de digitação ou' +
+      '\ncódigo aposentado passa batido — a revisão do PR do snapshot é o momento de' +
+      '\nolhar se o código serve para o analito.',
   );
   process.exitCode = EXIT_FINDINGS;
 }

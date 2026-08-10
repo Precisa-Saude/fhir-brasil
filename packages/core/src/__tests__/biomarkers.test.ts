@@ -56,9 +56,13 @@ describe('BIOMARKER_DEFINITIONS', () => {
   it('should have a valid Mod 10 check digit on every LOINC code', () => {
     const digitoEsperado = (numero: string): string => {
       let soma = 0;
-      [...numero].reverse().forEach((ch, i) => {
+      // `posicaoDaDireita` é o índice depois do reverse, ou seja, conta da
+      // direita para a esquerda. O algoritmo dobra as posições pares nessa
+      // contagem — trocar isso por índice da esquerda quebra o cálculo em
+      // números de comprimento ímpar, sem quebrar nenhum teste óbvio.
+      [...numero].reverse().forEach((ch, posicaoDaDireita) => {
         let d = Number(ch);
-        if (i % 2 === 0) {
+        if (posicaoDaDireita % 2 === 0) {
           d *= 2;
           if (d > 9) d -= 9;
         }
@@ -67,13 +71,18 @@ describe('BIOMARKER_DEFINITIONS', () => {
       return String((10 - (soma % 10)) % 10);
     };
 
+    // A forma inteira é validada de uma vez. Validar só os dois primeiros
+    // segmentos deixaria passar `4485-9-1`, que tem número e dígito corretos e
+    // ainda assim não é código LOINC.
+    const FORMA_LOINC = /^\d+-\d$/;
+
     const invalidos = BIOMARKER_DEFINITIONS.filter((d) => d.loinc)
       .map((d) => {
         const loinc = String(d.loinc);
-        const [numero, digito] = loinc.split('-');
-        if (!numero || !digito || !/^\d+$/.test(numero) || !/^\d$/.test(digito)) {
-          return `${d.code} -> forma inválida: ${loinc}`;
+        if (!FORMA_LOINC.test(loinc)) {
+          return `${d.code} -> ${loinc} não tem a forma <número>-<dígito único>`;
         }
+        const [numero, digito] = loinc.split('-') as [string, string];
         const esperado = digitoEsperado(numero);
         return esperado === digito
           ? null

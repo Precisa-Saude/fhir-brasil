@@ -1,3 +1,13 @@
+## [0.16.5](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.16.4...v0.16.5) (2026-08-10)
+
+### Bug Fixes
+
+* **core:** corrige piso da TFG e canonicaliza unidades ([#63](https://github.com/Precisa-Saude/fhir-brasil/issues/63)) ([3409a16](https://github.com/Precisa-Saude/fhir-brasil/commit/3409a16bd038163281302671d953b7a184a906ec))
+
+### Chores
+
+* **ci:** sincroniza templates e declara divergências deliberadas ([#62](https://github.com/Precisa-Saude/fhir-brasil/issues/62)) ([e62ac6d](https://github.com/Precisa-Saude/fhir-brasil/commit/e62ac6d045ac43940b031bd654691d115fe632a7))
+
 ## [0.16.4](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.16.3...v0.16.4) (2026-08-03)
 
 ### Bug Fixes

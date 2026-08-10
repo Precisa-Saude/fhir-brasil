@@ -647,15 +647,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   eGFR: {
-    default: { max: 120, min: 90, optimalMax: 120, optimalMin: 90, unit: 'mL/min/1.73m²' },
+    default: { max: 120, min: 60, optimalMax: 120, optimalMin: 90, unit: 'mL/min/1.73m²' },
+    // KDIGO 2024: TFG 60-89 (G2) sem marcador de lesão renal não é DRC, em
+    // nenhuma faixa etária. A variante por idade que existia aqui rebaixava o
+    // piso só para 60+ e ainda limitava o teto a 90, o que sinalizava como
+    // alterado qualquer idoso com função preservada.
     source: 'kdigo-ckd-2024',
-    variants: [
-      {
-        ageMin: 60,
-        range: { max: 90, min: 60, optimalMax: 90, optimalMin: 60, unit: 'mL/min/1.73m²' },
-        sex: 'all',
-      },
-    ],
   },
 
   Eosinophils: {
@@ -999,7 +996,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
       min: 2,
       optimalMax: 8,
       optimalMin: 3,
-      unit: 'µIU/mL',
+      unit: 'uIU/mL',
     },
     source: 'tietz-7ed-2015',
   },
@@ -1059,7 +1056,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   LDL_Medium: {
     // LDL Medium (LDL Média): lower is better
     // Quest Ion Mobility reference: Male 167-485, Female 121-397 nmol/L, optimal <215
-    default: { max: 485, min: 121, optimalMax: 215, optimalMin: 121, unit: 'nmol/L' },
+    default: { max: 485, min: 0, optimalMax: 215, optimalMin: 121, unit: 'nmol/L' },
     direction: 'lower-better',
     source: 'caulfield-ionmobility-2008',
   },
@@ -1067,7 +1064,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   LDL_ParticleNumber: {
     // LDL Particle Number: lower is better
     // Quest Ion Mobility reference: 1016-2185 nmol/L, optimal <1138
-    default: { max: 2185, min: 1016, optimalMax: 1138, optimalMin: 1016, unit: 'nmol/L' },
+    default: { max: 2185, min: 0, optimalMax: 1138, optimalMin: 1016, unit: 'nmol/L' },
     direction: 'lower-better',
     source: 'caulfield-ionmobility-2008',
   },
@@ -1075,7 +1072,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   LDL_Peak_Size: {
     // LDL Peak Size: higher is better (larger particles less atherogenic)
     // Quest Ion Mobility reference: optimal >222.9 Å (22.29 nm)
-    default: { max: 250.0, min: 217.4, optimalMax: 250.0, optimalMin: 222.9, unit: 'Å' },
+    default: { max: 250.0, min: 217.4, optimalMax: 250.0, optimalMin: 222.9, unit: 'Angstrom' },
     direction: 'higher-better',
     source: 'caulfield-ionmobility-2008',
   },
@@ -1083,7 +1080,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   LDL_Small: {
     // LDL Small (LDL Pequena): lower is better (small dense LDL is most atherogenic)
     // Quest Ion Mobility reference: Male 123-441, Female 126-382 nmol/L, optimal <142
-    default: { max: 441, min: 123, optimalMax: 142, optimalMin: 123, unit: 'nmol/L' },
+    default: { max: 441, min: 0, optimalMax: 142, optimalMin: 123, unit: 'nmol/L' },
     direction: 'lower-better',
     source: 'caulfield-ionmobility-2008',
   },
@@ -1276,7 +1273,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   Omega6_Omega3_Ratio: {
-    default: { max: 10.0, min: 1.0, optimalMax: 4.0, optimalMin: 1.0, unit: '' },
+    default: { max: 10.0, min: 0, optimalMax: 4.0, optimalMin: 1.0, unit: '' },
     direction: 'lower-better',
     source: 'simopoulos-omega-ratio-2002',
   },
@@ -1604,7 +1601,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   // sem invadir a faixa subclínica. Variante ageMin=65 mantém limite superior
   // expandido (tolerância fisiológica do eixo em idosos, SBEM 2013).
   TSH: {
-    default: { max: 4.0, min: 0.4, optimalMax: 3.0, optimalMin: 1.0, unit: 'µIU/mL' },
+    default: { max: 4.0, min: 0.4, optimalMax: 3.0, optimalMin: 1.0, unit: 'uIU/mL' },
     source: 'sbem-thyroid-2013',
     variants: [
       // Variantes gestacionais (ATA 2017 / SBEM): supressão fisiológica por hCG
@@ -1617,31 +1614,31 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
       {
         pregnant: true,
         pregnancyTrimester: 1,
-        range: { max: 2.5, min: 0.1, optimalMax: 2.0, optimalMin: 0.5, unit: 'µIU/mL' },
+        range: { max: 2.5, min: 0.1, optimalMax: 2.0, optimalMin: 0.5, unit: 'uIU/mL' },
         sex: 'F',
       },
       {
         pregnant: true,
         pregnancyTrimester: 2,
-        range: { max: 3.0, min: 0.2, optimalMax: 2.5, optimalMin: 0.5, unit: 'µIU/mL' },
+        range: { max: 3.0, min: 0.2, optimalMax: 2.5, optimalMin: 0.5, unit: 'uIU/mL' },
         sex: 'F',
       },
       {
         pregnant: true,
         pregnancyTrimester: 3,
-        range: { max: 3.0, min: 0.3, optimalMax: 2.5, optimalMin: 0.5, unit: 'µIU/mL' },
+        range: { max: 3.0, min: 0.3, optimalMax: 2.5, optimalMin: 0.5, unit: 'uIU/mL' },
         sex: 'F',
       },
       // Catch-all gestacional — usada quando o trimestre não é informado.
       // Adota a faixa mais conservadora (2º/3º trimestre: 0.2–3.0).
       {
         pregnant: true,
-        range: { max: 3.0, min: 0.2, optimalMax: 2.5, optimalMin: 0.5, unit: 'µIU/mL' },
+        range: { max: 3.0, min: 0.2, optimalMax: 2.5, optimalMin: 0.5, unit: 'uIU/mL' },
         sex: 'F',
       },
       {
         ageMin: 65,
-        range: { max: 6.0, min: 0.4, optimalMax: 4.0, optimalMin: 1.0, unit: 'µIU/mL' },
+        range: { max: 6.0, min: 0.4, optimalMax: 4.0, optimalMin: 1.0, unit: 'uIU/mL' },
         sex: 'all',
       },
     ],
@@ -2107,7 +2104,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   // BMI - WHO classification: 18.5–24.9 normal, 25–29.9 overweight, ≥30 obese
   BMI: {
-    default: { max: 30, min: 18.5, optimalMax: 24.9, optimalMin: 18.5, unit: 'kg/m2' },
+    default: { max: 24.9, min: 18.5, optimalMax: 24.9, optimalMin: 18.5, unit: 'kg/m2' },
     source: 'who-obesity-2000',
   },
 

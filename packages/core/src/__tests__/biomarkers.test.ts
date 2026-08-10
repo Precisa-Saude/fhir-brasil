@@ -45,6 +45,45 @@ describe('BIOMARKER_DEFINITIONS', () => {
     expect(uniqueCodes.size).toBe(loincCodes.length);
   });
 
+  // Todo código LOINC termina em dígito verificador Mod 10 ("double-add-double").
+  // Conferir isso pega erro de digitação **sem rede e sem credencial**, em todo PR
+  // — enquanto o `pnpm loinc:check` contra o servidor oficial é mensal e precisa
+  // de conta.
+  //
+  // Não é hipotético: a primeira execução real do verificador encontrou três
+  // códigos inválidos publicados (C3 `4485-3`, C4 `4498-6`, Selênio `5697-7`), e
+  // os três falham exatamente neste teste. Teriam sido pegos na entrada.
+  it('should have a valid Mod 10 check digit on every LOINC code', () => {
+    const digitoEsperado = (numero: string): string => {
+      let soma = 0;
+      [...numero].reverse().forEach((ch, i) => {
+        let d = Number(ch);
+        if (i % 2 === 0) {
+          d *= 2;
+          if (d > 9) d -= 9;
+        }
+        soma += d;
+      });
+      return String((10 - (soma % 10)) % 10);
+    };
+
+    const invalidos = BIOMARKER_DEFINITIONS.filter((d) => d.loinc)
+      .map((d) => {
+        const loinc = String(d.loinc);
+        const [numero, digito] = loinc.split('-');
+        if (!numero || !digito || !/^\d+$/.test(numero) || !/^\d$/.test(digito)) {
+          return `${d.code} -> forma inválida: ${loinc}`;
+        }
+        const esperado = digitoEsperado(numero);
+        return esperado === digito
+          ? null
+          : `${d.code} -> ${loinc} (dígito verificador deveria ser ${esperado})`;
+      })
+      .filter((x): x is string => x !== null);
+
+    expect(invalidos).toEqual([]);
+  });
+
   it('should have unique internal codes', () => {
     const codes = BIOMARKER_DEFINITIONS.map((d) => d.code);
     const uniqueCodes = new Set(codes);

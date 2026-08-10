@@ -458,9 +458,28 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   // CK: valores conservadores baseados em faixas laboratoriais típicas
+  // CK — o teto masculino era 190 U/L, bem abaixo de qualquer limite superior
+  // derivado de população: 314 no Kalaria 2026 (homens brancos) e 382 no McLeod
+  // 2016 (NHANES, brancos, p97.5). Sinalizava como alterado um monte de gente
+  // com músculo, exercício recente ou simplesmente CK alto normal.
+  //
+  // Passa a 314, que é o mais baixo entre os limites populacionais disponíveis
+  // — a escolha que menos deixa passar elevação real. O `optimalMax` fica em
+  // 170, então a faixa 170–314 lê como "acima do ótimo, dentro da referência",
+  // e não como alteração.
+  //
+  // O teto feminino de 170 já coincide com o limite de mulheres brancas do
+  // mesmo estudo, e fica como está.
+  //
+  // Estratificação por ancestralidade NÃO foi adotada, apesar de o estudo
+  // mostrar limites bem maiores em pessoas negras (389 ♀ / 757 ♂). As
+  // categorias do estudo são britânicas e não mapeiam na população brasileira:
+  // SUAREZ-KURTZ et al. (Front Pharmacol, 2012, PMID 23133420) mostram que a
+  // variação relevante é contínua entre brasileiros e "não é capturada pela
+  // autodeclaração de raça/Cor". Ver a issue #3 para a decisão registrada.
   CK: {
-    default: { max: 190, min: 30, optimalMax: 170, optimalMin: 40, unit: 'U/L' },
-    source: 'tietz-7ed-2015',
+    default: { max: 314, min: 30, optimalMax: 170, optimalMin: 40, unit: 'U/L' },
+    source: 'kalaria-ck-ri-2026',
     variants: [
       { sex: 'F', range: { max: 170, min: 30, optimalMax: 150, optimalMin: 40, unit: 'U/L' } },
     ],

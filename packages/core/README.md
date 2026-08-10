@@ -101,3 +101,14 @@ Este pacote fornece ferramentas de software para padronização de dados clínic
 ## Licença
 
 [Apache-2.0](../../LICENSE)
+
+### Conteúdo LOINC
+
+Este pacote incorpora códigos LOINC, que têm licença própria — permissiva e sem
+custo, mas com aviso exigido:
+
+> This material contains content from LOINC (http://loinc.org). LOINC is
+> copyright © Regenstrief Institute, Inc. and the Logical Observation
+> Identifiers Names and Codes (LOINC) Committee and is available at no cost
+> under the license at http://loinc.org/license. LOINC® is a registered United
+> States trademark of Regenstrief Institute, Inc.

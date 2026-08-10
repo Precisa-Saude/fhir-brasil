@@ -1,0 +1,98 @@
+name: LOINC
+
+# Agendado, e não por PR. O check precisa de credencial e de rede: em todo PR
+# ficaria lento e instável, e secret não é exposto a PR de fork em repo público.
+# O LOINC está migrando para release mensal, então o cron acompanha a cadência
+# do que está sendo observado.
+on:
+  schedule:
+    # Dia 5, 06:00 UTC — depois da virada do mês, sem cair no pico da meia-noite.
+    - cron: '0 6 5 * *'
+  workflow_dispatch:
+    inputs:
+      update:
+        description: 'Regravar o snapshot e abrir PR com a mudança'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+# Uma execução por vez. O modo update não escreve na main — abre PR — então
+# duas execuções simultâneas não corrompem nada, mas abririam dois PRs com o
+# mesmo conteúdo e gastariam o dobro de chamadas ao LOINC à toa.
+concurrency:
+  group: loinc-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    name: Códigos LOINC
+    if: ${{ !inputs.update }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 22
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - name: Conferir códigos contra o fhir.loinc.org
+        env:
+          LOINC_USER: ${{ secrets.LOINC_USER }}
+          LOINC_PASSWORD: ${{ secrets.LOINC_PASSWORD }}
+        run: |
+          code=0
+          pnpm loinc:check || code=$?
+          # 2 é "não deu para conferir" — LOINC fora do ar, rede bloqueada,
+          # credencial recusada. Indisponibilidade de terceiro não pode virar
+          # falha nossa, mas também não pode passar por sucesso silencioso.
+          if [ "$code" = "2" ]; then
+            echo "::warning::LOINC indisponível; códigos não verificados nesta execução"
+            exit 0
+          fi
+          exit "$code"
+
+  update:
+    name: Regravar snapshot
+    if: ${{ inputs.update }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 22
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - name: Regravar o snapshot
+        env:
+          LOINC_USER: ${{ secrets.LOINC_USER }}
+          LOINC_PASSWORD: ${{ secrets.LOINC_PASSWORD }}
+        run: pnpm loinc:update
+      # Aceitar deriva é PR revisado, nunca commit automático na main: uma
+      # mudança de nome upstream pode significar que o código deixou de servir
+      # para o analito, e isso precisa de olho humano.
+      - name: Abrir PR com o snapshot novo
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if git diff --quiet -- scripts/loinc-snapshot.json; then
+            echo "::notice::Snapshot já estava atualizado; nada a propor."
+            exit 0
+          fi
+          branch="chore/loinc-snapshot-$(date -u +%Y%m%d%H%M)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add scripts/loinc-snapshot.json
+          git commit -m "chore(core): atualiza o snapshot de códigos LOINC" \
+            -m "Gerado por workflow_dispatch em modo update. Conferir cada mudança de nome ou status antes de aprovar: nome novo pode significar que o código deixou de servir para o analito."
+          git push -u origin "$branch"
+          gh pr create --fill --base main --head "$branch"

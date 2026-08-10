@@ -19,6 +19,15 @@ contact:
         value: contato@precisa-saude.com.br
 jurisdiction: urn:iso:std:iso:3166#BR "Brazil"
 license: Apache-2.0
+# Exigido pela seção 10.1 da licença do LOINC: onde o produto é publicado como
+# recurso online, o aviso precisa estar disponível na licença ou nos termos de
+# uso. O IG publica códigos LOINC no BRLabTestVS.
+copyright: >-
+  This material contains content from LOINC (http://loinc.org). LOINC is
+  copyright © Regenstrief Institute, Inc. and the Logical Observation
+  Identifiers Names and Codes (LOINC) Committee and is available at no cost
+  under the license at http://loinc.org/license. LOINC® is a registered United
+  States trademark of Regenstrief Institute, Inc.
 description: >-
   Implementation Guide brasileiro com perfis FHIR R4 para resultados
   laboratoriais, incluindo definições de biomarcadores, faixas de

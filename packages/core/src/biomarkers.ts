@@ -2535,7 +2535,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'figado',
     code: 'LDH',
-    loinc: '2532-0',
+    loinc: '14804-9',
     names: {
       en: ['Lactate Dehydrogenase', 'LDH', 'LD'],
       pt: ['Desidrogenase Lática', 'DHL', 'LDH', 'Lactato Desidrogenase'],

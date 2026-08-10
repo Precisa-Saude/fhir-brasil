@@ -121,6 +121,8 @@ jobs:
           url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/compare/main...${branch}?expand=1"
           echo "::notice::Branch publicada: $branch"
           echo "::notice::Abrir PR manualmente: $url"
-          echo "### Snapshot de LOINC pronto para revisão" >> "$GITHUB_STEP_SUMMARY"
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "Branch \`$branch\` publicada. [Abrir PR]($url)" >> "$GITHUB_STEP_SUMMARY"
+          {
+            echo "### Snapshot de LOINC pronto para revisão"
+            echo ""
+            echo "Branch \`$branch\` publicada. [Abrir PR]($url)"
+          } >> "$GITHUB_STEP_SUMMARY"

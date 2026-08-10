@@ -1,0 +1,715 @@
+{
+  "_checkedAt": "2026-08-10",
+  "_loincVersion": null,
+  "_notice": "This material contains content from LOINC (http://loinc.org). LOINC is copyright © Regenstrief Institute, Inc. and the Logical Observation Identifiers Names and Codes (LOINC) Committee and is available at no cost under the license at http://loinc.org/license. LOINC® is a registered United States trademark of Regenstrief Institute, Inc.",
+  "codes": {
+    "10331-7": {
+      "display": "Rh [Type] in Blood",
+      "status": "ACTIVE"
+    },
+    "10334-1": {
+      "display": "Cancer Ag 125 [Units/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "10501-5": {
+      "display": "Lutropin [Units/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "10886-0": {
+      "display": "Prostate Specific Ag Free [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "11277-1": {
+      "display": "Epithelial cells.squamous [#/area] in Urine sediment by Microscopy high power field",
+      "status": "ACTIVE"
+    },
+    "11572-5": {
+      "display": "Rheumatoid factor [Units/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "12841-3": {
+      "display": "Prostate Specific Ag Free/Prostate specific Ag.total in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "13458-5": {
+      "display": "Cholesterol in VLDL [Mass/volume] in Serum or Plasma by calculation",
+      "status": "ACTIVE"
+    },
+    "13964-2": {
+      "display": "Methylmalonate [Moles/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "13965-9": {
+      "display": "Homocysteine [Moles/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "13967-5": {
+      "display": "Sex hormone binding globulin [Moles/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "14804-9": {
+      "display": "Lactate dehydrogenase [Enzymatic activity/volume] in Serum or Plasma by Lactate to pyruvate reaction",
+      "status": "ACTIVE"
+    },
+    "14957-5": {
+      "display": "Microalbumin [Mass/volume] in Urine",
+      "status": "ACTIVE"
+    },
+    "15067-2": {
+      "display": "Follitropin [Units/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "1742-6": {
+      "display": "Alanine aminotransferase [Enzymatic activity/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "1751-7": {
+      "display": "Albumin [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "1759-0": {
+      "display": "Albumin/Globulin [Mass Ratio] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "17782-4": {
+      "display": "Lipoprotein.beta.subparticle [Entitic length] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "17861-6": {
+      "display": "Calcium [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "1798-8": {
+      "display": "Amylase [Enzymatic activity/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "1834-1": {
+      "display": "Alpha-1-Fetoprotein [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "1848-1": {
+      "display": "Androstanolone [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "1869-7": {
+      "display": "Apolipoprotein A-I [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "1884-6": {
+      "display": "Apolipoprotein B [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "1903-4": {
+      "display": "Ascorbate [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "19080-1": {
+      "display": "Choriogonadotropin [Units/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "19113-0": {
+      "display": "IgE [Units/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "1920-8": {
+      "display": "Aspartate aminotransferase [Enzymatic activity/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "1968-7": {
+      "display": "Bilirubin.direct [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "1971-1": {
+      "display": "Bilirubin.indirect [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "1975-2": {
+      "display": "Bilirubin.total [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "1988-5": {
+      "display": "C-Reactive Protein (CRP)",
+      "status": "ACTIVE"
+    },
+    "1989-3": {
+      "display": "Vitamin D, 25-Hydroxy",
+      "status": "ACTIVE"
+    },
+    "2028-9": {
+      "display": "Carbon dioxide, total [Moles/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2039-6": {
+      "display": "Carcinoembryonic Ag [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "20405-7": {
+      "display": "Urobilinogen [Mass/volume] in Urine by Test strip",
+      "status": "ACTIVE"
+    },
+    "20448-7": {
+      "display": "Insulin [Units/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2075-0": {
+      "display": "Chloride [Moles/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2085-9": {
+      "display": "Cholesterol in HDL [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2089-1": {
+      "display": "Cholesterol in LDL [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2093-3": {
+      "display": "Cholesterol [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2132-9": {
+      "display": "Vitamin B12",
+      "status": "ACTIVE"
+    },
+    "21365-2": {
+      "display": "Leptin [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2143-6": {
+      "display": "Cortisol [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2157-6": {
+      "display": "Creatine kinase [Enzymatic activity/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2160-0": {
+      "display": "Creatinine [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2161-8": {
+      "display": "Creatinine [Mass/volume] in Urine",
+      "status": "ACTIVE"
+    },
+    "21619-2": {
+      "display": "APOE gene mutations found [Identifier] in Blood or Tissue by Molecular genetics method Nominal",
+      "status": "ACTIVE"
+    },
+    "2191-5": {
+      "display": "Dehydroepiandrosterone sulfate (DHEA-S) [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2243-4": {
+      "display": "Estradiol (E2) [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2276-4": {
+      "display": "Ferritin [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2284-8": {
+      "display": "Folate [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2324-2": {
+      "display": "Gamma glutamyl transferase [Enzymatic activity/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2336-6": {
+      "display": "Globulin [Mass/volume] in Serum",
+      "status": "ACTIVE"
+    },
+    "2345-7": {
+      "display": "Glucose [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "24108-3": {
+      "display": "Cancer Ag 19-9 [Units/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2458-8": {
+      "display": "IgA [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2465-3": {
+      "display": "IgG [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2472-9": {
+      "display": "IgM [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2498-4": {
+      "display": "Iron [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2500-7": {
+      "display": "Iron binding capacity [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2502-3": {
+      "display": "Iron saturation [Mass Fraction] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2571-8": {
+      "display": "Triglyceride [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "26746-8": {
+      "display": "Magnesium [Mass/volume] in Red Blood Cells",
+      "status": "ACTIVE"
+    },
+    "2731-8": {
+      "display": "Parathyrin.intact [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "27353-2": {
+      "display": "Glucose mean value [Mass/volume] in Blood Estimated from glycated hemoglobin",
+      "status": "ACTIVE"
+    },
+    "2823-3": {
+      "display": "Potassium [Moles/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2839-9": {
+      "display": "Progesterone [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2842-3": {
+      "display": "Prolactin [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2857-1": {
+      "display": "Prostate specific Ag [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2885-2": {
+      "display": "Protein [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2923-1": {
+      "display": "Retinol [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "29463-7": {
+      "display": "Body weight",
+      "status": "ACTIVE"
+    },
+    "2951-2": {
+      "display": "Sodium [Moles/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2986-8": {
+      "display": "Testosterone [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "2991-8": {
+      "display": "Testosterone Free [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "3016-3": {
+      "display": "Thyroid Stimulating Hormone (TSH)",
+      "status": "ACTIVE"
+    },
+    "30189-5": {
+      "display": "Grass Allergen Mix 1 (Orchard grass+Meadow Fescue+Perennial rye grass+Timothy+Kentucky blue grass) IgE Ab [Units/volume] in Serum by Multidisk",
+      "status": "ACTIVE"
+    },
+    "3024-7": {
+      "display": "Thyroxine (T4) free [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "3026-2": {
+      "display": "Thyroxine (T4) [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "30341-2": {
+      "display": "Erythrocyte [Sedimentation Rate] in Blood",
+      "status": "ACTIVE"
+    },
+    "3040-3": {
+      "display": "Lipase [Enzymatic activity/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "3051-0": {
+      "display": "Triiodothyronine (T3) Free [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "3084-1": {
+      "display": "Urate [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "3091-6": {
+      "display": "Urea [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "30934-4": {
+      "display": "Natriuretic peptide B [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "3097-3": {
+      "display": "Urea nitrogen/Creatinine [Mass Ratio] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "31017-7": {
+      "display": "Tissue transglutaminase IgA Ab [Units/volume] in Serum",
+      "status": "ACTIVE"
+    },
+    "3255-7": {
+      "display": "Fibrinogen [Mass/volume] in Platelet poor plasma by Coagulation assay",
+      "status": "ACTIVE"
+    },
+    "32623-1": {
+      "display": "Platelet [Entitic mean volume] in Blood by Automated count",
+      "status": "ACTIVE"
+    },
+    "32998-7": {
+      "display": "Tissue transglutaminase IgG Ab [Units/volume] in Serum",
+      "status": "ACTIVE"
+    },
+    "33762-6": {
+      "display": "Natriuretic peptide.B prohormone N-Terminal [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "33863-2": {
+      "display": "Cystatin C [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "35177-5": {
+      "display": "Polyunsaturated fatty acids [Moles/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "35505-7": {
+      "display": "Lipoprotein.beta.subparticle [Type] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "38476-8": {
+      "display": "Mullerian inhibiting substance [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "39156-5": {
+      "display": "Body mass index (BMI) [Ratio]",
+      "status": "ACTIVE"
+    },
+    "41982-0": {
+      "display": "Percentage of body fat Measured",
+      "status": "ACTIVE"
+    },
+    "43396-1": {
+      "display": "Cholesterol non HDL [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "43583-4": {
+      "display": "Lipoprotein a [Moles/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "43727-7": {
+      "display": "Lipoprotein.beta.subparticle.small [Moles/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "43729-3": {
+      "display": "Lipoprotein.alpha.subparticle.large [Moles/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "4485-9": {
+      "display": "Complement C3 [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "4498-2": {
+      "display": "Complement C4 [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "4544-3": {
+      "display": "Hematocrit [Volume Fraction] of Blood by Automated count",
+      "status": "ACTIVE"
+    },
+    "4548-4": {
+      "display": "Hemoglobin A1c",
+      "status": "ACTIVE"
+    },
+    "4679-7": {
+      "display": "Reticulocytes/Erythrocytes in Blood",
+      "status": "ACTIVE"
+    },
+    "47214-2": {
+      "display": "Homeostasis model assessment",
+      "status": "ACTIVE"
+    },
+    "47828-9": {
+      "display": "Adiponectin [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "48066-5": {
+      "display": "Fibrin D-dimer DDU [Mass/volume] in Platelet poor plasma",
+      "status": "ACTIVE"
+    },
+    "48371-9": {
+      "display": "Docosapentaenoate (C22:5 n-3) [Moles/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "49563-0": {
+      "display": "Troponin I.cardiac [Mass/volume] in Serum or Plasma by Detection limit <= 0.01 ng/mL",
+      "status": "ACTIVE"
+    },
+    "53060-0": {
+      "display": "Butyrylcarnitine (C4) [Moles/volume] in Amniotic fluid",
+      "status": "ACTIVE"
+    },
+    "54434-6": {
+      "display": "Lipoprotein.beta.subparticle [Moles/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "5685-3": {
+      "display": "Mercury [Mass/volume] in Blood",
+      "status": "ACTIVE"
+    },
+    "5724-0": {
+      "display": "Selenium [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "5767-9": {
+      "display": "Appearance of Urine",
+      "status": "ACTIVE"
+    },
+    "5770-3": {
+      "display": "Bilirubin.total [Presence] in Urine by Test strip",
+      "status": "ACTIVE"
+    },
+    "5778-6": {
+      "display": "Color of Urine",
+      "status": "ACTIVE"
+    },
+    "5792-7": {
+      "display": "Glucose [Mass/volume] in Urine by Test strip",
+      "status": "ACTIVE"
+    },
+    "5794-3": {
+      "display": "Hemoglobin [Presence] in Urine by Test strip",
+      "status": "ACTIVE"
+    },
+    "5796-8": {
+      "display": "Hyaline casts [#/area] in Urine sediment by Microscopy low power field",
+      "status": "ACTIVE"
+    },
+    "5797-6": {
+      "display": "Ketones [Mass/volume] in Urine by Test strip",
+      "status": "ACTIVE"
+    },
+    "5799-2": {
+      "display": "Leukocyte esterase [Presence] in Urine by Test strip",
+      "status": "ACTIVE"
+    },
+    "5802-4": {
+      "display": "Nitrite [Presence] in Urine by Test strip",
+      "status": "ACTIVE"
+    },
+    "5803-2": {
+      "display": "pH of Urine by Test strip",
+      "status": "ACTIVE"
+    },
+    "5804-0": {
+      "display": "Protein [Mass/volume] in Urine by Test strip",
+      "status": "ACTIVE"
+    },
+    "5808-1": {
+      "display": "Erythrocytes [#/volume] in Urine sediment by Microscopy high power field",
+      "status": "ACTIVE"
+    },
+    "5811-5": {
+      "display": "Specific gravity of Urine by Test strip",
+      "status": "ACTIVE"
+    },
+    "5821-4": {
+      "display": "Leukocytes [#/area] in Urine sediment by Microscopy high power field",
+      "status": "ACTIVE"
+    },
+    "5902-2": {
+      "display": "Prothrombin Time (PT)",
+      "status": "ACTIVE"
+    },
+    "5905-5": {
+      "display": "Monocytes/Leukocytes in Blood by Automated count",
+      "status": "ACTIVE"
+    },
+    "630-4": {
+      "display": "Urine Culture",
+      "status": "ACTIVE"
+    },
+    "6301-6": {
+      "display": "INR",
+      "status": "ACTIVE"
+    },
+    "63453-5": {
+      "display": "Gliadin peptide IgA Ab [Units/volume] in Serum by Immunoassay",
+      "status": "ACTIVE"
+    },
+    "63459-2": {
+      "display": "Gliadin peptide IgG Ab [Units/volume] in Serum by Immunoassay",
+      "status": "ACTIVE"
+    },
+    "6598-7": {
+      "display": "Troponin T.cardiac [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "6690-2": {
+      "display": "White Blood Cell Count",
+      "status": "ACTIVE"
+    },
+    "6768-6": {
+      "display": "Alkaline phosphatase [Enzymatic activity/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "6833-8": {
+      "display": "Cat dander IgE Ab [Units/volume] in Serum",
+      "status": "ACTIVE"
+    },
+    "6875-9": {
+      "display": "Cancer Ag 15-3 [Units/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "704-7": {
+      "display": "Basophils [#/volume] in Blood by Automated count",
+      "status": "ACTIVE"
+    },
+    "706-2": {
+      "display": "Basophils/Leukocytes in Blood by Automated count",
+      "status": "ACTIVE"
+    },
+    "711-2": {
+      "display": "Eosinophils [#/volume] in Blood by Automated count",
+      "status": "ACTIVE"
+    },
+    "713-8": {
+      "display": "Eosinophils/Leukocytes in Blood by Automated count",
+      "status": "ACTIVE"
+    },
+    "718-7": {
+      "display": "Hemoglobin",
+      "status": "ACTIVE"
+    },
+    "731-0": {
+      "display": "Lymphocytes [#/volume] in Blood by Automated count",
+      "status": "ACTIVE"
+    },
+    "736-9": {
+      "display": "Lymphocytes/Leukocytes in Blood by Automated count",
+      "status": "ACTIVE"
+    },
+    "73708-0": {
+      "display": "Body fat [Mass] Calculated",
+      "status": "ACTIVE"
+    },
+    "73964-9": {
+      "display": "Body muscle mass Calculated",
+      "status": "ACTIVE"
+    },
+    "742-7": {
+      "display": "Monocytes [#/volume] in Blood by Automated count",
+      "status": "ACTIVE"
+    },
+    "75095-0": {
+      "display": "Docosahexaenoate (C22:6w3) [Entitic substance] in Red Blood Cells",
+      "status": "ACTIVE"
+    },
+    "75097-6": {
+      "display": "Eicosapentaenoate (C20:5w3) [Entitic substance] in Red Blood Cells",
+      "status": "ACTIVE"
+    },
+    "751-8": {
+      "display": "Neutrophils [#/volume] in Blood by Automated count",
+      "status": "ACTIVE"
+    },
+    "75110-7": {
+      "display": "Arachidonate (C20:4w6) [Entitic substance] in Red Blood Cells",
+      "status": "ACTIVE"
+    },
+    "75117-2": {
+      "display": "Linoleate (C18:2w6) [Entitic substance] in Red Blood Cells",
+      "status": "ACTIVE"
+    },
+    "770-8": {
+      "display": "Neutrophils/Leukocytes in Blood by Automated count",
+      "status": "ACTIVE"
+    },
+    "77307-7": {
+      "display": "Lead [Mass/volume] in Venous blood",
+      "status": "ACTIVE"
+    },
+    "777-3": {
+      "display": "Platelets [#/volume] in Blood by Automated count",
+      "status": "ACTIVE"
+    },
+    "785-6": {
+      "display": "MCH [Entitic mass] by Automated count",
+      "status": "ACTIVE"
+    },
+    "786-4": {
+      "display": "MCHC [Entitic Mass/volume] in Red Blood Cells by Automated count",
+      "status": "ACTIVE"
+    },
+    "787-2": {
+      "display": "MCV [Entitic mean volume] in Red Blood Cells by Automated count",
+      "status": "ACTIVE"
+    },
+    "788-0": {
+      "display": "Erythrocyte [DistWidth] in Blood by Automated count",
+      "status": "ACTIVE"
+    },
+    "789-8": {
+      "display": "Erythrocytes [#/volume] in Blood by Automated count",
+      "status": "ACTIVE"
+    },
+    "8061-4": {
+      "display": "Nuclear Ab [Presence] in Serum",
+      "status": "ACTIVE"
+    },
+    "8098-6": {
+      "display": "Thyroglobulin Ab [Units/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "8099-4": {
+      "display": "Thyroperoxidase Ab [Units/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "8245-3": {
+      "display": "Zinc [Mass/volume] in Blood",
+      "status": "ACTIVE"
+    },
+    "883-9": {
+      "display": "ABO group [Type] in Blood",
+      "status": "ACTIVE"
+    },
+    "90908-5": {
+      "display": "Eicosapentaenoate (C20:5w3)+Docosapentaenate (C22:5w3)+Docosahexaenoate (C22:6w3)/Fatty acids.C14-C22 risk [Interpretation] in Blood Qualitative",
+      "status": "ACTIVE"
+    },
+    "90909-3": {
+      "display": "Arachidonate (C20:4w6)/Eicosapentaenoate (C20:5w3) [Mass Ratio] in Blood",
+      "status": "ACTIVE"
+    },
+    "90910-1": {
+      "display": "Omega 6 fatty acids (w6)/Omega 3 fatty acids (w3) [Mass Ratio] in Blood",
+      "status": "ACTIVE"
+    },
+    "9318-7": {
+      "display": "Albumin/Creatinine [Mass Ratio] in Urine",
+      "status": "ACTIVE"
+    },
+    "96735-6": {
+      "display": "Lipoprotein.beta.subparticle.medium [Moles/volume] in Serum",
+      "status": "ACTIVE"
+    },
+    "9830-1": {
+      "display": "Cholesterol.total/Cholesterol in HDL [Mass Ratio] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "98979-8": {
+      "display": "Glomerular filtration rate [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI 2021)/1.73 sq M",
+      "status": "ACTIVE"
+    },
+    "99620-7": {
+      "display": "Omega 3 fatty acids (w3) [Moles/volume] in RBC.lysate",
+      "status": "ACTIVE"
+    }
+  }
+}

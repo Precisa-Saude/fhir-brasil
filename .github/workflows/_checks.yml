@@ -86,6 +86,49 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm turbo run build
 
+  valueset:
+    name: ValueSet do IG
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 22
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      # Regenera o BRLabTestVS.fsh a partir do catálogo e falha se o arquivo
+      # versionado divergir. Sem rede e sem credencial, então roda em todo PR.
+      #
+      # É o que impede o ValueSet de congelar de novo: ele ficou parado em 160
+      # códigos enquanto o catálogo chegava a 177, e manteve o LOINC antigo da
+      # Lipoproteína (a), porque o gerador existia e não era chamado por nada.
+      # Separa os dois modos de falha em vez de deixar os dois saírem como um
+      # `git diff` mudo: gerador quebrado e ValueSet desatualizado pedem ações
+      # diferentes de quem for consertar.
+      - name: ValueSet está sincronizado com o catálogo
+        shell: bash
+        run: |
+          set -euo pipefail
+          VS=ig/input/fsh/valuesets/BRLabTestVS.fsh
+          # O diff depois da geração só significa "catálogo mudou e ninguém
+          # regenerou" se o arquivo estava limpo antes. Conferir primeiro separa
+          # esse caso de um step anterior ter sujado a árvore — que hoje não
+          # acontece, mas daria erro apontando para o culpado errado.
+          if ! git diff --quiet -- "$VS"; then
+            echo "::error::$VS já estava modificado antes da geração. Algum step anterior sujou a árvore."
+            exit 1
+          fi
+          if ! pnpm valueset:generate; then
+            echo "::error::O gerador do ValueSet falhou. Veja o log acima."
+            exit 1
+          fi
+          if ! git diff --exit-code -- "$VS"; then
+            echo "::error::$VS está fora de sincronia com o catálogo. Rode 'pnpm valueset:generate' e commite o resultado."
+            exit 1
+          fi
+
   test:
     name: Test
     runs-on: ubuntu-latest

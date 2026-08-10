@@ -1,7 +1,12 @@
 /**
  * Gera o ValueSet BRLabTestVS a partir dos biomarcadores do core.
  *
- * Uso: npx tsx scripts/generate-valueset.ts
+ * Uso: pnpm valueset:generate
+ *
+ * O CI roda `pnpm valueset:check`, que regenera e falha se o arquivo versionado
+ * divergir. Sem esse check o ValueSet congela em silêncio: ficou parado em 160
+ * códigos enquanto o catálogo chegava a 177, e manteve o LOINC antigo da
+ * Lipoproteína (a) por não ser regenerado depois da troca (PRE-254, item B).
  *
  * Lê BIOMARKER_DEFINITIONS, filtra biomarcadores com LOINC,
  * e gera ig/input/fsh/valuesets/BRLabTestVS.fsh com todos os códigos.
@@ -11,8 +16,10 @@ import { writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// Importa direto do source — este script é uma ferramenta de build, não código de runtime
-import { BIOMARKER_DEFINITIONS } from '../packages/core/src/biomarkers';
+// Importa direto do source — este script é uma ferramenta de build, não código de runtime.
+// A extensão .ts é explícita de propósito: com ela o type stripping nativo do Node dá
+// conta, e o script roda sem runner de TypeScript instalado.
+import { BIOMARKER_DEFINITIONS } from '../packages/core/src/biomarkers.ts';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

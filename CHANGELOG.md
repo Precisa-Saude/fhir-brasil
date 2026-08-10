@@ -1,3 +1,9 @@
+## [0.17.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.17.1...v0.17.2) (2026-08-10)
+
+### Bug Fixes
+
+* **core:** remove a razão ApoCIII/ApoA1, que não tinha fonte ([#68](https://github.com/Precisa-Saude/fhir-brasil/issues/68)) ([b51cdee](https://github.com/Precisa-Saude/fhir-brasil/commit/b51cdeeb9a4ab67eeda685151777434ddd2bc648)), closes [#3](https://github.com/Precisa-Saude/fhir-brasil/issues/3) [#3](https://github.com/Precisa-Saude/fhir-brasil/issues/3)
+
 ## [0.17.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.17.0...v0.17.1) (2026-08-10)
 
 ### Bug Fixes

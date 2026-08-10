@@ -108,13 +108,24 @@ jobs:
       # `git diff` mudo: gerador quebrado e ValueSet desatualizado pedem ações
       # diferentes de quem for consertar.
       - name: ValueSet está sincronizado com o catálogo
+        shell: bash
         run: |
+          set -euo pipefail
+          VS=ig/input/fsh/valuesets/BRLabTestVS.fsh
+          # O diff depois da geração só significa "catálogo mudou e ninguém
+          # regenerou" se o arquivo estava limpo antes. Conferir primeiro separa
+          # esse caso de um step anterior ter sujado a árvore — que hoje não
+          # acontece, mas daria erro apontando para o culpado errado.
+          if ! git diff --quiet -- "$VS"; then
+            echo "::error::$VS já estava modificado antes da geração. Algum step anterior sujou a árvore."
+            exit 1
+          fi
           if ! pnpm valueset:generate; then
             echo "::error::O gerador do ValueSet falhou. Veja o log acima."
             exit 1
           fi
-          if ! git diff --exit-code -- ig/input/fsh/valuesets/BRLabTestVS.fsh; then
-            echo "::error::BRLabTestVS.fsh está fora de sincronia com o catálogo. Rode 'pnpm valueset:generate' e commite o resultado."
+          if ! git diff --exit-code -- "$VS"; then
+            echo "::error::$VS está fora de sincronia com o catálogo. Rode 'pnpm valueset:generate' e commite o resultado."
             exit 1
           fi
 

@@ -82,7 +82,10 @@ describe('BIOMARKER_DEFINITIONS', () => {
         if (!FORMA_LOINC.test(loinc)) {
           return `${d.code} -> ${loinc} não tem a forma <número>-<dígito único>`;
         }
-        const [numero, digito] = loinc.split('-') as [string, string];
+        // Sem type assertion: os defaults do destructuring bastam para o
+        // compilador, e não dependem de raciocínio sobre o regex que um edit
+        // futuro poderia invalidar.
+        const [numero = '', digito = ''] = loinc.split('-');
         const esperado = digitoEsperado(numero);
         return esperado === digito
           ? null

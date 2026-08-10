@@ -289,6 +289,16 @@ describe('getDefinitionByCode', () => {
     expect(def?.unit).toBe('nmol/L');
   });
 
+  // O 2532-0 saiu de código canônico por estar DISCOURAGED no LOINC, mas
+  // continua chegando em laudo antigo e em dado já armazenado. Trocar o
+  // canônico sem manter o alias quebraria a leitura desse histórico.
+  it('LDH aceita o código antigo 2532-0 como alias', () => {
+    const def = getDefinitionByCode('LDH');
+    expect(def?.loinc).toBe('14804-9');
+    expect(loincToCode('14804-9')).toBe('LDH');
+    expect(loincToCode('2532-0')).toBe('LDH');
+  });
+
   it('Omega3_Total usa LOINC 99620-7 (RBC, não 35178-3 Ser/Plas)', () => {
     // Revisão clínica (issue #41): Índice Ômega-3 (Harris 2004) é medido
     // em hemácias; 99620-7 alinha à matriz dos sibling EPA (75097-6) e

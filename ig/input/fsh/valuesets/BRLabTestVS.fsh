@@ -58,7 +58,7 @@ Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-bras
 * $LOINC#1975-2 "Bilirrubina Total"
 * $LOINC#2324-2 "Gama-Glutamil Transferase"
 * $LOINC#2336-6 "Globulina"
-* $LOINC#2532-0 "Desidrogenase Lática"
+* $LOINC#14804-9 "Desidrogenase Lática"
 * $LOINC#2885-2 "Proteína Total"
 // hormonios
 * $LOINC#1848-1 "Diidrotestosterona"

@@ -2535,7 +2535,12 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'figado',
     code: 'LDH',
-    loinc: '2532-0',
+    loinc: '14804-9',
+    // 2532-0 é o código genérico anterior, que o LOINC marca como DISCOURAGED.
+    // Fica como alias para que laudo antigo e dado já armazenado continuem
+    // resolvendo em LDH — a troca do código canônico não pode quebrar leitura
+    // de histórico.
+    loincAliases: ['2532-0'],
     names: {
       en: ['Lactate Dehydrogenase', 'LDH', 'LD'],
       pt: ['Desidrogenase Lática', 'DHL', 'LDH', 'Lactato Desidrogenase'],

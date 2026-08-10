@@ -118,6 +118,16 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
   },
 
   // ---------------------------------------------------------------------------
+  // Referência laboratorial geral
+  // ---------------------------------------------------------------------------
+  'kalaria-ck-ri-2026': {
+    abnt: 'KALARIA, T. et al. Age, sex and ethnicity changes in creatine kinase and sex- and ethnicity-specific reference intervals of creatine kinase. Clinical Medicine, v. 26, n. 4, p. 100596, 2026.',
+    doi: '10.1016/j.clinme.2026.100596',
+    key: 'kalaria-ck-ri-2026',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/42142664/',
+  },
+
+  // ---------------------------------------------------------------------------
   // Fontes internacionais — Nefrologia
   // ---------------------------------------------------------------------------
   'kdigo-ckd-2024': {
@@ -273,13 +283,13 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     key: 'sbem-thyroid-2013',
     url: 'https://pubmed.ncbi.nlm.nih.gov/23681263/',
   },
-
   'sbem-vitamind-2014': {
     abnt: 'MAEDA, S. S. et al. Recomendações da Sociedade Brasileira de Endocrinologia e Metabologia (SBEM) para o diagnóstico e tratamento da hipovitaminose D. Arquivos Brasileiros de Endocrinologia & Metabologia, v. 58, n. 5, p. 411-433, 2014.',
     doi: '10.1590/0004-2730000003388',
     key: 'sbem-vitamind-2014',
     url: 'https://pubmed.ncbi.nlm.nih.gov/25166032/',
   },
+
   // ---------------------------------------------------------------------------
   // Sociedade Brasileira de Patologia Clínica / Medicina Laboratorial
   // ---------------------------------------------------------------------------
@@ -330,9 +340,6 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     url: 'https://pubmed.ncbi.nlm.nih.gov/19042984/',
   },
 
-  // ---------------------------------------------------------------------------
-  // Referência laboratorial geral
-  // ---------------------------------------------------------------------------
   'tietz-7ed-2015': {
     abnt: 'BURTIS, C. A.; BRUNS, D. E. Tietz Fundamentals of Clinical Chemistry and Molecular Diagnostics. 7. ed. St. Louis: Elsevier Saunders, 2015.',
     isbn: '978-1-4557-4165-6',

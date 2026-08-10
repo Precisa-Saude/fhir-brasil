@@ -1447,7 +1447,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['International Normalized Ratio', 'INR'],
       pt: ['Razão Normalizada Internacional', 'INR', 'RNI'],
     },
-    unit: 'ratio',
+    unit: 'razão',
   },
   {
     category: 'sangue',
@@ -1458,7 +1458,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Prothrombin Time', 'PT', 'Pro Time'],
       pt: ['Tempo de Protrombina', 'TP', 'TAP'],
     },
-    unit: 'seconds',
+    unit: 'segundos',
   },
   {
     category: 'sangue',
@@ -2154,7 +2154,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Índice Androide/Ginoide',
       ],
     },
-    unit: 'ratio',
+    unit: 'razão',
   },
   {
     category: 'composicao-corporal',

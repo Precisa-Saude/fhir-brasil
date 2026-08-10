@@ -1,3 +1,9 @@
+## [0.17.3](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.17.2...v0.17.3) (2026-08-10)
+
+### Bug Fixes
+
+* **core:** corrige três códigos LOINC inválidos ([#69](https://github.com/Precisa-Saude/fhir-brasil/issues/69)) ([52beb4f](https://github.com/Precisa-Saude/fhir-brasil/commit/52beb4f3918d10fd65faa195401a9cf436c1537e))
+
 ## [0.17.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.17.1...v0.17.2) (2026-08-10)
 
 ### Bug Fixes

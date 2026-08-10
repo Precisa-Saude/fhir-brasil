@@ -9,6 +9,7 @@ import {
   getReferenceRange,
   type ReferenceRangeContext,
 } from '../reference-ranges';
+import { SOURCE_REGISTRY } from '../sources';
 
 /**
  * Expected default range with the definition's source key propagated —
@@ -43,6 +44,30 @@ describe('biomarkerRangeDefinitions', () => {
       // Suppress unused variable warning
       void code;
     }
+  });
+
+  // Faixa sem fonte é um corte clínico que ninguém publicou, e ele decide o que
+  // a pessoa vê como "alterado". O `ApoCIII_ApoA1_Ratio` foi a última assim
+  // (issue #3): o corte de 0.15 era derivado das faixas individuais, sem
+  // validação, e seis buscas no PubMed não acharam publicação nenhuma.
+  //
+  // Com o catálogo em 100% de cobertura, este teste trava a regressão — é mais
+  // fácil impedir a primeira entrada sem fonte do que caçá-la depois.
+  it('should cite a source for every range definition', () => {
+    const semFonte = Object.entries(biomarkerRangeDefinitions)
+      .filter(([, def]) => !def.source)
+      .map(([code]) => code);
+
+    expect(semFonte).toEqual([]);
+  });
+
+  it('should only cite sources that exist in the registry', () => {
+    const desconhecidas = Object.entries(biomarkerRangeDefinitions)
+      .map(([code, def]) => [code, def.source?.split(':')[0]] as const)
+      .filter(([, chave]) => chave && !(chave in SOURCE_REGISTRY))
+      .map(([code, chave]) => `${code} -> ${chave}`);
+
+    expect(desconhecidas).toEqual([]);
   });
 });
 

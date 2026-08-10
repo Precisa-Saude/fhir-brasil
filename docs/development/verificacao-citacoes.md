@@ -8,7 +8,7 @@
 - `[ ]` - Nao verificado (sem fonte ou fonte nao conferida)
 - `[x]` - Verificado (valor conferido contra documento-fonte)
 
-**Estatisticas**: 204/205 verificados (99.5%) — 1 sem fonte publicada (ApoCIII_ApoA1_Ratio)
+**Estatisticas**: 204/204 verificados (100%). A unica entrada sem fonte publicada, `ApoCIII_ApoA1_Ratio`, foi removida — ver issue #3.
 
 ---
 
@@ -26,7 +26,6 @@
 - [x] ApoA1 - `contois-apoa1-1996` Framingham: H ~134+/-23, M ~154+/-28 mg/dL. Codigo 100-200 eh faixa ampla
 - [x] ApoB - `sbc-lipids-2025` Risco intermediario <90, alto <70 confere
 - [x] ApoCIII - `khetarpal-apociii-2016` Normolipidemicos ~8-10 mg/dL confere
-- [ ] ApoCIII_ApoA1_Ratio - **SEM FONTE**: corte 0.15 sem publicacao. Source removido intencionalmente. Ver issue #3
 - [x] Lipoprotein_a - `sbc-lipids-2025` Alterado >=75 nmol/L ou >=30 mg/dL confere
 
 ### Subfracoes Lipidicas (Avancado)

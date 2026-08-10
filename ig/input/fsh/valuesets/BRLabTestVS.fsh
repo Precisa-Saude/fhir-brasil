@@ -5,8 +5,8 @@ Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-bras
 
 // autoimunidade
 * $LOINC#8061-4 "Triagem de Anticorpos Antinucleares"
-* $LOINC#4485-3 "Complemento C3"
-* $LOINC#4498-6 "Complemento C4"
+* $LOINC#4485-9 "Complemento C3"
+* $LOINC#4498-2 "Complemento C4"
 * $LOINC#63453-5 "Anticorpos Anti-Gliadina Deamidada IgA"
 * $LOINC#63459-2 "Anticorpos Anti-Gliadina Deamidada IgG"
 * $LOINC#2472-9 "Imunoglobulina M"
@@ -97,7 +97,7 @@ Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-bras
 * $LOINC#75117-2 "Ômega-6: Ácido Linoleico"
 * $LOINC#90910-1 "Razão Ômega-6 / Ômega-3"
 * $LOINC#35177-5 "Ômega-6 Total"
-* $LOINC#5697-7 "Selênio"
+* $LOINC#5724-0 "Selênio"
 * $LOINC#2500-7 "Capacidade de Ligação do Ferro"
 * $LOINC#2502-3 "Saturação de Ferro"
 * $LOINC#2923-1 "Vitamina A"

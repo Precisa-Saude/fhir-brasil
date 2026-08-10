@@ -2573,7 +2573,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'autoimunidade',
     code: 'C3',
-    loinc: '4485-3',
+    loinc: '4485-9',
     names: {
       en: ['Complement C3', 'C3'],
       pt: ['Complemento C3', 'C3', 'Fração C3 do Complemento'],
@@ -2583,7 +2583,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'autoimunidade',
     code: 'C4',
-    loinc: '4498-6',
+    loinc: '4498-2',
     names: {
       en: ['Complement C4', 'C4'],
       pt: ['Complemento C4', 'C4', 'Fração C4 do Complemento'],
@@ -2652,7 +2652,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'nutrientes',
     code: 'Selenium',
-    loinc: '5697-7',
+    loinc: '5724-0',
     names: {
       en: ['Selenium', 'Se'],
       pt: ['Selênio', 'Se'],

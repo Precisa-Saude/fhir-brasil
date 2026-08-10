@@ -647,15 +647,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   eGFR: {
-    default: { max: 120, min: 90, optimalMax: 120, optimalMin: 90, unit: 'mL/min/1.73m²' },
+    default: { max: 120, min: 60, optimalMax: 120, optimalMin: 90, unit: 'mL/min/1.73m²' },
+    // KDIGO 2024: TFG 60-89 (G2) sem marcador de lesão renal não é DRC, em
+    // nenhuma faixa etária. A variante por idade que existia aqui rebaixava o
+    // piso só para 60+ e ainda limitava o teto a 90, o que sinalizava como
+    // alterado qualquer idoso com função preservada.
     source: 'kdigo-ckd-2024',
-    variants: [
-      {
-        ageMin: 60,
-        range: { max: 90, min: 60, optimalMax: 90, optimalMin: 60, unit: 'mL/min/1.73m²' },
-        sex: 'all',
-      },
-    ],
   },
 
   Eosinophils: {
@@ -999,7 +996,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
       min: 2,
       optimalMax: 8,
       optimalMin: 3,
-      unit: 'µIU/mL',
+      unit: 'uIU/mL',
     },
     source: 'tietz-7ed-2015',
   },
@@ -1075,7 +1072,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   LDL_Peak_Size: {
     // LDL Peak Size: higher is better (larger particles less atherogenic)
     // Quest Ion Mobility reference: optimal >222.9 Å (22.29 nm)
-    default: { max: 250.0, min: 217.4, optimalMax: 250.0, optimalMin: 222.9, unit: 'Å' },
+    default: { max: 250.0, min: 217.4, optimalMax: 250.0, optimalMin: 222.9, unit: 'Angstrom' },
     direction: 'higher-better',
     source: 'caulfield-ionmobility-2008',
   },
@@ -1604,7 +1601,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   // sem invadir a faixa subclínica. Variante ageMin=65 mantém limite superior
   // expandido (tolerância fisiológica do eixo em idosos, SBEM 2013).
   TSH: {
-    default: { max: 4.0, min: 0.4, optimalMax: 3.0, optimalMin: 1.0, unit: 'µIU/mL' },
+    default: { max: 4.0, min: 0.4, optimalMax: 3.0, optimalMin: 1.0, unit: 'uIU/mL' },
     source: 'sbem-thyroid-2013',
     variants: [
       // Variantes gestacionais (ATA 2017 / SBEM): supressão fisiológica por hCG
@@ -1617,31 +1614,31 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
       {
         pregnant: true,
         pregnancyTrimester: 1,
-        range: { max: 2.5, min: 0.1, optimalMax: 2.0, optimalMin: 0.5, unit: 'µIU/mL' },
+        range: { max: 2.5, min: 0.1, optimalMax: 2.0, optimalMin: 0.5, unit: 'uIU/mL' },
         sex: 'F',
       },
       {
         pregnant: true,
         pregnancyTrimester: 2,
-        range: { max: 3.0, min: 0.2, optimalMax: 2.5, optimalMin: 0.5, unit: 'µIU/mL' },
+        range: { max: 3.0, min: 0.2, optimalMax: 2.5, optimalMin: 0.5, unit: 'uIU/mL' },
         sex: 'F',
       },
       {
         pregnant: true,
         pregnancyTrimester: 3,
-        range: { max: 3.0, min: 0.3, optimalMax: 2.5, optimalMin: 0.5, unit: 'µIU/mL' },
+        range: { max: 3.0, min: 0.3, optimalMax: 2.5, optimalMin: 0.5, unit: 'uIU/mL' },
         sex: 'F',
       },
       // Catch-all gestacional — usada quando o trimestre não é informado.
       // Adota a faixa mais conservadora (2º/3º trimestre: 0.2–3.0).
       {
         pregnant: true,
-        range: { max: 3.0, min: 0.2, optimalMax: 2.5, optimalMin: 0.5, unit: 'µIU/mL' },
+        range: { max: 3.0, min: 0.2, optimalMax: 2.5, optimalMin: 0.5, unit: 'uIU/mL' },
         sex: 'F',
       },
       {
         ageMin: 65,
-        range: { max: 6.0, min: 0.4, optimalMax: 4.0, optimalMin: 1.0, unit: 'µIU/mL' },
+        range: { max: 6.0, min: 0.4, optimalMax: 4.0, optimalMin: 1.0, unit: 'uIU/mL' },
         sex: 'all',
       },
     ],
@@ -2122,12 +2119,23 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   //   optimalMax 105  ← HbA1c 5,3 % (teto do controle ótimo)
   //   max        117  ← HbA1c 5,7 % (teto do não diabético → início do pré-diabetes)
   //   warningMax 137  ← HbA1c 6,4 % (teto do pré-diabetes → acima disso, diabetes)
+  //   optimalMin  82  ← HbA1c 4,5 % (piso do alvo fisiológico da entrada HbA1c)
+  //   min         11  ← HbA1c 2,0 % (mesmo piso de sanidade da entrada HbA1c)
+  //
+  // O piso era 70 nos dois campos, e não vinha desta conversão: 70 é o limite
+  // inferior clássico da glicemia **de jejum**, transplantado para uma média
+  // estimada de ~3 meses. Pela fórmula, 70 equivale a HbA1c 4,07 % — ou seja,
+  // marcava como alterado exatamente quem a entrada `HbA1c` documenta que não
+  // deve ser sinalizado, já que HbA1c baixa reflete hemólise, perda sanguínea
+  // ou hemoglobinopatia, e não doença do metabolismo glicêmico. Espelhar o piso
+  // do HbA1c mantém as duas entradas coerentes, que é o que o comentário sempre
+  // afirmou fazer.
   //
   // Substitui a faixa anterior (optimalMax 126 = corte de glicemia de jejum;
   // max 154 = meta terapêutica do diabético, HbA1c 7 %), que classificava como
   // "Normal" valores já pré-diabéticos e diabéticos.
   eAG: {
-    default: { max: 117, min: 70, optimalMax: 105, optimalMin: 70, unit: 'mg/dL', warningMax: 137 },
+    default: { max: 117, min: 11, optimalMax: 105, optimalMin: 82, unit: 'mg/dL', warningMax: 137 },
     source: 'sbd-diabetes-2024',
   },
 

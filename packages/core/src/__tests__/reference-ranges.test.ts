@@ -120,7 +120,7 @@ describe('getReferenceRange', () => {
   });
 
   describe('age-specific variants', () => {
-    it('should return age-appropriate range for eGFR', () => {
+    it('should use the same eGFR floor at every age (KDIGO 2024)', () => {
       const youngContext: ReferenceRangeContext = { age: 30 };
       const oldContext: ReferenceRangeContext = { age: 65 };
 
@@ -129,8 +129,10 @@ describe('getReferenceRange', () => {
 
       expect(youngRange).toBeDefined();
       expect(oldRange).toBeDefined();
-      // Older adults have lower acceptable eGFR
-      expect(oldRange?.min).toBeLessThan(youngRange?.min || 999);
+      // KDIGO 2024: G2 (60-89) sem marcador de lesão renal não é DRC, e isso
+      // não varia com a idade. O piso é 60 para todo mundo.
+      expect(youngRange?.min).toBe(60);
+      expect(oldRange?.min).toBe(60);
     });
 
     it('should return appropriate range for AMH by age (female)', () => {

@@ -2119,12 +2119,23 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   //   optimalMax 105  ← HbA1c 5,3 % (teto do controle ótimo)
   //   max        117  ← HbA1c 5,7 % (teto do não diabético → início do pré-diabetes)
   //   warningMax 137  ← HbA1c 6,4 % (teto do pré-diabetes → acima disso, diabetes)
+  //   optimalMin  82  ← HbA1c 4,5 % (piso do alvo fisiológico da entrada HbA1c)
+  //   min         11  ← HbA1c 2,0 % (mesmo piso de sanidade da entrada HbA1c)
+  //
+  // O piso era 70 nos dois campos, e não vinha desta conversão: 70 é o limite
+  // inferior clássico da glicemia **de jejum**, transplantado para uma média
+  // estimada de ~3 meses. Pela fórmula, 70 equivale a HbA1c 4,07 % — ou seja,
+  // marcava como alterado exatamente quem a entrada `HbA1c` documenta que não
+  // deve ser sinalizado, já que HbA1c baixa reflete hemólise, perda sanguínea
+  // ou hemoglobinopatia, e não doença do metabolismo glicêmico. Espelhar o piso
+  // do HbA1c mantém as duas entradas coerentes, que é o que o comentário sempre
+  // afirmou fazer.
   //
   // Substitui a faixa anterior (optimalMax 126 = corte de glicemia de jejum;
   // max 154 = meta terapêutica do diabético, HbA1c 7 %), que classificava como
   // "Normal" valores já pré-diabéticos e diabéticos.
   eAG: {
-    default: { max: 117, min: 70, optimalMax: 105, optimalMin: 70, unit: 'mg/dL', warningMax: 137 },
+    default: { max: 117, min: 11, optimalMax: 105, optimalMin: 82, unit: 'mg/dL', warningMax: 137 },
     source: 'sbd-diabetes-2024',
   },
 

@@ -21,5 +21,5 @@
   ],
   "siteFilter": "@fhir-brasil/site",
   "siteProjectName": "fhir-brasil",
-  "ignoreTemplates": [".commitlintrc.cjs", "eslint.config.js"]
+  "ignoreTemplates": [".commitlintrc.cjs", ".github/workflows/_checks.yml", "eslint.config.js"]
 }

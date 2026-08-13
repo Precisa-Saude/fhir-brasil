@@ -1,3 +1,21 @@
+## [0.17.4](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.17.3...v0.17.4) (2026-08-13)
+
+### Bug Fixes
+
+* **ci:** guard de release compara desde a última release, não o push ([#79](https://github.com/Precisa-Saude/fhir-brasil/issues/79)) ([ea4127a](https://github.com/Precisa-Saude/fhir-brasil/commit/ea4127a64e98086c271de2eb6d63d17d4060b8d5)), closes [#72](https://github.com/Precisa-Saude/fhir-brasil/issues/72)
+* **ci:** não falha quando o Actions não pode abrir PR ([#73](https://github.com/Precisa-Saude/fhir-brasil/issues/73)) ([3c04c81](https://github.com/Precisa-Saude/fhir-brasil/commit/3c04c81bb25c5b8b6d1a230c5eeca7e3bceda08b))
+* **ci:** o primeiro snapshot de LOINC era gerado e descartado ([#70](https://github.com/Precisa-Saude/fhir-brasil/issues/70)) ([e6bc632](https://github.com/Precisa-Saude/fhir-brasil/commit/e6bc632820f9915b4e45ad55b7c069d68270fe04))
+* **ci:** publish-watch aceita pacote sem tag quando bate com o package.json ([#78](https://github.com/Precisa-Saude/fhir-brasil/issues/78)) ([72bc960](https://github.com/Precisa-Saude/fhir-brasil/commit/72bc9609eade39e3600202b7dbbcaf6cce1d9491)), closes [#48](https://github.com/Precisa-Saude/fhir-brasil/issues/48) [tooling#52](https://github.com/Precisa-Saude/tooling/issues/52)
+* **ci:** publish-watch compara a versão do pacote, não a maior tag ([#77](https://github.com/Precisa-Saude/fhir-brasil/issues/77)) ([aff0378](https://github.com/Precisa-Saude/fhir-brasil/commit/aff0378f49fc244b734c06accaa778a1c7289473)), closes [tooling#51](https://github.com/Precisa-Saude/tooling/issues/51)
+* **ci:** quebra a mensagem de commit do snapshot em parágrafos ([#71](https://github.com/Precisa-Saude/fhir-brasil/issues/71)) ([1f6fbe0](https://github.com/Precisa-Saude/fhir-brasil/commit/1f6fbe00e15b7d876060cc8d8350bcdeafaed93a))
+* **ci:** remove flag inválida que quebrava o publish de recuperação ([#75](https://github.com/Precisa-Saude/fhir-brasil/issues/75)) ([fd831b1](https://github.com/Precisa-Saude/fhir-brasil/commit/fd831b1a98cfa7b64c9f39a8060b72c8673b4f89))
+* **core:** troca o código LOINC da LDH, que está desencorajado ([#72](https://github.com/Precisa-Saude/fhir-brasil/issues/72)) ([da54e77](https://github.com/Precisa-Saude/fhir-brasil/commit/da54e77defdddefb114cb6fc04a3b7c149f5409a))
+
+### Chores
+
+* **ci:** sincroniza templates do cli 1.13.1 ([#76](https://github.com/Precisa-Saude/fhir-brasil/issues/76)) ([88beeac](https://github.com/Precisa-Saude/fhir-brasil/commit/88beeacc40bc1ce9e148aa0efeaec1b5d25caf76)), closes [tooling#47](https://github.com/Precisa-Saude/tooling/issues/47) [tooling#48](https://github.com/Precisa-Saude/tooling/issues/48) [tooling#50](https://github.com/Precisa-Saude/tooling/issues/50)
+* **core:** atualiza o snapshot de códigos LOINC ([#74](https://github.com/Precisa-Saude/fhir-brasil/issues/74)) ([31ff88e](https://github.com/Precisa-Saude/fhir-brasil/commit/31ff88ec65f713cabd2c11dc37f8b0e877d0165a))
+
 ## [0.17.3](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.17.2...v0.17.3) (2026-08-10)
 
 ### Bug Fixes

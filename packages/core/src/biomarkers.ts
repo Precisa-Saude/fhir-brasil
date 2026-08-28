@@ -1481,8 +1481,29 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     codeAliases: ['Urine_Microalbumin'],
     loinc: '14957-5',
     names: {
-      en: ['Microalbumin Urine', 'Urine Albumin', 'Urine Microalbumin'],
-      pt: ['Albumina Urina', 'Microalbumina Urina', 'Microalbumina na Urina'],
+      en: [
+        'Microalbumin Urine',
+        'Urine Albumin',
+        'Urine Microalbumin',
+        'Microalbumin',
+        'Microalbuminuria',
+        'Albumin, Urine',
+      ],
+      // "Albumina Urinária" e "Microalbumina" sozinha são as formas que os
+      // laboratórios brasileiros de fato imprimem, e faltavam. Sem elas o
+      // pré-scan casava "Albumina Urinária" com `Albumin`, a albumina
+      // sérica: microalbuminúria é marcador de lesão renal e albumina sérica
+      // é de função hepática e estado nutricional, então a troca não é
+      // cosmética.
+      pt: [
+        'Albumina Urinária',
+        'Albumina Urina',
+        'Microalbumina',
+        'Microalbuminúria',
+        'Microalbumina Urina',
+        'Microalbumina na Urina',
+        'Albumina na Urina',
+      ],
     },
     unit: 'mg/L',
   },

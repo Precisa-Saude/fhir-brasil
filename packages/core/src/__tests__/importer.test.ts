@@ -201,7 +201,10 @@ describe('mapFHIRObservationToInternal', () => {
     const result = mapFHIRObservationToInternal(noLoincObs, 0);
     expect('skipped' in result).toBe(true);
     if ('skipped' in result) {
-      expect(result.skipped.reason).toContain('No LOINC code');
+      // O coding existe, só está num system que não tratamos. Dizer "nenhum
+      // código encontrado" mandaria procurar o problema no lugar errado.
+      expect(result.skipped.reason).toContain('No code in a supported system');
+      expect(result.skipped.reason).toContain('http://custom.org');
     }
   });
 
@@ -213,7 +216,7 @@ describe('mapFHIRObservationToInternal', () => {
     const result = mapFHIRObservationToInternal(unknownLoincObs, 0);
     expect('skipped' in result).toBe(true);
     if ('skipped' in result) {
-      expect(result.skipped.reason).toContain('Unknown LOINC');
+      expect(result.skipped.reason).toContain('Unknown code');
     }
   });
 
@@ -310,5 +313,167 @@ describe('limites de importação', () => {
     expect(result.observations).toHaveLength(MAX_OBSERVATIONS);
     expect(result.skipped).toHaveLength(3);
     expect(result.skipped[0]?.reason).toContain(String(MAX_OBSERVATIONS));
+  });
+});
+
+describe('biomarcadores sem LOINC', () => {
+  const bodyCompositionObservation = (biomarkerCode: string, loincCode?: string) => ({
+    code: {
+      coding: [
+        ...(loincCode
+          ? [{ code: loincCode, display: 'Gordura visceral', system: 'http://loinc.org' }]
+          : []),
+        {
+          code: biomarkerCode,
+          display: 'Massa gorda',
+          system: 'http://fhir-brasil.dev/biomarker-codes',
+        },
+      ],
+      text: 'Massa gorda',
+    },
+    effectiveDateTime: '2024-06-15T08:00:00.000Z',
+    resourceType: 'Observation' as const,
+    status: 'final' as const,
+    subject: { reference: 'Patient/user-1' },
+    valueQuantity: { code: 'kg', system: 'http://unitsofmeasure.org', unit: 'kg', value: 22.4 },
+  });
+
+  it('importa pelo código interno quando não há coding LOINC', () => {
+    const result = mapFHIRObservationToInternal(bodyCompositionObservation('VATMass'), 0);
+
+    expect('observation' in result).toBe(true);
+    if (!('observation' in result)) return;
+    expect(result.observation.biomarkerCode).toBe('VATMass');
+    expect(result.observation.value).toBe(22.4);
+    // Sem LOINC publicado, o campo fica ausente em vez de receber valor inventado.
+    expect(result.observation.loincCode).toBeUndefined();
+  });
+
+  it('importa arquivos antigos que traziam o placeholder 99999-9', () => {
+    const result = mapFHIRObservationToInternal(
+      bodyCompositionObservation('VATMass', '99999-9'),
+      0,
+    );
+
+    expect('observation' in result).toBe(true);
+    if (!('observation' in result)) return;
+    expect(result.observation.biomarkerCode).toBe('VATMass');
+    expect(result.observation.loincCode).toBeUndefined();
+  });
+
+  it('prefere o LOINC quando ele resolve', () => {
+    const result = mapFHIRObservationToInternal(bodyCompositionObservation('VATMass', '2345-7'), 0);
+
+    expect('observation' in result).toBe(true);
+    if (!('observation' in result)) return;
+    // 2345-7 é glicose: o LOINC ganha do coding interno.
+    expect(result.observation.biomarkerCode).toBe('Glucose');
+    expect(result.observation.loincCode).toBe('2345-7');
+  });
+
+  it('descarta código interno inexistente, citando o que viu', () => {
+    const result = mapFHIRObservationToInternal(bodyCompositionObservation('NaoExiste'), 3);
+
+    expect('skipped' in result).toBe(true);
+    if (!('skipped' in result)) return;
+    expect(result.skipped.reason).toContain('biomarker code NaoExiste');
+  });
+
+  it('não aceita o coding interno de outro system', () => {
+    const observation = {
+      ...bodyCompositionObservation('FatMass'),
+      code: {
+        coding: [{ code: 'VATMass', display: 'Massa gorda', system: 'http://exemplo.invalido' }],
+        text: 'Massa gorda',
+      },
+    };
+
+    expect('skipped' in mapFHIRObservationToInternal(observation, 0)).toBe(true);
+  });
+});
+
+describe('motivos de descarte', () => {
+  const base = {
+    effectiveDateTime: '2024-06-15T08:00:00.000Z',
+    resourceType: 'Observation' as const,
+    status: 'final' as const,
+    subject: { reference: 'Patient/user-1' },
+    valueQuantity: { unit: 'mg/dL', value: 5 },
+  };
+
+  it('distingue coding ausente de coding em system alheio', () => {
+    const semCoding = mapFHIRObservationToInternal({ ...base, code: { coding: [] } }, 0);
+    const systemAlheio = mapFHIRObservationToInternal(
+      { ...base, code: { coding: [{ code: '365812005', system: 'http://snomed.info/sct' }] } },
+      1,
+    );
+
+    expect('skipped' in semCoding && semCoding.skipped.reason).toBe(
+      'No code found in observation coding',
+    );
+    expect('skipped' in systemAlheio && systemAlheio.skipped.reason).toContain(
+      'http://snomed.info/sct',
+    );
+  });
+
+  it('cita os dois codings quando nenhum resolve', () => {
+    const result = mapFHIRObservationToInternal(
+      {
+        ...base,
+        code: {
+          coding: [
+            { code: '00000-0', system: 'http://loinc.org' },
+            { code: 'NaoExiste', system: 'http://fhir-brasil.dev/biomarker-codes' },
+          ],
+        },
+      },
+      0,
+    );
+
+    expect('skipped' in result).toBe(true);
+    if (!('skipped' in result)) return;
+    // Citar só um dos dois faria parecer que o outro nem foi considerado.
+    expect(result.skipped.reason).toContain('LOINC 00000-0');
+    expect(result.skipped.reason).toContain('biomarker code NaoExiste');
+  });
+});
+
+describe('alias no coding interno', () => {
+  const withDeclaredCode = (code: string) => ({
+    code: {
+      coding: [{ code, display: 'x', system: 'http://fhir-brasil.dev/biomarker-codes' }],
+      text: 'x',
+    },
+    effectiveDateTime: '2024-06-15T08:00:00.000Z',
+    resourceType: 'Observation' as const,
+    status: 'final' as const,
+    subject: { reference: 'Patient/user-1' },
+    valueQuantity: { unit: 'mg/dL', value: 30 },
+  });
+
+  it('grava o código canônico, não o alias', () => {
+    const result = mapFHIRObservationToInternal(withDeclaredCode('VLDL_Cholesterol'), 0);
+
+    expect('observation' in result).toBe(true);
+    if (!('observation' in result)) return;
+    expect(result.observation.biomarkerCode).toBe('VLDL');
+  });
+
+  it('recupera o LOINC do canônico quando o alias chega sem ele', () => {
+    const result = mapFHIRObservationToInternal(withDeclaredCode('VLDL_Cholesterol'), 0);
+
+    expect('observation' in result).toBe(true);
+    if (!('observation' in result)) return;
+    // `codeToLoinc` é indexado pelo canônico: sem normalizar, viria undefined.
+    expect(result.observation.loincCode).toBe('13458-5');
+  });
+
+  it('mantém o canônico intacto quando já vem canônico', () => {
+    const result = mapFHIRObservationToInternal(withDeclaredCode('VLDL'), 0);
+
+    expect('observation' in result).toBe(true);
+    if (!('observation' in result)) return;
+    expect(result.observation.biomarkerCode).toBe('VLDL');
+    expect(result.observation.loincCode).toBe('13458-5');
   });
 });

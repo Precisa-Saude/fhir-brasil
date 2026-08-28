@@ -68,6 +68,13 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     url: 'https://pubmed.ncbi.nlm.nih.gov/8605666/',
   },
 
+  'ewgsop2-2019': {
+    abnt: 'CRUZ-JENTOFT, A. J. et al. Sarcopenia: revised European consensus on definition and diagnosis. Age and Ageing, v. 48, n. 1, p. 16-31, 2019.',
+    doi: '10.1093/ageing/afy169',
+    key: 'ewgsop2-2019',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/30312372/',
+  },
+
   'ferreira-vitd-2017': {
     abnt: 'FERREIRA, C. E. S. et al. Posicionamento oficial da Sociedade Brasileira de Patologia Clínica/Medicina Laboratorial e da Sociedade Brasileira de Endocrinologia e Metabologia sobre intervalos de referência da vitamina D [25(OH)D]. Archives of Endocrinology and Metabolism, v. 61, n. 6, p. 527-542, 2017.',
     doi: '10.1590/2359-3997000000310',

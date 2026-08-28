@@ -2314,10 +2314,21 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // cadastro. Mesmo ajuste que o IMC faz com o peso, e serve para a medida
   // ser comparável entre estaturas diferentes e ao longo do tempo.
   //
-  // Sem `loinc` e sem faixa. Os cortes publicados (AWGS 2019, EWGSOP2) são
-  // definidos sobre massa muscular *apendicular*, a dos quatro membros,
-  // enquanto `MuscleMass` é total. Total é bem maior, então aplicar o corte
-  // classificaria quase todo mundo como normal.
+  // Sem `loinc` e sem faixa, e agora com fonte para a decisão em vez de só
+  // cautela. O EWGSOP2 (Age and Ageing, 2019, DOI 10.1093/ageing/afy169)
+  // separa explicitamente "total body Skeletal Muscle Mass (SMM)" de
+  // "Appendicular Skeletal Muscle Mass (ASM)", e os cortes publicados são
+  // sobre ASM. `MuscleMass` aqui é total, então o corte não se aplica.
+  //
+  // O mesmo consenso ainda diz, sobre ajustar por tamanho corporal: "The
+  // authors make no recommendation to adjust for body size, but adjustment
+  // can be made if data are available for a relevant normative population."
+  // Não temos população normativa brasileira para bioimpedância, e o
+  // consenso registra que a equação de Sergi, padrão do método, foi
+  // derivada em europeus idosos.
+  //
+  // Por isso o índice existe para acompanhar a própria evolução, e não para
+  // classificar.
   {
     category: 'composicao-corporal',
     code: 'MuscleMassIndex',

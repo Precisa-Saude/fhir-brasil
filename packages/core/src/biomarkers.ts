@@ -2256,8 +2256,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // múltiplas formulações: "total body water" não devolve nada, "body water"
   // devolve os dois códigos abaixo.
   //
-  // As 12 entradas sem código, e o motivo de cada uma:
+  // As 13 entradas sem código, e o motivo de cada uma:
   //
+  //   MuscleMassIndex       corte publicado é sobre massa apendicular, não total
   //   VisceralFatLevel      índice de 1 a 20; 73707-2 é área, outra grandeza
   //   ResidualMass          conceito de fracionamento antropométrico, não LOINC
   //   BasalMetabolicRate    candidatos são índice ou RMR medido, ver nota local
@@ -2307,6 +2308,24 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       ],
     },
     unit: 'kg',
+  },
+  // Derivado, não extraído: `MuscleMass / altura²`, calculado pelo
+  // `calculadoras-clinicas` a partir da altura que o usuário informa no
+  // cadastro. Mesmo ajuste que o IMC faz com o peso, e serve para a medida
+  // ser comparável entre estaturas diferentes e ao longo do tempo.
+  //
+  // Sem `loinc` e sem faixa. Os cortes publicados (AWGS 2019, EWGSOP2) são
+  // definidos sobre massa muscular *apendicular*, a dos quatro membros,
+  // enquanto `MuscleMass` é total. Total é bem maior, então aplicar o corte
+  // classificaria quase todo mundo como normal.
+  {
+    category: 'composicao-corporal',
+    code: 'MuscleMassIndex',
+    names: {
+      en: ['Muscle Mass Index', 'Skeletal Muscle Mass Index', 'SMI', 'SMMI'],
+      pt: ['Índice de Massa Muscular', 'IMM', 'Índice de Massa Muscular Esquelética'],
+    },
+    unit: 'kg/m2',
   },
   {
     category: 'composicao-corporal',

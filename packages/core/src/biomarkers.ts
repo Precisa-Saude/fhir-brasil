@@ -2440,6 +2440,18 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     },
     unit: 'cm',
   },
+  // O EWGSOP2 usa a panturrilha como proxy de massa muscular onde não há
+  // outro método disponível, o que a torna útil em consulta sem aparelho.
+  {
+    category: 'composicao-corporal',
+    code: 'CalfCircumference',
+    loinc: '107112-5',
+    names: {
+      en: ['Calf Circumference', 'Calf Girth'],
+      pt: ['Circunferência da Panturrilha', 'Perímetro da Panturrilha', 'Panturrilha'],
+    },
+    unit: 'cm',
+  },
   {
     category: 'composicao-corporal',
     code: 'WaistToHeightRatio',

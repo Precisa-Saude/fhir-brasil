@@ -1823,6 +1823,31 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   // Só `max`. O limite inferior não entra porque a revisão não estabelece
   // piso, e inventar um transformaria em alteração um valor que a fonte não
   // classifica.
+  // O EWGSOP2 traz um único corte, <31 cm, e o enuncia restrito: "Calf
+  // circumference has been shown to predict performance and survival in
+  // older people (cut-off point <31 cm)". Por isso entra como variante por
+  // idade, e não como padrão para todo adulto — estender o número para
+  // gente de 30 anos seria ir além do que a fonte diz.
+  //
+  // O padrão fica sem `min` de propósito: não há corte publicado para
+  // adulto jovem, e o consumidor lê a medida sem zona em vez de ler uma
+  // zona inventada.
+  //
+  // Nota: o consenso asiático (AWGS 2019) usa 34 cm para homens e 33 para
+  // mulheres, em outra população e como triagem, não como corte de massa.
+  // Os números não são intercambiáveis.
+  CalfCircumference: {
+    default: { unit: 'cm' },
+    direction: 'higher-better',
+    source: 'ewgsop2-2019',
+    // O corte não é específico por sexo na fonte; as duas variantes existem
+    // porque `RangeVariant` exige o campo, e carregam o mesmo número.
+    variants: [
+      { ageMin: 60, range: { min: 31, unit: 'cm' }, sex: 'F' },
+      { ageMin: 60, range: { min: 31, unit: 'cm' }, sex: 'M' },
+    ],
+  },
+
   WaistToHeightRatio: {
     default: { max: 0.5, unit: '' },
     direction: 'lower-better',

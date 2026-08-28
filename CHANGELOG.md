@@ -1,3 +1,9 @@
+## [0.19.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.18.0...v0.19.0) (2026-08-28)
+
+### Features
+
+* **core:** bioimpedância, dobras cutâneas e antropometria ([#83](https://github.com/Precisa-Saude/fhir-brasil/issues/83)) ([7affc87](https://github.com/Precisa-Saude/fhir-brasil/commit/7affc874166600eb306e81873016bc07bfe38cbd))
+
 ## [0.18.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.17.4...v0.18.0) (2026-08-28)
 
 ### Features

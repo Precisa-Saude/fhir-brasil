@@ -437,3 +437,43 @@ describe('motivos de descarte', () => {
     expect(result.skipped.reason).toContain('biomarker code NaoExiste');
   });
 });
+
+describe('alias no coding interno', () => {
+  const withDeclaredCode = (code: string) => ({
+    code: {
+      coding: [{ code, display: 'x', system: 'http://fhir-brasil.dev/biomarker-codes' }],
+      text: 'x',
+    },
+    effectiveDateTime: '2024-06-15T08:00:00.000Z',
+    resourceType: 'Observation' as const,
+    status: 'final' as const,
+    subject: { reference: 'Patient/user-1' },
+    valueQuantity: { unit: 'mg/dL', value: 30 },
+  });
+
+  it('grava o código canônico, não o alias', () => {
+    const result = mapFHIRObservationToInternal(withDeclaredCode('VLDL_Cholesterol'), 0);
+
+    expect('observation' in result).toBe(true);
+    if (!('observation' in result)) return;
+    expect(result.observation.biomarkerCode).toBe('VLDL');
+  });
+
+  it('recupera o LOINC do canônico quando o alias chega sem ele', () => {
+    const result = mapFHIRObservationToInternal(withDeclaredCode('VLDL_Cholesterol'), 0);
+
+    expect('observation' in result).toBe(true);
+    if (!('observation' in result)) return;
+    // `codeToLoinc` é indexado pelo canônico: sem normalizar, viria undefined.
+    expect(result.observation.loincCode).toBe('13458-5');
+  });
+
+  it('mantém o canônico intacto quando já vem canônico', () => {
+    const result = mapFHIRObservationToInternal(withDeclaredCode('VLDL'), 0);
+
+    expect('observation' in result).toBe(true);
+    if (!('observation' in result)) return;
+    expect(result.observation.biomarkerCode).toBe('VLDL');
+    expect(result.observation.loincCode).toBe('13458-5');
+  });
+});

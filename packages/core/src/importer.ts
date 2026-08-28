@@ -5,7 +5,13 @@
  * mapping them to internal biomarker codes for storage as lab results.
  */
 
-import { codeToLoinc, getDefinitionByCode, isValidCode, loincToCode } from './biomarkers';
+import {
+  codeToLoinc,
+  getDefinitionByCode,
+  isValidCode,
+  loincToCode,
+  normalizeCode,
+} from './biomarkers';
 import { BIOMARKER_CODE_SYSTEM, LOINC_SYSTEM } from './code-systems';
 import type { FHIRBundle, FHIRObservation } from './fhir-types';
 import { validateFHIRImportBundle } from './validators';
@@ -103,9 +109,17 @@ function resolveBiomarkerCode(observation: FHIRObservation): {
   if (fromLoinc) return { internalCode: fromLoinc, loincCode, reason };
 
   if (declaredCode && isValidCode(declaredCode)) {
+    // `isValidCode` aceita alias, mas alias não serve como código armazenado:
+    // 49 definições têm um, e tanto `codeToLoinc` quanto as faixas de
+    // referência são indexadas só pelo canônico. Sem normalizar, `VLDL_Cholesterol`
+    // entraria no lugar de `VLDL` e perderia o LOINC 13458-5 que ele tem.
+    // Importar um Bundle é fronteira de dados, que é onde `normalizeCode` deve
+    // ser aplicado.
+    const canonical = normalizeCode(declaredCode);
+
     // `codeToLoinc` devolve undefined para quem não tem LOINC, que é o caso
     // esperado aqui. O campo fica de fora em vez de receber um valor inventado.
-    return { internalCode: declaredCode, loincCode: codeToLoinc(declaredCode), reason };
+    return { internalCode: canonical, loincCode: codeToLoinc(canonical), reason };
   }
 
   return { loincCode, reason };

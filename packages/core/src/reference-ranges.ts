@@ -1847,6 +1847,15 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   // consenso deriva o corte justamente na faixa em que a perda vira
   // desfecho.
   //
+  // Recência conferida em 28/08/2026. Existe consenso mais novo, o GLIS
+  // 2024 (Age and Ageing, DOI 10.1093/ageing/afae052), primeiro global
+  // sobre sarcopenia, com Cruz-Jentoft e Chen entre os autores — ou seja,
+  // os líderes do EWGSOP2 e do AWGS. Ele **não** substitui este corte: é
+  // conceitual, e o próprio texto diz que servirá "to develop an
+  // operational definition for clinical and research settings". Enquanto a
+  // definição operacional não sai, o EWGSOP2 segue sendo a referência de
+  // ponto de corte.
+  //
   // Nota: o consenso asiático (AWGS 2019) usa 34 cm para homens e 33 para
   // mulheres, em outra população e como triagem, não como corte de massa.
   // Os números não são intercambiáveis.

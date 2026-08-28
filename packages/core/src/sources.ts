@@ -121,6 +121,13 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     key: 'giannitsis-hstnt-2010',
     url: 'https://pubmed.ncbi.nlm.nih.gov/19959623/',
   },
+
+  'glis-2024': {
+    abnt: 'KIRK, B. et al. The conceptual definition of sarcopenia: Delphi consensus from the Global Leadership Initiative in Sarcopenia (GLIS). Age and Ageing, v. 53, n. 3, afae052, 2024.',
+    doi: '10.1093/ageing/afae052',
+    key: 'glis-2024',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/38520141/',
+  },
   // ---------------------------------------------------------------------------
   // Fontes internacionais — Ácidos graxos ômega
   // ---------------------------------------------------------------------------

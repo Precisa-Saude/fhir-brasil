@@ -1,3 +1,9 @@
+## [0.20.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.20.0...v0.20.1) (2026-08-28)
+
+### Bug Fixes
+
+* **core:** round-trip preserva biomarcadores sem LOINC ([#85](https://github.com/Precisa-Saude/fhir-brasil/issues/85)) ([0528a5d](https://github.com/Precisa-Saude/fhir-brasil/commit/0528a5d96c994c32522c87006dcd03b70c0c0c63)), closes [#82](https://github.com/Precisa-Saude/fhir-brasil/issues/82)
+
 ## [0.20.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.19.0...v0.20.0) (2026-08-28)
 
 ### Features

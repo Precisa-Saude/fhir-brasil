@@ -1,6 +1,6 @@
 {
   "name": "@precisa-saude/fhir-ocr-utils",
-  "version": "0.20.0",
+  "version": "0.20.1",
   "description": "Utilitários de ancoragem OCR para extração de biomarcadores de PDFs de resultados laboratoriais",
   "keywords": [
     "fhir",

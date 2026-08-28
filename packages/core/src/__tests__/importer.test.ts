@@ -4,6 +4,8 @@ import type { FHIRBundle, FHIRObservation } from '../fhir-types';
 import {
   extractObservationsFromBundle,
   mapFHIRObservationToInternal,
+  MAX_FILE_SIZE,
+  MAX_OBSERVATIONS,
   processImportBundle,
 } from '../importer';
 import { validateFHIRImportBundle } from '../validators';
@@ -280,5 +282,33 @@ describe('processImportBundle', () => {
     const result = processImportBundle(bundle);
     expect(result.imported).toHaveLength(0);
     expect(result.totalProcessed).toBe(0);
+  });
+});
+
+describe('limites de importação', () => {
+  it('expõe limites coerentes entre si', () => {
+    // Uma Observation indentada ocupa ~2,75KB. O teto de arquivo precisa caber
+    // MAX_OBSERVATIONS nessa forma, senão o limite de tamanho corta antes.
+    const worstCaseBytes = MAX_OBSERVATIONS * 2816;
+
+    expect(MAX_OBSERVATIONS).toBe(5000);
+    expect(MAX_FILE_SIZE).toBe(15 * 1024 * 1024);
+    expect(worstCaseBytes).toBeLessThan(MAX_FILE_SIZE);
+  });
+
+  it('para de coletar ao atingir MAX_OBSERVATIONS', () => {
+    const entries = Array.from({ length: MAX_OBSERVATIONS + 3 }, () => ({
+      resource: { ...validObservation },
+    }));
+
+    const result = extractObservationsFromBundle({
+      entry: entries,
+      resourceType: 'Bundle',
+      type: 'collection',
+    });
+
+    expect(result.observations).toHaveLength(MAX_OBSERVATIONS);
+    expect(result.skipped).toHaveLength(3);
+    expect(result.skipped[0]?.reason).toContain(String(MAX_OBSERVATIONS));
   });
 });

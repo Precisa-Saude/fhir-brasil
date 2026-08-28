@@ -141,7 +141,7 @@ Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-bras
 * $LOINC#2161-8 "Creatinina Urinária"
 * $LOINC#33863-2 "Cistatina C"
 * $LOINC#98979-8 "Taxa de Filtração Glomerular Estimada"
-* $LOINC#14957-5 "Albumina Urina"
+* $LOINC#14957-5 "Albumina Urinária"
 * $LOINC#2823-3 "Potássio"
 * $LOINC#2951-2 "Sódio"
 * $LOINC#3091-6 "Ureia"

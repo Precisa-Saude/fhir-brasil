@@ -18,6 +18,9 @@ export type {
 // Export biomarker definitions (single source of truth)
 export * from './biomarkers';
 
+// Export code system identifiers shared by converter and importer
+export * from './code-systems';
+
 // Export 10-group taxonomy over the 20 biomarker subcategories
 export * from './category-groups';
 

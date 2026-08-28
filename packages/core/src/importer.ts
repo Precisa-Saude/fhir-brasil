@@ -5,7 +5,8 @@
  * mapping them to internal biomarker codes for storage as lab results.
  */
 
-import { getDefinitionByLoinc, loincToCode } from './biomarkers';
+import { codeToLoinc, getDefinitionByCode, isValidCode, loincToCode } from './biomarkers';
+import { BIOMARKER_CODE_SYSTEM, LOINC_SYSTEM } from './code-systems';
 import type { FHIRBundle, FHIRObservation } from './fhir-types';
 import { validateFHIRImportBundle } from './validators';
 
@@ -15,7 +16,8 @@ export interface ImportedObservation {
   collectionDate: string;
   flag: 'H' | 'L' | '';
   isQualitative: boolean;
-  loincCode: string;
+  /** Ausente nos biomarcadores sem LOINC publicado, como composição corporal. */
+  loincCode?: string;
   referenceMax?: number;
   referenceMin?: number;
   unit: string;
@@ -57,12 +59,41 @@ const MAX_OBSERVATIONS = 5000;
 const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15MB
 
 /**
- * Extract LOINC code from an Observation's code.coding array
+ * Resolve o código interno do biomarcador a partir do `code.coding`.
+ *
+ * LOINC primeiro, que é o vocabulário que arquivos de terceiros usam. Quando
+ * não resolve, cai para o coding de códigos internos, presente nos arquivos
+ * exportados pela própria plataforma.
+ *
+ * O fallback cobre dois casos: biomarcadores sem LOINC publicado (composição
+ * corporal, densidade óssea, escore de cálcio) e arquivos antigos, exportados
+ * quando esses biomarcadores saíam com o placeholder `99999-9`, que não
+ * resolve para nada.
  */
-function extractLoincCode(observation: FHIRObservation): string | undefined {
-  if (!observation.code?.coding) return undefined;
-  const loincCoding = observation.code.coding.find((c) => c.system === 'http://loinc.org');
-  return loincCoding?.code;
+function resolveBiomarkerCode(observation: FHIRObservation): {
+  internalCode?: string;
+  loincCode?: string;
+  seenCodes: string[];
+} {
+  const coding = observation.code?.coding ?? [];
+  const loincCode = coding.find((c) => c.system === LOINC_SYSTEM)?.code;
+  const declaredCode = coding.find((c) => c.system === BIOMARKER_CODE_SYSTEM)?.code;
+
+  const seenCodes = [
+    ...(loincCode ? [`LOINC ${loincCode}`] : []),
+    ...(declaredCode ? [`biomarker code ${declaredCode}`] : []),
+  ];
+
+  const fromLoinc = loincCode ? loincToCode(loincCode) : undefined;
+  if (fromLoinc) return { internalCode: fromLoinc, loincCode, seenCodes };
+
+  if (declaredCode && isValidCode(declaredCode)) {
+    // `codeToLoinc` devolve undefined para quem não tem LOINC, que é o caso
+    // esperado aqui. O campo fica de fora em vez de receber um valor inventado.
+    return { internalCode: declaredCode, loincCode: codeToLoinc(declaredCode), seenCodes };
+  }
+
+  return { loincCode, seenCodes };
 }
 
 /**
@@ -115,31 +146,22 @@ export function mapFHIRObservationToInternal(
   observation: FHIRObservation,
   index: number,
 ): { observation: ImportedObservation } | { skipped: SkippedEntry } {
-  const loincCode = extractLoincCode(observation);
+  const { internalCode, loincCode, seenCodes } = resolveBiomarkerCode(observation);
 
-  if (!loincCode) {
-    return {
-      skipped: {
-        index,
-        reason: 'No LOINC code found in observation coding',
-        resourceType: 'Observation',
-      },
-    };
-  }
-
-  const internalCode = loincToCode(loincCode);
   if (!internalCode) {
     return {
       skipped: {
         index,
         loincCode,
-        reason: `Unknown LOINC code: ${loincCode}`,
+        reason: seenCodes.length
+          ? `Unknown code: ${seenCodes.join(', ')}`
+          : 'No code found in observation coding',
         resourceType: 'Observation',
       },
     };
   }
 
-  const definition = getDefinitionByLoinc(loincCode);
+  const definition = getDefinitionByCode(internalCode);
 
   // Extract value
   let value: number | string;

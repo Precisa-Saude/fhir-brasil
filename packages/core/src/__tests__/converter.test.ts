@@ -588,3 +588,40 @@ describe('interventionsToFHIRBundle', () => {
     expect(bundle.entry[1].fullUrl).toBe('urn:uuid:intervention-int-med-001');
   });
 });
+
+describe('biomarcadores sem LOINC na exportação', () => {
+  const observation = (biomarkerCode: string): LabObservationData => ({
+    biomarkerCode,
+    biomarkerName: 'Gordura visceral',
+    flag: '',
+    isQualitative: false,
+    reportId: 'r1',
+    unit: 'kg',
+    value: 1.2,
+  });
+
+  it('omite o coding LOINC em vez de emitir 99999-9', () => {
+    const fhir = labObservationToFHIR(observation('VATMass'), 'user-1');
+    const systems = fhir.code.coding.map((c) => c.system);
+
+    expect(systems).not.toContain('http://loinc.org');
+    expect(systems).toContain('http://fhir-brasil.dev/biomarker-codes');
+    expect(JSON.stringify(fhir)).not.toContain('99999-9');
+  });
+
+  it('mantém o código interno para o round-trip', () => {
+    const fhir = labObservationToFHIR(observation('VATMass'), 'user-1');
+    const internal = fhir.code.coding.find(
+      (c) => c.system === 'http://fhir-brasil.dev/biomarker-codes',
+    );
+
+    expect(internal?.code).toBe('VATMass');
+  });
+
+  it('continua emitindo os dois codings quando há LOINC', () => {
+    const fhir = labObservationToFHIR(observation('Glucose'), 'user-1');
+    const systems = fhir.code.coding.map((c) => c.system);
+
+    expect(systems).toEqual(['http://loinc.org', 'http://fhir-brasil.dev/biomarker-codes']);
+  });
+});

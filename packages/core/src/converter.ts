@@ -6,6 +6,7 @@
  */
 
 import { codeToLoinc } from './biomarkers';
+import { BIOMARKER_CODE_SYSTEM, LOINC_SYSTEM } from './code-systems';
 import type { FHIRBundle, FHIRDiagnosticReport, FHIRObservation, FHIRPatient } from './fhir-types';
 import type { Flag, LabObservationData, LabReportData, UserProfileData } from './types';
 import { getDefaultUnit, unitToUCUM } from './units';
@@ -49,7 +50,7 @@ export function labObservationToFHIR(
   patientId: string,
   laboratoryName?: string,
 ): FHIRObservation {
-  const loincCode = codeToLoinc(observation.biomarkerCode) || '99999-9';
+  const loincCode = codeToLoinc(observation.biomarkerCode);
   // Use default unit if source unit is empty
   const sourceUnit =
     observation.unit || getDefaultUnit(observation.biomarkerCode) || observation.unit;
@@ -70,16 +71,25 @@ export function labObservationToFHIR(
       },
     ],
     code: {
+      // Sem LOINC, o coding LOINC simplesmente não sai. Antes ia `99999-9`,
+      // que não é código LOINC nenhum: publicava sob `http://loinc.org` uma
+      // afirmação falsa, e quem consumisse o bundle confiando no system
+      // trataria aquilo como código de verdade. Composição corporal, densidade
+      // óssea e escore de cálcio não têm LOINC, e o certo é a lacuna explícita.
       coding: [
-        {
-          code: loincCode,
-          display: observation.biomarkerName,
-          system: 'http://loinc.org',
-        },
+        ...(loincCode
+          ? [
+              {
+                code: loincCode,
+                display: observation.biomarkerName,
+                system: LOINC_SYSTEM,
+              },
+            ]
+          : []),
         {
           code: observation.biomarkerCode,
           display: observation.biomarkerName,
-          system: 'http://fhir-brasil.dev/biomarker-codes',
+          system: BIOMARKER_CODE_SYSTEM,
         },
       ],
       text: observation.biomarkerName,

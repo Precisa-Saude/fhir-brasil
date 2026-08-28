@@ -2041,10 +2041,20 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     },
     unit: 'kg',
   },
+  // Sem `loinc` de propósito. A entrada apontava para 73964-9, cujo nome
+  // oficial é "Body muscle mass Calculated", e massa magra não é massa
+  // muscular: em DEXA, massa magra é tudo que não é gordura nem mineral
+  // ósseo, incluindo órgãos, água e tecido conjuntivo. Massa muscular é um
+  // subconjunto dela.
+  //
+  // O campo sai em bundle FHIR, então a aproximação não ficava só aqui — um
+  // consumidor externo leria massa muscular onde escrevemos massa magra. Não
+  // há LOINC para massa magra (busca por "lean body mass" só devolve códigos
+  // de urina ajustados por LBM), então o certo é não ter código, como já se
+  // faz com FatFreeMass. Quem quer massa muscular usa MuscleMass, abaixo.
   {
     category: 'composicao-corporal',
     code: 'LeanMass',
-    loinc: '73964-9',
     names: {
       en: ['Lean Mass', 'Lean Body Mass', 'Lean Tissue Mass', 'Total Lean Mass', 'LBM'],
       pt: ['Massa Magra', 'Massa Corporal Magra', 'Tecido Magro', 'Massa Magra Total'],
@@ -2212,6 +2222,243 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       pt: ['Massa Total', 'Massa Corporal Total', 'Peso Corporal', 'Peso'],
     },
     unit: 'kg',
+  },
+
+  // Bioimpedância (BIA)
+  //
+  // Códigos conferidos na API pública da NLM (Clinical Table Search Service),
+  // que serve LOINC sem autenticação. Vários só aparecem sob formulação
+  // diferente da usada no laudo: "total body water" não devolve nada, "body
+  // water" devolve os dois códigos abaixo.
+  {
+    category: 'composicao-corporal',
+    code: 'TotalBodyWater',
+    loinc: '101683-1',
+    names: {
+      en: ['Total Body Water', 'Body Water', 'TBW', 'Total Water'],
+      pt: ['Água Corporal Total', 'Água Corporal', 'ACT', 'Água Total'],
+    },
+    unit: 'L',
+  },
+  {
+    category: 'composicao-corporal',
+    code: 'BodyWaterPct',
+    loinc: '101684-9',
+    names: {
+      en: ['Body Water Percentage', 'Percentage of Body Water', '% Body Water', 'Water %'],
+      pt: ['Percentual de Água Corporal', '% Água Corporal', 'Água Corporal %'],
+    },
+    unit: '%',
+  },
+  {
+    category: 'composicao-corporal',
+    code: 'MuscleMass',
+    loinc: '73964-9',
+    names: {
+      en: ['Muscle Mass', 'Skeletal Muscle Mass', 'SMM', 'Body Muscle Mass'],
+      pt: [
+        'Massa Muscular',
+        'Massa Muscular Esquelética',
+        'MME',
+        'Massa Muscular Corporal',
+        'Músculo',
+      ],
+    },
+    unit: 'kg',
+  },
+  {
+    category: 'composicao-corporal',
+    code: 'PhaseAngle',
+    loinc: '107160-4',
+    names: {
+      en: ['Phase Angle', 'Whole Body Phase Angle', 'PhA', 'AnglePhase'],
+      pt: ['Ângulo de Fase', 'Ângulo de Fase Corporal'],
+    },
+    unit: 'deg',
+  },
+  // O nível de gordura visceral do InBody e similares é um índice
+  // adimensional de 1 a 20, e NÃO é o mesmo que VATMass ou VATVolume, que
+  // vêm de DEXA em massa e volume. LOINC 73707-2 é "Visceral fat [Area]", em
+  // área, então também não serve. Fica sem código, com unidade vazia, para
+  // não ser confundido com nenhum dos três.
+  {
+    category: 'composicao-corporal',
+    code: 'VisceralFatLevel',
+    names: {
+      en: ['Visceral Fat Level', 'Visceral Fat Index', 'VFL'],
+      pt: ['Nível de Gordura Visceral', 'Índice de Gordura Visceral', 'Gordura Visceral Nível'],
+    },
+    unit: '',
+  },
+  // Compartimentos de água. Sem LOINC: busca por "extracellular water" e
+  // "intracellular water" não devolve nada, ao contrário de "body water",
+  // que rendeu os dois códigos usados acima.
+  {
+    category: 'composicao-corporal',
+    code: 'ExtracellularWater',
+    names: {
+      en: ['Extracellular Water', 'ECW'],
+      pt: ['Água Extracelular', 'AEC'],
+    },
+    unit: 'L',
+  },
+  {
+    category: 'composicao-corporal',
+    code: 'IntracellularWater',
+    names: {
+      en: ['Intracellular Water', 'ICW'],
+      pt: ['Água Intracelular', 'AIC'],
+    },
+    unit: 'L',
+  },
+  // Razão entre água extracelular e total. É o marcador de retenção hídrica
+  // e de estado inflamatório que os aparelhos de bioimpedância reportam, e
+  // vem adimensional.
+  {
+    category: 'composicao-corporal',
+    code: 'ECWToTBWRatio',
+    names: {
+      en: ['ECW/TBW', 'ECW_TBW', 'ECW to TBW Ratio', 'Extracellular Water Ratio'],
+      pt: ['Relação AEC/ACT', 'Razão Água Extracelular'],
+    },
+    unit: '',
+  },
+  {
+    category: 'composicao-corporal',
+    code: 'ResidualMass',
+    names: {
+      en: ['Residual Mass', 'Residual Weight'],
+      pt: ['Massa Residual', 'Peso Residual'],
+    },
+    unit: 'kg',
+  },
+  // Sem `loinc` até alguém decidir com a definição completa em mãos. Os
+  // candidatos não servem como estão: 50042-1 é "Basal metabolic rate
+  // index", um índice e não kcal/dia; 82278-3 é "Measured RMR", medido por
+  // calorimetria indireta, enquanto o aparelho de bioimpedância *estima* a
+  // partir da massa magra; 82286-6 "Predicted RMR" é o mais próximo, mas
+  // ainda é RMR e não TMB. Colocar qualquer um deles repetiria o erro que
+  // esta mesma PR corrige em LeanMass.
+  {
+    category: 'composicao-corporal',
+    code: 'BasalMetabolicRate',
+    names: {
+      en: ['Basal Metabolic Rate', 'BMR'],
+      pt: ['Taxa Metabólica Basal', 'TMB', 'Metabolismo Basal', 'Gasto Energético Basal'],
+    },
+    unit: 'kcal/d',
+  },
+
+  // Antropometria
+  {
+    category: 'composicao-corporal',
+    code: 'WaistCircumference',
+    // 8280-0 é a medida em si. 56086-2, que parecia o óbvio pela busca, é
+    // "Adult Waist Circumference Protocol", um protocolo PhenX e não um
+    // resultado.
+    loinc: '8280-0',
+    names: {
+      en: ['Waist Circumference', 'Abdominal Circumference', 'Waist'],
+      pt: [
+        'Circunferência de Cintura',
+        'Circunferência Abdominal',
+        'Perímetro Abdominal',
+        'Cintura',
+      ],
+    },
+    unit: 'cm',
+  },
+  {
+    category: 'composicao-corporal',
+    code: 'WaistToHeightRatio',
+    names: {
+      en: ['Waist to Height Ratio', 'Waist-to-Height Ratio', 'WHtR'],
+      pt: ['Razão Cintura-Altura', 'Relação Cintura-Estatura', 'RCEst'],
+    },
+    unit: '',
+  },
+  {
+    category: 'composicao-corporal',
+    code: 'ConicityIndex',
+    names: {
+      en: ['Conicity Index', 'C Index'],
+      pt: ['Índice de Conicidade', 'Índice C'],
+    },
+    unit: '',
+  },
+
+  // Dobras cutâneas (adipometria)
+  //
+  // A LOINC tem apenas três sítios: tríceps, coxa e cintura. Os outros quatro
+  // que os protocolos brasileiros medem ficam sem código, e é por ausência
+  // confirmada, não por falta de busca. Entram individualmente porque o
+  // protocolo de somatório varia (Pollock 3 ou 7 dobras, Faulkner, Guedes) e
+  // guardar só a soma perderia o dado de origem.
+  {
+    category: 'composicao-corporal',
+    code: 'SkinfoldTriceps',
+    loinc: '8354-3',
+    names: {
+      en: ['Triceps Skinfold', 'Tricipital Skinfold', 'Skin Fold Thickness Triceps'],
+      pt: ['Dobra Tricipital', 'Dobra Cutânea Tricipital', 'Tricipital', 'DCT'],
+    },
+    unit: 'mm',
+  },
+  {
+    category: 'composicao-corporal',
+    code: 'SkinfoldThigh',
+    loinc: '8353-5',
+    names: {
+      en: ['Thigh Skinfold', 'Skin Fold Thickness Thigh'],
+      pt: ['Dobra da Coxa', 'Dobra Cutânea Coxa', 'Coxa'],
+    },
+    unit: 'mm',
+  },
+  {
+    category: 'composicao-corporal',
+    code: 'SkinfoldAbdominal',
+    loinc: '8355-0',
+    names: {
+      en: ['Abdominal Skinfold', 'Waist Skinfold', 'Skin Fold Thickness Waist'],
+      pt: ['Dobra Abdominal', 'Dobra Cutânea Abdominal', 'Abdominal'],
+    },
+    unit: 'mm',
+  },
+  {
+    category: 'composicao-corporal',
+    code: 'SkinfoldSubscapular',
+    names: {
+      en: ['Subscapular Skinfold'],
+      pt: ['Dobra Subescapular', 'Dobra Cutânea Subescapular', 'Subescapular'],
+    },
+    unit: 'mm',
+  },
+  {
+    category: 'composicao-corporal',
+    code: 'SkinfoldSuprailiac',
+    names: {
+      en: ['Suprailiac Skinfold', 'Supra-iliac Skinfold'],
+      pt: ['Dobra Supra-ilíaca', 'Dobra Cutânea Supra-ilíaca', 'Supra-ilíaca', 'Suprailiaca'],
+    },
+    unit: 'mm',
+  },
+  {
+    category: 'composicao-corporal',
+    code: 'SkinfoldChest',
+    names: {
+      en: ['Chest Skinfold', 'Pectoral Skinfold'],
+      pt: ['Dobra Peitoral', 'Dobra Cutânea Peitoral', 'Peitoral', 'Dobra Torácica'],
+    },
+    unit: 'mm',
+  },
+  {
+    category: 'composicao-corporal',
+    code: 'SkinfoldMidaxillary',
+    names: {
+      en: ['Midaxillary Skinfold', 'Mid-axillary Skinfold'],
+      pt: ['Dobra Axilar Média', 'Dobra Cutânea Axilar Média', 'Axilar Média'],
+    },
+    unit: 'mm',
   },
 
   // Regional Body Composition (DEXA)

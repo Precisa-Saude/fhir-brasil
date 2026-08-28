@@ -1,3 +1,9 @@
+## [0.20.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.20.1...v0.20.2) (2026-08-28)
+
+### Bug Fixes
+
+* **core:** albumina urinária deixa de virar albumina sérica ([#86](https://github.com/Precisa-Saude/fhir-brasil/issues/86)) ([59b62af](https://github.com/Precisa-Saude/fhir-brasil/commit/59b62af36cc34cb6f19baa927d969984d98d5e59))
+
 ## [0.20.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.20.0...v0.20.1) (2026-08-28)
 
 ### Bug Fixes

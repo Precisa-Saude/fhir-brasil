@@ -2255,6 +2255,21 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // Table Search Service), e a ausência só foi registrada depois de tentar
   // múltiplas formulações: "total body water" não devolve nada, "body water"
   // devolve os dois códigos abaixo.
+  //
+  // As 12 entradas sem código, e o motivo de cada uma:
+  //
+  //   VisceralFatLevel      índice de 1 a 20; 73707-2 é área, outra grandeza
+  //   ResidualMass          conceito de fracionamento antropométrico, não LOINC
+  //   BasalMetabolicRate    candidatos são índice ou RMR medido, ver nota local
+  //   ExtracellularWater    "extracellular water" não devolve nada
+  //   IntracellularWater    "intracellular water" não devolve nada
+  //   ECWToTBWRatio         razão derivada, sem conceito próprio
+  //   WaistToHeightRatio    "waist to height" não devolve nada
+  //   ConicityIndex         índice derivado, sem conceito próprio
+  //   SkinfoldSubscapular   LOINC só tem tríceps, coxa e cintura
+  //   SkinfoldSuprailiac    idem
+  //   SkinfoldChest         idem
+  //   SkinfoldMidaxillary   idem
 
   // Bioimpedância (BIA)
   {

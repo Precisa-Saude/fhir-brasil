@@ -41,8 +41,20 @@ export interface FHIRImportResult {
   totalProcessed: number;
 }
 
-const MAX_OBSERVATIONS = 1000;
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+/**
+ * Limites de importação.
+ *
+ * Uma Observation exportada ocupa cerca de 1,25KB em JSON compacto e 2,75KB
+ * quando o arquivo vem indentado, medido sobre um histórico real de 998
+ * Observations em 61 laudos. Nesse tamanho, 5000 Observations dão 6,0MB
+ * compactos ou 13,1MB indentados, e por isso o teto de arquivo é 15MB: cobre
+ * as duas formas com folga.
+ *
+ * Na densidade desse mesmo histórico (16 Observations por laudo), 5000
+ * equivalem a cerca de 300 laudos.
+ */
+const MAX_OBSERVATIONS = 5000;
+const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15MB
 
 /**
  * Extract LOINC code from an Observation's code.coding array

@@ -2224,12 +2224,39 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'kg',
   },
 
-  // Bioimpedância (BIA)
+  // ===========================================================================
+  // Composição corporal por bioimpedância, adipometria e antropometria
+  // ===========================================================================
   //
-  // Códigos conferidos na API pública da NLM (Clinical Table Search Service),
-  // que serve LOINC sem autenticação. Vários só aparecem sob formulação
-  // diferente da usada no laudo: "total body water" não devolve nada, "body
-  // water" devolve os dois códigos abaixo.
+  // POLÍTICA DE `loinc` AUSENTE, e o que ela custa
+  //
+  // Várias entradas abaixo não têm `loinc`. Isso não é pendência esquecida: é
+  // o resultado de procurar e não achar, e a decisão tem consequência que
+  // vale enunciar uma vez.
+  //
+  // O que muda sem o código: a observação continua sendo exportada em FHIR e
+  // continua aparecendo para o usuário, mas o `Observation.code` sai só com o
+  // nosso código interno, sem identificador interoperável. Um consumidor
+  // externo consegue ler o valor e a unidade, e não consegue mapear a medida
+  // para o vocabulário dele sem acordo bilateral. Na prática: exibível
+  // sempre, comparável entre sistemas só quando há LOINC.
+  //
+  // Por que ainda assim é o certo: código errado é pior que código ausente.
+  // Ausente o consumidor sabe que precisa perguntar; errado ele integra com
+  // confiança e erra em silêncio. Esta mesma PR corrige um caso desses, em
+  // que `LeanMass` apontava para "Body muscle mass" e o IG publicava massa
+  // muscular sob o rótulo de massa magra.
+  //
+  // Como preencher depois: quando a LOINC publicar o conceito, basta somar o
+  // campo `loinc` — o código interno não muda, e as observações já gravadas
+  // não precisam ser reescritas, porque a chave é o nosso código.
+  //
+  // Todos os códigos aqui foram conferidos na API pública da NLM (Clinical
+  // Table Search Service), e a ausência só foi registrada depois de tentar
+  // múltiplas formulações: "total body water" não devolve nada, "body water"
+  // devolve os dois códigos abaixo.
+
+  // Bioimpedância (BIA)
   {
     category: 'composicao-corporal',
     code: 'TotalBodyWater',

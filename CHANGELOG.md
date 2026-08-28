@@ -1,3 +1,13 @@
+## [0.18.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.17.4...v0.18.0) (2026-08-28)
+
+### Features
+
+* **core:** amplia limites de importação para 5000 Observations ([#81](https://github.com/Precisa-Saude/fhir-brasil/issues/81)) ([47cc667](https://github.com/Precisa-Saude/fhir-brasil/commit/47cc6678224318d48c9e698a04e5767baf897dc0))
+
+### Chores
+
+* **ci:** alinha o _release.yml ao template do tooling ([#80](https://github.com/Precisa-Saude/fhir-brasil/issues/80)) ([afb73fe](https://github.com/Precisa-Saude/fhir-brasil/commit/afb73fe057d003ad2d6aeed3baae3a295889b973)), closes [#79](https://github.com/Precisa-Saude/fhir-brasil/issues/79)
+
 ## [0.17.4](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.17.3...v0.17.4) (2026-08-13)
 
 ### Bug Fixes

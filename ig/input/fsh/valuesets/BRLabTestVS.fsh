@@ -1,7 +1,7 @@
 ValueSet: BRLabTestVS
 Id: br-lab-test-vs
 Title: "BR Lab Test ValueSet"
-Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-brasil. Gerado automaticamente a partir de 184 biomarcadores com código LOINC no pacote core."
+Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-brasil. Gerado automaticamente a partir de 185 biomarcadores com código LOINC no pacote core."
 
 // autoimunidade
 * $LOINC#8061-4 "Triagem de Anticorpos Antinucleares"
@@ -17,6 +17,7 @@ Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-bras
 * $LOINC#39156-5 "Índice de Massa Corporal"
 * $LOINC#41982-0 "Percentual de Gordura Corporal"
 * $LOINC#101684-9 "Percentual de Água Corporal"
+* $LOINC#107112-5 "Circunferência da Panturrilha"
 * $LOINC#73708-0 "Massa de Gordura"
 * $LOINC#73964-9 "Massa Muscular"
 * $LOINC#107160-4 "Ângulo de Fase"

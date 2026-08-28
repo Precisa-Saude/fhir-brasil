@@ -2256,8 +2256,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // múltiplas formulações: "total body water" não devolve nada, "body water"
   // devolve os dois códigos abaixo.
   //
-  // As 12 entradas sem código, e o motivo de cada uma:
+  // As 13 entradas sem código, e o motivo de cada uma:
   //
+  //   MuscleMassIndex       corte publicado é sobre massa apendicular, não total
   //   VisceralFatLevel      índice de 1 a 20; 73707-2 é área, outra grandeza
   //   ResidualMass          conceito de fracionamento antropométrico, não LOINC
   //   BasalMetabolicRate    candidatos são índice ou RMR medido, ver nota local
@@ -2307,6 +2308,35 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       ],
     },
     unit: 'kg',
+  },
+  // Derivado, não extraído: `MuscleMass / altura²`, calculado pelo
+  // `calculadoras-clinicas` a partir da altura que o usuário informa no
+  // cadastro. Mesmo ajuste que o IMC faz com o peso, e serve para a medida
+  // ser comparável entre estaturas diferentes e ao longo do tempo.
+  //
+  // Sem `loinc` e sem faixa, e agora com fonte para a decisão em vez de só
+  // cautela. O EWGSOP2 (Age and Ageing, 2019, DOI 10.1093/ageing/afy169)
+  // separa explicitamente "total body Skeletal Muscle Mass (SMM)" de
+  // "Appendicular Skeletal Muscle Mass (ASM)", e os cortes publicados são
+  // sobre ASM. `MuscleMass` aqui é total, então o corte não se aplica.
+  //
+  // O mesmo consenso ainda diz, sobre ajustar por tamanho corporal: "The
+  // authors make no recommendation to adjust for body size, but adjustment
+  // can be made if data are available for a relevant normative population."
+  // Não temos população normativa brasileira para bioimpedância, e o
+  // consenso registra que a equação de Sergi, padrão do método, foi
+  // derivada em europeus idosos.
+  //
+  // Por isso o índice existe para acompanhar a própria evolução, e não para
+  // classificar.
+  {
+    category: 'composicao-corporal',
+    code: 'MuscleMassIndex',
+    names: {
+      en: ['Muscle Mass Index', 'Skeletal Muscle Mass Index', 'SMI', 'SMMI'],
+      pt: ['Índice de Massa Muscular', 'IMM', 'Índice de Massa Muscular Esquelética'],
+    },
+    unit: 'kg/m2',
   },
   {
     category: 'composicao-corporal',
@@ -2407,6 +2437,18 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Perímetro Abdominal',
         'Cintura',
       ],
+    },
+    unit: 'cm',
+  },
+  // O EWGSOP2 usa a panturrilha como proxy de massa muscular onde não há
+  // outro método disponível, o que a torna útil em consulta sem aparelho.
+  {
+    category: 'composicao-corporal',
+    code: 'CalfCircumference',
+    loinc: '107112-5',
+    names: {
+      en: ['Calf Circumference', 'Calf Girth'],
+      pt: ['Circunferência da Panturrilha', 'Perímetro da Panturrilha', 'Panturrilha'],
     },
     unit: 'cm',
   },

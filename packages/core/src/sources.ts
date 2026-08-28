@@ -68,6 +68,13 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     url: 'https://pubmed.ncbi.nlm.nih.gov/8605666/',
   },
 
+  'ewgsop2-2019': {
+    abnt: 'CRUZ-JENTOFT, A. J. et al. Sarcopenia: revised European consensus on definition and diagnosis. Age and Ageing, v. 48, n. 1, p. 16-31, 2019.',
+    doi: '10.1093/ageing/afy169',
+    key: 'ewgsop2-2019',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/30312372/',
+  },
+
   'ferreira-vitd-2017': {
     abnt: 'FERREIRA, C. E. S. et al. Posicionamento oficial da Sociedade Brasileira de Patologia Clínica/Medicina Laboratorial e da Sociedade Brasileira de Endocrinologia e Metabologia sobre intervalos de referência da vitamina D [25(OH)D]. Archives of Endocrinology and Metabolism, v. 61, n. 6, p. 527-542, 2017.',
     doi: '10.1590/2359-3997000000310',
@@ -113,6 +120,13 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     doi: '10.1373/clinchem.2009.132654',
     key: 'giannitsis-hstnt-2010',
     url: 'https://pubmed.ncbi.nlm.nih.gov/19959623/',
+  },
+
+  'glis-2024': {
+    abnt: 'KIRK, B. et al. The conceptual definition of sarcopenia: Delphi consensus from the Global Leadership Initiative in Sarcopenia (GLIS). Age and Ageing, v. 53, n. 3, afae052, 2024.',
+    doi: '10.1093/ageing/afae052',
+    key: 'glis-2024',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/38520141/',
   },
   // ---------------------------------------------------------------------------
   // Fontes internacionais — Ácidos graxos ômega

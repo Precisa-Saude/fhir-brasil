@@ -1823,6 +1823,54 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   // Só `max`. O limite inferior não entra porque a revisão não estabelece
   // piso, e inventar um transformaria em alteração um valor que a fonte não
   // classifica.
+  // O EWGSOP2 traz um único corte, <31 cm, e o enuncia restrito: "Calf
+  // circumference has been shown to predict performance and survival in
+  // older people (cut-off point <31 cm)". Por isso entra como variante por
+  // idade, e não como padrão para todo adulto — estender o número para
+  // gente de 30 anos seria ir além do que a fonte diz.
+  //
+  // O padrão fica sem `min` de propósito: não há corte publicado para
+  // adulto jovem, e o consumidor lê a medida sem zona em vez de ler uma
+  // zona inventada.
+  //
+  // Como interpretar, por faixa etária:
+  //
+  //   60+   a medida tem corte e classifica: abaixo de 31 cm é sinal de
+  //         alerta para perda de massa muscular.
+  //   <60   a medida é válida e comparável com ela mesma ao longo do tempo,
+  //         mas não classifica. Uma queda consistente entre exames importa
+  //         mais do que o valor absoluto num único dia, e é assim que o
+  //         conteúdo do marcador orienta o usuário.
+  //
+  // A ausência de zona abaixo dos 60 não é lacuna a preencher com o número
+  // dos idosos: massa muscular tem trajetória própria por idade, e o
+  // consenso deriva o corte justamente na faixa em que a perda vira
+  // desfecho.
+  //
+  // Recência conferida em 28/08/2026. Existe consenso mais novo, o GLIS
+  // 2024 (Age and Ageing, DOI 10.1093/ageing/afae052), primeiro global
+  // sobre sarcopenia, com Cruz-Jentoft e Chen entre os autores — ou seja,
+  // os líderes do EWGSOP2 e do AWGS. Ele **não** substitui este corte: é
+  // conceitual, e o próprio texto diz que servirá "to develop an
+  // operational definition for clinical and research settings". Enquanto a
+  // definição operacional não sai, o EWGSOP2 segue sendo a referência de
+  // ponto de corte.
+  //
+  // Nota: o consenso asiático (AWGS 2019) usa 34 cm para homens e 33 para
+  // mulheres, em outra população e como triagem, não como corte de massa.
+  // Os números não são intercambiáveis.
+  CalfCircumference: {
+    default: { unit: 'cm' },
+    direction: 'higher-better',
+    source: 'ewgsop2-2019',
+    // O corte não é específico por sexo na fonte; as duas variantes existem
+    // porque `RangeVariant` exige o campo, e carregam o mesmo número.
+    variants: [
+      { ageMin: 60, range: { min: 31, unit: 'cm' }, sex: 'F' },
+      { ageMin: 60, range: { min: 31, unit: 'cm' }, sex: 'M' },
+    ],
+  },
+
   WaistToHeightRatio: {
     default: { max: 0.5, unit: '' },
     direction: 'lower-better',

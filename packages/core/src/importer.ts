@@ -73,7 +73,7 @@ const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15MB
 function resolveBiomarkerCode(observation: FHIRObservation): {
   internalCode?: string;
   loincCode?: string;
-  seenCodes: string[];
+  reason: string;
 } {
   const coding = observation.code?.coding ?? [];
   const loincCode = coding.find((c) => c.system === LOINC_SYSTEM)?.code;
@@ -84,16 +84,31 @@ function resolveBiomarkerCode(observation: FHIRObservation): {
     ...(declaredCode ? [`biomarker code ${declaredCode}`] : []),
   ];
 
+  // Três motivos distintos de descarte, que antes se confundiam num só. Sem
+  // essa separação, um arquivo em SNOMED relatava "nenhum código encontrado",
+  // sugerindo `coding` vazio quando na verdade o código existia e estava num
+  // system que não tratamos. Para importação de terceiros, é a diferença entre
+  // um diagnóstico acionável e um enigma.
+  let reason: string;
+  if (seenCodes.length > 0) {
+    reason = `Unknown code: ${seenCodes.join(', ')}`;
+  } else if (coding.length > 0) {
+    const systems = [...new Set(coding.map((c) => c.system ?? '(sem system)'))];
+    reason = `No code in a supported system (found: ${systems.join(', ')})`;
+  } else {
+    reason = 'No code found in observation coding';
+  }
+
   const fromLoinc = loincCode ? loincToCode(loincCode) : undefined;
-  if (fromLoinc) return { internalCode: fromLoinc, loincCode, seenCodes };
+  if (fromLoinc) return { internalCode: fromLoinc, loincCode, reason };
 
   if (declaredCode && isValidCode(declaredCode)) {
     // `codeToLoinc` devolve undefined para quem não tem LOINC, que é o caso
     // esperado aqui. O campo fica de fora em vez de receber um valor inventado.
-    return { internalCode: declaredCode, loincCode: codeToLoinc(declaredCode), seenCodes };
+    return { internalCode: declaredCode, loincCode: codeToLoinc(declaredCode), reason };
   }
 
-  return { loincCode, seenCodes };
+  return { loincCode, reason };
 }
 
 /**
@@ -146,18 +161,11 @@ export function mapFHIRObservationToInternal(
   observation: FHIRObservation,
   index: number,
 ): { observation: ImportedObservation } | { skipped: SkippedEntry } {
-  const { internalCode, loincCode, seenCodes } = resolveBiomarkerCode(observation);
+  const { internalCode, loincCode, reason } = resolveBiomarkerCode(observation);
 
   if (!internalCode) {
     return {
-      skipped: {
-        index,
-        loincCode,
-        reason: seenCodes.length
-          ? `Unknown code: ${seenCodes.join(', ')}`
-          : 'No code found in observation coding',
-        resourceType: 'Observation',
-      },
+      skipped: { index, loincCode, reason, resourceType: 'Observation' },
     };
   }
 

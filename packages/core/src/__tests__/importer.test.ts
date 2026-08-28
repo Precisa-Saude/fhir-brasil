@@ -201,7 +201,10 @@ describe('mapFHIRObservationToInternal', () => {
     const result = mapFHIRObservationToInternal(noLoincObs, 0);
     expect('skipped' in result).toBe(true);
     if ('skipped' in result) {
-      expect(result.skipped.reason).toContain('No code found');
+      // O coding existe, só está num system que não tratamos. Dizer "nenhum
+      // código encontrado" mandaria procurar o problema no lugar errado.
+      expect(result.skipped.reason).toContain('No code in a supported system');
+      expect(result.skipped.reason).toContain('http://custom.org');
     }
   });
 
@@ -386,5 +389,51 @@ describe('biomarcadores sem LOINC', () => {
     };
 
     expect('skipped' in mapFHIRObservationToInternal(observation, 0)).toBe(true);
+  });
+});
+
+describe('motivos de descarte', () => {
+  const base = {
+    effectiveDateTime: '2024-06-15T08:00:00.000Z',
+    resourceType: 'Observation' as const,
+    status: 'final' as const,
+    subject: { reference: 'Patient/user-1' },
+    valueQuantity: { unit: 'mg/dL', value: 5 },
+  };
+
+  it('distingue coding ausente de coding em system alheio', () => {
+    const semCoding = mapFHIRObservationToInternal({ ...base, code: { coding: [] } }, 0);
+    const systemAlheio = mapFHIRObservationToInternal(
+      { ...base, code: { coding: [{ code: '365812005', system: 'http://snomed.info/sct' }] } },
+      1,
+    );
+
+    expect('skipped' in semCoding && semCoding.skipped.reason).toBe(
+      'No code found in observation coding',
+    );
+    expect('skipped' in systemAlheio && systemAlheio.skipped.reason).toContain(
+      'http://snomed.info/sct',
+    );
+  });
+
+  it('cita os dois codings quando nenhum resolve', () => {
+    const result = mapFHIRObservationToInternal(
+      {
+        ...base,
+        code: {
+          coding: [
+            { code: '00000-0', system: 'http://loinc.org' },
+            { code: 'NaoExiste', system: 'http://fhir-brasil.dev/biomarker-codes' },
+          ],
+        },
+      },
+      0,
+    );
+
+    expect('skipped' in result).toBe(true);
+    if (!('skipped' in result)) return;
+    // Citar só um dos dois faria parecer que o outro nem foi considerado.
+    expect(result.skipped.reason).toContain('LOINC 00000-0');
+    expect(result.skipped.reason).toContain('biomarker code NaoExiste');
   });
 });

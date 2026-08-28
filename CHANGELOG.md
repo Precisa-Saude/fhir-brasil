@@ -1,3 +1,9 @@
+## [0.20.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.19.0...v0.20.0) (2026-08-28)
+
+### Features
+
+* **core:** índice de massa muscular e circunferência da panturrilha ([#84](https://github.com/Precisa-Saude/fhir-brasil/issues/84)) ([92438ba](https://github.com/Precisa-Saude/fhir-brasil/commit/92438ba26b20134a4eddfe61810c3af4e8f62a4b)), closes [#83](https://github.com/Precisa-Saude/fhir-brasil/issues/83)
+
 ## [0.19.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.18.0...v0.19.0) (2026-08-28)
 
 ### Features

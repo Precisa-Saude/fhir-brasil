@@ -40,6 +40,13 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     url: 'https://pubmed.ncbi.nlm.nih.gov/2407762/',
   },
 
+  'browning-ashwell-2010': {
+    abnt: 'BROWNING, L. M.; HSIEH, S. D.; ASHWELL, M. A systematic review of waist-to-height ratio as a screening tool for the prediction of cardiovascular disease and diabetes: 0,5 could be a suitable global boundary value. Nutrition Research Reviews, v. 23, n. 2, p. 247-269, 2010.',
+    doi: '10.1017/S0954422410000144',
+    key: 'browning-ashwell-2010',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/20819243/',
+  },
+
   'castelli-ratio-1992': {
     abnt: 'CASTELLI, W. P. et al. Lipids and risk of coronary heart disease: the Framingham Study. Annals of Epidemiology, v. 2, n. 1-2, p. 23-28, 1992.',
     doi: '10.1016/1047-2797(92)90033-M',

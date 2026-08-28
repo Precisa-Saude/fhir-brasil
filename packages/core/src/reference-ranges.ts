@@ -1816,6 +1816,19 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     ],
   },
 
+  // Revisão sistemática de 78 estudos, catorze países, incluindo população
+  // centro-americana: o limite médio ficou em 0,50 para homens e para
+  // mulheres, e é o mesmo para os dois sexos, daí não haver variantes.
+  //
+  // Só `max`. O limite inferior não entra porque a revisão não estabelece
+  // piso, e inventar um transformaria em alteração um valor que a fonte não
+  // classifica.
+  WaistToHeightRatio: {
+    default: { max: 0.5, unit: '' },
+    direction: 'lower-better',
+    source: 'browning-ashwell-2010',
+  },
+
   AndroidGynoidRatio: {
     default: { max: 1.2, min: 0.5, optimalMax: 1.0, optimalMin: 0.6, unit: '' },
     direction: 'lower-better',

@@ -1489,12 +1489,28 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Microalbuminuria',
         'Albumin, Urine',
       ],
-      // "Albumina Urinária" e "Microalbumina" sozinha são as formas que os
-      // laboratórios brasileiros de fato imprimem, e faltavam. Sem elas o
-      // pré-scan casava "Albumina Urinária" com `Albumin`, a albumina
-      // sérica: microalbuminúria é marcador de lesão renal e albumina sérica
-      // é de função hepática e estado nutricional, então a troca não é
-      // cosmética.
+      // Todas as formas abaixo, em pt e en, nomeiam o MESMO analito: albumina
+      // dosada na urina. Não são exames diferentes.
+      //
+      // "Microalbumina" e "microalbuminúria" são herança de nomenclatura: o
+      // prefixo micro nunca se referiu a uma molécula menor, e sim a uma
+      // faixa de excreção. O analito é o mesmo, e por isso as duas formas
+      // pertencem a esta entrada e não a uma separada.
+      //
+      // "Albumina Urinária" vem primeiro de propósito. O gerador do ValueSet
+      // do IG usa o primeiro nome pt como display, então a ordem decide o
+      // rótulo publicado — e essa é a forma que os laboratórios brasileiros
+      // de fato imprimem.
+      //
+      // As formas foram tiradas de dado real, não inventadas: "Albumin,
+      // Urine" e "Albumina Urinária" aparecem como rótulos `UNKNOWN_` na
+      // auditoria de cobertura da plataforma, ou seja, chegaram em laudo e
+      // não casaram com nada.
+      //
+      // Sem elas o pré-scan casava "Albumina Urinária" com `Albumin`, a
+      // albumina sérica. A troca não é cosmética: albumina na urina é
+      // marcador de lesão renal precoce, medida em mg/L, e a sérica é de
+      // função hepática e estado nutricional, medida em g/dL.
       pt: [
         'Albumina Urinária',
         'Albumina Urina',

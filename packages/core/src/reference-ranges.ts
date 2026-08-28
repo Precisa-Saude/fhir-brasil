@@ -1833,6 +1833,20 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   // adulto jovem, e o consumidor lê a medida sem zona em vez de ler uma
   // zona inventada.
   //
+  // Como interpretar, por faixa etária:
+  //
+  //   60+   a medida tem corte e classifica: abaixo de 31 cm é sinal de
+  //         alerta para perda de massa muscular.
+  //   <60   a medida é válida e comparável com ela mesma ao longo do tempo,
+  //         mas não classifica. Uma queda consistente entre exames importa
+  //         mais do que o valor absoluto num único dia, e é assim que o
+  //         conteúdo do marcador orienta o usuário.
+  //
+  // A ausência de zona abaixo dos 60 não é lacuna a preencher com o número
+  // dos idosos: massa muscular tem trajetória própria por idade, e o
+  // consenso deriva o corte justamente na faixa em que a perda vira
+  // desfecho.
+  //
   // Nota: o consenso asiático (AWGS 2019) usa 34 cm para homens e 33 para
   // mulheres, em outra população e como triagem, não como corte de massa.
   // Os números não são intercambiáveis.

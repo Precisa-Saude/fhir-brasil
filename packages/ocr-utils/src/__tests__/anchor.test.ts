@@ -246,6 +246,36 @@ describe('findBiomarkersInText — dobra cutânea versus circunferência', () =>
     expect(result.matches.some((m) => m.code === 'SkinfoldThigh')).toBe(true);
   });
 
+  // Formas que o OCR realmente produz: pipe de extração de tabela, pontilhado
+  // de sumário, tab, caixa alta, acento perdido. Todas dependem do mesmo
+  // `normalize`, então o teste guarda a normalização, não cada variação.
+  const RUIDO_DE_OCR: ReadonlyArray<readonly [string, string]> = [
+    ['Thigh    Skinfold    18,0 mm', 'SkinfoldThigh'],
+    ['Thigh\tSkinfold\t18,0 mm', 'SkinfoldThigh'],
+    ['THIGH SKINFOLD 18.0 MM', 'SkinfoldThigh'],
+    ['Dobra Cutanea Coxa 18,0 mm', 'SkinfoldThigh'],
+    ['Suprailiac  |  20,0  |  mm', 'SkinfoldSuprailiac'],
+    ['Triceps.....12,0 mm', 'SkinfoldTriceps'],
+  ];
+
+  it.each(RUIDO_DE_OCR)('anchors through OCR noise: %s', (linha, code) => {
+    const result = findBiomarkersInText(linha);
+    expect(result.matches.some((m) => m.code === code)).toBe(true);
+  });
+
+  // A guarda tem que sobreviver ao mesmo ruído, senão bloqueia só a grafia
+  // limpa e deixa passar a suja, que é a que vem de PDF.
+  const GIRTH_COM_RUIDO = [
+    'Thigh Circumference:  55,0 cm',
+    'THIGH CIRCUMFERENCE 55.0 CM',
+    'Circunferencia da Coxa 55,0 cm',
+  ];
+
+  it.each(GIRTH_COM_RUIDO)('holds the guard through OCR noise: %s', (linha) => {
+    const result = findBiomarkersInText(linha);
+    expect(result.matches.filter((m) => m.code.startsWith('Skinfold'))).toEqual([]);
+  });
+
   it('keeps both anchors when a line names the fold and the girth', () => {
     // Ambígua demais para descartar: preserva a dobra em vez de perder o dado.
     const result = findBiomarkersInText('Dobra Cutânea Coxa e Circunferência da Coxa 18,0 mm');

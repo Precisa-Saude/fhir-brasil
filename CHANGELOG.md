@@ -1,3 +1,9 @@
+## [0.21.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.20.3...v0.21.0) (2026-08-29)
+
+### Features
+
+* **core:** reconhece bioimpedância e adipometria como composição corporal ([#88](https://github.com/Precisa-Saude/fhir-brasil/issues/88)) ([c4277eb](https://github.com/Precisa-Saude/fhir-brasil/commit/c4277ebce22ffc06cee4d5149fa9ffb64a45ab2b)), closes [#87](https://github.com/Precisa-Saude/fhir-brasil/issues/87)
+
 ## [0.20.3](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.20.2...v0.20.3) (2026-08-29)
 
 ### Bug Fixes

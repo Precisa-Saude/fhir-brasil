@@ -203,6 +203,86 @@ describe('findBiomarkersInText — falsos positivos (issue #59)', () => {
   });
 });
 
+describe('findBiomarkersInText — dobra cutânea versus circunferência', () => {
+  const SITIOS = [
+    ['Dobra Cutânea Coxa 18,0 mm', 'SkinfoldThigh'],
+    ['Thigh Skinfold 18,0 mm', 'SkinfoldThigh'],
+    ['Triceps 12,0 mm', 'SkinfoldTriceps'],
+    ['Subscapular 15,0 mm', 'SkinfoldSubscapular'],
+    ['Suprailiac 20,0 mm', 'SkinfoldSuprailiac'],
+    ['MidAxilla 9,0 mm', 'SkinfoldMidaxillary'],
+    ['Skin Fold Thickness Thigh 18,0 mm', 'SkinfoldThigh'],
+    ['Pregas cutâneas: Coxa 18,0 mm', 'SkinfoldThigh'],
+  ] as const;
+
+  it.each(SITIOS)('anchors %s', (linha, code) => {
+    const result = findBiomarkersInText(linha);
+    expect(result.matches.some((m) => m.code === code)).toBe(true);
+  });
+
+  // O termo nu do sítio é substring do nome da circunferência, então sem a
+  // guarda de contexto "Circunferência da Coxa" ancorava SkinfoldThigh com
+  // confiança máxima: uma medida em cm apontando para um biomarcador em mm.
+  const CIRCUNFERENCIAS = [
+    'Circunferência da Coxa 55,0 cm',
+    'Perímetro da Coxa 55,0 cm',
+    'Thigh Circumference 55,0 cm',
+    'Chest Circumference 98,0 cm',
+    'Calf Circumference 36,0 cm',
+  ];
+
+  it.each(CIRCUNFERENCIAS)('does not anchor a skinfold for %s', (linha) => {
+    const result = findBiomarkersInText(linha);
+    expect(result.matches.filter((m) => m.code.startsWith('Skinfold'))).toEqual([]);
+  });
+
+  // A guarda é por linha. Um cabeçalho "CIRCUNFERENCIAS" acima de linhas com
+  // só o sítio não alcança essas linhas, então o sítio nu ainda ancora. Vale
+  // tanto para o alias pt, que já existia, quanto para o novo em inglês;
+  // separar esses casos pede o sinal de unidade (dobra em mm, circunferência
+  // em cm), que é mudança maior e fica para outro PR.
+  it('documents that the guard is line-scoped', () => {
+    const result = findBiomarkersInText('CIRCUNFERENCIAS\nCoxa 55,0 cm');
+    expect(result.matches.some((m) => m.code === 'SkinfoldThigh')).toBe(true);
+  });
+
+  // Formas que o OCR realmente produz: pipe de extração de tabela, pontilhado
+  // de sumário, tab, caixa alta, acento perdido. Todas dependem do mesmo
+  // `normalize`, então o teste guarda a normalização, não cada variação.
+  const RUIDO_DE_OCR: ReadonlyArray<readonly [string, string]> = [
+    ['Thigh    Skinfold    18,0 mm', 'SkinfoldThigh'],
+    ['Thigh\tSkinfold\t18,0 mm', 'SkinfoldThigh'],
+    ['THIGH SKINFOLD 18.0 MM', 'SkinfoldThigh'],
+    ['Dobra Cutanea Coxa 18,0 mm', 'SkinfoldThigh'],
+    ['Suprailiac  |  20,0  |  mm', 'SkinfoldSuprailiac'],
+    ['Triceps.....12,0 mm', 'SkinfoldTriceps'],
+  ];
+
+  it.each(RUIDO_DE_OCR)('anchors through OCR noise: %s', (linha, code) => {
+    const result = findBiomarkersInText(linha);
+    expect(result.matches.some((m) => m.code === code)).toBe(true);
+  });
+
+  // A guarda tem que sobreviver ao mesmo ruído, senão bloqueia só a grafia
+  // limpa e deixa passar a suja, que é a que vem de PDF.
+  const GIRTH_COM_RUIDO = [
+    'Thigh Circumference:  55,0 cm',
+    'THIGH CIRCUMFERENCE 55.0 CM',
+    'Circunferencia da Coxa 55,0 cm',
+  ];
+
+  it.each(GIRTH_COM_RUIDO)('holds the guard through OCR noise: %s', (linha) => {
+    const result = findBiomarkersInText(linha);
+    expect(result.matches.filter((m) => m.code.startsWith('Skinfold'))).toEqual([]);
+  });
+
+  it('keeps both anchors when a line names the fold and the girth', () => {
+    // Ambígua demais para descartar: preserva a dobra em vez de perder o dado.
+    const result = findBiomarkersInText('Dobra Cutânea Coxa e Circunferência da Coxa 18,0 mm');
+    expect(result.matches.some((m) => m.code === 'SkinfoldThigh')).toBe(true);
+  });
+});
+
 describe('getMatchedCodes', () => {
   it('should return array of matched biomarker codes', () => {
     const result = findBiomarkersInText('Hemoglobina 14.2\nGlicose 95');

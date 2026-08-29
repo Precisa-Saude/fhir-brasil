@@ -592,3 +592,28 @@ describe('new biomarker definitions', () => {
     expect(reference).toContain('CEA');
   });
 });
+
+describe('findCodeByName — sítios de dobra em inglês', () => {
+  // Laudo de adipometria imprime só o sítio na coluna. O lado pt já tinha os
+  // termos nus ("Tricipital", "Coxa"); sem o espelho em inglês, observações
+  // gravadas como "Triceps" ou "Thigh" ficavam fora do catálogo.
+  const SITIOS: ReadonlyArray<readonly [string, string]> = [
+    ['Triceps', 'SkinfoldTriceps'],
+    ['Thigh', 'SkinfoldThigh'],
+    ['Subscapular', 'SkinfoldSubscapular'],
+    ['Suprailiac', 'SkinfoldSuprailiac'],
+    ['Chest', 'SkinfoldChest'],
+    ['MidAxilla', 'SkinfoldMidaxillary'],
+  ];
+
+  it.each(SITIOS)('resolves %s', (nome, code) => {
+    expect(findCodeByName(nome)).toBe(code);
+  });
+
+  it('does not let the bare site swallow the girth measurement', () => {
+    // findCodeByName casa por igualdade exata, então o nome composto não pode
+    // cair no alias nu. A desambiguação por contexto vive no pré-scan.
+    expect(findCodeByName('Thigh Circumference')).not.toBe('SkinfoldThigh');
+    expect(findCodeByName('Chest Circumference')).not.toBe('SkinfoldChest');
+  });
+});

@@ -123,6 +123,20 @@ const CONTEXT_REQUIRED_NAMES = new Set([
   'tap', // ProthrombinTime — "tap" em inglês
   'volume', // VATVolume
   'weight', // TotalMass
+  // Sítios de dobra pelo nome nu. São partes do corpo antes de serem medidas,
+  // e aparecem em prosa: num laudo de DEXA real, "hips and thighs" e
+  // "abdominal region" ancoravam dobra cutânea que o documento não tem.
+  // Exigir valor na linha separa a tabela do parágrafo.
+  'abdominal',
+  'chest',
+  'coxa',
+  'peitoral',
+  'subescapular',
+  'subscapular',
+  'suprailiac',
+  'thigh',
+  'triceps',
+  'tricipital',
 ]);
 
 /**

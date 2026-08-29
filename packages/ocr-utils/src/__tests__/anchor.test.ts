@@ -276,6 +276,20 @@ describe('findBiomarkersInText — dobra cutânea versus circunferência', () =>
     expect(result.matches.filter((m) => m.code.startsWith('Skinfold'))).toEqual([]);
   });
 
+  // Sítio de dobra pelo nome nu é parte do corpo antes de ser medida. Num
+  // laudo de DEXA real, o parágrafo que explica a região ginoide ancorava
+  // dobra da coxa, e o documento não mede dobra nenhuma.
+  const PROSA = [
+    'Gynoid region is that around the hips and thighs and often the body type',
+    'increased fat in the abdominal region.',
+    'A avaliação do tríceps braquial faz parte do exame físico.',
+  ];
+
+  it.each(PROSA)('does not anchor a skinfold in prose: %s', (linha) => {
+    const result = findBiomarkersInText(linha);
+    expect(result.matches.filter((m) => m.code.startsWith('Skinfold'))).toEqual([]);
+  });
+
   it('keeps both anchors when a line names the fold and the girth', () => {
     // Ambígua demais para descartar: preserva a dobra em vez de perder o dado.
     const result = findBiomarkersInText('Dobra Cutânea Coxa e Circunferência da Coxa 18,0 mm');

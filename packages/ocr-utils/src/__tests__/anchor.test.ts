@@ -236,14 +236,13 @@ describe('findBiomarkersInText — dobra cutânea versus circunferência', () =>
     expect(result.matches.filter((m) => m.code.startsWith('Skinfold'))).toEqual([]);
   });
 
-  // A guarda é por linha. Um cabeçalho "CIRCUNFERENCIAS" acima de linhas com
-  // só o sítio não alcança essas linhas, então o sítio nu ainda ancora. Vale
-  // tanto para o alias pt, que já existia, quanto para o novo em inglês;
-  // separar esses casos pede o sinal de unidade (dobra em mm, circunferência
-  // em cm), que é mudança maior e fica para outro PR.
-  it('documents that the guard is line-scoped', () => {
+  // Era um limite conhecido: a guarda olha uma linha por vez, então um
+  // cabeçalho "CIRCUNFERENCIAS" acima de linhas com só o sítio não as
+  // alcançava. A regra da unidade fechou a lacuna sem precisar de contexto
+  // entre linhas, porque o valor em cm já diz que não é dobra.
+  it('reads the row by its unit even when the heading is on another line', () => {
     const result = findBiomarkersInText('CIRCUNFERENCIAS\nCoxa 55,0 cm');
-    expect(result.matches.some((m) => m.code === 'SkinfoldThigh')).toBe(true);
+    expect(result.matches.filter((m) => m.code.startsWith('Skinfold'))).toEqual([]);
   });
 
   // Formas que o OCR realmente produz: pipe de extração de tabela, pontilhado
@@ -288,6 +287,36 @@ describe('findBiomarkersInText — dobra cutânea versus circunferência', () =>
   it.each(PROSA)('does not anchor a skinfold in prose: %s', (linha) => {
     const result = findBiomarkersInText(linha);
     expect(result.matches.filter((m) => m.code.startsWith('Skinfold'))).toEqual([]);
+  });
+
+  it('does not match the site inside a longer word', () => {
+    const result = findBiomarkersInText('Abdominoplastia realizada em 2024');
+    expect(result.matches.filter((m) => m.code.startsWith('Skinfold'))).toEqual([]);
+  });
+
+  // A unidade desambigua sem depender da palavra "circunferência": dobra é em
+  // milímetros, sempre, e num laudo de antropometria a coluna costuma trazer
+  // só o sítio e o número.
+  const EM_CENTIMETROS = ['Coxa 55,0 cm', 'Tórax 98 cm', 'Braço 32,5 cm'];
+
+  it.each(EM_CENTIMETROS)('does not read a centimetre value as a skinfold: %s', (linha) => {
+    const result = findBiomarkersInText(linha);
+    expect(result.matches.filter((m) => m.code.startsWith('Skinfold'))).toEqual([]);
+  });
+
+  it('still anchors the same site in millimetres', () => {
+    expect(
+      findBiomarkersInText('Coxa 18,0 mm').matches.some((m) => m.code === 'SkinfoldThigh'),
+    ).toBe(true);
+  });
+
+  // Limite conhecido, fixado em teste para não virar surpresa: sítio nu com um
+  // número qualquer e sem unidade ainda ancora. Ficha de treino e queixa
+  // clínica caem aqui. Resolver exigiria a unidade na linha, o que perderia
+  // folha que imprime a unidade só no cabeçalho da coluna.
+  it('documents that a bare site with a unitless number still anchors', () => {
+    const treino = findBiomarkersInText('Triceps 3 series de 12 repeticoes');
+    expect(treino.matches.some((m) => m.code === 'SkinfoldTriceps')).toBe(true);
   });
 
   it('keeps both anchors when a line names the fold and the girth', () => {

@@ -208,6 +208,45 @@ const GENETIC_CONTEXT_PATTERNS: RegExp[] = [
   /\bsequence change\b/,
 ];
 
+/**
+ * Sítios de dobra cutânea cujo nome nu também nomeia uma circunferência:
+ * "Coxa" aparece tanto em "Dobra Cutânea Coxa" quanto em "Circunferência da
+ * Coxa". O termo nu precisa existir como alias, porque há laudo que imprime
+ * só o sítio na coluna, então a desambiguação tem que vir do contexto da
+ * linha, como já se faz com laudo genético.
+ */
+const SKINFOLD_SITE_CODES = new Set([
+  'SkinfoldAbdominal',
+  'SkinfoldChest',
+  'SkinfoldMidaxillary',
+  'SkinfoldSubscapular',
+  'SkinfoldSuprailiac',
+  'SkinfoldThigh',
+  'SkinfoldTriceps',
+]);
+
+/** Uma linha de circunferência ou perímetro não mede dobra. */
+const GIRTH_CONTEXT_PATTERNS: RegExp[] = [
+  /\bcircumference\b/,
+  /\bcircunferencias?\b/,
+  /\bperimetros?\b/,
+  /\bgirth\b/,
+];
+
+/**
+ * Só bloqueia quando a linha fala de circunferência e não fala de dobra:
+ * "Dobra Cutânea Coxa" e "Thigh Skinfold" continuam ancorando normalmente,
+ * e uma linha que traga as duas palavras é ambígua demais para descartar.
+ */
+const SKINFOLD_CONTEXT_PATTERNS: RegExp[] = [/\bdobras?\b/, /\bskin ?folds?\b/, /\bpregas?\b/];
+
+function hasGirthContext(line: string): boolean {
+  if (SKINFOLD_CONTEXT_PATTERNS.some((re) => re.test(line))) {
+    return false;
+  }
+  return GIRTH_CONTEXT_PATTERNS.some((re) => re.test(line));
+}
+
 const DIGIT_PATTERN = /\d/;
 
 /** Unit tokens reused from the core catalog instead of a parallel list. */
@@ -425,6 +464,7 @@ export function findBiomarkersInText(ocrText: string): AnchorResult {
   const bestByCode = new Map<string, AnchorMatch>();
   const geneticLines = new Map<number, boolean>();
   const valueLines = new Map<number, boolean>();
+  const girthLines = new Map<number, boolean>();
 
   for (const candidate of resolveOverlaps(collectCandidates(normalizedText))) {
     const { end: lineEnd, start: lineStart } = getLineBounds(normalizedText, candidate.start);
@@ -444,8 +484,18 @@ export function findBiomarkersInText(ocrText: string): AnchorResult {
       valueLines.set(lineStart, hasValue);
     }
 
+    let girth = girthLines.get(lineStart);
+    if (girth === undefined) {
+      girth = hasGirthContext(normalizedText.slice(lineStart, lineEnd));
+      girthLines.set(lineStart, girth);
+    }
+
     for (const entry of candidate.entries) {
       if (entry.ambiguous && !hasValue) {
+        continue;
+      }
+
+      if (girth && SKINFOLD_SITE_CODES.has(entry.code)) {
         continue;
       }
 

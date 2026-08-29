@@ -2520,7 +2520,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     code: 'SkinfoldTriceps',
     loinc: '8354-3',
     names: {
-      en: ['Triceps Skinfold', 'Tricipital Skinfold', 'Skin Fold Thickness Triceps'],
+      en: ['Triceps Skinfold', 'Tricipital Skinfold', 'Skin Fold Thickness Triceps', 'Triceps'],
       pt: ['Dobra Tricipital', 'Dobra Cutânea Tricipital', 'Tricipital', 'DCT'],
     },
     unit: 'mm',
@@ -2530,7 +2530,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     code: 'SkinfoldThigh',
     loinc: '8353-5',
     names: {
-      en: ['Thigh Skinfold', 'Skin Fold Thickness Thigh'],
+      en: ['Thigh Skinfold', 'Skin Fold Thickness Thigh', 'Thigh'],
       pt: ['Dobra da Coxa', 'Dobra Cutânea Coxa', 'Coxa'],
     },
     unit: 'mm',
@@ -2549,7 +2549,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     category: 'composicao-corporal',
     code: 'SkinfoldSubscapular',
     names: {
-      en: ['Subscapular Skinfold'],
+      en: ['Subscapular Skinfold', 'Subscapular'],
       pt: ['Dobra Subescapular', 'Dobra Cutânea Subescapular', 'Subescapular'],
     },
     unit: 'mm',
@@ -2558,7 +2558,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     category: 'composicao-corporal',
     code: 'SkinfoldSuprailiac',
     names: {
-      en: ['Suprailiac Skinfold', 'Supra-iliac Skinfold'],
+      en: ['Suprailiac Skinfold', 'Supra-iliac Skinfold', 'Suprailiac'],
       pt: ['Dobra Supra-ilíaca', 'Dobra Cutânea Supra-ilíaca', 'Supra-ilíaca', 'Suprailiaca'],
     },
     unit: 'mm',
@@ -2567,7 +2567,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     category: 'composicao-corporal',
     code: 'SkinfoldChest',
     names: {
-      en: ['Chest Skinfold', 'Pectoral Skinfold'],
+      en: ['Chest Skinfold', 'Pectoral Skinfold', 'Chest'],
       pt: ['Dobra Peitoral', 'Dobra Cutânea Peitoral', 'Peitoral', 'Dobra Torácica'],
     },
     unit: 'mm',
@@ -2576,7 +2576,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     category: 'composicao-corporal',
     code: 'SkinfoldMidaxillary',
     names: {
-      en: ['Midaxillary Skinfold', 'Mid-axillary Skinfold'],
+      en: ['Midaxillary Skinfold', 'Mid-axillary Skinfold', 'Midaxillary', 'MidAxilla'],
       pt: ['Dobra Axilar Média', 'Dobra Cutânea Axilar Média', 'Axilar Média'],
     },
     unit: 'mm',

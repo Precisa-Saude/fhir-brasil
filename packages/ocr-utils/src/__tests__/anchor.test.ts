@@ -203,6 +203,44 @@ describe('findBiomarkersInText — falsos positivos (issue #59)', () => {
   });
 });
 
+describe('findBiomarkersInText — dobra cutânea versus circunferência', () => {
+  const SITIOS = [
+    ['Dobra Cutânea Coxa 18,0 mm', 'SkinfoldThigh'],
+    ['Thigh Skinfold 18,0 mm', 'SkinfoldThigh'],
+    ['Triceps 12,0 mm', 'SkinfoldTriceps'],
+    ['Subscapular 15,0 mm', 'SkinfoldSubscapular'],
+    ['Suprailiac 20,0 mm', 'SkinfoldSuprailiac'],
+    ['MidAxilla 9,0 mm', 'SkinfoldMidaxillary'],
+  ] as const;
+
+  it.each(SITIOS)('anchors %s', (linha, code) => {
+    const result = findBiomarkersInText(linha);
+    expect(result.matches.some((m) => m.code === code)).toBe(true);
+  });
+
+  // O termo nu do sítio é substring do nome da circunferência, então sem a
+  // guarda de contexto "Circunferência da Coxa" ancorava SkinfoldThigh com
+  // confiança máxima: uma medida em cm apontando para um biomarcador em mm.
+  const CIRCUNFERENCIAS = [
+    'Circunferência da Coxa 55,0 cm',
+    'Perímetro da Coxa 55,0 cm',
+    'Thigh Circumference 55,0 cm',
+    'Chest Circumference 98,0 cm',
+    'Calf Circumference 36,0 cm',
+  ];
+
+  it.each(CIRCUNFERENCIAS)('does not anchor a skinfold for %s', (linha) => {
+    const result = findBiomarkersInText(linha);
+    expect(result.matches.filter((m) => m.code.startsWith('Skinfold'))).toEqual([]);
+  });
+
+  it('keeps both anchors when a line names the fold and the girth', () => {
+    // Ambígua demais para descartar: preserva a dobra em vez de perder o dado.
+    const result = findBiomarkersInText('Dobra Cutânea Coxa e Circunferência da Coxa 18,0 mm');
+    expect(result.matches.some((m) => m.code === 'SkinfoldThigh')).toBe(true);
+  });
+});
+
 describe('getMatchedCodes', () => {
   it('should return array of matched biomarker codes', () => {
     const result = findBiomarkersInText('Hemoglobina 14.2\nGlicose 95');

@@ -211,6 +211,8 @@ describe('findBiomarkersInText — dobra cutânea versus circunferência', () =>
     ['Subscapular 15,0 mm', 'SkinfoldSubscapular'],
     ['Suprailiac 20,0 mm', 'SkinfoldSuprailiac'],
     ['MidAxilla 9,0 mm', 'SkinfoldMidaxillary'],
+    ['Skin Fold Thickness Thigh 18,0 mm', 'SkinfoldThigh'],
+    ['Pregas cutâneas: Coxa 18,0 mm', 'SkinfoldThigh'],
   ] as const;
 
   it.each(SITIOS)('anchors %s', (linha, code) => {
@@ -232,6 +234,16 @@ describe('findBiomarkersInText — dobra cutânea versus circunferência', () =>
   it.each(CIRCUNFERENCIAS)('does not anchor a skinfold for %s', (linha) => {
     const result = findBiomarkersInText(linha);
     expect(result.matches.filter((m) => m.code.startsWith('Skinfold'))).toEqual([]);
+  });
+
+  // A guarda é por linha. Um cabeçalho "CIRCUNFERENCIAS" acima de linhas com
+  // só o sítio não alcança essas linhas, então o sítio nu ainda ancora. Vale
+  // tanto para o alias pt, que já existia, quanto para o novo em inglês;
+  // separar esses casos pede o sinal de unidade (dobra em mm, circunferência
+  // em cm), que é mudança maior e fica para outro PR.
+  it('documents that the guard is line-scoped', () => {
+    const result = findBiomarkersInText('CIRCUNFERENCIAS\nCoxa 55,0 cm');
+    expect(result.matches.some((m) => m.code === 'SkinfoldThigh')).toBe(true);
   });
 
   it('keeps both anchors when a line names the fold and the girth', () => {

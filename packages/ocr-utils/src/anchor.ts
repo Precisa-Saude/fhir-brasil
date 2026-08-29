@@ -123,6 +123,20 @@ const CONTEXT_REQUIRED_NAMES = new Set([
   'tap', // ProthrombinTime — "tap" em inglês
   'volume', // VATVolume
   'weight', // TotalMass
+  // Sítios de dobra pelo nome nu. São partes do corpo antes de serem medidas,
+  // e aparecem em prosa: num laudo de DEXA real, "hips and thighs" e
+  // "abdominal region" ancoravam dobra cutânea que o documento não tem.
+  // Exigir valor na linha separa a tabela do parágrafo.
+  'abdominal',
+  'chest',
+  'coxa',
+  'peitoral',
+  'subescapular',
+  'subscapular',
+  'suprailiac',
+  'thigh',
+  'triceps',
+  'tricipital',
 ]);
 
 /**
@@ -240,11 +254,24 @@ const GIRTH_CONTEXT_PATTERNS: RegExp[] = [
  */
 const SKINFOLD_CONTEXT_PATTERNS: RegExp[] = [/\bdobras?\b/, /\bskin ?folds?\b/, /\bpregas?\b/];
 
+/**
+ * Medida em centímetros numa linha de sítio corporal.
+ *
+ * Dobra cutânea é em milímetros, sempre: um valor em cm no mesmo sítio é
+ * circunferência. É o desambiguador mais forte que existe aqui, porque não
+ * depende de a folha escrever a palavra "circunferência", e num laudo de
+ * antropometria a coluna costuma trazer só o sítio e o número.
+ *
+ * Rejeita cm em vez de exigir mm: há folha que imprime a unidade no cabeçalho
+ * da coluna e não em cada linha, e exigir mm perderia essas.
+ */
+const CENTIMETRE_VALUE = /\d\s*(?:,\d+\s*)?cm\b/;
+
 function hasGirthContext(line: string): boolean {
   if (SKINFOLD_CONTEXT_PATTERNS.some((re) => re.test(line))) {
     return false;
   }
-  return GIRTH_CONTEXT_PATTERNS.some((re) => re.test(line));
+  return GIRTH_CONTEXT_PATTERNS.some((re) => re.test(line)) || CENTIMETRE_VALUE.test(line);
 }
 
 const DIGIT_PATTERN = /\d/;

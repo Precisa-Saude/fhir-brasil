@@ -3360,16 +3360,47 @@ export function generateFilteredLLMReference(codes: string[]): string {
 }
 
 /**
- * DEXA indicator biomarker codes
- * When these are found in OCR text, the document is likely a DEXA/body composition scan
+ * Códigos que identificam um documento de composição corporal.
+ *
+ * O nome diz DEXA por herança: quando a lista foi escrita, densitometria era a
+ * única fonte desse tipo de laudo. Hoje ela decide o caminho para
+ * bioimpedância e adipometria também, e a lista tinha ficado para trás.
+ *
+ * Medido em produção: um laudo de adipometria com sete dobras cutâneas,
+ * circunferência de cintura e IMC não casava nenhum indicador e caía no
+ * caminho genérico, perdendo a referência filtrada e a extração de tendência.
+ * As dobras e as circunferências não aparecem em DEXA, então só elas
+ * identificam esse aparelho.
+ *
+ * Massa muscular e os compartimentos de água entram pela mesma razão: são o
+ * que a bioimpedância imprime e o DEXA não.
  */
 export const DEXA_INDICATOR_CODES = [
+  // Densitometria e composição corporal clássica
   'BodyFatPct',
   'FatMass',
   'LeanMass',
   'BMC',
   'FatFreeMass',
   'TotalMass',
+  // Bioimpedância
+  'MuscleMass',
+  'TotalBodyWater',
+  'BodyWaterPct',
+  'PhaseAngle',
+  'ExtracellularWater',
+  'IntracellularWater',
+  // Adipometria: sete sítios, e nenhum aparece em laudo de DEXA
+  'SkinfoldTriceps',
+  'SkinfoldSubscapular',
+  'SkinfoldSuprailiac',
+  'SkinfoldAbdominal',
+  'SkinfoldThigh',
+  'SkinfoldChest',
+  'SkinfoldMidaxillary',
+  // Antropometria
+  'WaistCircumference',
+  'CalfCircumference',
 ] as const;
 
 /**

@@ -15,6 +15,7 @@ import {
   getDefinitionsBySex,
   getSexForCode,
   isCacDocument,
+  isDexaDocument,
   isValidCode,
   isValidLoinc,
   loincToCode,
@@ -615,5 +616,38 @@ describe('findCodeByName — sítios de dobra em inglês', () => {
     // cair no alias nu. A desambiguação por contexto vive no pré-scan.
     expect(findCodeByName('Thigh Circumference')).not.toBe('SkinfoldThigh');
     expect(findCodeByName('Chest Circumference')).not.toBe('SkinfoldChest');
+  });
+});
+
+describe('isDexaDocument — classes além da densitometria', () => {
+  // Medido em produção: um laudo de adipometria traz dobras, circunferência e
+  // IMC, e nenhum indicador de densitometria. Antesta mudança ele caía no
+  // caminho genérico e perdia referência filtrada e extração de tendência.
+  it('recognises an adipometry report with skinfolds only', () => {
+    const codes = [
+      'BMI',
+      'SkinfoldSubscapular',
+      'SkinfoldChest',
+      'SkinfoldTriceps',
+      'SkinfoldMidaxillary',
+      'SkinfoldAbdominal',
+      'SkinfoldThigh',
+      'SkinfoldSuprailiac',
+      'WaistCircumference',
+    ];
+    expect(isDexaDocument(codes)).toBe(true);
+  });
+
+  it('recognises a bioimpedance report by muscle mass and body water', () => {
+    expect(isDexaDocument(['MuscleMass', 'TotalBodyWater', 'PhaseAngle'])).toBe(true);
+  });
+
+  it('still recognises a classic DEXA report', () => {
+    expect(isDexaDocument(['BodyFatPct', 'FatMass', 'LeanMass', 'BMC'])).toBe(true);
+  });
+
+  it('leaves an ordinary lab panel alone', () => {
+    // O IMC sozinho não caracteriza a classe: aparece em laudo comum.
+    expect(isDexaDocument(['Glucose', 'Hgb', 'BMI'])).toBe(false);
   });
 });

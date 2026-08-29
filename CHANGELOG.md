@@ -1,3 +1,9 @@
+## [0.20.3](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.20.2...v0.20.3) (2026-08-29)
+
+### Bug Fixes
+
+* **core:** alias nu dos sítios de dobra em inglês e guarda de circunferência ([#87](https://github.com/Precisa-Saude/fhir-brasil/issues/87)) ([3dbefd1](https://github.com/Precisa-Saude/fhir-brasil/commit/3dbefd1f0239169ed56abe8697922386e54daa94))
+
 ## [0.20.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.20.1...v0.20.2) (2026-08-28)
 
 ### Bug Fixes

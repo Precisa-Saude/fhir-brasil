@@ -1,3 +1,9 @@
+## [0.21.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.21.0...v0.21.1) (2026-09-02)
+
+### Bug Fixes
+
+* **ocr-utils:** hífen entre palavras equivale a espaço na ancoragem ([#90](https://github.com/Precisa-Saude/fhir-brasil/issues/90)) ([1199623](https://github.com/Precisa-Saude/fhir-brasil/commit/119962335165b830d442a84855c1ac174105faf1))
+
 ## [0.21.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.20.3...v0.21.0) (2026-08-29)
 
 ### Features

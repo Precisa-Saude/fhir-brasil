@@ -61,14 +61,36 @@ const MAX_OCCURRENCES_PER_NAME = 5;
  * Normalize text for comparison:
  * - Removes diacritics (ã→a, ç→c, é→e)
  * - Converts to lowercase
+ * - Treats a hyphen that joins words as a space
  * - Collapses horizontal whitespace, but KEEPS line breaks — the line is the
  *   context window used to decide whether a match is a real biomarker mention
+ *
+ * O hífen entre palavras vira espaço porque o catálogo e o laboratório
+ * discordam sobre ele o tempo todo: o catálogo escreve "Proteína C-Reativa" e
+ * "High-Density Lipoprotein", e os laudos imprimem "Proteína C Reativa" e
+ * "High Density Lipoprotein". Sem essa equivalência, 82 dos 159 nomes com
+ * hífen deixam de ancorar na grafia que o documento usa.
+ *
+ * Não era teórico: um GGT de verdade foi descartado como alucinação em 27
+ * laudos porque o documento escrevia "Gama glutamil transferase" e o catálogo
+ * "Gama-Glutamil Transferase". Um caractere derrubava o valor antes de
+ * qualquer validação.
+ *
+ * A troca exige **letra antes** do hífen, e por isso não toca em número:
+ * o `-2.5` de um T-score e o `0-5` de uma faixa de urina seguem intactos.
+ * Trocar sem essa guarda apagaria o sinal de um valor negativo, que é bem
+ * pior que o problema original.
+ *
+ * O pré-filtro de substring do `collectCandidates` compara a chave com o texto
+ * já normalizado, então a equivalência precisa nascer aqui: aplicada só na
+ * regex, o `includes` descartaria o nome antes de ela rodar.
  */
 function normalize(text: string): string {
   return text
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
+    .replace(/(?<=\p{L})-(?=[\p{L}\p{N}])/gu, ' ')
     .replace(/[^\S\n]+/g, ' ');
 }
 

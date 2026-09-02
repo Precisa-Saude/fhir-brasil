@@ -335,3 +335,37 @@ describe('getMatchedCodes', () => {
     expect(codes.length).toBe(result.matches.length);
   });
 });
+
+describe('hífen entre palavras equivale a espaço', () => {
+  const acha = (texto: string, code: string): boolean =>
+    findBiomarkersInText(texto).matches.some((m) => m.code === code);
+
+  // O caso que motivou a mudança: o catálogo tem "Gama-Glutamil Transferase",
+  // o laudo imprime sem hífen, e o valor era descartado como alucinação.
+  it('ancora o nome do catálogo na grafia sem hífen que o laudo usa', () => {
+    expect(acha('Gama glutamil transferase 141 U/L', 'GGT')).toBe(true);
+    expect(acha('Gama-Glutamil Transferase 141 U/L', 'GGT')).toBe(true);
+  });
+
+  it('vale para os outros nomes compostos do catálogo', () => {
+    expect(acha('Proteina C Reativa 3.2 mg/L', 'CRP')).toBe(true);
+    expect(acha('High Density Lipoprotein 55 mg/dL', 'HDL')).toBe(true);
+    expect(acha('Colesterol Non HDL 120 mg/dL', 'NonHDL_Cholesterol')).toBe(true);
+    expect(acha('Anti Thyroglobulin Antibody 20 UI/mL', 'AntiThyroglobulin')).toBe(true);
+  });
+
+  // A guarda exige letra antes do hífen. Sem ela, o sinal de um valor negativo
+  // viraria espaço, que é bem pior que o problema original.
+  it('não toca em hífen que faz parte de número', () => {
+    expect(acha('T-Score -2.5', 'TScore_Total')).toBe(true);
+    expect(acha('Leucocitos 0-5 p/campo', 'WBC')).toBe(true);
+    expect(acha('Hemacias 3-5 /campo', 'RBC')).toBe(true);
+  });
+
+  // `CA 19-9` é o nome do ensaio, não duas palavras unidas por hífen. Colapsar
+  // aqui inventaria uma grafia que não existe.
+  it('preserva o hífen entre dígitos do nome de ensaio', () => {
+    expect(acha('CA 19-9 12 U/mL', 'CA199')).toBe(true);
+    expect(acha('CA 19 9 12 U/mL', 'CA199')).toBe(false);
+  });
+});

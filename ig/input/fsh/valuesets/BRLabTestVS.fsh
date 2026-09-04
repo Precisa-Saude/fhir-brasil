@@ -1,7 +1,7 @@
 ValueSet: BRLabTestVS
 Id: br-lab-test-vs
 Title: "BR Lab Test ValueSet"
-Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-brasil. Gerado automaticamente a partir de 185 biomarcadores com código LOINC no pacote core."
+Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-brasil. Gerado automaticamente a partir de 187 biomarcadores com código LOINC no pacote core."
 
 // autoimunidade
 * $LOINC#8061-4 "Triagem de Anticorpos Antinucleares"
@@ -95,6 +95,7 @@ Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-bras
 * $LOINC#2284-8 "Folato"
 * $LOINC#13965-9 "Homocisteína"
 * $LOINC#2498-4 "Ferro"
+* $LOINC#19123-9 "Magnésio"
 * $LOINC#26746-8 "Magnésio RBC"
 * $LOINC#13964-2 "Ácido Metilmalônico"
 * $LOINC#75095-0 "Ômega-3: DHA"
@@ -185,6 +186,7 @@ Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-bras
 * $LOINC#3051-0 "Triiodotironina Livre"
 * $LOINC#3024-7 "Tiroxina Livre"
 * $LOINC#3026-2 "Tiroxina"
+* $LOINC#3013-0 "Tireoglobulina"
 * $LOINC#3016-3 "Hormônio Tireoestimulante"
 // toxinas-ambientais
 * $LOINC#77307-7 "Chumbo"

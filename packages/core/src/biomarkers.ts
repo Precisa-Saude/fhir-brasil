@@ -380,6 +380,18 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     category: 'tireoide',
+    code: 'Thyroglobulin',
+    // 3013-0 é a tireoglobulina sérica em massa/volume (ng/mL), a forma que o
+    // laboratório reporta. Não a de moles/volume (14918-7) nem os painéis.
+    loinc: '3013-0',
+    names: {
+      en: ['Thyroglobulin', 'Tg'],
+      pt: ['Tireoglobulina', 'Tg'],
+    },
+    unit: 'ng/mL',
+  },
+  {
+    category: 'tireoide',
     code: 'T3Free',
     loinc: '3051-0',
     names: {
@@ -627,6 +639,20 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     names: {
       en: ['Estradiol', 'E2'],
       pt: ['Estradiol', 'E2'],
+    },
+    unit: 'pg/mL',
+  },
+  {
+    category: ['saude-feminina', 'saude-masculina'],
+    code: 'Estrone',
+    // Sem loinc de propósito. Em soro/massa-volume a LOINC só tem a forma
+    // "unconjugated" (2261-6) e razões; não há conceito de estrona total
+    // sérica. Atribuir a não-conjugada a um laudo de estrona total mediria
+    // outra fração — o mesmo tipo de erro que descartou candidatos nas 22
+    // primeiras. Entra sem código, política já usada em FatFreeMass e BMC.
+    names: {
+      en: ['Estrone', 'E1'],
+      pt: ['Estrona', 'E1'],
     },
     unit: 'pg/mL',
   },
@@ -986,6 +1012,18 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Magnesium (RBC)',
       ],
       pt: ['Magnésio RBC', 'Magnésio Eritrocitário', 'Magnésio Intraeritrocitário'],
+    },
+    unit: 'mg/dL',
+  },
+  {
+    category: 'nutrientes',
+    code: 'Magnesium',
+    // Magnésio sérico em massa/volume. Distinto do Magnesium_RBC (26746-8),
+    // que mede a fração intraeritrocitária.
+    loinc: '19123-9',
+    names: {
+      en: ['Magnesium', 'Serum Magnesium', 'Magnesium, Serum', 'Magnesium Total'],
+      pt: ['Magnésio', 'Magnésio Sérico', 'Magnésio Total'],
     },
     unit: 'mg/dL',
   },

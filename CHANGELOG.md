@@ -1,3 +1,9 @@
+## [0.22.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.22.1...v0.22.2) (2026-09-05)
+
+### Refactoring
+
+* **core:** identificador em inglês nos testes da referência sem LOINC ([#96](https://github.com/Precisa-Saude/fhir-brasil/issues/96)) ([851cbb0](https://github.com/Precisa-Saude/fhir-brasil/commit/851cbb0f38635d0bbec6cd18940683565be2b4a0))
+
 ## [0.22.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.22.0...v0.22.1) (2026-09-05)
 
 ### Bug Fixes

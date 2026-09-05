@@ -3252,6 +3252,32 @@ export function getAllLoincCodes(): string[] {
 }
 
 /**
+ * Imprime o bloco de um biomarcador na referência entregue ao modelo de
+ * extração. Compartilhado por generateLLMReference e
+ * generateFilteredLLMReference, que antes duplicavam este trecho.
+ *
+ * Com LOINC, o bloco mantém três linhas (LOINC | Code, EN, PT). Sem LOINC,
+ * tudo vai em uma linha só. Medido em produção (PRE-391): 20 observações de
+ * 4 usuários gravadas com biomarkerName igual à linha "EN:" inteira, por
+ * exemplo "Subscapular Skinfold, Subscapular". O modelo copiava a linha
+ * como nome do analito, o code nunca resolvia e a medida se perdia. Só as
+ * entradas sem LOINC eram afetadas, então só elas mudam de formato: sem uma
+ * linha que comece com "EN:" ou "PT:", não há o que copiar por engano, e os
+ * nomes continuam disponíveis para casar com o texto do PDF.
+ */
+function pushDefinitionReference(lines: string[], def: BiomarkerDefinition): void {
+  const ptNames = def.names.pt.join(', ');
+  const enNames = def.names.en.join(', ');
+  if (def.loinc) {
+    lines.push(`- LOINC: ${def.loinc} | Code: ${def.code}`);
+    lines.push(`  EN: ${enNames}`);
+    lines.push(`  PT: ${ptNames}`);
+    return;
+  }
+  lines.push(`- Code: ${def.code} (no LOINC, use the Code) | EN: ${enNames} | PT: ${ptNames}`);
+}
+
+/**
  * Generate LLM reference prompt for biomarker extraction
  * This is included in the extraction prompt so the LLM can output LOINC codes directly
  */
@@ -3275,15 +3301,7 @@ export function generateLLMReference(): string {
   for (const [category, defs] of byCategory) {
     lines.push(`[${category.toUpperCase()}]`);
     for (const def of defs) {
-      const ptNames = def.names.pt.join(', ');
-      const enNames = def.names.en.join(', ');
-      if (def.loinc) {
-        lines.push(`- LOINC: ${def.loinc} | Code: ${def.code}`);
-      } else {
-        lines.push(`- Code: ${def.code} (no LOINC - use code only)`);
-      }
-      lines.push(`  EN: ${enNames}`);
-      lines.push(`  PT: ${ptNames}`);
+      pushDefinitionReference(lines, def);
     }
     lines.push('');
   }
@@ -3384,15 +3402,7 @@ export function generateFilteredLLMReference(codes: string[]): string {
   for (const [category, defs] of byCategory) {
     lines.push(`[${category.toUpperCase()}]`);
     for (const def of defs) {
-      const ptNames = def.names.pt.join(', ');
-      const enNames = def.names.en.join(', ');
-      if (def.loinc) {
-        lines.push(`- LOINC: ${def.loinc} | Code: ${def.code}`);
-      } else {
-        lines.push(`- Code: ${def.code} (no LOINC - use code only)`);
-      }
-      lines.push(`  EN: ${enNames}`);
-      lines.push(`  PT: ${ptNames}`);
+      pushDefinitionReference(lines, def);
     }
     lines.push('');
   }

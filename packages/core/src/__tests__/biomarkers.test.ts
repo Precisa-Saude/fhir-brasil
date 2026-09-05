@@ -418,6 +418,21 @@ describe('referência LLM para biomarcadores sem LOINC (PRE-391)', () => {
     expect(linhas[indice + 1]).not.toMatch(LINHA_NOME_SOLTA);
   });
 
+  // Os casos acima usam dois codes escolhidos a dedo. Este varre o catálogo
+  // inteiro, para que uma entrada sem LOINC acrescentada depois não volte a
+  // imprimir a linha solta sem ninguém perceber.
+  it('nenhuma entrada sem LOINC do catálogo é seguida de linha "EN:" ou "PT:"', () => {
+    const linhas = generateLLMReference().split('\n');
+    const semLoincNaReferencia = linhas
+      .map((linha, indice) => ({ indice, linha }))
+      .filter(({ linha }) => linha.startsWith('- Code: '));
+
+    expect(semLoincNaReferencia.length).toBeGreaterThan(0);
+    for (const { indice, linha } of semLoincNaReferencia) {
+      expect(linhas[indice + 1], linha).not.toMatch(LINHA_NOME_SOLTA);
+    }
+  });
+
   it('a referência filtrada só com entradas sem LOINC não tem linha "EN:" ou "PT:"', () => {
     const referencia = generateFilteredLLMReference(['SkinfoldSubscapular', 'SkinfoldSuprailiac']);
     for (const linha of referencia.split('\n')) {

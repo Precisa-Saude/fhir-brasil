@@ -429,7 +429,13 @@ describe('referência LLM para biomarcadores sem LOINC (PRE-391)', () => {
 
     expect(semLoincNaReferencia.length).toBeGreaterThan(0);
     for (const { indice, linha } of semLoincNaReferencia) {
-      expect(linhas[indice + 1], linha).not.toMatch(LINHA_NOME_SOLTA);
+      // A adjacência é a propriedade sob teste, então o índice é proposital: o
+      // defeito era justamente a linha seguinte. Só se confirma que ela existe,
+      // porque `toMatch` contra undefined falharia por outro motivo e esconderia
+      // o que se quer medir.
+      const seguinte = linhas[indice + 1];
+      expect(seguinte, `sem linha após ${linha}`).toBeDefined();
+      expect(seguinte, linha).not.toMatch(LINHA_NOME_SOLTA);
     }
   });
 

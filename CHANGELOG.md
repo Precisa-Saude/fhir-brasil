@@ -1,3 +1,13 @@
+## [0.22.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.22.0...v0.22.1) (2026-09-05)
+
+### Bug Fixes
+
+* **core:** referência LLM sem LOINC em uma linha só ([#95](https://github.com/Precisa-Saude/fhir-brasil/issues/95)) ([5618eb4](https://github.com/Precisa-Saude/fhir-brasil/commit/5618eb44c6d4b7b3ec802810c51434e53441bbe3))
+
+### CI/CD
+
+* sincroniza template de review-dispatch (pr_number como number) ([#94](https://github.com/Precisa-Saude/fhir-brasil/issues/94)) ([22e5c38](https://github.com/Precisa-Saude/fhir-brasil/commit/22e5c382ef649931d91d19514d3ca7983e0252f6))
+
 ## [0.22.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.21.1...v0.22.0) (2026-09-05)
 
 ### Features

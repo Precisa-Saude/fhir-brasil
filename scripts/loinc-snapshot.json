@@ -1,8 +1,16 @@
 {
-  "_checkedAt": "2026-08-10",
-  "_loincVersion": null,
+  "_checkedAt": "2026-09-05",
+  "_loincVersion": "2.83",
   "_notice": "This material contains content from LOINC (http://loinc.org). LOINC is copyright © Regenstrief Institute, Inc. and the Logical Observation Identifiers Names and Codes (LOINC) Committee and is available at no cost under the license at http://loinc.org/license. LOINC® is a registered United States trademark of Regenstrief Institute, Inc.",
   "codes": {
+    "101683-1": {
+      "display": "Body water mass",
+      "status": "ACTIVE"
+    },
+    "101684-9": {
+      "display": "Percentage of body water",
+      "status": "ACTIVE"
+    },
     "10331-7": {
       "display": "Rh [Type] in Blood",
       "status": "ACTIVE"
@@ -13,6 +21,14 @@
     },
     "10501-5": {
       "display": "Lutropin [Units/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "107112-5": {
+      "display": "Calf circumference",
+      "status": "ACTIVE"
+    },
+    "107160-4": {
+      "display": "Phase angle Xc/R [Ratio] Bioelectrical impedance analysis",
       "status": "ACTIVE"
     },
     "10886-0": {
@@ -111,6 +127,10 @@
       "display": "IgE [Units/volume] in Serum or Plasma",
       "status": "ACTIVE"
     },
+    "19123-9": {
+      "display": "Magnesium [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
     "1920-8": {
       "display": "Aspartate aminotransferase [Enzymatic activity/volume] in Serum or Plasma",
       "status": "ACTIVE"
@@ -128,11 +148,11 @@
       "status": "ACTIVE"
     },
     "1988-5": {
-      "display": "C-Reactive Protein (CRP)",
+      "display": "C reactive protein [Mass/volume] in Serum or Plasma",
       "status": "ACTIVE"
     },
     "1989-3": {
-      "display": "Vitamin D, 25-Hydroxy",
+      "display": "25-hydroxyvitamin D3 [Mass/volume] in Serum or Plasma",
       "status": "ACTIVE"
     },
     "2028-9": {
@@ -168,7 +188,7 @@
       "status": "ACTIVE"
     },
     "2132-9": {
-      "display": "Vitamin B12",
+      "display": "Cobalamin (Vitamin B12) [Mass/volume] in Serum or Plasma",
       "status": "ACTIVE"
     },
     "21365-2": {
@@ -192,7 +212,7 @@
       "status": "ACTIVE"
     },
     "21619-2": {
-      "display": "APOE gene mutations found [Identifier] in Blood or Tissue by Molecular genetics method Nominal",
+      "display": "APOE gene mutations found [Identifier] in Blood or Tissue by Targeted gene mutation analysis Nominal",
       "status": "ACTIVE"
     },
     "2191-5": {
@@ -307,8 +327,12 @@
       "display": "Testosterone Free [Mass/volume] in Serum or Plasma",
       "status": "ACTIVE"
     },
+    "3013-0": {
+      "display": "Thyroglobulin [Mass/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
     "3016-3": {
-      "display": "Thyroid Stimulating Hormone (TSH)",
+      "display": "Thyrotropin [Units/volume] in Serum or Plasma",
       "status": "ACTIVE"
     },
     "30189-5": {
@@ -424,7 +448,7 @@
       "status": "ACTIVE"
     },
     "4548-4": {
-      "display": "Hemoglobin A1c",
+      "display": "Hemoglobin A1c/Hemoglobin.total in Blood",
       "status": "ACTIVE"
     },
     "4679-7": {
@@ -524,7 +548,7 @@
       "status": "ACTIVE"
     },
     "5902-2": {
-      "display": "Prothrombin Time (PT)",
+      "display": "Prothrombin time (PT)",
       "status": "ACTIVE"
     },
     "5905-5": {
@@ -532,11 +556,11 @@
       "status": "ACTIVE"
     },
     "630-4": {
-      "display": "Urine Culture",
+      "display": "Bacteria identified in Urine by Culture",
       "status": "ACTIVE"
     },
     "6301-6": {
-      "display": "INR",
+      "display": "INR in Platelet poor plasma by Coagulation assay",
       "status": "ACTIVE"
     },
     "63453-5": {
@@ -552,7 +576,7 @@
       "status": "ACTIVE"
     },
     "6690-2": {
-      "display": "White Blood Cell Count",
+      "display": "Leukocytes [#/volume] in Blood by Automated count",
       "status": "ACTIVE"
     },
     "6768-6": {
@@ -584,7 +608,7 @@
       "status": "ACTIVE"
     },
     "718-7": {
-      "display": "Hemoglobin",
+      "display": "Hemoglobin [Mass/volume] in Blood",
       "status": "ACTIVE"
     },
     "731-0": {
@@ -673,6 +697,22 @@
     },
     "8245-3": {
       "display": "Zinc [Mass/volume] in Blood",
+      "status": "ACTIVE"
+    },
+    "8280-0": {
+      "display": "Waist Circumference at umbilicus by Tape measure",
+      "status": "ACTIVE"
+    },
+    "8353-5": {
+      "display": "Skin fold thickness Thigh",
+      "status": "ACTIVE"
+    },
+    "8354-3": {
+      "display": "Skin fold thickness Triceps",
+      "status": "ACTIVE"
+    },
+    "8355-0": {
+      "display": "Skin fold thickness Waist",
       "status": "ACTIVE"
     },
     "883-9": {

@@ -112,7 +112,7 @@ Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-bras
 * $LOINC#2923-1 "Vitamina A"
 * $LOINC#2132-9 "Vitamina B12"
 * $LOINC#1903-4 "Vitamina C"
-* $LOINC#1989-3 "Vitamina D"
+* $LOINC#62292-8 "Vitamina D"
 * $LOINC#8245-3 "Zinco"
 // pancreas
 * $LOINC#1798-8 "Amilase"

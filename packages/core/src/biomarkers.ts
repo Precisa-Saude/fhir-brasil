@@ -1191,7 +1191,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'nutrientes',
     code: 'VitaminD',
-    loinc: '1989-3',
+    // 62292-8 é 25(OH)D2 + 25(OH)D3, o total que os imunoensaios reportam
+    // como "Vitamina D 25-OH". Até set/2026 apontava para 1989-3, que é só
+    // a fração D3: nome parecido, analito diferente.
+    loinc: '62292-8',
     names: {
       en: [
         'Vitamin D',

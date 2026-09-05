@@ -401,76 +401,76 @@ describe('referência LLM para biomarcadores sem LOINC (PRE-391)', () => {
   // Subscapular"). O modelo copiava a linha como nome do analito e o code
   // nunca resolvia. O bloco sem LOINC agora cabe em uma linha só, sem
   // nenhuma linha começando com "EN:" ou "PT:".
-  const LINHA_NOME_SOLTA = /^\s*(EN|PT):/;
-  const semLoinc = getDefinitionByCode('SkinfoldSubscapular');
-  const comLoinc = getDefinitionByCode('HDL');
+  const STANDALONE_NAME_LINE = /^\s*(EN|PT):/;
+  const withoutLoinc = getDefinitionByCode('SkinfoldSubscapular');
+  const withLoinc = getDefinitionByCode('HDL');
 
   it('o catálogo ainda tem os dois casos usados aqui', () => {
-    expect(semLoinc?.loinc).toBeUndefined();
-    expect(comLoinc?.loinc).toBe('2085-9');
+    expect(withoutLoinc?.loinc).toBeUndefined();
+    expect(withLoinc?.loinc).toBe('2085-9');
   });
 
   it('o bloco sem LOINC não tem linha solta "EN:" ou "PT:" na referência completa', () => {
-    const linhas = generateLLMReference().split('\n');
-    const indice = linhas.findIndex((l) => l.startsWith('- Code: SkinfoldSubscapular'));
-    expect(indice).toBeGreaterThan(-1);
+    const lines = generateLLMReference().split('\n');
+    const index = lines.findIndex((l) => l.startsWith('- Code: SkinfoldSubscapular'));
+    expect(index).toBeGreaterThan(-1);
     // A linha seguinte já é outro biomarcador ou o fim da categoria.
-    expect(linhas[indice + 1]).not.toMatch(LINHA_NOME_SOLTA);
+    expect(lines[index + 1]).not.toMatch(STANDALONE_NAME_LINE);
   });
 
   // Os casos acima usam dois codes escolhidos a dedo. Este varre o catálogo
   // inteiro, para que uma entrada sem LOINC acrescentada depois não volte a
   // imprimir a linha solta sem ninguém perceber.
   it('nenhuma entrada sem LOINC do catálogo é seguida de linha "EN:" ou "PT:"', () => {
-    const linhas = generateLLMReference().split('\n');
-    const semLoincNaReferencia = linhas
-      .map((linha, indice) => ({ indice, linha }))
-      .filter(({ linha }) => linha.startsWith('- Code: '));
+    const lines = generateLLMReference().split('\n');
+    const noLoincEntries = lines
+      .map((line, index) => ({ index, line }))
+      .filter(({ line }) => line.startsWith('- Code: '));
 
-    expect(semLoincNaReferencia.length).toBeGreaterThan(0);
-    for (const { indice, linha } of semLoincNaReferencia) {
+    expect(noLoincEntries.length).toBeGreaterThan(0);
+    for (const { index, line } of noLoincEntries) {
       // A adjacência é a propriedade sob teste, então o índice é proposital: o
       // defeito era justamente a linha seguinte. Só se confirma que ela existe,
       // porque `toMatch` contra undefined falharia por outro motivo e esconderia
       // o que se quer medir.
-      const seguinte = linhas[indice + 1];
-      expect(seguinte, `sem linha após ${linha}`).toBeDefined();
-      expect(seguinte, linha).not.toMatch(LINHA_NOME_SOLTA);
+      const nextLine = lines[index + 1];
+      expect(nextLine, `sem line após ${line}`).toBeDefined();
+      expect(nextLine, line).not.toMatch(STANDALONE_NAME_LINE);
     }
   });
 
   it('a referência filtrada só com entradas sem LOINC não tem linha "EN:" ou "PT:"', () => {
-    const referencia = generateFilteredLLMReference(['SkinfoldSubscapular', 'SkinfoldSuprailiac']);
-    for (const linha of referencia.split('\n')) {
-      expect(linha).not.toMatch(LINHA_NOME_SOLTA);
+    const reference = generateFilteredLLMReference(['SkinfoldSubscapular', 'SkinfoldSuprailiac']);
+    for (const line of reference.split('\n')) {
+      expect(line).not.toMatch(STANDALONE_NAME_LINE);
     }
   });
 
   it('os nomes em inglês e português continuam na mesma linha do code', () => {
-    const referencia = generateFilteredLLMReference(['SkinfoldSubscapular']);
-    const linha = referencia.split('\n').find((l) => l.startsWith('- Code: SkinfoldSubscapular'));
-    expect(linha).toBe(
+    const reference = generateFilteredLLMReference(['SkinfoldSubscapular']);
+    const line = reference.split('\n').find((l) => l.startsWith('- Code: SkinfoldSubscapular'));
+    expect(line).toBe(
       '- Code: SkinfoldSubscapular (no LOINC, use the Code) | EN: Subscapular Skinfold, Subscapular | PT: Dobra Subescapular, Dobra Cutânea Subescapular, Subescapular',
     );
   });
 
   it('o bloco com LOINC segue com a linha LOINC e os nomes em linhas próprias', () => {
-    const linhas = generateFilteredLLMReference(['HDL']).split('\n');
-    const indice = linhas.findIndex((l) => l.startsWith('- LOINC: 2085-9 | Code: HDL'));
-    expect(indice).toBeGreaterThan(-1);
-    expect(linhas[indice + 1]).toMatch(/^ {2}EN: /);
-    expect(linhas[indice + 2]).toMatch(/^ {2}PT: /);
+    const lines = generateFilteredLLMReference(['HDL']).split('\n');
+    const index = lines.findIndex((l) => l.startsWith('- LOINC: 2085-9 | Code: HDL'));
+    expect(index).toBeGreaterThan(-1);
+    expect(lines[index + 1]).toMatch(/^ {2}EN: /);
+    expect(lines[index + 2]).toMatch(/^ {2}PT: /);
   });
 
   it('a referência completa e a filtrada imprimem o mesmo bloco sem LOINC', () => {
-    const completa = generateLLMReference()
+    const full = generateLLMReference()
       .split('\n')
       .find((l) => l.startsWith('- Code: SkinfoldSubscapular'));
-    const filtrada = generateFilteredLLMReference(['SkinfoldSubscapular'])
+    const filtered = generateFilteredLLMReference(['SkinfoldSubscapular'])
       .split('\n')
       .find((l) => l.startsWith('- Code: SkinfoldSubscapular'));
-    expect(completa).toBeDefined();
-    expect(completa).toBe(filtrada);
+    expect(full).toBeDefined();
+    expect(full).toBe(filtered);
   });
 });
 
@@ -702,7 +702,7 @@ describe('findCodeByName — sítios de dobra em inglês', () => {
 describe('isDexaDocument — classes além da densitometria', () => {
   // Medido em produção: um laudo de adipometria traz dobras, circunferência e
   // IMC, e nenhum indicador de densitometria. Antesta mudança ele caía no
-  // caminho genérico e perdia referência filtrada e extração de tendência.
+  // caminho genérico e perdia referência filtered e extração de tendência.
   it('recognises an adipometry report with skinfolds only', () => {
     const codes = [
       'BMI',

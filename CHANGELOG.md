@@ -1,3 +1,17 @@
+## [0.22.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.21.1...v0.22.0) (2026-09-05)
+
+### Features
+
+* **core:** cataloga Estrone, Magnesium sérico e Thyroglobulin ([#91](https://github.com/Precisa-Saude/fhir-brasil/issues/91)) ([dd3848c](https://github.com/Precisa-Saude/fhir-brasil/commit/dd3848cc237f5d876043b9d603c583317a9b150a))
+
+### Bug Fixes
+
+* **core:** troca o LOINC da vitamina D para o total 25(OH)D2+D3 ([#93](https://github.com/Precisa-Saude/fhir-brasil/issues/93)) ([12ade3a](https://github.com/Precisa-Saude/fhir-brasil/commit/12ade3ac123e5c284e4b2c33b294e98995152bf6))
+
+### Chores
+
+* **core:** atualiza o snapshot de códigos LOINC ([#92](https://github.com/Precisa-Saude/fhir-brasil/issues/92)) ([d72f919](https://github.com/Precisa-Saude/fhir-brasil/commit/d72f91957c13d1ca6acd36411d3ba429c2999a37))
+
 ## [0.21.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.21.0...v0.21.1) (2026-09-02)
 
 ### Bug Fixes

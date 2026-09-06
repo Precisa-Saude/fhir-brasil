@@ -6,6 +6,7 @@
  */
 
 import { codeToLoinc } from './biomarkers';
+import { type Addressable, entryFullUrl } from './bundle-urls';
 import { BIOMARKER_CODE_SYSTEM, LOINC_SYSTEM } from './code-systems';
 import type { FHIRBundle, FHIRDiagnosticReport, FHIRObservation, FHIRPatient } from './fhir-types';
 import type { Flag, LabObservationData, LabReportData, UserProfileData } from './types';
@@ -49,7 +50,7 @@ export function labObservationToFHIR(
   observation: LabObservationData,
   patientId: string,
   laboratoryName?: string,
-): FHIRObservation {
+): Addressable<FHIRObservation> {
   const loincCode = codeToLoinc(observation.biomarkerCode);
   // Use default unit if source unit is empty
   const sourceUnit =
@@ -58,7 +59,7 @@ export function labObservationToFHIR(
   const isQualitative = observation.isQualitative || typeof observation.value === 'string';
 
   // Base observation structure
-  const fhirObs: FHIRObservation = {
+  const fhirObs: Addressable<FHIRObservation> = {
     category: [
       {
         coding: [
@@ -157,7 +158,7 @@ export function labReportToFHIR(
   report: LabReportData,
   patientId: string,
   observationIds: string[],
-): FHIRDiagnosticReport {
+): Addressable<FHIRDiagnosticReport> {
   // Map processing status to FHIR status
   let status: FHIRDiagnosticReport['status'];
   switch (report.processingStatus) {
@@ -231,7 +232,7 @@ export function labReportToFHIR(
  * Convert user profile to FHIR Patient
  * NOTE: CPF is intentionally excluded for privacy (LGPD compliance)
  */
-export function userProfileToFHIR(profile: UserProfileData): FHIRPatient {
+export function userProfileToFHIR(profile: UserProfileData): Addressable<FHIRPatient> {
   const nameParts = profile.name.split(' ');
   const given = nameParts.slice(0, -1);
   const family = nameParts[nameParts.length - 1] || '';
@@ -289,18 +290,20 @@ export function labResultToFHIRBundle(
   const patientId = userProfile.userId;
 
   // Convert observations
-  const fhirObservations = observations.map((obs) => ({
-    fullUrl: `urn:uuid:observation-${obs.reportId}-${obs.biomarkerCode}`,
-    resource: labObservationToFHIR(
+  const fhirObservations = observations.map((obs) => {
+    const resource = labObservationToFHIR(
       { ...obs, collectionDate: report.collectionDate },
       patientId,
       report.laboratoryName,
-    ),
-  }));
+    );
 
-  const observationIds = observations.map(
-    (obs) => `observation-${obs.reportId}-${obs.biomarkerCode}`,
-  );
+    return { fullUrl: entryFullUrl(resource), resource };
+  });
+
+  // Os ids vêm dos recursos já montados, e não de uma segunda montagem da mesma
+  // regra. O `DiagnosticReport.result` aponta para eles, e era aqui que a
+  // referência se separava do recurso.
+  const observationIds = fhirObservations.map((entry) => entry.resource.id);
 
   // Convert report
   const diagnosticReport = labReportToFHIR(report, patientId, observationIds);
@@ -310,14 +313,8 @@ export function labResultToFHIRBundle(
 
   return {
     entry: [
-      {
-        fullUrl: `urn:uuid:${patientId}`,
-        resource: fhirPatient,
-      },
-      {
-        fullUrl: `urn:uuid:diagnostic-report-${report.reportId}`,
-        resource: diagnosticReport,
-      },
+      { fullUrl: entryFullUrl(fhirPatient), resource: fhirPatient },
+      { fullUrl: entryFullUrl(diagnosticReport), resource: diagnosticReport },
       ...fhirObservations,
     ],
     resourceType: 'Bundle',

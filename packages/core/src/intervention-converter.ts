@@ -5,6 +5,7 @@
  * to FHIR R4 MedicationStatement and Observation resources.
  */
 
+import { type Addressable, entryFullUrl } from './bundle-urls';
 import { userProfileToFHIR } from './converter';
 import type { FHIRBundle, FHIRMedicationStatement, FHIRObservation } from './fhir-types';
 import type { InterventionData, UserProfileData } from './types';
@@ -32,8 +33,8 @@ const LIFESTYLE_CODES: Record<string, { code: string; display: string }> = {
 export function interventionToFHIRMedicationStatement(
   intervention: InterventionData,
   patientId: string,
-): FHIRMedicationStatement {
-  const statement: FHIRMedicationStatement = {
+): Addressable<FHIRMedicationStatement> {
+  const statement: Addressable<FHIRMedicationStatement> = {
     category: {
       coding: [
         {
@@ -72,10 +73,10 @@ export function interventionToFHIRMedicationStatement(
 export function interventionToFHIRObservation(
   intervention: InterventionData,
   patientId: string,
-): FHIRObservation {
+): Addressable<FHIRObservation> {
   const lifestyleCode = LIFESTYLE_CODES[intervention.type];
 
-  const observation: FHIRObservation = {
+  const observation: Addressable<FHIRObservation> = {
     category: [
       {
         coding: [
@@ -135,20 +136,11 @@ export function interventionsToFHIRBundle(
       ? interventionToFHIRMedicationStatement(intervention, patientId)
       : interventionToFHIRObservation(intervention, patientId);
 
-    return {
-      fullUrl: `urn:uuid:intervention-${intervention.interventionId}`,
-      resource,
-    };
+    return { fullUrl: entryFullUrl(resource), resource };
   });
 
   return {
-    entry: [
-      {
-        fullUrl: `urn:uuid:${patientId}`,
-        resource: fhirPatient,
-      },
-      ...entries,
-    ],
+    entry: [{ fullUrl: entryFullUrl(fhirPatient), resource: fhirPatient }, ...entries],
     resourceType: 'Bundle',
     type: 'collection',
   };

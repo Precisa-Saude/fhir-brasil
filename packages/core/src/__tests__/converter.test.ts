@@ -6,7 +6,7 @@ import {
   labResultToFHIRBundle,
   userProfileToFHIR,
 } from '../converter';
-import type { FHIRDiagnosticReport, FHIRObservation } from '../fhir-types';
+import type { FHIRBundle, FHIRDiagnosticReport, FHIRObservation } from '../fhir-types';
 import {
   interventionsToFHIRBundle,
   interventionToFHIRMedicationStatement,
@@ -585,7 +585,104 @@ describe('interventionsToFHIRBundle', () => {
 
   it('should set correct fullUrl for each entry', () => {
     const bundle = interventionsToFHIRBundle([sampleMedicationIntervention], sampleUserProfile);
-    expect(bundle.entry[1].fullUrl).toBe('urn:uuid:intervention-int-med-001');
+    expect(bundle.entry[1].fullUrl).toBe(
+      'https://precisa-saude.com.br/fhir/MedicationStatement/intervention-int-med-001',
+    );
+  });
+});
+
+/**
+ * O Bundle antigo saía com `fullUrl` valendo `urn:uuid:observation-<laudo>-<código>`
+ * e referências relativas que não apontavam para entrada nenhuma. Um laudo de 22
+ * marcadores levava 24 erros de URN e 22 referências perdidas no validador.
+ *
+ * As duas checagens abaixo são as que teriam pego isso, e nenhuma dependia de
+ * saber qual seria o formato final: uma diz que toda referência acha o recurso,
+ * a outra que toda entrada tem endereço que o FHIR aceita.
+ */
+describe('referências dentro do Bundle', () => {
+  const collectReferences = (node: unknown, found: string[] = []): string[] => {
+    if (Array.isArray(node)) {
+      node.forEach((item) => collectReferences(item, found));
+    } else if (node !== null && typeof node === 'object') {
+      Object.entries(node as Record<string, unknown>).forEach(([key, value]) => {
+        if (key === 'reference' && typeof value === 'string') found.push(value);
+        else collectReferences(value, found);
+      });
+    }
+
+    return found;
+  };
+
+  const resolvable = (bundle: FHIRBundle): Set<string> => {
+    const addresses = new Set<string>();
+    bundle.entry.forEach((entry) => {
+      const { id, resourceType } = entry.resource;
+      const relative = `${resourceType}/${id}`;
+
+      if (entry.fullUrl === undefined) return;
+
+      addresses.add(entry.fullUrl);
+      // A forma relativa só resolve se o `fullUrl` da entrada terminar nela, que
+      // é como o validador lê a base. Num Bundle de entradas `urn:uuid:` ela não
+      // resolve, e aceitá-la aqui de graça deixaria passar justamente o defeito
+      // que estes testes existem para pegar.
+      if (entry.fullUrl.endsWith(`/${relative}`)) addresses.add(relative);
+    });
+
+    return addresses;
+  };
+
+  it('toda referência do laudo aponta para uma entrada do próprio Bundle', () => {
+    const bundle = labResultToFHIRBundle(
+      sampleLabReport,
+      [sampleLabObservation],
+      sampleUserProfile,
+    );
+    const addresses = resolvable(bundle);
+
+    const dangling = collectReferences(bundle).filter((ref) => !addresses.has(ref));
+
+    expect(dangling).toEqual([]);
+  });
+
+  it('toda referência das intervenções aponta para uma entrada do próprio Bundle', () => {
+    const bundle = interventionsToFHIRBundle([sampleMedicationIntervention], sampleUserProfile);
+    const addresses = resolvable(bundle);
+
+    const dangling = collectReferences(bundle).filter((ref) => !addresses.has(ref));
+
+    expect(dangling).toEqual([]);
+  });
+
+  it('o fullUrl de cada entrada é um endereço que o FHIR aceita', () => {
+    const bundle = labResultToFHIRBundle(
+      sampleLabReport,
+      [sampleLabObservation],
+      sampleUserProfile,
+    );
+
+    bundle.entry.forEach((entry) => {
+      const { fullUrl } = entry;
+      expect(fullUrl).toBeDefined();
+      // `urn:uuid:` seria legítimo, mas só com a sintaxe de UUID, que é
+      // exatamente o que o formato antigo não tinha.
+      expect(fullUrl?.startsWith('urn:uuid:')).toBe(false);
+      expect(() => new URL(fullUrl ?? '')).not.toThrow();
+    });
+  });
+
+  it('o fullUrl termina no tipo e no id do recurso que ele endereça', () => {
+    const bundle = labResultToFHIRBundle(
+      sampleLabReport,
+      [sampleLabObservation],
+      sampleUserProfile,
+    );
+
+    bundle.entry.forEach((entry) => {
+      const { id, resourceType } = entry.resource;
+      expect(entry.fullUrl).toBe(`https://precisa-saude.com.br/fhir/${resourceType}/${id}`);
+    });
   });
 });
 

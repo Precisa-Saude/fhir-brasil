@@ -1,3 +1,9 @@
+## [0.22.3](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.22.2...v0.22.3) (2026-09-06)
+
+### Bug Fixes
+
+* **core:** referências do Bundle não resolviam e o fullUrl não era URN válida ([#97](https://github.com/Precisa-Saude/fhir-brasil/issues/97)) ([7645ee0](https://github.com/Precisa-Saude/fhir-brasil/commit/7645ee0641a42e975e9ddfab3ec8e688c5888d4a))
+
 ## [0.22.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.22.1...v0.22.2) (2026-09-05)
 
 ### Refactoring

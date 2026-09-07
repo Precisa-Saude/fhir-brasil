@@ -33,6 +33,23 @@ describe('specimenTypeCoding', () => {
     expect(specimenTypeCoding(text)?.code).toBe('SER');
   });
 
+  it.each([
+    ['espaço não separável', 'Sangue\u00a0Total'],
+    ['tabulação', 'Sangue\tTotal'],
+    ['espaço fino', 'Sangue\u2009Total'],
+  ])('trata %s como espaço comum', (_nome, text) => {
+    expect(specimenTypeCoding(text)?.code).toBe('WB');
+  });
+
+  it.each([
+    ['no meio', 'So\u200bro'],
+    ['nas bordas', '\ufeffSoro\u200b'],
+  ])('descarta caractere de largura zero %s', (_nome, text) => {
+    // A camada de texto de PDF emite esses, e eles não são espaço: `\s` não os
+    // pega, então saem antes da normalização.
+    expect(specimenTypeCoding(text)?.code).toBe('SER');
+  });
+
   it('ignora acento, que o laudo às vezes não traz', () => {
     expect(specimenTypeCoding('Liquor')?.code).toBe('CSF');
     expect(specimenTypeCoding('LÍQUOR')?.code).toBe('CSF');

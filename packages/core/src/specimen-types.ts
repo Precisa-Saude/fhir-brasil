@@ -58,9 +58,18 @@ const CODINGS: ReadonlyArray<{ code: string; display: string }> = [
  * normalizador de nomes de biomarcador: "Soro/Plasma" impresso numa linha só é
  * ambíguo de verdade, e escolher um dos dois seria inferência. Sem casar, ele
  * segue o caminho do não mapeado.
+ *
+ * Os caracteres de largura zero saem antes, e não junto com o resto: `\s` cobre
+ * tabulação, quebra de linha, espaço fino e o espaço não separável, mas não
+ * cobre U+200B e companhia, que são caracteres de formatação. A camada de texto
+ * de PDF emite esses, e um deles no meio de "Soro" derruba o casamento sem
+ * deixar rastro na tela.
  */
+const ZERO_WIDTH = /[\u200b-\u200d\ufeff]/g;
+
 const normalize = (text: string): string =>
   text
+    .replace(ZERO_WIDTH, '')
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()

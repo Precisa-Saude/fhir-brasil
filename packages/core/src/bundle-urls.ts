@@ -13,8 +13,6 @@
  * então nenhuma das relativas resolvia. Um laudo de 22 marcadores saía com 24
  * erros de URN e 22 referências perdidas.
  */
-import type { FHIRBundleEntry } from './fhir-types';
-
 /**
  * Recurso que já tem id, e por isso pode ser endereçado numa entrada.
  *
@@ -43,6 +41,12 @@ export const BUNDLE_BASE_URL = 'https://precisa-saude.com.br/fhir';
  * isto substitui nasceu de montar os dois lados em separado: o `fullUrl` dizia
  * `observation-demo-Hgb` enquanto o recurso tinha id `demo-Hgb`, e ninguém
  * percebeu porque nada obrigava os dois a concordarem.
+ *
+ * O parâmetro pede o mínimo que a URL consome, e não a união de recursos que
+ * este pacote converte. Um Bundle pode carregar qualquer recurso do R4, e quem
+ * acrescenta uma entrada de um tipo que não está nessa união (um `Specimen`,
+ * por exemplo) precisa do mesmo endereço, senão monta o dele e as duas formas
+ * divergem outra vez.
  */
-export const entryFullUrl = (resource: Addressable<FHIRBundleEntry['resource']>): string =>
+export const entryFullUrl = (resource: Addressable<{ resourceType: string }>): string =>
   `${BUNDLE_BASE_URL}/${resource.resourceType}/${resource.id}`;

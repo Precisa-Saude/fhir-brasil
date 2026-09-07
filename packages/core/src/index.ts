@@ -53,3 +53,6 @@ export * from './i18n';
 
 // Export Brazilian identifier helpers (CPF, CNS)
 export * from './identifiers';
+
+// Export Bundle entry addressing (fullUrl)
+export * from './bundle-urls';

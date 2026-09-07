@@ -1,3 +1,9 @@
+## [0.23.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.22.3...v0.23.0) (2026-09-07)
+
+### Features
+
+* **core:** expõe entryFullUrl para quem acrescenta entrada ao Bundle ([#98](https://github.com/Precisa-Saude/fhir-brasil/issues/98)) ([05ad966](https://github.com/Precisa-Saude/fhir-brasil/commit/05ad96648dea40490f91d39d29abd3eb34a472c9))
+
 ## [0.22.3](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.22.2...v0.22.3) (2026-09-06)
 
 ### Bug Fixes

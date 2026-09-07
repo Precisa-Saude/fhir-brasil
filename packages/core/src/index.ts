@@ -56,3 +56,6 @@ export * from './identifiers';
 
 // Export Bundle entry addressing (fullUrl)
 export * from './bundle-urls';
+
+// Export specimen type coding (RNDS BRTipoAmostra)
+export * from './specimen-types';

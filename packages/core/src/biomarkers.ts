@@ -2182,9 +2182,12 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'VATVolume',
         'Visceral Adipose Tissue Volume',
         'VAT',
+        // "Visceral Fat" e "Gordura Visceral" nus não dizem qual das duas
+        // medidas o laudo traz, então também estão no `VisceralFatLevel`. O
+        // pré-scan devolve os dois candidatos e o modelo decide pela unidade e
+        // pela ordem de grandeza, que é o que separa um índice 9 de 120 cm³.
         'Visceral Fat',
         'Visceral Volume',
-        'Volume',
       ],
       pt: [
         'Volume de Gordura Visceral',
@@ -2435,8 +2438,15 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     category: 'composicao-corporal',
     code: 'VisceralFatLevel',
     names: {
-      en: ['Visceral Fat Level', 'Visceral Fat Index', 'VFL'],
-      pt: ['Nível de Gordura Visceral', 'Índice de Gordura Visceral', 'Gordura Visceral Nível'],
+      en: ['Visceral Fat Level', 'Visceral Fat Index', 'VFL', 'Visceral Fat'],
+      pt: [
+        'Nível de Gordura Visceral',
+        'Índice de Gordura Visceral',
+        'Gordura Visceral Nível',
+        // Termo nu, compartilhado com o `VATVolume` de propósito. Ver o
+        // comentário lá.
+        'Gordura Visceral',
+      ],
     },
     unit: '',
   },

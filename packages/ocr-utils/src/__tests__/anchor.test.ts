@@ -369,3 +369,42 @@ describe('hífen entre palavras equivale a espaço', () => {
     expect(acha('CA 19 9 12 U/mL', 'CA199')).toBe(false);
   });
 });
+
+describe('findBiomarkersInText: sinônimo genérico não puxa linha alheia', () => {
+  const codesOf = (text: string) => findBiomarkersInText(text).matches.map((m) => m.code);
+
+  it.each(['Volume Urinario: 1500 mL', 'Volume Prostatico: 28 cm3', 'Volume de Ejaculado: 3.0 mL'])(
+    'não casa %p com nada',
+    (line) => {
+      // O `VATVolume` tinha "Volume" solto entre os sinônimos, então qualquer
+      // linha com a palavra entrava no pré-scan como gordura visceral. O
+      // pré-scan monta a lista de permissão entregue ao modelo, e um candidato
+      // errado ali é um convite a preencher o código errado.
+      expect(codesOf(line)).toEqual([]);
+    },
+  );
+
+  it('continua achando o volume corpuscular médio, que é biomarcador de verdade', () => {
+    expect(codesOf('Volume Corpuscular Medio: 89 fL')).toContain('MCV');
+  });
+
+  it.each([
+    ['Volume de Gordura Visceral: 120 cm3', 'VATVolume'],
+    ['Visceral Fat Volume: 120 cm3', 'VATVolume'],
+    ['Nivel de Gordura Visceral: 9', 'VisceralFatLevel'],
+    ['Visceral Fat Level: 9', 'VisceralFatLevel'],
+  ])('resolve %p sem ambiguidade para %s', (line, code) => {
+    expect(codesOf(line)).toEqual([code]);
+  });
+
+  it.each(['Gordura Visceral: 9', 'Visceral Fat: 9'])(
+    'oferece os dois candidatos para o termo nu %p',
+    (line) => {
+      // Sem qualificador não dá para saber se é o índice adimensional do
+      // InBody ou o volume em cm³ do DEXA. Entregar os dois deixa o modelo
+      // decidir pela unidade e pela ordem de grandeza; escolher um aqui seria
+      // acertar metade das vezes em silêncio.
+      expect(codesOf(line).sort()).toEqual(['VATVolume', 'VisceralFatLevel']);
+    },
+  );
+});

@@ -2,24 +2,30 @@
 
 Este diretório contém o Implementation Guide (IG) do fhir-brasil, escrito em [FHIR Shorthand (FSH)](https://build.fhir.org/ig/HL7/fhir-shorthand/) e compilado com [SUSHI](https://fshschool.org/docs/sushi/).
 
-## Como instalar
+## Publicação
 
-O pacote FHIR está disponível no [Simplifier FHIR Package Registry](https://simplifier.net/packages/br.dev.fhir-brasil.core).
+**O pacote ainda não está publicado em registro nenhum.** `br.dev.fhir-brasil.core`
+não resolve no [FHIR Package Registry](https://packages.fhir.org/catalog?name=br.dev.fhir-brasil.core)
+nem no [Simplifier](https://simplifier.net/packages/br.dev.fhir-brasil.core): as
+duas consultas voltam vazias. Não cite o pacote como instalável.
+
+O workflow `_publish-ig.yml` existe e está pronto, mas nada o chama e o
+`SIMPLIFIER_API_KEY` não está configurado no repositório.
+
+Até lá, compile localmente:
 
 ```bash
-# Via FHIR CLI
-fhir install br.dev.fhir-brasil.core 0.9.0
-
-# Ou como dependência em outro IG (sushi-config.yaml)
-# dependencies:
-#   br.dev.fhir-brasil.core: 0.9.0
+pnpm exec sushi ig/ -o ig/output
+node ig/scripts/build-package-tgz.js
 ```
 
 ## Conteúdo
 
 ### Perfis
 
+- **BRPatient** — Restringe `Patient` para o contexto do SUS: exige nome, data de nascimento, sexo e pelo menos um identificador brasileiro, CPF ou CNS, conferido por invariante.
 - **BRLabObservation** — Perfil para resultados de exames laboratoriais brasileiros. Restringe `Observation` com código LOINC obrigatório, unidade UCUM, faixa de referência e suporte a dados derivados de OCR.
+- **BRDiagnosticReport** — Restringe `DiagnosticReport` para laudos laboratoriais: categoria `LAB` obrigatória, status limitado a `final`, `amended` ou `corrected`, sujeito em `BRPatient` e resultados em `BRLabObservation`.
 
 ### Extensões
 
@@ -36,11 +42,11 @@ fhir install br.dev.fhir-brasil.core 0.9.0
 
 ### ValueSets
 
-- **BRLabTestVS** — Códigos LOINC para exames laboratoriais suportados (160 biomarcadores).
+- **BRLabTestVS** — Códigos LOINC para exames laboratoriais suportados. Gerado por `pnpm valueset:generate` a partir do catálogo do core, e o número fica na `Description` do arquivo `.fsh`, não aqui, para não congelar de novo.
 - **BRLabObservationStatusVS** — Status permitidos para resultados laboratoriais (`final`, `amended`, `corrected`).
 - **BRSUSRacaCorVS** — Todos os valores de raça/cor do SUS.
 - **BRTISSGuiasVS** — Tipos de guia TISS.
-- **BRTUSSProcedimentosLabVS** — Subset TUSS para procedimentos laboratoriais.
+- **BRTUSSProcedimentosLabVS** — Subset TUSS para procedimentos laboratoriais. **Não cite este ValueSet.** A auditoria em `fhir-brasil-tuss-audit.md`, no `datasus-sdk`, achou 57 dos 59 códigos desalinhados em relação à tabela oficial da ANS. A correção é trabalho separado.
 - **BRCID10MetabolicoVS** — Subset CID-10 para diagnósticos metabólicos (diabetes, dislipidemias, obesidade, tireoide, deficiências nutricionais).
 
 ### Exemplos

@@ -2,6 +2,8 @@ import { useGridCol } from '@precisa-saude/ui/hooks';
 import { Activity, ExternalLink, FlaskConical, HeartPulse, Network } from 'lucide-react';
 import type { ReactNode } from 'react';
 
+import catalog from '../data/catalog-counts.json';
+
 interface FeatureLink {
   label: string;
   href: string;
@@ -17,9 +19,8 @@ interface Feature {
 const FEATURES: Feature[] = [
   {
     icon: <HeartPulse className="h-6 w-6" />,
-    title: '200+ Biomarcadores',
-    description:
-      'Códigos LOINC, nomes em pt-BR e en-US, unidades UCUM, organizados em 10 categorias clínicas (20 sub-categorias). Catálogo completo com normalização de aliases.',
+    title: `${catalog.biomarkers} Biomarcadores`,
+    description: `${catalog.withLoinc} dos ${catalog.biomarkers} têm código LOINC. Nomes em pt-BR e en-US, unidades UCUM, ${catalog.categoryGroups} categorias clínicas sobre ${catalog.subcategories} sub-categorias, normalização de aliases.`,
     links: [
       { label: 'LOINC', href: 'https://loinc.org/' },
       { label: 'UCUM', href: 'https://ucum.org/' },

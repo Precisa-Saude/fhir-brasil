@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "turbo run build",
+    "catalog:check": "node --experimental-strip-types scripts/catalog-counts.ts && git diff --exit-code --stat README.md site/src/data/catalog-counts.json",
+    "catalog:counts": "node --experimental-strip-types scripts/catalog-counts.ts",
     "clean": "turbo run clean",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

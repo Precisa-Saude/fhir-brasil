@@ -16,25 +16,25 @@ Documentação completa e contexto do projeto em [fhir-brasil.dev.br](https://fh
 
 O sistema de saúde brasileiro opera como redes paralelas com troca mínima de dados — laboratórios privados entregam PDFs sem padrão, laboratórios do SUS usam sistemas internos, e nenhum enxerga o outro. O **fhir-brasil** fornece a infraestrutura de código aberto para resolver essa fragmentação via FHIR R4:
 
-- **200+ biomarcadores** com códigos LOINC, nomes em pt-BR/en-US, unidades UCUM, organizados em 10 categorias clínicas
-- **200+ faixas de referência** com variantes por sexo/idade, baseadas em diretrizes SBPC/ML, SBC e SBD
+- **Catálogo de biomarcadores** com códigos LOINC, nomes em pt-BR/en-US, unidades UCUM e categorias clínicas. As contagens exatas estão em [Catálogo em números](#catálogo-em-números)
+- **Faixas de referência** com variantes por sexo/idade, baseadas em diretrizes SBPC/ML, SBC e SBD
 - **Normalização de aliases** — cada laboratório usa nomes diferentes para o mesmo exame; `normalizeCode('colesterol HDL')` retorna `'HDL'`
 - **Utilitários OCR** — ancoragem de texto para extração de biomarcadores de PDFs de resultados de laboratório
 - **Cliente RNDS** — cliente HTTP para a Rede Nacional de Dados em Saúde (DATASUS), com autenticação mTLS e zero dependências externas
 - **Sandbox RNDS** — mock local da RNDS para desenvolvimento, ensino e demos sem certificado ICP-Brasil
 
-> 580+ testes automatizados, cobertura acima de 80%, revisão contínua de faixas de referência.
+> Todo pacote publicado tem piso de 80% de cobertura em statements, branches, functions e lines, e o CI reprova abaixo disso. As faixas de referência são revisadas continuamente contra as diretrizes citadas.
 
 ---
 
 ## Pacotes
 
-| Pacote                                                       | Descrição                                                                                     | Deps                  |
-| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------- | --------------------- |
-| [`@precisa-saude/fhir`](packages/core/)                      | Tipos FHIR R4, 200+ biomarcadores, faixas de referência, conversores, normalização de aliases | 0 runtime deps        |
-| [`@precisa-saude/fhir-ocr-utils`](packages/ocr-utils/)       | Ancoragem OCR para extração de biomarcadores                                                  | `@precisa-saude/fhir` |
-| [`@precisa-saude/fhir-rnds`](packages/rnds/)                 | Cliente HTTP para a RNDS (DATASUS) — autenticação mTLS, FHIR R4                               | `@precisa-saude/fhir` |
-| [`@precisa-saude/fhir-rnds-sandbox`](packages/rnds-sandbox/) | Mock local da RNDS — endpoints FHIR R4 e cenários sintéticos para dev/ensino                  | `@precisa-saude/fhir` |
+| Pacote                                                       | Descrição                                                                                            | Deps                  |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- | --------------------- |
+| [`@precisa-saude/fhir`](packages/core/)                      | Tipos FHIR R4, catálogo de biomarcadores, faixas de referência, conversores, normalização de aliases | 0 runtime deps        |
+| [`@precisa-saude/fhir-ocr-utils`](packages/ocr-utils/)       | Ancoragem OCR para extração de biomarcadores                                                         | `@precisa-saude/fhir` |
+| [`@precisa-saude/fhir-rnds`](packages/rnds/)                 | Cliente HTTP para a RNDS (DATASUS) — autenticação mTLS, FHIR R4                                      | `@precisa-saude/fhir` |
+| [`@precisa-saude/fhir-rnds-sandbox`](packages/rnds-sandbox/) | Mock local da RNDS — endpoints FHIR R4 e cenários sintéticos para dev/ensino                         | `@precisa-saude/fhir` |
 
 ---
 
@@ -137,20 +137,38 @@ echo "Hemoglobina 14.5 g/dL Glicose 99 mg/dL" | fhir-ocr codes --json
 
 ---
 
-## Biomarcadores suportados
+## Catálogo em números
 
-| Categoria           | Qtd | Exemplos                                               |
-| ------------------- | --- | ------------------------------------------------------ |
-| Coração             | 30+ | Colesterol, HDL, LDL, Triglicerídeos, ApoB, PCR, Lp(a) |
-| Tireoide            | 6   | TSH, T3 Livre, T4 Livre, Anti-TPO                      |
-| Metabólico          | 8   | Glicose, HbA1c, Insulina, HOMA-IR, Ácido Úrico         |
-| Nutrientes          | 15+ | Vitamina D, B12, Ferro, Ferritina, Folato, Zinco       |
-| Fígado              | 8   | ALT, AST, GGT, Bilirrubina, Albumina                   |
-| Sangue (CBC)        | 15+ | Hemoglobina, Hematócrito, Plaquetas, Leucócitos        |
-| Rins                | 8   | Creatinina, TFGe, Ureia, Sódio, Potássio               |
-| Hormônios           | 10+ | Testosterona, Estradiol, DHEAS, FSH, LH                |
-| Composição corporal | 15+ | % Gordura, Massa Magra, VAT, DMO                       |
-| Urina               | 20+ | pH, Proteína, Glicose, Hemoglobina                     |
+<!-- catalog:counts:start -->
+
+Medido no `@precisa-saude/fhir@0.24.1`, gerado por `pnpm catalog:counts`.
+
+- **225 biomarcadores** definidos, dos quais **187 têm código LOINC** (83,1%) e 38 não têm.
+- **188 códigos LOINC aceitos** na busca por código: os 187 canônicos mais os aliases de códigos que o LOINC aposentou.
+- **208 faixas de referência**, com variantes por sexo e idade.
+- **10 categorias clínicas** de primeiro nível sobre 20 subcategorias.
+
+| Categoria                            | Biomarcadores | Com LOINC | Exemplos                                                            |
+| ------------------------------------ | ------------: | --------: | ------------------------------------------------------------------- |
+| Cardiovascular                       |            29 |        22 | ApoB, HDL, HDL_Large, CRP, LDL                                      |
+| Composição Corporal e Envelhecimento |            44 |        14 | Cortisol, BMI, BodyFatPct, FatMass, LeanMass                        |
+| Hematológico                         |            17 |        17 | Hct, Hgb, MCH, MCHC, MCV                                            |
+| Hepático e Biliar                    |            12 |        12 | ALT, Albumin, Albumin_Globulin_Ratio, AlkalinePhosphatase, AST      |
+| Imunológico                          |            25 |        25 | ANA_Screen, RheumatoidFactor, Basophils, Basophils_Abs, Eosinophils |
+| Metabólico e Endócrino               |            21 |        21 | AntiThyroglobulin, AntiTPO, TSH, T4Free, Thyroglobulin              |
+| Nutricional e Exposição Ambiental    |            28 |        28 | Lead, Mercury, AA_EPA_Ratio, Calcium, Ferritin                      |
+| Oncológico                           |             6 |         6 | AFP, CA125, CEA, CA199, CA153                                       |
+| Renal e Eletrolítico                 |            29 |        29 | Microalbumin_Urine, Urea, BUN_Creatinine_Ratio, Creatinine, eGFR    |
+| Saúde Reprodutiva                    |            15 |        14 | AMH, DHEAS, Estradiol, Estrone, FSH                                 |
+| **Total**                            |       **225** |   **187** |                                                                     |
+
+As linhas somam 226 porque 1 biomarcador aparece em duas categorias. O Beta-hCG é marcador tumoral e exame de saúde feminina ao mesmo tempo. O total não conta ninguém duas vezes.
+
+<!-- catalog:counts:end -->
+
+O CI roda `pnpm catalog:check` e reprova quando o catálogo anda sem o texto
+acompanhar. Por isso esta é a formulação para citar em apresentação, artigo ou
+proposta. Números escritos à mão em outro lugar não são conferidos por nada.
 
 ---
 

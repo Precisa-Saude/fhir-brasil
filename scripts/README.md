@@ -89,6 +89,35 @@ o gerador ficou anos sem ser chamado por nada: o ValueSet congelou em 160 códig
 enquanto o catálogo chegava a 177, e manteve um código LOINC antigo da
 Lipoproteína (a) depois da troca.
 
+## catalog-counts.ts
+
+Fonte única dos números do catálogo. Regrava o bloco entre
+`<!-- catalog:counts:start -->` e `<!-- catalog:counts:end -->` no `README.md` da
+raiz e o `site/src/data/catalog-counts.json` que o site consome.
+
+```bash
+pnpm catalog:counts          # regrava os dois
+pnpm catalog:counts --json   # imprime os números, não escreve nada
+pnpm catalog:check           # regrava e falha se o versionado divergir
+```
+
+O `catalog:check` roda em todo PR. Não usa rede nem credencial.
+
+Existe porque os mesmos números circulavam em quatro formulações e nenhuma batia
+com o publicado. O README dizia "200+ biomarcadores com códigos LOINC" quando 38
+dos 225 não têm código nenhum, e "580+ testes"; o site dizia "397 testes" com 699
+no repositório; um deck herdou "153 de 164, 93,3%", que era o escopo de um
+crosswalk de abril de 2026 no `datasus-sdk`, não o catálogo (PRE-328).
+
+Para citar em deck, artigo ou proposta, use o `--json` ou copie o bloco do
+README. Não escreva os números à mão em outro lugar: o check só cobre o que ele
+gera.
+
+Uma nota sobre `acceptedLoincCodes`: é maior que `withLoinc` porque a busca por
+código aceita também os aliases de códigos que o LOINC aposentou. O LDH responde
+tanto pelo canônico quanto pelo `2532-0`, que está `DISCOURAGED`. São medidas
+diferentes, e trocar uma pela outra muda o número em um.
+
 ## sync-versions.js
 
 Sincroniza a versão entre os pacotes do workspace. Chamado pelo

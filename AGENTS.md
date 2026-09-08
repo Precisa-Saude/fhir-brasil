@@ -23,7 +23,7 @@ biomarker definitions, reference ranges, OCR utilities, and an RNDS client.
 
 ```
 packages/
-  core/          — FHIR R4 types, 200+ biomarkers (10 categorias), reference ranges, converters
+  core/          — FHIR R4 types, biomarker catalogue (10 categorias), reference ranges, converters
   ocr-utils/     — OCR anchoring for biomarker extraction
   rnds/          — HTTP client for RNDS (DATASUS), mTLS auth
   rnds-sandbox/  — Mock local da RNDS para dev/ensino (FHIR R4, cenários sintéticos)

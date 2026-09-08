@@ -3,6 +3,8 @@ import { useGridCol } from '@precisa-saude/ui/hooks';
 import { Building2, FlaskConical, GraduationCap, Landmark, Stethoscope, User } from 'lucide-react';
 import type { ReactNode } from 'react';
 
+import catalog from '../data/catalog-counts.json';
+
 interface Actor {
   icon: ReactNode;
   name: string;
@@ -27,7 +29,7 @@ const ACTORS: Actor[] = [
     icon: <FlaskConical className="h-5 w-5" />,
     name: 'Laboratório',
     problem: 'Formatos proprietários, LOINC inconsistente',
-    role: 'Vocabulário compartilhado com 200+ biomarcadores',
+    role: `Vocabulário compartilhado com ${catalog.biomarkers} biomarcadores`,
   },
   {
     icon: <Building2 className="h-5 w-5" />,

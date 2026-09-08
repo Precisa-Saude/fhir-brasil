@@ -20,7 +20,7 @@ const PILLARS: Pillar[] = [
     icon: <Shield className="h-5 w-5" />,
     title: 'Confiabilidade',
     description:
-      '397 testes automatizados, cobertura acima de 80% e revisão contínua de faixas de referência.',
+      'Piso de 80% de cobertura em todo pacote publicado, reprovado no CI abaixo disso, e revisão contínua de faixas de referência.',
   },
   {
     icon: <Users className="h-5 w-5" />,

@@ -1,3 +1,9 @@
+## [0.24.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.23.0...v0.24.0) (2026-09-08)
+
+### Features
+
+* **core:** código do tipo de amostra a partir do material do laudo ([#99](https://github.com/Precisa-Saude/fhir-brasil/issues/99)) ([9ad4623](https://github.com/Precisa-Saude/fhir-brasil/commit/9ad4623945a55c5892e179f7746255d988c26b4a))
+
 ## [0.23.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.22.3...v0.23.0) (2026-09-07)
 
 ### Features

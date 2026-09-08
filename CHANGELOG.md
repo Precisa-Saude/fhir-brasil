@@ -1,3 +1,9 @@
+## [0.24.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.24.0...v0.24.1) (2026-09-08)
+
+### Bug Fixes
+
+* **core:** sinônimo genérico do VATVolume puxava linha de outro exame ([#101](https://github.com/Precisa-Saude/fhir-brasil/issues/101)) ([264df08](https://github.com/Precisa-Saude/fhir-brasil/commit/264df084f31df65909521b5b8860c25f4b80ed5a))
+
 ## [0.24.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.23.0...v0.24.0) (2026-09-08)
 
 ### Features

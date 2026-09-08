@@ -59,17 +59,21 @@ const CODINGS: ReadonlyArray<{ code: string; display: string }> = [
  * ambíguo de verdade, e escolher um dos dois seria inferência. Sem casar, ele
  * segue o caminho do não mapeado.
  *
- * Os caracteres de largura zero saem antes, e não junto com o resto: `\s` cobre
- * tabulação, quebra de linha, espaço fino e o espaço não separável, mas não
- * cobre U+200B e companhia, que são caracteres de formatação. A camada de texto
- * de PDF emite esses, e um deles no meio de "Soro" derruba o casamento sem
- * deixar rastro na tela.
+ * Os caracteres invisíveis saem antes, e a divisão entre as duas regras é a do
+ * próprio Unicode: `\p{Cf}` são os de formatação, que não ocupam espaço e por
+ * isso são apagados, e `\s` são os de espaço, que são colapsados. A camada de
+ * texto de PDF emite os dois tipos, e um U+200B no meio de "Soro" derruba o
+ * casamento sem deixar rastro na tela.
+ *
+ * Vale a categoria em vez da lista porque a lista nunca fecha. Enumerando, o
+ * hífen opcional (U+00AD) tinha ficado de fora, e ele aparece justamente onde
+ * um nome composto como "Sangue Total" quebra de linha.
  */
-const ZERO_WIDTH = /[\u200b-\u200d\ufeff]/g;
+const INVISIBLE = /\p{Cf}/gu;
 
 const normalize = (text: string): string =>
   text
-    .replace(ZERO_WIDTH, '')
+    .replace(INVISIBLE, '')
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()

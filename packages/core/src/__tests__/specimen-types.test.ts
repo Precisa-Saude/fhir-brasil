@@ -42,11 +42,13 @@ describe('specimenTypeCoding', () => {
   });
 
   it.each([
-    ['no meio', 'So\u200bro'],
-    ['nas bordas', '\ufeffSoro\u200b'],
-  ])('descarta caractere de largura zero %s', (_nome, text) => {
-    // A camada de texto de PDF emite esses, e eles não são espaço: `\s` não os
-    // pega, então saem antes da normalização.
+    ['largura zero no meio', 'So\u200bro'],
+    ['BOM e largura zero nas bordas', '\ufeffSoro\u200b'],
+    ['hífen opcional, de quebra de linha', 'So\u00adro'],
+    ['juntador de palavra', 'So\u2060ro'],
+  ])('descarta caractere invisível: %s', (_nome, text) => {
+    // A camada de texto de PDF emite esses. Não são espaço, então `\s` não os
+    // pega: saem pela categoria `\p{Cf}` antes da normalização.
     expect(specimenTypeCoding(text)?.code).toBe('SER');
   });
 

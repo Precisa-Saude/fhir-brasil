@@ -1247,7 +1247,14 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     loinc: '1742-6',
     names: {
       en: ['Alanine Transaminase', 'ALT', 'SGPT'],
-      pt: ['Alanina Aminotransferase', 'ALT', 'TGP'],
+      pt: [
+        'Alanina Aminotransferase',
+        'ALT',
+        'TGP',
+        'Transaminase Glutâmico-Pirúvica',
+        'Transaminase Pirúvica',
+        'TGP/ALT',
+      ],
     },
     unit: 'U/L',
   },
@@ -1288,7 +1295,14 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     loinc: '1920-8',
     names: {
       en: ['Aspartate Aminotransferase', 'AST', 'SGOT'],
-      pt: ['Aspartato Aminotransferase', 'AST', 'TGO'],
+      pt: [
+        'Aspartato Aminotransferase',
+        'AST',
+        'TGO',
+        'Transaminase Glutâmico-Oxalacética',
+        'Transaminase Oxalacética',
+        'TGO/AST',
+      ],
     },
     unit: 'U/L',
   },
@@ -1298,7 +1312,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     loinc: '2324-2',
     names: {
       en: ['Gamma-glutamyl Transferase', 'GGT', 'Gamma GT'],
-      pt: ['Gama-Glutamil Transferase', 'GGT', 'Gama GT'],
+      pt: ['Gama-Glutamil Transferase', 'GGT', 'Gama GT', 'Gama Glutamiltransferase', 'Gama-GT'],
     },
     unit: 'U/L',
   },
@@ -1444,7 +1458,11 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     loinc: '788-0',
     names: {
       en: ['Red Cell Distribution Width', 'RDW'],
-      pt: ['Amplitude de Distribuição dos Eritrócitos', 'RDW'],
+      pt: [
+        'Amplitude de Distribuição dos Eritrócitos',
+        'RDW',
+        'Coeficiente de Variação do Volume Eritrocitário',
+      ],
     },
     unit: '%',
   },

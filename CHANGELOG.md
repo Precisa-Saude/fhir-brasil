@@ -1,3 +1,13 @@
+## [0.25.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.24.1...v0.25.0) (2026-09-14)
+
+### Features
+
+* **core:** nomes em português que os laboratórios realmente imprimem ([#103](https://github.com/Precisa-Saude/fhir-brasil/issues/103)) ([9d06fae](https://github.com/Precisa-Saude/fhir-brasil/commit/9d06faeebb272924be1c9a40dc3b7ac516e5ac20))
+
+### Documentation
+
+* números do catálogo não batiam com o pacote publicado ([#102](https://github.com/Precisa-Saude/fhir-brasil/issues/102)) ([83f71c8](https://github.com/Precisa-Saude/fhir-brasil/commit/83f71c8e698419c85489d696ee0634b0415115ae))
+
 ## [0.24.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.24.0...v0.24.1) (2026-09-08)
 
 ### Bug Fixes

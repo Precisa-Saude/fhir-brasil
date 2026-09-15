@@ -1,3 +1,13 @@
+## [0.25.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.25.0...v0.25.1) (2026-09-15)
+
+### Bug Fixes
+
+* **core:** "GFR CKD-EPI 2021" não resolvia para o eGFR ([#104](https://github.com/Precisa-Saude/fhir-brasil/issues/104)) ([85cfe1d](https://github.com/Precisa-Saude/fhir-brasil/commit/85cfe1dcc7eb4235139736373ffd8dc814e48fe3))
+
+### Documentation
+
+* registra o marcador que faz o push pular a CI ([#105](https://github.com/Precisa-Saude/fhir-brasil/issues/105)) ([20bef83](https://github.com/Precisa-Saude/fhir-brasil/commit/20bef832fc17b3bc50fe7b3cd7fa602ef7c95927)), closes [#104](https://github.com/Precisa-Saude/fhir-brasil/issues/104)
+
 ## [0.25.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.24.1...v0.25.0) (2026-09-14)
 
 ### Features

@@ -39,3 +39,19 @@
   - `feat(core): adicionar definição do biomarcador Cistatina C`
   - `fix(core): corrigir conversão de unidade para creatinina`
   - `docs: atualizar README com novos exemplos de uso`
+
+### Nunca escrever o marcador de pular CI
+
+O GitHub procura o marcador `[skip` + `ci]` na mensagem **inteira** do commit,
+não só no assunto, e o honra mesmo dentro de crase. Escrevê-lo em prosa, ainda
+que para explicar o comportamento de outro commit, faz o push não disparar
+workflow nenhum.
+
+Aconteceu na #104: o corpo do commit explicava que o commit de release carrega
+esse marcador, o texto foi junto no squash-merge, e a main recebeu a mudança
+sem rodar CI. Sem CI não roda o `semantic-release`, e o pacote ficou sem
+publicar com a correção já mergeada — invisível para quem dependia dela, e sem
+nenhum aviso.
+
+Ao descrever o comportamento, escrever o nome do marcador em vez do literal.
+Vale também para corpo de PR, que vira mensagem de commit no squash-merge.

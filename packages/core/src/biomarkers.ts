@@ -1612,6 +1612,11 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'eGFR CKD-EPI',
         'eGFR CKD-EPI 2021',
         'CKD-EPI 2021',
+        // O laudo imprime só "CKD-EPI 2021", e a extração devolve o nome com o
+        // "GFR" na frente. Sem esta entrada o exame virava
+        // `UNKNOWN_GFR_CKD_EPI_2021` num laudo do Fleury, com valor medido e
+        // tudo, porque a resolução por nome não achava a forma composta.
+        'GFR CKD-EPI 2021',
         'CKD-EPI eGFR 2021',
         'eGFR (CKD-EPI 2021)',
         'eGFR (MDRD)',

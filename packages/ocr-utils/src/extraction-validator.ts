@@ -146,7 +146,12 @@ export function validateExtraction(
         });
         continue;
       }
-      if (!allowed.has(loinc) && !allowed.has(loincToCode(loinc) ?? '')) {
+      // O `?? ''` de antes nunca deixava código inválido passar, porque string
+      // vazia não entra no conjunto de permitidos, mas obrigava quem lê a
+      // provar isso. A forma explícita não precisa de prova.
+      const interno = loincToCode(loinc);
+      const ancorado = allowed.has(loinc) || (interno !== undefined && allowed.has(interno));
+      if (!ancorado) {
         rejected.push({
           detail: `${loinc} não foi ancorado no texto de origem`,
           raw: entry,

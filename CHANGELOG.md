@@ -1,3 +1,9 @@
+## [0.26.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.25.1...v0.26.0) (2026-09-16)
+
+### Features
+
+* contrato de extração, pacote de PDF, e a separação da glicemia de jejum ([#106](https://github.com/Precisa-Saude/fhir-brasil/issues/106)) ([b0e3e79](https://github.com/Precisa-Saude/fhir-brasil/commit/b0e3e79835ca2358f1ff4561f3d3e95f121ce063))
+
 ## [0.25.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.25.0...v0.25.1) (2026-09-15)
 
 ### Bug Fixes

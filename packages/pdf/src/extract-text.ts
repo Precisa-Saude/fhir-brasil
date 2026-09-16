@@ -38,6 +38,10 @@ function joinItems(items: { hasEOL?: boolean; str?: string }[]): string {
  * extraído, e ligá-lo faz o pdf.js procurar fontes no sistema, o que muda o
  * resultado conforme a máquina.
  *
+ * `isEvalSupported: false` desliga a avaliação de JavaScript embutido no PDF.
+ * Laudo é documento de terceiro, então o parser não tem por que executar código
+ * que veio junto, e desligar também tira uma fonte de variação entre máquinas.
+ *
  * `verbosity: 0` não é cosmético. O pdf.js escreve aviso em `console.warn`, que
  * no Node cai no mesmo lugar que o resto, e laudo que usa fonte padrão não
  * embutida gera um aviso por página. Sem isto, os avisos entram no texto
@@ -57,7 +61,8 @@ export async function extractPdfText(data: Uint8Array): Promise<PdfText> {
     for (let n = 1; n <= doc.numPages; n += 1) {
       const page = await doc.getPage(n);
       const content = await page.getTextContent();
-      pages.push({ pageNumber: n, text: joinItems(content.items as { str?: string }[]).trim() });
+      const items = content.items as { hasEOL?: boolean; str?: string }[];
+      pages.push({ pageNumber: n, text: joinItems(items).trim() });
     }
 
     return {

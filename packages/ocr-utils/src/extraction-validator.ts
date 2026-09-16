@@ -149,9 +149,10 @@ export function validateExtraction(
       // O `?? ''` de antes nunca deixava código inválido passar, porque string
       // vazia não entra no conjunto de permitidos, mas obrigava quem lê a
       // provar isso. A forma explícita não precisa de prova.
-      const interno = loincToCode(loinc);
-      const ancorado = allowed.has(loinc) || (interno !== undefined && allowed.has(interno));
-      if (!ancorado) {
+      const internalCode = loincToCode(loinc);
+      const isAnchored =
+        allowed.has(loinc) || (internalCode !== undefined && allowed.has(internalCode));
+      if (!isAnchored) {
         rejected.push({
           detail: `${loinc} não foi ancorado no texto de origem`,
           raw: entry,

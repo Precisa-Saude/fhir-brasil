@@ -48,6 +48,9 @@ export async function check(
     // `fhir-bio convert` continuar limpo. Sem isto, saída inteiramente
     // recusada viraria um envelope válido e vazio, que é o pior jeito de
     // descobrir que a extração falhou.
+    // Hoje o `extractionToLabResult` só descarta por falta de código no
+    // catálogo, então a subtração diz exatamente isso. Se ele ganhar outro
+    // filtro, esta mensagem passa a mentir e precisa mudar junto.
     const semCodigo = result.accepted.length - envelope.observations.length;
     if (semCodigo > 0) {
       process.stderr.write(

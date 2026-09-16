@@ -755,4 +755,20 @@ describe('glicose genérica e glicemia de jejum', () => {
   it('não deixa a grafia genérica afirmar jejum', () => {
     expect(findCodeByName('Glicose')).not.toBe('Glucose_Fasting');
   });
+
+  // A separação vive nas listas de nomes, e nada no tipo impede alguém de
+  // acrescentar "Glicemia de Jejum" ao genérico e desfazer tudo em silêncio.
+  // Esta invariante é o que reprova essa mudança.
+  it('mantém a invariante: jejum de um lado, nenhum jejum do outro', () => {
+    const jejum = /jejum|fasting/i;
+    const generico = getDefinitionByCode('Glucose');
+    const emJejum = getDefinitionByCode('Glucose_Fasting');
+
+    for (const nome of [...(generico?.names.pt ?? []), ...(generico?.names.en ?? [])]) {
+      expect(nome).not.toMatch(jejum);
+    }
+    for (const nome of [...(emJejum?.names.pt ?? []), ...(emJejum?.names.en ?? [])]) {
+      expect(nome).toMatch(jejum);
+    }
+  });
 });

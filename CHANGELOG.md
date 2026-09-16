@@ -1,3 +1,9 @@
+## [0.26.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.26.0...v0.26.1) (2026-09-16)
+
+### Bug Fixes
+
+* **ci:** pacote novo recebia versão e nunca chegava ao npm ([#107](https://github.com/Precisa-Saude/fhir-brasil/issues/107)) ([0d10705](https://github.com/Precisa-Saude/fhir-brasil/commit/0d107052fec37f75fc5d6f7aa77f8a81406716a5))
+
 ## [0.26.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.25.1...v0.26.0) (2026-09-16)
 
 ### Features

@@ -258,7 +258,7 @@ describe('getReferenceRange', () => {
         biologicalSex: 'F',
         pregnant: true,
       };
-      const range = getReferenceRange('Glucose', context);
+      const range = getReferenceRange('Glucose_Fasting', context);
       expect(range?.max).toBe(91);
     });
 
@@ -350,8 +350,14 @@ describe('getReferenceRange', () => {
   });
 
   describe('fastingRequired metadata', () => {
-    it('marks Glucose as strict fasting', () => {
-      expect(biomarkerRangeDefinitions.Glucose.default.fastingRequired).toBe('strict');
+    it('marks Glucose_Fasting as strict fasting', () => {
+      expect(biomarkerRangeDefinitions.Glucose_Fasting.default.fastingRequired).toBe('strict');
+    });
+
+    it('leaves generic Glucose without a range at all', () => {
+      // A faixa da SBD 2024 é de jejum, e glicose genérica não afirma jejum.
+      // Lacuna explícita em vez de intervalo sem fonte.
+      expect(biomarkerRangeDefinitions.Glucose).toBeUndefined();
     });
 
     it('marks Triglycerides as preferred fasting (non-fasting acceptable per SBC)', () => {
@@ -467,7 +473,7 @@ describe('applyFallbackReferenceRanges', () => {
   it('should handle dL unit variations', () => {
     const biomarkers = [
       {
-        code: 'Glucose',
+        code: 'Glucose_Fasting',
         referenceMin: null as number | null,
         referenceMax: null as number | null,
         unit: 'mg/dL',

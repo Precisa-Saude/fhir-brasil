@@ -821,12 +821,18 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'tietz-7ed-2015',
   },
 
+  // A faixa é de jejum, então mora na definição que afirma jejum. Glicose
+  // genérica (`Glucose`, `2345-7`) ficou sem faixa de propósito: a SBD 2024
+  // publica o intervalo de jejum, não o de coleta casual, e inventar um
+  // intervalo sem fonte é pior do que não ter. Na prática o laudo costuma
+  // imprimir a própria faixa, e é ela que o consumidor usa.
+  //
   // Glicemia de jejum — 70–99 mg/dL é a faixa de normalidade (SBD 2024, ADA);
   // hipoglicemia clinicamente acionável em não-diabético é <54 mg/dL (Level 2
   // ADA/SBD), não 70. O corte 70 era Level 1 (alerta em diabético em tratamento)
   // e gerava falsos "abaixo do normal" em indivíduos saudáveis cuja glicemia
   // em jejum está fisiologicamente entre 54–70. optimalMin preserva o alvo.
-  Glucose: {
+  Glucose_Fasting: {
     default: {
       fastingRequired: 'strict',
       max: 100,

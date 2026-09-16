@@ -148,15 +148,15 @@ describe('cli: categories', () => {
 describe('cli: range', () => {
   it('should display reference range for a biomarker', async () => {
     const { range } = await import('../../cli/commands/range');
-    await range(['Glucose'], false);
-    expect(stdoutOutput).toContain('Faixa de Referência: Glucose');
+    await range(['Glucose_Fasting'], false);
+    expect(stdoutOutput).toContain('Faixa de Referência: Glucose_Fasting');
     expect(stdoutOutput).toContain('Mínimo:');
     expect(stdoutOutput).toContain('Máximo:');
   });
 
   it('should output JSON range', async () => {
     const { range } = await import('../../cli/commands/range');
-    await range(['Glucose'], true);
+    await range(['Glucose_Fasting'], true);
     const data = JSON.parse(stdoutOutput);
     expect(data.referenceRange).toBeDefined();
     expect(data.referenceRange.unit).toBe('mg/dL');

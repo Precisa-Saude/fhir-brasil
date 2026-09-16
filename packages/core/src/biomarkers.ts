@@ -786,13 +786,36 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // ============================================================================
   // METABOLIC / METABOLICO
   // ============================================================================
+  // Glicose e glicemia de jejum são duas definições, e a linha entre elas é o
+  // que o laudo **afirma**, não o que provavelmente aconteceu.
+  //
+  // No LOINC a diferença está no eixo do componente: `2345-7` é `Glucose` e
+  // `1558-6` é `Glucose^post CFst`, com o desafio de jejum declarado. Laudo que
+  // imprime só "Glicose" não afirma jejum nenhum, mesmo quando a faixa impressa
+  // ao lado é de jejum e mesmo sendo jejum na esmagadora maioria dos painéis
+  // ambulatoriais brasileiros. Codificar essa linha como `1558-6` afirmaria um
+  // jejum de oito horas que ninguém declarou.
+  //
+  // As duas estavam fundidas numa definição só, que carregava `2345-7` e uma
+  // faixa `fastingRequired: 'strict'`: o código dizia genérico e a faixa dizia
+  // jejum. A grafia é que decide agora.
   {
     category: 'metabolico',
     code: 'Glucose',
     loinc: '2345-7',
     names: {
-      en: ['Glucose', 'Blood Glucose', 'Fasting Glucose'],
-      pt: ['Glicose', 'Glicemia', 'Glicemia de Jejum'],
+      en: ['Glucose', 'Blood Glucose', 'Random Glucose'],
+      pt: ['Glicose', 'Glicemia'],
+    },
+    unit: 'mg/dL',
+  },
+  {
+    category: 'metabolico',
+    code: 'Glucose_Fasting',
+    loinc: '1558-6',
+    names: {
+      en: ['Fasting Glucose', 'Fasting Blood Glucose', 'Glucose, Fasting'],
+      pt: ['Glicemia de Jejum', 'Glicose de Jejum', 'Glicemia em Jejum'],
     },
     unit: 'mg/dL',
   },

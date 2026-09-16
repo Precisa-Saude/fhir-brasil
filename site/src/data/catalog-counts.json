@@ -1,6 +1,6 @@
 {
-  "acceptedLoincCodes": 188,
-  "biomarkers": 225,
+  "acceptedLoincCodes": 189,
+  "biomarkers": 226,
   "byCategory": [
     {
       "count": 29,
@@ -33,10 +33,10 @@
       "withLoinc": 25
     },
     {
-      "count": 21,
+      "count": 22,
       "examples": ["AntiThyroglobulin", "AntiTPO", "TSH", "T4Free", "Thyroglobulin"],
       "pt": "Metabólico e Endócrino",
-      "withLoinc": 21
+      "withLoinc": 22
     },
     {
       "count": 28,
@@ -64,10 +64,10 @@
     }
   ],
   "categoryGroups": 10,
-  "loincCoveragePct": 83.1,
+  "loincCoveragePct": 83.2,
   "referenceRanges": 208,
   "subcategories": 20,
-  "version": "0.25.0",
-  "withLoinc": 187,
+  "version": "0.25.1",
+  "withLoinc": 188,
   "withoutLoinc": 38
 }

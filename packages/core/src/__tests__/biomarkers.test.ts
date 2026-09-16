@@ -731,3 +731,44 @@ describe('isDexaDocument — classes além da densitometria', () => {
     expect(isDexaDocument(['Glucose', 'Hgb', 'BMI'])).toBe(false);
   });
 });
+
+describe('glicose genérica e glicemia de jejum', () => {
+  // A linha entre as duas é o que o laudo afirma, não o que provavelmente
+  // aconteceu: `1558-6` é `Glucose^post CFst`, com o jejum declarado no eixo do
+  // componente, e `2345-7` não declara nada.
+  it('separa os dois códigos LOINC', () => {
+    expect(getDefinitionByCode('Glucose')?.loinc).toBe('2345-7');
+    expect(getDefinitionByCode('Glucose_Fasting')?.loinc).toBe('1558-6');
+  });
+
+  it.each([
+    ['Glicose', 'Glucose'],
+    ['Glicemia', 'Glucose'],
+    ['Glucose', 'Glucose'],
+    ['Glicemia de Jejum', 'Glucose_Fasting'],
+    ['Glicose de Jejum', 'Glucose_Fasting'],
+    ['Fasting Glucose', 'Glucose_Fasting'],
+  ])('resolve %s para %s', (grafia, esperado) => {
+    expect(findCodeByName(grafia)).toBe(esperado);
+  });
+
+  it('não deixa a grafia genérica afirmar jejum', () => {
+    expect(findCodeByName('Glicose')).not.toBe('Glucose_Fasting');
+  });
+
+  // A separação vive nas listas de nomes, e nada no tipo impede alguém de
+  // acrescentar "Glicemia de Jejum" ao genérico e desfazer tudo em silêncio.
+  // Esta invariante é o que reprova essa mudança.
+  it('mantém a invariante: jejum de um lado, nenhum jejum do outro', () => {
+    const jejum = /jejum|fasting/i;
+    const generico = getDefinitionByCode('Glucose');
+    const emJejum = getDefinitionByCode('Glucose_Fasting');
+
+    for (const nome of [...(generico?.names.pt ?? []), ...(generico?.names.en ?? [])]) {
+      expect(nome).not.toMatch(jejum);
+    }
+    for (const nome of [...(emJejum?.names.pt ?? []), ...(emJejum?.names.en ?? [])]) {
+      expect(nome).toMatch(jejum);
+    }
+  });
+});

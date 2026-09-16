@@ -24,7 +24,8 @@ biomarker definitions, reference ranges, OCR utilities, and an RNDS client.
 ```
 packages/
   core/          — FHIR R4 types, biomarker catalogue (10 categorias), reference ranges, converters
-  ocr-utils/     — OCR anchoring for biomarker extraction
+  ocr-utils/     — OCR anchoring, extraction contract and validator
+  pdf/           — PDF text-layer extraction (the one package with an external dep)
   rnds/          — HTTP client for RNDS (DATASUS), mTLS auth
   rnds-sandbox/  — Mock local da RNDS para dev/ensino (FHIR R4, cenários sintéticos)
 ig/              — FHIR Implementation Guide (SUSHI), published on Simplifier
@@ -33,7 +34,7 @@ site/            — Public site (Cloudflare Pages)
 
 ## Commit scopes
 
-Valid scopes: `core`, `ocr-utils`, `rnds`, `rnds-sandbox`,
+Valid scopes: `core`, `ocr-utils`, `pdf`, `rnds`, `rnds-sandbox`,
 `docs`, `ci`, `deps`, `lint`.
 
 ## Dependency rules
@@ -42,7 +43,9 @@ Valid scopes: `core`, `ocr-utils`, `rnds`, `rnds-sandbox`,
 - `@precisa-saude/fhir-ocr-utils` depends only on `@precisa-saude/fhir`
 - `@precisa-saude/fhir-rnds` depends only on `@precisa-saude/fhir`
 - `@precisa-saude/fhir-rnds-sandbox` depends only on `@precisa-saude/fhir`
-- Any external runtime dep requires explicit approval
+- `@precisa-saude/fhir-pdf` is the one exception: it carries `pdfjs-dist`,
+  which is why PDF parsing lives in its own package instead of `ocr-utils`
+- Any other external runtime dep requires explicit approval
 
 ## Medical data guidelines
 

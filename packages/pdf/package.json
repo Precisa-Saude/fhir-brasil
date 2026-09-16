@@ -1,0 +1,66 @@
+{
+  "name": "@precisa-saude/fhir-pdf",
+  "version": "0.0.0",
+  "description": "Extração da camada de texto de PDFs de laudo laboratorial, para alimentar a ancoragem do fhir-ocr-utils",
+  "keywords": [
+    "fhir",
+    "pdf",
+    "lab-results",
+    "text-extraction",
+    "brasil"
+  ],
+  "homepage": "https://github.com/Precisa-Saude/fhir-brasil/tree/main/packages/pdf#readme",
+  "bugs": "https://github.com/Precisa-Saude/fhir-brasil/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Precisa-Saude/fhir-brasil.git",
+    "directory": "packages/pdf"
+  },
+  "license": "Apache-2.0",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "fhir-pdf": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "clean": "rm -rf dist .turbo",
+    "lint": "eslint src/ --max-warnings 0",
+    "test": "vitest run --passWithNoTests",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@precisa-saude/fhir": "workspace:^",
+    "pdfjs-dist": "^4.10.38"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.5",
+    "typescript": "~5.7.3",
+    "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

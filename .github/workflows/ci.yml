@@ -94,6 +94,7 @@ jobs:
       packages: |
         packages/core
         packages/ocr-utils
+        packages/pdf
         packages/rnds
         packages/rnds-sandbox
     secrets: inherit

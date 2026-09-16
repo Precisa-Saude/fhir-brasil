@@ -129,6 +129,22 @@ jobs:
             exit 1
           fi
 
+  release-packages:
+    name: Lista de publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 22
+      # Pacote publicável fora da lista do `ci.yml` recebe versão nova no
+      # release e nunca chega ao npm, sem nada falhar. Foi o que aconteceu com
+      # o `@precisa-saude/fhir-pdf`, que nasceu em 0.0.0 e ficou lá. Sem rede e
+      # sem install: é só ler `packages/*` e comparar com o `ci.yml`.
+      - name: Lista de publish cobre todo pacote publicável
+        run: node scripts/sync-versions.js --check
+
   catalog:
     name: Números do catálogo
     runs-on: ubuntu-latest

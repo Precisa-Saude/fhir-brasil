@@ -13,6 +13,7 @@
     "lint": "turbo run lint",
     "loinc:check": "node --experimental-strip-types scripts/verify-loinc.ts",
     "loinc:update": "node --experimental-strip-types scripts/verify-loinc.ts --update",
+    "packages:check": "node scripts/sync-versions.js --check",
     "prepare": "husky",
     "release": "semantic-release",
     "test": "turbo run test",

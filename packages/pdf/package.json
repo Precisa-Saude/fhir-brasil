@@ -1,6 +1,6 @@
 {
   "name": "@precisa-saude/fhir-pdf",
-  "version": "0.0.0",
+  "version": "0.26.0",
   "description": "Extração da camada de texto de PDFs de laudo laboratorial, para alimentar a ancoragem do fhir-ocr-utils",
   "keywords": [
     "fhir",

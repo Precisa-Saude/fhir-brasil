@@ -68,13 +68,28 @@ module.exports = {
     // Bump root package.json version (no npm publish — handled by workflow)
     ['@semantic-release/npm', { npmPublish: false }],
 
-    // Sync version to all workspace packages
-    ['@semantic-release/exec', { prepareCmd: 'node scripts/sync-versions.js' }],
+    // Sincroniza a versão nos pacotes e regrava o bloco de contagens.
+    //
+    // As contagens carregam a versão do `@precisa-saude/fhir` no texto, e ela
+    // só muda aqui. Sem regravar, o bloco commitado fica uma versão atrás e o
+    // check `catalog` reprova o **próximo** PR, que não tem nada a ver com
+    // isso. A ordem importa: o gerador lê a versão de `packages/core`, que o
+    // `sync-versions` acabou de escrever.
+    [
+      '@semantic-release/exec',
+      { prepareCmd: 'node scripts/sync-versions.js && pnpm catalog:counts' },
+    ],
 
     [
       '@semantic-release/git',
       {
-        assets: ['CHANGELOG.md', 'package.json', 'packages/*/package.json'],
+        assets: [
+          'CHANGELOG.md',
+          'package.json',
+          'packages/*/package.json',
+          'README.md',
+          'site/src/data/catalog-counts.json',
+        ],
         message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
       },
     ],

@@ -33,7 +33,7 @@
 
 - Formato: `tipo(escopo): descrição em pt-BR`
 - Tipos: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `ci`
-- Escopos: `core`, `ocr-utils`, `rnds`, `docs`, `ci`
+- Escopos: `core`, `ocr-utils`, `pdf`, `rnds`, `docs`, `ci`
 - Mensagens concisas, modo imperativo, em português brasileiro
 - Exemplos:
   - `feat(core): adicionar definição do biomarcador Cistatina C`

@@ -32,7 +32,8 @@ O sistema de saúde brasileiro opera como redes paralelas com troca mínima de d
 | Pacote                                                       | Descrição                                                                                            | Deps                  |
 | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- | --------------------- |
 | [`@precisa-saude/fhir`](packages/core/)                      | Tipos FHIR R4, catálogo de biomarcadores, faixas de referência, conversores, normalização de aliases | 0 runtime deps        |
-| [`@precisa-saude/fhir-ocr-utils`](packages/ocr-utils/)       | Ancoragem OCR para extração de biomarcadores                                                         | `@precisa-saude/fhir` |
+| [`@precisa-saude/fhir-ocr-utils`](packages/ocr-utils/)       | Ancoragem OCR, contrato de extração e conferência da saída de modelo                                 | `@precisa-saude/fhir` |
+| [`@precisa-saude/fhir-pdf`](packages/pdf/)                   | Camada de texto de PDF de laudo, para alimentar a ancoragem                                          | `pdfjs-dist`          |
 | [`@precisa-saude/fhir-rnds`](packages/rnds/)                 | Cliente HTTP para a RNDS (DATASUS) — autenticação mTLS, FHIR R4                                      | `@precisa-saude/fhir` |
 | [`@precisa-saude/fhir-rnds-sandbox`](packages/rnds-sandbox/) | Mock local da RNDS — endpoints FHIR R4 e cenários sintéticos para dev/ensino                         | `@precisa-saude/fhir` |
 
@@ -111,7 +112,7 @@ const result = await client.submitBundle(bundle);
 
 ## CLI
 
-Os pacotes core e ocr-utils incluem ferramentas de linha de comando — zero dependências externas. Todas suportam `--json` para saída estruturada e `--help` para detalhes.
+Os pacotes core, ocr-utils e pdf incluem ferramentas de linha de comando. Todas suportam `--json` para saída estruturada e `--help` para detalhes.
 
 ### `fhir-bio` — biomarcadores e conversão FHIR
 
@@ -141,10 +142,10 @@ echo "Hemoglobina 14.5 g/dL Glicose 99 mg/dL" | fhir-ocr codes --json
 
 <!-- catalog:counts:start -->
 
-Medido no `@precisa-saude/fhir@0.25.0`, gerado por `pnpm catalog:counts`.
+Medido no `@precisa-saude/fhir@0.25.1`, gerado por `pnpm catalog:counts`.
 
-- **225 biomarcadores** definidos, dos quais **187 têm código LOINC** (83,1%) e 38 não têm.
-- **188 códigos LOINC aceitos** na busca por código: os 187 canônicos mais os aliases de códigos que o LOINC aposentou.
+- **226 biomarcadores** definidos, dos quais **188 têm código LOINC** (83,2%) e 38 não têm.
+- **189 códigos LOINC aceitos** na busca por código: os 188 canônicos mais os aliases de códigos que o LOINC aposentou.
 - **208 faixas de referência**, com variantes por sexo e idade.
 - **10 categorias clínicas** de primeiro nível sobre 20 subcategorias.
 
@@ -155,14 +156,14 @@ Medido no `@precisa-saude/fhir@0.25.0`, gerado por `pnpm catalog:counts`.
 | Hematológico                         |            17 |        17 | Hct, Hgb, MCH, MCHC, MCV                                            |
 | Hepático e Biliar                    |            12 |        12 | ALT, Albumin, Albumin_Globulin_Ratio, AlkalinePhosphatase, AST      |
 | Imunológico                          |            25 |        25 | ANA_Screen, RheumatoidFactor, Basophils, Basophils_Abs, Eosinophils |
-| Metabólico e Endócrino               |            21 |        21 | AntiThyroglobulin, AntiTPO, TSH, T4Free, Thyroglobulin              |
+| Metabólico e Endócrino               |            22 |        22 | AntiThyroglobulin, AntiTPO, TSH, T4Free, Thyroglobulin              |
 | Nutricional e Exposição Ambiental    |            28 |        28 | Lead, Mercury, AA_EPA_Ratio, Calcium, Ferritin                      |
 | Oncológico                           |             6 |         6 | AFP, CA125, CEA, CA199, CA153                                       |
 | Renal e Eletrolítico                 |            29 |        29 | Microalbumin_Urine, Urea, BUN_Creatinine_Ratio, Creatinine, eGFR    |
 | Saúde Reprodutiva                    |            15 |        14 | AMH, DHEAS, Estradiol, Estrone, FSH                                 |
-| **Total**                            |       **225** |   **187** |                                                                     |
+| **Total**                            |       **226** |   **188** |                                                                     |
 
-As linhas somam 226 porque 1 biomarcador aparece em duas categorias. O Beta-hCG é marcador tumoral e exame de saúde feminina ao mesmo tempo. O total não conta ninguém duas vezes.
+As linhas somam 227 porque 1 biomarcador aparece em duas categorias. O Beta-hCG é marcador tumoral e exame de saúde feminina ao mesmo tempo. O total não conta ninguém duas vezes.
 
 <!-- catalog:counts:end -->
 
@@ -188,6 +189,8 @@ proposta. Números escritos à mão em outro lugar não são conferidos por nada
 
 - [x] `@precisa-saude/fhir` — Core: tipos FHIR R4, biomarcadores, faixas de referência, conversores
 - [x] `@precisa-saude/fhir-ocr-utils` — Utilitários OCR: ancoragem de biomarcadores em texto
+- [x] Contrato de extração — schema público que qualquer modelo pode preencher, e a conferência da saída contra a ancoragem
+- [x] `@precisa-saude/fhir-pdf` — Camada de texto de PDF, fechando o caminho do laudo até o FHIR
 - [x] Calculadoras clínicas — extraídas para [`@precisa-saude/calculadoras-clinicas`](https://github.com/Precisa-Saude/calculadoras-clinicas)
 - [x] `@precisa-saude/fhir-rnds` — Cliente RNDS: autenticação mTLS, submissão de bundles
 - [x] Implementation Guide FHIR — perfis BRPatient, BRLabObservation, BRDiagnosticReport via SUSHI

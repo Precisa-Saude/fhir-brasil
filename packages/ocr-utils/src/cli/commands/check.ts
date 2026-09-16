@@ -42,7 +42,24 @@ export async function check(
     if (!result.valid) {
       exitWithError(`Saída inválida: ${result.errors.join('; ')}`);
     }
-    outputJson(extractionToLabResult(result.accepted));
+    const envelope = extractionToLabResult(result.accepted);
+
+    // O envelope sai por stdout e os avisos por stderr, para o pipe com o
+    // `fhir-bio convert` continuar limpo. Sem isto, saída inteiramente
+    // recusada viraria um envelope válido e vazio, que é o pior jeito de
+    // descobrir que a extração falhou.
+    const semCodigo = result.accepted.length - envelope.observations.length;
+    if (semCodigo > 0) {
+      process.stderr.write(
+        `aviso: ${String(semCodigo)} grandeza(s) aprovada(s) ficaram de fora do envelope ` +
+          'por não terem código no catálogo\n',
+      );
+    }
+    if (envelope.observations.length === 0) {
+      process.stderr.write('aviso: nenhuma observação no envelope\n');
+    }
+
+    outputJson(envelope);
     return;
   }
 

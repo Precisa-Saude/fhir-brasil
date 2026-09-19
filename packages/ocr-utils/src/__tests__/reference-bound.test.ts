@@ -114,4 +114,64 @@ describe('placeSingleBound', () => {
     expect(r.referenceMax).toBe(90);
     expect(r.referenceMin).toBeNull();
   });
+
+  // Laudo brasileiro imprime vírgula decimal, e o número chega do JSON com
+  // ponto. Procurar só a grafia do JavaScript não achava nada, e a correção
+  // não acontecia justamente nos laudos em português.
+  it('acha o número impresso com vírgula decimal', () => {
+    const r = placeSingleBound(
+      apo({
+        name: 'Insulina',
+        referenceMax: null,
+        referenceMin: 24.9,
+        sourceText: 'Insulina 3,4 uUI/mL menor que 24,9',
+      }),
+    );
+
+    expect(r.referenceMax).toBe(24.9);
+    expect(r.referenceMin).toBeNull();
+  });
+
+  it('o ponto decimal continua valendo', () => {
+    const r = placeSingleBound(
+      apo({ referenceMax: null, referenceMin: 24.9, sourceText: 'Insulin 3.4 uIU/mL < 24.9' }),
+    );
+
+    expect(r.referenceMax).toBe(24.9);
+  });
+
+  it.each([
+    ['dois-pontos', 'Ferritina 210 ng/mL menor que: 30'],
+    ['igual', 'Ferritina 210 ng/mL menor que = 30'],
+  ])('atravessa a pontuação entre o sinal e o número: %s', (_label, sourceText) => {
+    const r = placeSingleBound(
+      apo({ name: 'Ferritina', referenceMax: null, referenceMin: 30, sourceText }),
+    );
+
+    expect(r.referenceMax).toBe(30);
+  });
+
+  // O número do limite aparece inteiro dentro de outro: a fronteira explícita
+  // é o que impede "190" de responder por 90, e "90.5" de responder por 90.
+  it.each([
+    ['número maior que contém o limite', 'ApoB 102 mg/dL 190'],
+    ['decimal que começa com o limite', 'ApoB 102 mg/dL < 90.5'],
+  ])('não casa com %s', (_label, sourceText) => {
+    const r = placeSingleBound(apo({ referenceMax: null, referenceMin: 90, sourceText }));
+
+    expect(r.referenceMin).toBe(90);
+    expect(r.referenceMax).toBeNull();
+  });
+
+  // Documenta o desempate: com o mesmo número em dois sinais diferentes vale a
+  // primeira ocorrência. É arbitrário, e é melhor estar fixado do que virar
+  // surpresa numa mudança de regex.
+  it('com o mesmo número em dois sinais, vale o primeiro', () => {
+    const r = placeSingleBound(
+      apo({ referenceMax: null, referenceMin: 90, sourceText: 'X > 90 e depois Y < 90' }),
+    );
+
+    expect(r.referenceMin).toBe(90);
+    expect(r.referenceMax).toBeNull();
+  });
 });

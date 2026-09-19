@@ -26,11 +26,12 @@ import type { ExtractedBiomarker } from './extraction-schema.js';
  * existe fronteira entre ele e o espaço seguinte e o `\b` nunca casava. Quem
  * faz o papel de fronteira aqui é o `\s*$` que fecha o padrão.
  */
-const ATE = /(?:<|≤|<=|menor\s+que|menor\s+ou\s+igual|abaixo\s+de|at[ée]|under|less\s+than)\s*$/iu;
+const ATE =
+  /(?:<|≤|<=|menor\s+que|menor\s+ou\s+igual|abaixo\s+de|at[ée]|under|less\s+than)[\s:=]*$/iu;
 
 /** Sinal de limite inferior: o valor fica acima do número. */
 const ACIMA =
-  /(?:>|≥|>=|maior\s+que|maior\s+ou\s+igual|acima\s+de|superior\s+a|over|greater\s+than)\s*$/iu;
+  /(?:>|≥|>=|maior\s+que|maior\s+ou\s+igual|acima\s+de|superior\s+a|over|greater\s+than)[\s:=]*$/iu;
 
 /**
  * De que lado o número solto cai, lendo o que vem imediatamente antes dele.
@@ -40,7 +41,12 @@ const ACIMA =
  * é o `<` colado no 90, e não um `>` que apareça em outro ponto da linha.
  */
 const ladoDoLimite = (sourceText: string, bound: number): 'max' | 'min' | undefined => {
-  const escapado = String(bound).replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+  // Laudo brasileiro imprime "24,9" e o número chega como 24.9. Procurar a
+  // grafia do JavaScript não encontrava nada, e a correção simplesmente não
+  // acontecia num laudo em português, que é a maior parte deles.
+  const escapado = String(bound)
+    .replace(/[.*+?^${}()|[\]\\]/gu, '\\$&')
+    .replace(/\\\./gu, '[.,]');
   // `\b` não serve depois de um número decimal, então a fronteira é explícita.
   const ocorrencia = new RegExp(`(.*?)(?<![\\d.,])${escapado}(?![\\d.,])`, 'u').exec(sourceText);
   if (!ocorrencia) return undefined;
@@ -67,6 +73,9 @@ export const placeSingleBound = (biomarker: ExtractedBiomarker): ExtractedBiomar
   const repetido = temMin && temMax && referenceMin === referenceMax;
   if (!repetido && temMin === temMax) return biomarker;
 
+  // Com as duas pontas repetidas o `temMin` é verdadeiro e o número sai do
+  // `referenceMin`, que é o mesmo dos dois lados. Dito aqui porque a expressão
+  // sozinha parece escolher um lado quando na verdade tanto faz.
   const bound = (temMin ? referenceMin : referenceMax) as number;
   const lado = ladoDoLimite(sourceText, bound);
   if (lado === undefined) return biomarker;

@@ -1,3 +1,9 @@
+## [0.26.4](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.26.3...v0.26.4) (2026-09-19)
+
+### Bug Fixes
+
+* **ocr-utils:** limite solto cai do lado que o laudo imprimiu ([#110](https://github.com/Precisa-Saude/fhir-brasil/issues/110)) ([b1ae436](https://github.com/Precisa-Saude/fhir-brasil/commit/b1ae436469befaef1533a0d4b4927ca1b7b9a571))
+
 ## [0.26.3](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.26.2...v0.26.3) (2026-09-19)
 
 ### Bug Fixes

@@ -24,7 +24,13 @@ const hemoglobina = {
 describe('LAB_EXTRACTION_SCHEMA', () => {
   it('exige os campos que tornam a conferência possível', () => {
     expect(LAB_EXTRACTION_SCHEMA.properties.biomarkers.items.required).toContain('sourceText');
-    expect(LAB_EXTRACTION_SCHEMA.required).toEqual(['biomarkers']);
+    // A data e o laboratório valem para o laudo inteiro, e a data decide se
+    // existe Bundle FHIR: sem ela o mapeador recusa montar.
+    expect(LAB_EXTRACTION_SCHEMA.required).toEqual([
+      'biomarkers',
+      'collectionDate',
+      'laboratoryName',
+    ]);
   });
 
   it('não carrega regra de comportamento nas descrições', () => {
@@ -138,6 +144,27 @@ describe('validateExtraction', () => {
     );
     expect(result.accepted).toHaveLength(1);
     expect(result.rejected.map((r) => r.reason)).toEqual(['not-anchored', 'schema']);
+  });
+});
+
+describe('o que vale para o laudo inteiro', () => {
+  it('devolve data e laboratório quando o modelo responde', () => {
+    const result = validateExtraction(
+      { biomarkers: [hemoglobina], collectionDate: '2026-09-18', laboratoryName: 'Fleury' },
+      { anchors },
+    );
+    expect(result.report).toEqual({ collectionDate: '2026-09-18', laboratoryName: 'Fleury' });
+  });
+
+  // Campo ausente e `null` são a mesma coisa aqui, e string vazia também: o
+  // Bundle não sai com data vazia, e "" atravessaria a checagem de tipo.
+  it.each([
+    ['ausente', {}],
+    ['nulo', { collectionDate: null, laboratoryName: null }],
+    ['vazio', { collectionDate: '', laboratoryName: '' }],
+  ])('devolve nulo quando o campo está %s', (_label, extra) => {
+    const result = validateExtraction({ biomarkers: [hemoglobina], ...extra }, { anchors });
+    expect(result.report).toEqual({ collectionDate: null, laboratoryName: null });
   });
 });
 

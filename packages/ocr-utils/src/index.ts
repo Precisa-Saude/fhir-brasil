@@ -19,3 +19,4 @@ export type {
 export { acceptedBiomarkers, validateExtraction } from './extraction-validator';
 export type { ExtractOptions, ExtractResult } from './llm-client';
 export { extractWithModel } from './llm-client';
+export { placeSingleBound } from './reference-bound';

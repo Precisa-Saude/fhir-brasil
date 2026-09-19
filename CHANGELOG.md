@@ -1,3 +1,9 @@
+## [0.26.3](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.26.2...v0.26.3) (2026-09-19)
+
+### Bug Fixes
+
+* **ocr-utils:** faixa de referência obrigatória no contrato ([#109](https://github.com/Precisa-Saude/fhir-brasil/issues/109)) ([92028e2](https://github.com/Precisa-Saude/fhir-brasil/commit/92028e2196f655c259c273099cc98b3a5722dbcd))
+
 ## [0.26.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.26.1...v0.26.2) (2026-09-19)
 
 ### Bug Fixes

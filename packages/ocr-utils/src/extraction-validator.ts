@@ -2,6 +2,7 @@ import { loincToCode } from '@precisa-saude/fhir';
 
 import type { AnchorResult } from './anchor.js';
 import type { ExtractedBiomarker, ExtractionPayload } from './extraction-schema.js';
+import { placeSingleBound } from './reference-bound.js';
 
 /**
  * Conferência da saída do modelo contra o contrato e contra a ancoragem.
@@ -182,7 +183,10 @@ export function validateExtraction(
       }
     }
 
-    accepted.push(biomarker);
+    // O lado de um limite solto é decidido aqui, e não pelo modelo: a linha
+    // impressa diz o sinal, e os modelos abertos erram o lado sem que a
+    // descrição do contrato os corrija. Ver `reference-bound.ts`.
+    accepted.push(placeSingleBound(biomarker));
   }
 
   return {

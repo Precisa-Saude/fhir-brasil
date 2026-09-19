@@ -20,6 +20,13 @@
  * O campo `sourceText` existe porque é o que torna a conferência possível:
  * sem o trecho que originou o valor não dá para auditar a extração depois.
  *
+ * O `loinc` é obrigatório apesar de aceitar `null`. Opcional, ele some: num
+ * laudo da Labcorp o `granite-4.1-8b` leu os cinco exames certos e devolveu
+ * todos sem o campo, e a conferência recusou os cinco. Obrigatório, o modelo
+ * precisa decidir e responder `null` quando nenhum código serve, que é uma
+ * resposta auditável em vez de um silêncio. Sem isto, qual modelo funciona
+ * depende de o modelo lembrar de preencher campo opcional.
+ *
  * Campo que aceita mais de um tipo usa `anyOf`, e não `type: [...]`. As duas
  * formas são JSON Schema válido, mas decodificador restrito não engole a
  * segunda: o LM Studio recusa a geração com `'type' must be a string`. Como o
@@ -43,7 +50,9 @@ export const LAB_EXTRACTION_SCHEMA = {
           },
           loinc: {
             anyOf: [{ type: 'string' }, { type: 'null' }],
-            description: 'A LOINC code from the allowed list, or null when none of them applies.',
+            description:
+              'A LOINC code from the allowed list, or null when none of them applies. ' +
+              'Required: answer null rather than omitting the field.',
           },
           name: {
             description: 'The measurement name as the report prints it.',
@@ -70,7 +79,7 @@ export const LAB_EXTRACTION_SCHEMA = {
             description: 'Numeric value, or text for a qualitative result.',
           },
         },
-        required: ['name', 'value', 'unit', 'sourceText', 'confidence'],
+        required: ['name', 'value', 'unit', 'sourceText', 'confidence', 'loinc'],
         type: 'object',
       },
       type: 'array',

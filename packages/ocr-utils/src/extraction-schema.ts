@@ -20,6 +20,12 @@
  * O campo `sourceText` existe porque é o que torna a conferência possível:
  * sem o trecho que originou o valor não dá para auditar a extração depois.
  *
+ * A descrição dele diz "linha" e não "trecho" porque "trecho" é largo demais:
+ * num laudo da Quest o `qwen3-4b-2507` citou a nota de rodapé inteira do ANA
+ * SCREEN, oito linhas de explicação, e quem confere recebeu um parágrafo aceso
+ * no lugar da linha do resultado. A citação continua sendo do documento, só
+ * que grande demais para servir de referência.
+ *
  * `collectionDate` e `laboratoryName` moram no topo porque valem para o laudo
  * inteiro, e não para uma medida. Sem a data não sai Bundle FHIR: o mapeador
  * recusa montar um sem ela, então um contrato que não pede a data entrega
@@ -72,7 +78,9 @@ export const LAB_EXTRACTION_SCHEMA = {
             description: 'Lower bound of the range printed on the report, or null.',
           },
           sourceText: {
-            description: 'The snippet of the report carrying this measurement and its value.',
+            description:
+              'The line of the report where this measurement and its value are printed. ' +
+              'A line, not the explanatory block around it.',
             type: 'string',
           },
           unit: {

@@ -174,4 +174,41 @@ describe('placeSingleBound', () => {
     expect(r.referenceMin).toBe(90);
     expect(r.referenceMax).toBeNull();
   });
+
+  // Grafia diferente, mesmo número: o laudo escreve o limite com zero à
+  // direita e o modelo devolve o inteiro. A comparação é por valor.
+  it.each([
+    ['vírgula com zero', 'ApoB 102 mg/dL < 90,0'],
+    ['ponto com zero', 'ApoB 102 mg/dL < 90.0'],
+  ])('acha o limite impresso como %s', (_label, sourceText) => {
+    const r = placeSingleBound(apo({ referenceMax: null, referenceMin: 90, sourceText }));
+
+    expect(r.referenceMax).toBe(90);
+    expect(r.referenceMin).toBeNull();
+  });
+
+  it('as duas grafias convivem na mesma linha', () => {
+    const r = placeSingleBound(
+      apo({
+        name: 'Insulina',
+        referenceMax: null,
+        referenceMin: 24.9,
+        sourceText: 'Insulina 3.4 uUI/mL faixa 2.6 a 24,9 menor que 24.9',
+      }),
+    );
+
+    // A primeira ocorrência por valor é o "24,9" do meio, que vem depois de
+    // "a" e não de um sinal: sem sinal, nada muda.
+    expect(r.referenceMin).toBe(24.9);
+    expect(r.referenceMax).toBeNull();
+  });
+
+  it('não confunde o limite com número maior que o contém', () => {
+    const r = placeSingleBound(
+      apo({ referenceMax: null, referenceMin: 90, sourceText: 'ApoB 102 mg/dL < 190' }),
+    );
+
+    expect(r.referenceMin).toBe(90);
+    expect(r.referenceMax).toBeNull();
+  });
 });

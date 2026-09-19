@@ -27,33 +27,41 @@ import type { ExtractedBiomarker } from './extraction-schema.js';
  * faz o papel de fronteira aqui é o `\s*$` que fecha o padrão.
  */
 const ATE =
-  /(?:<|≤|<=|menor\s+que|menor\s+ou\s+igual|abaixo\s+de|at[ée]|under|less\s+than)[\s:=]*$/iu;
+  /(?:<|≤|<=|menor\s+que|menor\s+ou\s+igual|abaixo\s+de|at[ée]|under|less\s+than)\s*[:=]?\s*$/iu;
 
 /** Sinal de limite inferior: o valor fica acima do número. */
 const ACIMA =
-  /(?:>|≥|>=|maior\s+que|maior\s+ou\s+igual|acima\s+de|superior\s+a|over|greater\s+than)[\s:=]*$/iu;
+  /(?:>|≥|>=|maior\s+que|maior\s+ou\s+igual|acima\s+de|superior\s+a|over|greater\s+than)\s*[:=]?\s*$/iu;
 
 /**
  * De que lado o número solto cai, lendo o que vem imediatamente antes dele.
  *
- * Só o trecho anterior ao número interessa, e por isso a âncora `$` nos dois
- * padrões: numa linha como "Apolipoprotein B 102 High mg/dL < 90" o que decide
- * é o `<` colado no 90, e não um `>` que apareça em outro ponto da linha.
+ * A linha é varrida por número, e cada um é comparado **por valor** com o
+ * limite. Comparar grafia não servia: o laudo imprime "24,9" onde o JSON traz
+ * 24.9, e imprime "90,0" onde o modelo devolveu 90.
+ *
+ * Achado o número, o que decide é o trecho anterior a ele, e por isso a âncora
+ * `$` nos dois padrões: numa linha como "Apolipoprotein B 102 High mg/dL < 90"
+ * quem manda é o `<` colado no 90, e não um `>` noutro ponto da linha.
  */
-const ladoDoLimite = (sourceText: string, bound: number): 'max' | 'min' | undefined => {
-  // Laudo brasileiro imprime "24,9" e o número chega como 24.9. Procurar a
-  // grafia do JavaScript não encontrava nada, e a correção simplesmente não
-  // acontecia num laudo em português, que é a maior parte deles.
-  const escapado = String(bound)
-    .replace(/[.*+?^${}()|[\]\\]/gu, '\\$&')
-    .replace(/\\\./gu, '[.,]');
-  // `\b` não serve depois de um número decimal, então a fronteira é explícita.
-  const ocorrencia = new RegExp(`(.*?)(?<![\\d.,])${escapado}(?![\\d.,])`, 'u').exec(sourceText);
-  if (!ocorrencia) return undefined;
+const NUMERO = /\d+(?:[.,]\d+)?/gu;
 
-  const antes = ocorrencia[1] ?? '';
-  if (ATE.test(antes)) return 'max';
-  if (ACIMA.test(antes)) return 'min';
+const ladoDoLimite = (sourceText: string, bound: number): 'max' | 'min' | undefined => {
+  for (const achado of sourceText.matchAll(NUMERO)) {
+    // Comparação por valor, e não por grafia. Laudo brasileiro imprime "24,9"
+    // e o número chega como 24.9, e um laudo que escreve "90,0" é o mesmo 90
+    // que o modelo devolveu. Procurar a grafia do JavaScript errava os dois.
+    if (Number(achado[0].replace(',', '.')) !== bound) continue;
+
+    // Só a primeira ocorrência decide. Com o mesmo número em dois sinais na
+    // mesma linha o desempate é arbitrário de qualquer jeito, e parar aqui
+    // deixa o comportamento fixo em vez de depender da ordem dos padrões.
+    const antes = sourceText.slice(0, achado.index);
+    if (ATE.test(antes)) return 'max';
+    if (ACIMA.test(antes)) return 'min';
+    return undefined;
+  }
+
   return undefined;
 };
 

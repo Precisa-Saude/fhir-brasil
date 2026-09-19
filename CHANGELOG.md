@@ -1,3 +1,9 @@
+## [0.26.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.26.1...v0.26.2) (2026-09-19)
+
+### Bug Fixes
+
+* **ocr-utils:** o contrato decidia qual modelo aberto funcionava ([#108](https://github.com/Precisa-Saude/fhir-brasil/issues/108)) ([1561809](https://github.com/Precisa-Saude/fhir-brasil/commit/1561809387c7e7df6ff04c9bfba80bdb2ca85e9f))
+
 ## [0.26.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.26.0...v0.26.1) (2026-09-16)
 
 ### Bug Fixes

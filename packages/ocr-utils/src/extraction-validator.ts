@@ -39,6 +39,15 @@ export interface ExtractionValidationResult {
   /** Erros do objeto inteiro, quando nem dá para chegar nas grandezas. */
   errors: string[];
   rejected: RejectedBiomarker[];
+  /**
+   * O que vale para o laudo inteiro, e não para uma medida.
+   *
+   * Sai daqui em vez de o consumidor ler do objeto cru porque é aqui que a
+   * forma é conferida: string ou `null`, nunca o que o modelo inventar. Sem a
+   * data não há Bundle FHIR, então ela precisa atravessar a conferência em vez
+   * de ficar para trás.
+   */
+  report: { collectionDate: string | null; laboratoryName: string | null };
   /** `true` quando o objeto tem forma válida, mesmo que toda grandeza caia. */
   valid: boolean;
 }
@@ -55,6 +64,10 @@ export interface ValidateExtractionOptions {
 
 const isRecord = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null && !Array.isArray(v);
+
+/** String, ou `null` para qualquer outra coisa, inclusive campo ausente. */
+const nullableString = (v: unknown): string | null =>
+  typeof v === 'string' && v !== '' ? v : null;
 
 /** Confere uma grandeza contra o schema. Devolve a lista de problemas. */
 function schemaErrors(raw: unknown): string[] {
@@ -110,13 +123,20 @@ export function validateExtraction(
   const { anchors } = options;
 
   if (!isRecord(raw)) {
-    return { accepted: [], errors: ['a saída não é um objeto JSON'], rejected: [], valid: false };
+    return {
+      accepted: [],
+      errors: ['a saída não é um objeto JSON'],
+      rejected: [],
+      report: { collectionDate: null, laboratoryName: null },
+      valid: false,
+    };
   }
   if (!Array.isArray(raw.biomarkers)) {
     return {
       accepted: [],
       errors: ['`biomarkers` ausente ou não é lista'],
       rejected: [],
+      report: { collectionDate: null, laboratoryName: null },
       valid: false,
     };
   }
@@ -165,7 +185,16 @@ export function validateExtraction(
     accepted.push(biomarker);
   }
 
-  return { accepted, errors: [], rejected, valid: true };
+  return {
+    accepted,
+    errors: [],
+    rejected,
+    report: {
+      collectionDate: nullableString(raw.collectionDate),
+      laboratoryName: nullableString(raw.laboratoryName),
+    },
+    valid: true,
+  };
 }
 
 /** Só a lista de grandezas aprovadas, para quem não quer o relatório inteiro. */

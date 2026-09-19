@@ -33,6 +33,17 @@ describe('LAB_EXTRACTION_SCHEMA', () => {
     ]);
   });
 
+  // Faixa é campo obrigatório pelo mesmo motivo do `loinc`: opcional, o modelo
+  // esquece, e faixa errada não parece errada. Ver o comentário do schema.
+  it.each(['referenceMin', 'referenceMax'])('exige %s, que decide normal ou alterado', (campo) => {
+    expect(LAB_EXTRACTION_SCHEMA.properties.biomarkers.items.required).toContain(campo);
+  });
+
+  it('diz que o limite não é a medida, que era a confusão dos modelos', () => {
+    const { referenceMax } = LAB_EXTRACTION_SCHEMA.properties.biomarkers.items.properties;
+    expect(referenceMax.description).toContain('not this');
+  });
+
   it('não carrega regra de comportamento nas descrições', () => {
     const descriptions = JSON.stringify(LAB_EXTRACTION_SCHEMA).toLowerCase();
     for (const forbidden of ['never', 'nunca', 'verbatim', 'do not infer']) {

@@ -38,6 +38,20 @@
  * resposta auditável em vez de um silêncio. Sem isto, qual modelo funciona
  * depende de o modelo lembrar de preencher campo opcional.
  *
+ * `referenceMin` e `referenceMax` são obrigatórios pelo mesmo motivo do
+ * `loinc`, e o erro que eles deixavam passar era pior que o silêncio. Num laudo
+ * da Labcorp, com a faixa impressa na mesma linha, `ministral-3-8b` e
+ * `granite-4.1-8b` devolveram o **valor medido** no lugar do limite superior
+ * sempre que o resultado encostava no topo da faixa: 5,7 em vez de 5,6 na
+ * hemoglobina glicada, 7,0 em vez de 8,4 no ácido úrico. Os dois também
+ * arredondaram limites impressos, 149 virando 150 e 24,9 virando 25.
+ *
+ * Uma faixa errada não parece errada: ela vira um "normal" ou um "alterado" que
+ * ninguém questiona, e o valor ao lado está certo. Por isso a descrição diz as
+ * duas coisas que o modelo confundia, que o limite não é a medida e que os
+ * dígitos são os do laudo, e o campo passa a exigir resposta: `null` quando o
+ * laudo não publica limite é auditável, um campo ausente não é.
+ *
  * Campo que aceita mais de um tipo usa `anyOf`, e não `type: [...]`. As duas
  * formas são JSON Schema válido, mas decodificador restrito não engole a
  * segunda: o LM Studio recusa a geração com `'type' must be a string`. Como o
@@ -71,11 +85,17 @@ export const LAB_EXTRACTION_SCHEMA = {
           },
           referenceMax: {
             anyOf: [{ type: 'number' }, { type: 'null' }],
-            description: 'Upper bound of the range printed on the report, or null.',
+            description:
+              'Upper bound of the reference range as printed on the report, or null when ' +
+              'the report prints no upper bound. The bound describes the test, not this ' +
+              'result, and keeps the digits the report prints.',
           },
           referenceMin: {
             anyOf: [{ type: 'number' }, { type: 'null' }],
-            description: 'Lower bound of the range printed on the report, or null.',
+            description:
+              'Lower bound of the reference range as printed on the report, or null when ' +
+              'the report prints no lower bound. The bound describes the test, not this ' +
+              'result, and keeps the digits the report prints.',
           },
           sourceText: {
             description:
@@ -92,7 +112,16 @@ export const LAB_EXTRACTION_SCHEMA = {
             description: 'Numeric value, or text for a qualitative result.',
           },
         },
-        required: ['name', 'value', 'unit', 'sourceText', 'confidence', 'loinc'],
+        required: [
+          'name',
+          'value',
+          'unit',
+          'sourceText',
+          'confidence',
+          'loinc',
+          'referenceMin',
+          'referenceMax',
+        ],
         type: 'object',
       },
       type: 'array',

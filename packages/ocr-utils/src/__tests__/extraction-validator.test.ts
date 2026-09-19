@@ -39,9 +39,14 @@ describe('LAB_EXTRACTION_SCHEMA', () => {
     expect(LAB_EXTRACTION_SCHEMA.properties.biomarkers.items.required).toContain(campo);
   });
 
+  // A descrição é montada por concatenação, então a asserção tolera quebra de
+  // linha e espaço: reflow do código-fonte não é mudança de contrato.
   it('diz que o limite não é a medida, que era a confusão dos modelos', () => {
-    const { referenceMax } = LAB_EXTRACTION_SCHEMA.properties.biomarkers.items.properties;
-    expect(referenceMax.description).toContain('not this');
+    const { referenceMax, referenceMin } =
+      LAB_EXTRACTION_SCHEMA.properties.biomarkers.items.properties;
+    for (const campo of [referenceMin, referenceMax]) {
+      expect(campo.description).toMatch(/not\s+this\s+result/);
+    }
   });
 
   it('não carrega regra de comportamento nas descrições', () => {

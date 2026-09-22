@@ -169,7 +169,23 @@ describe('labObservationToFHIR', () => {
       'patient-1',
     );
 
+    // Ausente, e não lista vazia: `referenceRange: []` seria serializado como
+    // array vazio no JSON e o R4 não admite elemento de lista sem conteúdo.
     expect(fhirObs.referenceRange).toBeUndefined();
+    expect('referenceRange' in fhirObs).toBe(false);
+  });
+
+  // Lista vazia diz a mesma coisa que lista ausente, e tratá-las diferente
+  // faria um `[]` vindo de um `.filter()` apagar em silêncio a faixa que o
+  // chamador também mandou no par simples.
+  it('lista anotada vazia cai no par simples', () => {
+    const fhirObs = labObservationToFHIR(
+      { ...sampleLabObservation, referenceRanges: [] },
+      'patient-1',
+    );
+
+    expect(fhirObs.referenceRange).toHaveLength(1);
+    expect(fhirObs.referenceRange?.[0]?.low?.value).toBe(70);
   });
 
   // Laudo com uma coluna de referência por sexo. Sem `appliesTo` só há duas

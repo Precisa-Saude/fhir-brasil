@@ -51,13 +51,17 @@ function interpretationDisplay(flag: Flag): string {
 }
 
 /**
- * Sexo como o R4 o codifica dentro de `referenceRange.appliesTo`.
+ * O `coding` do sexo, que vai **dentro** do CodeableConcept do `appliesTo`.
+ *
+ * O nome diz `CODING` e não `APPLIES_TO` de propósito: isto não é o valor do
+ * campo, é uma entrada da lista de codificações dele. O embrulho acontece no
+ * uso, em `{ coding: [SEX_CODING[sex]] }`.
  *
  * É o `AdministrativeGender`, e não o v3-ObservationInterpretation nem um
  * sistema nosso: um consumidor que já lê `Patient.gender` compara os dois sem
  * tabela de tradução no meio.
  */
-const APPLIES_TO_SEX = {
+const SEX_CODING = {
   female: {
     code: 'female',
     display: 'Female',
@@ -95,12 +99,15 @@ const buildReferenceRanges = (
     value,
   });
 
-  const toRange = (low?: number, high?: number, sex?: 'female' | 'male'): FHIRReferenceRange[] => {
+  // Devolve lista, e não uma faixa: o caso sem limite nenhum vira lista vazia
+  // em vez de `undefined`, e aí os dois caminhos abaixo se compõem com
+  // `flatMap` sem ninguém precisar filtrar nada depois.
+  const toRanges = (low?: number, high?: number, sex?: 'female' | 'male'): FHIRReferenceRange[] => {
     if (low === undefined && high === undefined) return [];
 
     return [
       {
-        ...(sex === undefined ? {} : { appliesTo: [{ coding: [APPLIES_TO_SEX[sex]] }] }),
+        ...(sex === undefined ? {} : { appliesTo: [{ coding: [SEX_CODING[sex]] }] }),
         ...(high === undefined ? {} : { high: quantity(high) }),
         ...(low === undefined ? {} : { low: quantity(low) }),
       },
@@ -110,11 +117,16 @@ const buildReferenceRanges = (
   // A lista anotada tem precedência: quando ela existe, o par simples é o
   // resumo de uma das colunas e repeti-lo publicaria a mesma faixa duas vezes,
   // uma delas sem dizer a quem se aplica.
+  //
+  // Lista vazia cai no par simples, igual a ausente, e isso é escolha: as duas
+  // dizem "não tenho faixa anotada", e tratá-las diferente faria um `[]` vindo
+  // de um `.filter()` apagar em silêncio a faixa que o chamador também mandou
+  // em `referenceMin` e `referenceMax`.
   if (observation.referenceRanges && observation.referenceRanges.length > 0) {
-    return observation.referenceRanges.flatMap((r) => toRange(r.low, r.high, r.appliesTo));
+    return observation.referenceRanges.flatMap((r) => toRanges(r.low, r.high, r.appliesTo));
   }
 
-  return toRange(observation.referenceMin, observation.referenceMax);
+  return toRanges(observation.referenceMin, observation.referenceMax);
 };
 
 /**

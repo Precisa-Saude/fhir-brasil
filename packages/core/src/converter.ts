@@ -8,7 +8,14 @@
 import { codeToLoinc } from './biomarkers';
 import { type Addressable, entryFullUrl } from './bundle-urls';
 import { BIOMARKER_CODE_SYSTEM, LOINC_SYSTEM } from './code-systems';
-import type { FHIRBundle, FHIRDiagnosticReport, FHIRObservation, FHIRPatient } from './fhir-types';
+import type {
+  FHIRBundle,
+  FHIRDiagnosticReport,
+  FHIRObservation,
+  FHIRPatient,
+  FHIRQuantity,
+  FHIRReferenceRange,
+} from './fhir-types';
 import type { Flag, LabObservationData, LabReportData, UserProfileData } from './types';
 import { getDefaultUnit, unitToUCUM } from './units';
 
@@ -42,6 +49,73 @@ function interpretationDisplay(flag: Flag): string {
       return 'Normal';
   }
 }
+
+/**
+ * Sexo como o R4 o codifica dentro de `referenceRange.appliesTo`.
+ *
+ * É o `AdministrativeGender`, e não o v3-ObservationInterpretation nem um
+ * sistema nosso: um consumidor que já lê `Patient.gender` compara os dois sem
+ * tabela de tradução no meio.
+ */
+const APPLIES_TO_SEX = {
+  female: {
+    code: 'female',
+    display: 'Female',
+    system: 'http://hl7.org/fhir/administrative-gender',
+  },
+  male: { code: 'male', display: 'Male', system: 'http://hl7.org/fhir/administrative-gender' },
+} as const;
+
+/**
+ * Monta as faixas de referência do `Observation`.
+ *
+ * Duas mudanças em relação ao que existia, e as duas são sobre não perder o que
+ * o laudo imprimiu.
+ *
+ * **Um limite só já basta.** Antes a faixa só saía com os dois, e um laudo que
+ * publica "inferior a 190 mg/dL" ou "superior a 60 mL/min/1,73m²" perdia o
+ * campo inteiro. O R4 trata `low` e `high` como opcionais independentes e
+ * documenta o caso de um lado só, e o importador deste mesmo pacote já lia
+ * `low?.value` e `high?.value` com acesso opcional: a assimetria era só do
+ * escritor. Ver PRE-430.
+ *
+ * **Mais de uma faixa, anotada.** Laudo com uma coluna de referência por sexo
+ * passa a sair com as duas, cada uma com o seu `appliesTo`, em vez de o
+ * pipeline escolher uma sem saber de quem é o exame. Ver PRE-424 e PRE-425.
+ */
+const buildReferenceRanges = (
+  observation: LabObservationData,
+  sourceUnit: string,
+  ucumUnit: string,
+): FHIRReferenceRange[] => {
+  const quantity = (value: number): FHIRQuantity => ({
+    code: ucumUnit,
+    system: 'http://unitsofmeasure.org',
+    unit: sourceUnit,
+    value,
+  });
+
+  const toRange = (low?: number, high?: number, sex?: 'female' | 'male'): FHIRReferenceRange[] => {
+    if (low === undefined && high === undefined) return [];
+
+    return [
+      {
+        ...(sex === undefined ? {} : { appliesTo: [{ coding: [APPLIES_TO_SEX[sex]] }] }),
+        ...(high === undefined ? {} : { high: quantity(high) }),
+        ...(low === undefined ? {} : { low: quantity(low) }),
+      },
+    ];
+  };
+
+  // A lista anotada tem precedência: quando ela existe, o par simples é o
+  // resumo de uma das colunas e repeti-lo publicaria a mesma faixa duas vezes,
+  // uma delas sem dizer a quem se aplica.
+  if (observation.referenceRanges && observation.referenceRanges.length > 0) {
+    return observation.referenceRanges.flatMap((r) => toRange(r.low, r.high, r.appliesTo));
+  }
+
+  return toRange(observation.referenceMin, observation.referenceMax);
+};
 
 /**
  * Convert generic lab observation to FHIR Observation
@@ -128,24 +202,8 @@ export function labObservationToFHIR(
     };
 
     // Reference range only applies to quantitative values
-    if (observation.referenceMin !== undefined && observation.referenceMax !== undefined) {
-      fhirObs.referenceRange = [
-        {
-          high: {
-            code: ucumUnit,
-            system: 'http://unitsofmeasure.org',
-            unit: sourceUnit,
-            value: observation.referenceMax,
-          },
-          low: {
-            code: ucumUnit,
-            system: 'http://unitsofmeasure.org',
-            unit: sourceUnit,
-            value: observation.referenceMin,
-          },
-        },
-      ];
-    }
+    const referenceRange = buildReferenceRanges(observation, sourceUnit, ucumUnit);
+    if (referenceRange.length > 0) fhirObs.referenceRange = referenceRange;
   }
 
   return fhirObs;

@@ -29,6 +29,15 @@ export interface FHIRQuantity {
 }
 
 export interface FHIRReferenceRange {
+  /**
+   * A quem esta faixa se aplica, quando o laudo publica mais de uma.
+   *
+   * É o campo nativo do R4 para faixa estratificada, e existe justamente para
+   * o caso em que o documento imprime uma coluna por sexo. Sem ele só há duas
+   * saídas, e as duas perdem: escolher uma coluna sem saber de quem é o exame,
+   * ou descartar as duas.
+   */
+  appliesTo?: FHIRCodeableConcept[];
   high?: FHIRQuantity;
   low?: FHIRQuantity;
   text?: string;

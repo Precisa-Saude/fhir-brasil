@@ -1,3 +1,9 @@
+## [0.26.5](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.26.4...v0.26.5) (2026-09-22)
+
+### Bug Fixes
+
+* **core:** faixa de referência com um limite só, e uma por sexo ([#111](https://github.com/Precisa-Saude/fhir-brasil/issues/111)) ([db57572](https://github.com/Precisa-Saude/fhir-brasil/commit/db57572e5c8e4284381d56e3a6323d836a4ec7c8))
+
 ## [0.26.4](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.26.3...v0.26.4) (2026-09-19)
 
 ### Bug Fixes

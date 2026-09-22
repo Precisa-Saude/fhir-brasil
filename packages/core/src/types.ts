@@ -25,6 +25,22 @@ export interface LabReportData {
 /**
  * Individual biomarker observation for FHIR conversion
  */
+/**
+ * Uma faixa impressa no laudo, com a quem ela se aplica.
+ *
+ * Existe para o laudo que publica uma coluna de referência por sexo. Sem esta
+ * forma só há duas saídas, e as duas perdem: escolher uma coluna sem saber de
+ * quem é o exame, ou descartar as duas. Ambas já aconteceram no corpo real e
+ * estão registradas na PRE-424 e na PRE-425.
+ *
+ * `appliesTo` ausente significa "vale para todo mundo", que é o caso comum.
+ */
+export interface PrintedReferenceRange {
+  appliesTo?: 'female' | 'male';
+  high?: number;
+  low?: number;
+}
+
 export interface LabObservationData {
   biomarkerCode: string;
   biomarkerName: string;
@@ -33,6 +49,15 @@ export interface LabObservationData {
   isQualitative?: boolean;
   referenceMax?: number;
   referenceMin?: number;
+  /**
+   * As faixas impressas, quando o laudo publica mais de uma.
+   *
+   * Tem precedência sobre `referenceMin` e `referenceMax`, que continuam sendo
+   * a forma simples e seguem valendo para o laudo de coluna única. As duas
+   * existem porque converter todo chamador de uma vez trocaria um problema real
+   * por uma migração grande sem ganho para quem tem uma faixa só.
+   */
+  referenceRanges?: PrintedReferenceRange[];
   reportId: string;
   unit: string;
   value: number | string;

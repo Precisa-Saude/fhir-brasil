@@ -140,6 +140,107 @@ describe('labObservationToFHIR', () => {
     expect(fhirObs.referenceRange?.[0]?.low?.value).toBe(70);
     expect(fhirObs.referenceRange?.[0]?.high?.value).toBe(100);
   });
+
+  // Antes a faixa só saía com os dois limites, e laudo que publica
+  // "inferior a 190 mg/dL" perdia o campo inteiro. Ver PRE-430.
+  it('emite a faixa com só o teto, e o R4 aceita', () => {
+    const fhirObs = labObservationToFHIR(
+      { ...sampleLabObservation, referenceMax: 190, referenceMin: undefined },
+      'patient-1',
+    );
+
+    expect(fhirObs.referenceRange?.[0]?.high?.value).toBe(190);
+    expect(fhirObs.referenceRange?.[0]?.low).toBeUndefined();
+  });
+
+  it('emite a faixa com só o piso', () => {
+    const fhirObs = labObservationToFHIR(
+      { ...sampleLabObservation, referenceMax: undefined, referenceMin: 60 },
+      'patient-1',
+    );
+
+    expect(fhirObs.referenceRange?.[0]?.low?.value).toBe(60);
+    expect(fhirObs.referenceRange?.[0]?.high).toBeUndefined();
+  });
+
+  it('sem limite nenhum, não emite faixa', () => {
+    const fhirObs = labObservationToFHIR(
+      { ...sampleLabObservation, referenceMax: undefined, referenceMin: undefined },
+      'patient-1',
+    );
+
+    // Ausente, e não lista vazia: `referenceRange: []` seria serializado como
+    // array vazio no JSON e o R4 não admite elemento de lista sem conteúdo.
+    expect(fhirObs.referenceRange).toBeUndefined();
+    expect('referenceRange' in fhirObs).toBe(false);
+  });
+
+  // Lista vazia diz a mesma coisa que lista ausente, e tratá-las diferente
+  // faria um `[]` vindo de um `.filter()` apagar em silêncio a faixa que o
+  // chamador também mandou no par simples.
+  it('lista anotada vazia cai no par simples', () => {
+    // O par vem escrito aqui, e não herdado do fixture: o que este teste
+    // afirma é que a lista vazia deixa passar **estes** limites, e depender do
+    // fixture faria a asserção mudar de significado se ele mudar.
+    const fhirObs = labObservationToFHIR(
+      { ...sampleLabObservation, referenceMax: 99, referenceMin: 70, referenceRanges: [] },
+      'patient-1',
+    );
+
+    expect(fhirObs.referenceRange).toHaveLength(1);
+    expect(fhirObs.referenceRange?.[0]?.low?.value).toBe(70);
+    expect(fhirObs.referenceRange?.[0]?.high?.value).toBe(99);
+    expect(fhirObs.referenceRange?.[0]?.appliesTo).toBeUndefined();
+  });
+
+  // Laudo com uma coluna de referência por sexo. Sem `appliesTo` só há duas
+  // saídas, e as duas perdem: escolher uma coluna sem saber de quem é o exame,
+  // ou descartar as duas. Ver PRE-424 e PRE-425.
+  it('emite uma faixa por sexo, cada uma dizendo a quem se aplica', () => {
+    const fhirObs = labObservationToFHIR(
+      {
+        ...sampleLabObservation,
+        referenceRanges: [
+          { appliesTo: 'male', high: 181, low: 49 },
+          { appliesTo: 'female', high: 170, low: 37 },
+        ],
+      },
+      'patient-1',
+    );
+
+    expect(fhirObs.referenceRange).toHaveLength(2);
+    expect(fhirObs.referenceRange?.[0]?.appliesTo?.[0]?.coding?.[0]?.code).toBe('male');
+    expect(fhirObs.referenceRange?.[0]?.low?.value).toBe(49);
+    expect(fhirObs.referenceRange?.[1]?.appliesTo?.[0]?.coding?.[0]?.code).toBe('female');
+    expect(fhirObs.referenceRange?.[1]?.high?.value).toBe(170);
+  });
+
+  // O par simples é o resumo de uma das colunas: repeti-lo publicaria a mesma
+  // faixa duas vezes, uma delas sem dizer a quem se aplica.
+  it('a lista anotada tem precedência sobre o par simples', () => {
+    const fhirObs = labObservationToFHIR(
+      {
+        ...sampleLabObservation,
+        referenceMax: 100,
+        referenceMin: 70,
+        referenceRanges: [{ appliesTo: 'male', high: 181, low: 49 }],
+      },
+      'patient-1',
+    );
+
+    expect(fhirObs.referenceRange).toHaveLength(1);
+    expect(fhirObs.referenceRange?.[0]?.low?.value).toBe(49);
+  });
+
+  it('faixa anotada também aceita um limite só', () => {
+    const fhirObs = labObservationToFHIR(
+      { ...sampleLabObservation, referenceRanges: [{ appliesTo: 'male', low: 60 }] },
+      'patient-1',
+    );
+
+    expect(fhirObs.referenceRange?.[0]?.low?.value).toBe(60);
+    expect(fhirObs.referenceRange?.[0]?.high).toBeUndefined();
+  });
 });
 
 describe('labReportToFHIR', () => {

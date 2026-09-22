@@ -179,13 +179,18 @@ describe('labObservationToFHIR', () => {
   // faria um `[]` vindo de um `.filter()` apagar em silêncio a faixa que o
   // chamador também mandou no par simples.
   it('lista anotada vazia cai no par simples', () => {
+    // O par vem escrito aqui, e não herdado do fixture: o que este teste
+    // afirma é que a lista vazia deixa passar **estes** limites, e depender do
+    // fixture faria a asserção mudar de significado se ele mudar.
     const fhirObs = labObservationToFHIR(
-      { ...sampleLabObservation, referenceRanges: [] },
+      { ...sampleLabObservation, referenceMax: 99, referenceMin: 70, referenceRanges: [] },
       'patient-1',
     );
 
     expect(fhirObs.referenceRange).toHaveLength(1);
     expect(fhirObs.referenceRange?.[0]?.low?.value).toBe(70);
+    expect(fhirObs.referenceRange?.[0]?.high?.value).toBe(99);
+    expect(fhirObs.referenceRange?.[0]?.appliesTo).toBeUndefined();
   });
 
   // Laudo com uma coluna de referência por sexo. Sem `appliesTo` só há duas

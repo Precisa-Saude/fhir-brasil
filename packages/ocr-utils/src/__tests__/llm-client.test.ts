@@ -40,6 +40,7 @@ describe('extractWithModel', () => {
     vi.stubGlobal('fetch', fetchMock);
 
     await extractWithModel('Glicose 90 mg/dL', {
+      apiKey: 'chave',
       baseUrl: 'https://modelo.exemplo/v1',
       headers: { Authorization: 'Bearer outra', 'Content-Type': 'text/plain', 'X-Extra': '1' },
       model: 'qualquer',
@@ -47,7 +48,21 @@ describe('extractWithModel', () => {
 
     expect(sentHeaders(fetchMock)).toEqual({
       'X-Extra': '1',
+      authorization: 'Bearer chave',
       'content-type': 'application/json',
     });
+  });
+
+  it('descarta authorization de fora mesmo sem apiKey', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(okResponse());
+    vi.stubGlobal('fetch', fetchMock);
+
+    await extractWithModel('Glicose 90 mg/dL', {
+      baseUrl: 'https://modelo.exemplo/v1',
+      headers: { authorization: 'Bearer outra' },
+      model: 'qualquer',
+    });
+
+    expect(sentHeaders(fetchMock)).toEqual({ 'content-type': 'application/json' });
   });
 });

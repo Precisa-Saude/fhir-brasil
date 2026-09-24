@@ -1,3 +1,13 @@
+## [0.27.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.26.5...v0.27.0) (2026-09-24)
+
+### Features
+
+* **ocr-utils:** aceita cabeçalhos extras no extractWithModel ([#113](https://github.com/Precisa-Saude/fhir-brasil/issues/113)) ([61a898e](https://github.com/Precisa-Saude/fhir-brasil/commit/61a898ef754e70e22b16d034c4c18da05e75c744))
+
+### Bug Fixes
+
+* quebra volta a gerar versão maior ([#112](https://github.com/Precisa-Saude/fhir-brasil/issues/112)) ([c67e84e](https://github.com/Precisa-Saude/fhir-brasil/commit/c67e84ee717b832d3711a17e76b506a2a27c2819))
+
 ## [0.26.5](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.26.4...v0.26.5) (2026-09-22)
 
 ### Bug Fixes

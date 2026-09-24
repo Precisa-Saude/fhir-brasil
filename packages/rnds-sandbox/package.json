@@ -1,6 +1,6 @@
 {
   "name": "@precisa-saude/fhir-rnds-sandbox",
-  "version": "0.26.5",
+  "version": "0.27.0",
   "description": "Mock local da RNDS (Rede Nacional de Dados em Saúde) — endpoints FHIR R4 com cenários sintéticos para desenvolvimento e ensino",
   "keywords": [
     "fhir",

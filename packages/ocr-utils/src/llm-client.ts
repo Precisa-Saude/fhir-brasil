@@ -21,6 +21,16 @@ import { LAB_EXTRACTION_SCHEMA } from './extraction-schema.js';
 export interface ExtractOptions {
   apiKey?: string;
   baseUrl: string;
+  /**
+   * Cabeçalhos a mais em cada chamada, para endpoint atrás de proxy que exige
+   * credencial própria (o Cloudflare Access, por exemplo, pede
+   * `CF-Access-Client-Id` e `CF-Access-Client-Secret`).
+   *
+   * Não substituem `content-type` nem `authorization`: o corpo é sempre JSON e
+   * a chave do modelo continua vindo de `apiKey`. Um cabeçalho de proxy que
+   * trocasse um dos dois quebraria a chamada de um jeito difícil de ler.
+   */
+  headers?: Record<string, string>;
   model: string;
   /**
    * Modo de saída estruturada. O padrão é negociar sozinho.
@@ -38,6 +48,9 @@ export interface ExtractOptions {
   /** Milissegundos até desistir. Modelo local frio demora para carregar. */
   timeoutMs?: number;
 }
+
+/** Os dois cabeçalhos que o cliente monta e que `headers` não pode trocar. */
+const RESERVED_HEADERS = new Set(['authorization', 'content-type']);
 
 export interface ExtractResult {
   /** O JSON que o modelo devolveu, ainda sem conferência nenhuma. */
@@ -87,7 +100,14 @@ export async function extractWithModel(
   text: string,
   options: ExtractOptions,
 ): Promise<ExtractResult> {
-  const { apiKey, baseUrl, model, responseFormat, timeoutMs = 300_000 } = options;
+  const { apiKey, baseUrl, headers = {}, model, responseFormat, timeoutMs = 300_000 } = options;
+
+  // Nome de cabeçalho não diferencia maiúscula, e um objeto sim: sem comparar
+  // em minúsculas, `Authorization` passaria ao lado do `authorization` daqui e
+  // o `fetch` juntaria os dois num valor só.
+  const extraHeaders = Object.fromEntries(
+    Object.entries(headers).filter(([name]) => !RESERVED_HEADERS.has(name.toLowerCase())),
+  );
 
   // A própria ancoragem já monta a lista de permitidos, então o prompt e a
   // conferência bebem exatamente da mesma fonte.
@@ -115,6 +135,7 @@ export async function extractWithModel(
     fetch(`${baseUrl.replace(/\/$/, '')}/chat/completions`, {
       body: formatBody(mode),
       headers: {
+        ...extraHeaders,
         'content-type': 'application/json',
         ...(apiKey ? { authorization: `Bearer ${apiKey}` } : {}),
       },

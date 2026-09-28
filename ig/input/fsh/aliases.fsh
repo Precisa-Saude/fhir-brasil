@@ -20,4 +20,4 @@ Alias: $CNESTipo = https://fhir-brasil.dev.br/CodeSystem/cnes-tipo-estabelecimen
 Alias: $ObsCat = http://terminology.hl7.org/CodeSystem/observation-category
 
 // Extensões fhir-brasil
-Alias: $DerivedFromOCR = https://fhir-brasil.dev.br/StructureDefinition/derived-from-ocr
+Alias: $DerivedFromOCR = https://fhir-brasil.dev.br/ig/StructureDefinition/derived-from-ocr

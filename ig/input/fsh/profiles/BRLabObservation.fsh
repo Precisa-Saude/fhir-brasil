@@ -2,7 +2,7 @@ Profile: BRLabObservation
 Parent: Observation
 Id: br-lab-observation
 Title: "BR Lab Observation"
-Description: "Perfil para resultados de exames laboratoriais brasileiros. Restringe a Observation base do FHIR R4 para convenções laboratoriais do Brasil, incluindo código LOINC obrigatório, unidade UCUM, faixa de referência e suporte a dados derivados de OCR."
+Description: "Perfil para resultados de exames laboratoriais brasileiros. Restringe a Observation base do FHIR R4 para convenções laboratoriais do Brasil, incluindo código LOINC obrigatório, unidade UCUM, faixa de referência e suporte a dados extraídos de documento (OCR, origem do valor, confiança e valor como impresso)."
 
 // Status restrito a resultados finalizados
 * status from BRLabObservationStatusVS (required)
@@ -51,8 +51,13 @@ Description: "Perfil para resultados de exames laboratoriais brasileiros. Restri
 * effective[x] only dateTime
 * effectiveDateTime 1..1
 
-// Extensão para dados derivados de OCR
-* extension contains DerivedFromOCR named derivedFromOCR 0..1
+// Extensões de dado extraído de documento: OCR, origem, confiança e o valor
+// como impresso quando houve conversão de unidade
+* extension contains
+    DerivedFromOCR named derivedFromOCR 0..1 and
+    ExtractionSource named extractionSource 0..1 and
+    ExtractionConfidence named extractionConfidence 0..1 and
+    AsPrinted named asPrinted 0..1
 
 
 ValueSet: BRLabObservationStatusVS

@@ -33,6 +33,9 @@ Description: "Perfil para laudos de exames laboratoriais brasileiros. Restringe 
 // Responsável pelo laudo
 * performer 1..*
 
+// Laudo lido da tabela de histórico que outro laudo reimprime
+* extension contains ReprintedIn named reprintedIn 0..1
+
 
 ValueSet: BRDiagnosticReportStatusVS
 Id: br-diagnostic-report-status-vs

@@ -24,12 +24,16 @@ node ig/scripts/build-package-tgz.js
 ### Perfis
 
 - **BRPatient** — Restringe `Patient` para o contexto do SUS: exige nome, data de nascimento, sexo e pelo menos um identificador brasileiro, CPF ou CNS, conferido por invariante.
-- **BRLabObservation** — Perfil para resultados de exames laboratoriais brasileiros. Restringe `Observation` com código LOINC obrigatório, unidade UCUM, faixa de referência e suporte a dados derivados de OCR.
+- **BRLabObservation** — Perfil para resultados de exames laboratoriais brasileiros. Restringe `Observation` com código LOINC obrigatório, unidade UCUM, faixa de referência e extensões para dado extraído de documento.
 - **BRDiagnosticReport** — Restringe `DiagnosticReport` para laudos laboratoriais: categoria `LAB` obrigatória, status limitado a `final`, `amended` ou `corrected`, sujeito em `BRPatient` e resultados em `BRLabObservation`.
 
 ### Extensões
 
 - **DerivedFromOCR** — Indica se uma Observation foi extraída de PDF via OCR. Permite que consumidores apliquem limiares de confiança diferentes.
+- **ExtractionSource** — Em `Observation`: páginas em que o exame aparece, trecho citado e, em documento digitalizado, a caixa do trecho na página. É o que deixa conferir um valor extraído contra o documento.
+- **ExtractionConfidence** — Em `Observation`: confiança na leitura dos caracteres (`reading`) e na atribuição do valor ao exame (`interpretation`), de 0 a 1. Os dois eixos falham por motivos diferentes, por isso ficam separados.
+- **AsPrinted** — Em `Observation`: valor e faixa de referência como o documento imprime, quando a Observation traz o valor convertido para outra unidade.
+- **ReprintedIn** — Em `DiagnosticReport`: o laudo não foi emitido, e sim lido da tabela de histórico que outro laudo reimprime. Aponta para esse outro laudo.
 
 ### CodeSystems
 
@@ -54,6 +58,8 @@ node ig/scripts/build-package-tgz.js
 - Colesterol total normal
 - HDL com faixa de referência sexo-específica
 - Glicose derivada de OCR
+- Glicose extraída de laudo digitalizado, com conversão de unidade e as extensões de extração
+- Laudo e glicose lidos da tabela de histórico (`reprintedIn`)
 
 ## Compilar localmente
 

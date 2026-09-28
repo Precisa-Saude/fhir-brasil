@@ -34,6 +34,7 @@ node ig/scripts/build-package-tgz.js
 - **ExtractionConfidence** — Em `Observation`: confiança na leitura dos caracteres (`reading`) e na atribuição do valor ao exame (`interpretation`), de 0 a 1. Os dois eixos falham por motivos diferentes, por isso ficam separados.
 - **AsPrinted** — Em `Observation`: valor e faixa de referência como o documento imprime, quando a Observation traz o valor convertido para outra unidade.
 - **ReprintedIn** — Em `DiagnosticReport`: o laudo não foi emitido, e sim lido da tabela de histórico que outro laudo reimprime. Aponta para esse outro laudo.
+- **Superseded** — Em `Observation`: o valor foi lido do documento, mas o próprio laudo o substitui por outro, como a filtração glomerular por equação estratificada por etnia. Mostre o outro.
 
 ### CodeSystems
 
@@ -60,6 +61,7 @@ node ig/scripts/build-package-tgz.js
 - Glicose derivada de OCR
 - Glicose extraída de laudo digitalizado, com conversão de unidade e as extensões de extração
 - Laudo e glicose lidos da tabela de histórico (`reprintedIn`)
+- VLDL calculado dos triglicerídeos, com `derivedFrom` apontando para eles
 
 ## Compilar localmente
 

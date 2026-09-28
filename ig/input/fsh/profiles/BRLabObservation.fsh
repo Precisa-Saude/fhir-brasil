@@ -2,7 +2,7 @@ Profile: BRLabObservation
 Parent: Observation
 Id: br-lab-observation
 Title: "BR Lab Observation"
-Description: "Perfil para resultados de exames laboratoriais brasileiros. Restringe a Observation base do FHIR R4 para convenções laboratoriais do Brasil, incluindo código LOINC obrigatório, unidade UCUM, faixa de referência e suporte a dados extraídos de documento (OCR, origem do valor, confiança e valor como impresso)."
+Description: "Perfil para resultados de exames laboratoriais brasileiros. Restringe a Observation base do FHIR R4 para convenções laboratoriais do Brasil, incluindo código LOINC obrigatório, unidade UCUM no valor numérico, resultado em texto, faixa de referência e suporte a dados extraídos de documento (OCR, origem do valor, confiança e valor como impresso)."
 
 // Status restrito a resultados finalizados
 * status from BRLabObservationStatusVS (required)
@@ -30,8 +30,9 @@ Description: "Perfil para resultados de exames laboratoriais brasileiros. Restri
 * code.coding[loinc].display 1..1
 * code.coding[loinc].display ^short = "Nome do exame em pt-BR"
 
-// Valor numérico com unidade UCUM
-* value[x] only Quantity
+// Valor numérico com unidade UCUM, ou resultado em texto ("Negativo", "Raras").
+// As regras de valueQuantity valem quando o valor é numérico.
+* value[x] only Quantity or string
 * valueQuantity.value 1..1
 * valueQuantity.unit 1..1
 * valueQuantity.system 1..1
@@ -52,13 +53,15 @@ Description: "Perfil para resultados de exames laboratoriais brasileiros. Restri
 * effectiveDateTime 1..1
 
 // Extensões de dado extraído de documento: OCR, origem, confiança, o valor
-// como impresso quando houve conversão de unidade, e o valor substituído
+// como impresso quando a Observation traz outro, o valor substituído e a
+// unidade de um resultado em texto
 * extension contains
     DerivedFromOCR named derivedFromOCR 0..1 and
     ExtractionSource named extractionSource 0..1 and
     ExtractionConfidence named extractionConfidence 0..1 and
     AsPrinted named asPrinted 0..1 and
-    Superseded named superseded 0..1
+    Superseded named superseded 0..1 and
+    TextValueUnit named textValueUnit 0..1
 
 
 ValueSet: BRLabObservationStatusVS

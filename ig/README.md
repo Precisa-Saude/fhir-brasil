@@ -24,7 +24,7 @@ node ig/scripts/build-package-tgz.js
 ### Perfis
 
 - **BRPatient** — Restringe `Patient` para o contexto do SUS: exige nome, data de nascimento, sexo e pelo menos um identificador brasileiro, CPF ou CNS, conferido por invariante.
-- **BRLabObservation** — Perfil para resultados de exames laboratoriais brasileiros. Restringe `Observation` com código LOINC obrigatório, unidade UCUM, faixa de referência e extensões para dado extraído de documento.
+- **BRLabObservation** — Perfil para resultados de exames laboratoriais brasileiros. Restringe `Observation` com código LOINC obrigatório, valor numérico com unidade UCUM ou resultado em texto, faixa de referência e extensões para dado extraído de documento.
 - **BRDiagnosticReport** — Restringe `DiagnosticReport` para laudos laboratoriais: categoria `LAB` obrigatória, status limitado a `final`, `amended` ou `corrected`, sujeito em `BRPatient` e resultados em `BRLabObservation`.
 
 ### Extensões
@@ -32,9 +32,10 @@ node ig/scripts/build-package-tgz.js
 - **DerivedFromOCR** — Indica se uma Observation foi extraída de PDF via OCR. Permite que consumidores apliquem limiares de confiança diferentes.
 - **ExtractionSource** — Em `Observation`: páginas em que o exame aparece, trecho citado e, em documento digitalizado, a caixa do trecho na página. É o que deixa conferir um valor extraído contra o documento.
 - **ExtractionConfidence** — Em `Observation`: confiança na leitura dos caracteres (`reading`) e na atribuição do valor ao exame (`interpretation`), de 0 a 1. Os dois eixos falham por motivos diferentes, por isso ficam separados.
-- **AsPrinted** — Em `Observation`: valor e faixa de referência como o documento imprime, quando a Observation traz o valor convertido para outra unidade.
+- **AsPrinted** — Em `Observation`: valor e faixa de referência como o documento imprime, quando a Observation traz outra coisa: o valor convertido para outra unidade, ou a unidade do catálogo num valor impresso sem unidade. Quantidade sem `unit` quer dizer que o documento não imprime unidade.
 - **ReprintedIn** — Em `DiagnosticReport`: o laudo não foi emitido, e sim lido da tabela de histórico que outro laudo reimprime. Aponta para esse outro laudo.
 - **Superseded** — Em `Observation`: o valor foi lido do documento, mas o próprio laudo o substitui por outro, como a filtração glomerular por equação estratificada por etnia. Mostre o outro.
+- **TextValueUnit** — Em `Observation` com `valueString`: a unidade impressa ao lado do resultado em texto, como `/campo` em "Raras". O R4 não tem lugar para ela.
 
 ### CodeSystems
 
@@ -62,6 +63,8 @@ node ig/scripts/build-package-tgz.js
 - Glicose extraída de laudo digitalizado, com conversão de unidade e as extensões de extração
 - Laudo e glicose lidos da tabela de histórico (`reprintedIn`)
 - VLDL calculado dos triglicerídeos, com `derivedFrom` apontando para eles
+- Células epiteliais na urina em texto, com a unidade em `text-value-unit`
+- Densidade da urina impressa sem unidade, com a unidade do catálogo e o `as-printed` sem `unit`
 
 ## Compilar localmente
 

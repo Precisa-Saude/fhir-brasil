@@ -31,4 +31,6 @@ export const FHIR_BRASIL_EXTENSIONS = {
   extractionSource: structureDefinition('extraction-source'),
   /** `DiagnosticReport`: lido da tabela de histórico de outro laudo. */
   reprintedIn: structureDefinition('reprinted-in'),
+  /** `Observation`: lido do documento, mas substituído por outro valor do mesmo laudo. */
+  superseded: structureDefinition('superseded'),
 } as const;

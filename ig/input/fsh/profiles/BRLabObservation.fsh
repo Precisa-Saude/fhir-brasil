@@ -51,13 +51,14 @@ Description: "Perfil para resultados de exames laboratoriais brasileiros. Restri
 * effective[x] only dateTime
 * effectiveDateTime 1..1
 
-// Extensões de dado extraído de documento: OCR, origem, confiança e o valor
-// como impresso quando houve conversão de unidade
+// Extensões de dado extraído de documento: OCR, origem, confiança, o valor
+// como impresso quando houve conversão de unidade, e o valor substituído
 * extension contains
     DerivedFromOCR named derivedFromOCR 0..1 and
     ExtractionSource named extractionSource 0..1 and
     ExtractionConfidence named extractionConfidence 0..1 and
-    AsPrinted named asPrinted 0..1
+    AsPrinted named asPrinted 0..1 and
+    Superseded named superseded 0..1
 
 
 ValueSet: BRLabObservationStatusVS

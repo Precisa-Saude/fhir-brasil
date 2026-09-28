@@ -1,3 +1,9 @@
+## [0.28.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.27.0...v0.28.0) (2026-09-28)
+
+### Features
+
+* **core:** extensões de proveniência da extração no IG ([#115](https://github.com/Precisa-Saude/fhir-brasil/issues/115)) ([eca9707](https://github.com/Precisa-Saude/fhir-brasil/commit/eca970717e7cf7a79e9d7a77fac7cd9dbf96d0ed))
+
 ## [0.27.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.26.5...v0.27.0) (2026-09-24)
 
 ### Features

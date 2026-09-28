@@ -38,4 +38,18 @@ Description: "Um DiagnosticReport por data da tabela de histórico. A extensão 
 * effectiveDateTime = "2025-10-02"
 * performer = Reference(Organization/example)
 * result = Reference(GlicoseDoHistorico)
-* extension[reprintedIn].valueReference = Reference(DiagnosticReport/laudo-2026-03-15)
+* extension[reprintedIn].valueReference = Reference(LaudoAtual)
+
+Instance: LaudoAtual
+InstanceOf: BRDiagnosticReport
+Usage: #example
+Title: "Laudo que reimprime o histórico"
+Description: "O laudo emitido em 15/03/2026. Traz o resultado do dia e reimprime a tabela de histórico de onde saiu o LaudoDoHistorico."
+
+* status = #final
+* category[laboratory] = http://terminology.hl7.org/CodeSystem/v2-0074#LAB
+* code = $LOINC#11502-2 "Laboratory report"
+* subject = Reference(Patient/example)
+* effectiveDateTime = "2026-03-15"
+* performer = Reference(Organization/example)
+* result = Reference(GlicoseExtraidaConvertida)

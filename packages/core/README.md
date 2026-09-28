@@ -54,6 +54,19 @@ const def = getDefinitionByCode('HDL');
 const all = getAllDefinitions(); // todo o catálogo
 ```
 
+### URLs das extensões do IG
+
+Quem emite e quem lê uma extensão do IG precisa concordar na URL. As constantes
+saem do pacote raiz, conferidas por teste contra o FSH do IG:
+
+```ts
+import { FHIR_BRASIL_EXTENSIONS } from '@precisa-saude/fhir';
+
+const source = observation.extension?.find(
+  (e) => e.url === FHIR_BRASIL_EXTENSIONS.extractionSource,
+);
+```
+
 ## Sub-path imports
 
 Para tree-shaking otimizado, cada módulo pode ser importado individualmente:

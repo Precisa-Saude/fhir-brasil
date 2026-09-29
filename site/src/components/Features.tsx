@@ -31,11 +31,6 @@ const FEATURES: Feature[] = [
     links: [{ label: 'SBPC/ML', href: 'https://www.sbpc.org.br/' }],
   },
   {
-    title: 'Calculadoras Clínicas',
-    description:
-      'PhenoAge (idade biológica), BrDMrisc (risco de diabetes), HOMA-IR, VLDL e IMC. Conversão automática de unidades brasileiras.',
-  },
-  {
     title: 'Cliente RNDS',
     description:
       'Integração com a Rede Nacional de Dados em Saúde (DATASUS). Autenticação mTLS com certificado ICP-Brasil, zero dependências externas. Testado contra mock RNDS — validação contra infraestrutura real requer certificado ICP-Brasil.',

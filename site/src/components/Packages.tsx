@@ -22,9 +22,21 @@ const PACKAGES: PackageInfo[] = [
     install: 'npm i @precisa-saude/fhir-ocr-utils',
   },
   {
+    name: '@precisa-saude/fhir-pdf',
+    description:
+      'Extração da camada de texto de PDFs de laudo laboratorial, para alimentar a ancoragem do fhir-ocr-utils',
+    install: 'npm i @precisa-saude/fhir-pdf',
+  },
+  {
     name: '@precisa-saude/fhir-rnds',
     description: 'Cliente HTTP para a RNDS (DATASUS) — autenticação mTLS, zero deps externas',
     install: 'npm i @precisa-saude/fhir-rnds',
+  },
+  {
+    name: '@precisa-saude/fhir-rnds-sandbox',
+    description:
+      'Mock local da RNDS (Rede Nacional de Dados em Saúde) — endpoints FHIR R4 com cenários sintéticos para desenvolvimento e ensino',
+    install: 'npm i @precisa-saude/fhir-rnds-sandbox',
   },
 ];
 

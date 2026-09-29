@@ -26,8 +26,7 @@ const PILLARS: Pillar[] = [
   {
     icon: <Users className="h-5 w-5" />,
     title: 'Colaboração',
-    description:
-      'Contribuições abertas para novos biomarcadores, calculadoras e integrações regionais.',
+    description: 'Contribuições abertas para novos biomarcadores e integrações regionais.',
   },
   {
     icon: <GitFork className="h-5 w-5" />,

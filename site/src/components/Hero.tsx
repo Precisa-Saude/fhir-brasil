@@ -38,7 +38,7 @@ export function Hero() {
         style={gridStyle}
       >
         <div className="col-span-full md:col-span-12 md:col-start-2 lg:col-span-6 lg:col-start-2 lg:pr-8 3xl:col-start-3">
-          <p className={`mb-5 ${TYPE.kicker}`}>Código aberto · TypeScript · Zero deps</p>
+          <p className={`mb-5 ${TYPE.kicker}`}>Código aberto · TypeScript · Zero deps no core</p>
           <h1 className={`max-w-[19ch] ${TYPE.h1}`}>
             Toolkit FHIR R4 para o ecossistema de{' '}
             <em className="brand-highlight">saúde&nbsp;brasileiro</em>

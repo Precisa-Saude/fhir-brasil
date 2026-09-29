@@ -1,11 +1,11 @@
 import base from '@precisa-saude/eslint-config/base';
-import reactConfig from '@precisa-saude/eslint-config/react';
 
 export default [
   ...base,
-  // React rules for site/** (Astro/Vite frontend). The preset's
-  // REACT_PATHS already includes `site/**/*.{ts,tsx,jsx}`.
-  ...reactConfig,
+  // Same setup as medbench-brasil: the site is linted with the base preset
+  // only. The react preset sets `react.version: 'detect'`, and
+  // eslint-plugin-react 7.37 calls `context.getFilename()` to detect it,
+  // which ESLint 10 removed — every run over site/** crashed before linting.
   {
     // Test files are excluded from package tsconfigs (to keep tsc --noEmit tight),
     // so disable type-aware parsing for them or ESLint errors trying to locate a project.

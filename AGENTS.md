@@ -63,6 +63,16 @@ Valid scopes: `core`, `ocr-utils`, `pdf`, `rnds`, `rnds-sandbox`,
 | API changes            | package README, `CONVENTIONS.md` |
 | Reference range update | source citation in code          |
 
+## Justified divergences from the shared baseline
+
+- **`eslint.config.js` — no react preset.** The site is linted with the
+  base preset only, the same as medbench-brasil. The react preset sets
+  `settings.react.version: 'detect'`; eslint-plugin-react 7.37 detects it
+  through `context.getFilename()`, which ESLint 10 removed, so every run
+  over `site/**` crashed before linting. The crash went unnoticed because
+  lint-staged only lints `*.ts`. Restore the preset once
+  `@precisa-saude/eslint-config` ships a fix.
+
 ## Worktree — specific values
 
 Worktree flow and commands are in the shared base. The canonical config

@@ -1,3 +1,9 @@
+## [0.30.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.29.0...v0.30.0) (2026-09-29)
+
+### Features
+
+* **core:** resultado em texto no BRLabObservation, com a unidade impressa ao lado ([#117](https://github.com/Precisa-Saude/fhir-brasil/issues/117)) ([d455f54](https://github.com/Precisa-Saude/fhir-brasil/commit/d455f548e9f792c6a433753560c63676d5fdcd91))
+
 ## [0.29.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.28.0...v0.29.0) (2026-09-28)
 
 ### Features

@@ -42,17 +42,23 @@ function CopyButton({ text }: { text: string }) {
   };
 
   return (
-    <button
-      onClick={handleCopy}
-      className="rounded-md p-1.5 text-primary/60 transition-colors hover:bg-secondary hover:text-primary"
-      aria-label={`Copiar: ${text}`}
-    >
-      {copied ? (
-        <Check aria-hidden="true" className="h-3.5 w-3.5 text-primary" />
-      ) : (
-        <Copy aria-hidden="true" className="h-3.5 w-3.5" />
-      )}
-    </button>
+    <>
+      <button
+        onClick={handleCopy}
+        className="rounded-md p-1.5 text-primary/60 transition-colors hover:bg-secondary hover:text-primary"
+        aria-label={`Copiar: ${text}`}
+      >
+        {copied ? (
+          <Check aria-hidden="true" className="h-3.5 w-3.5 text-primary" />
+        ) : (
+          <Copy aria-hidden="true" className="h-3.5 w-3.5" />
+        )}
+      </button>
+      {/* A troca de ícone é só visual; a região viva anuncia a cópia. */}
+      <span aria-live="polite" className="sr-only">
+        {copied ? `Copiado: ${text}` : ''}
+      </span>
+    </>
   );
 }
 

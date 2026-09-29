@@ -64,7 +64,7 @@ export function Hero() {
           {/* Comando de instalação em superfície opaca sobre o fundo, como os
               objetos da /laudos: é o dado que o desenvolvedor copia. */}
           <button
-            aria-label={copied ? 'Comando copiado' : `Copiar: ${INSTALL_CMD}`}
+            aria-label={`Copiar: ${INSTALL_CMD}`}
             className="group mt-5 flex w-full max-w-md items-center justify-between gap-4 rounded-md bg-white px-4 py-3 font-mono text-sm text-[#30264f] shadow-[0_0_0_1px_#463c6d24,0_6px_16px_#463c6d12] transition-shadow hover:shadow-[0_0_0_1px_#463c6d52,0_6px_16px_#463c6d12]"
             type="button"
             onClick={handleCopy}
@@ -84,6 +84,10 @@ export function Hero() {
               />
             )}
           </button>
+          {/* A troca de ícone é só visual; a região viva anuncia a cópia. */}
+          <span aria-live="polite" className="sr-only">
+            {copied ? 'Comando copiado' : ''}
+          </span>
         </div>
       </div>
 

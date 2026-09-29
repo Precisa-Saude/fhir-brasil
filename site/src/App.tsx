@@ -1,4 +1,4 @@
-import { GridOverlay, MosaicBg } from '@precisa-saude/ui/decorative';
+import { GridOverlay } from '@precisa-saude/ui/decorative';
 
 import { CodeExamples } from './components/CodeExamples';
 import { Ecosystem } from './components/Ecosystem';
@@ -11,28 +11,18 @@ import { Packages } from './components/Packages';
 import { Problem } from './components/Problem';
 import { Standards } from './components/Standards';
 
-const MOSAIC_COLORS = ['var(--ps-violet)', 'var(--ps-mint)'];
-
 export default function App() {
   return (
     <div className="min-h-screen overflow-x-hidden">
       <Nav />
       <main>
-        <MosaicBg colors={MOSAIC_COLORS} className="bg-primary">
-          <Hero />
-        </MosaicBg>
+        <Hero />
         <Problem />
-        <MosaicBg colors={MOSAIC_COLORS}>
-          <Features />
-        </MosaicBg>
+        <Features />
         <Ecosystem />
-        <MosaicBg colors={MOSAIC_COLORS}>
-          <CodeExamples />
-        </MosaicBg>
+        <CodeExamples />
         <Packages />
-        <MosaicBg colors={MOSAIC_COLORS}>
-          <Standards />
-        </MosaicBg>
+        <Standards />
         <OpenSource />
       </main>
       <Footer />

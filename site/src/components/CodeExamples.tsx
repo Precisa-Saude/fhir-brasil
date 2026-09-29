@@ -6,7 +6,47 @@ import {
   SelectValue,
 } from '@precisa-saude/ui/primitives';
 import { cn } from '@precisa-saude/ui/utils';
+import type { ThemeRegistration } from 'shiki/core';
 import { useEffect, useState } from 'react';
+
+import { TYPE } from '../lib/typography';
+import { GridSection } from './brand/GridSection';
+
+// Tema de sintaxe da marca sobre o roxo escuro #463C6D, o mesmo fundo do
+// código da /laudos. Todos os tons passam de 4,5:1 (menor: comentário, 5,1:1);
+// a lavanda pura #8E8BD8 daria 2,6:1 e foi clareada para #C8C6F2.
+const BRAND_THEME: ThemeRegistration = {
+  colors: { 'editor.background': '#463C6D', 'editor.foreground': '#F5F3FA' },
+  name: 'precisa',
+  tokenColors: [
+    {
+      scope: ['comment', 'punctuation.definition.comment'],
+      settings: { fontStyle: 'italic', foreground: '#BDB8D0' },
+    },
+    {
+      scope: ['keyword', 'storage', 'storage.type', 'storage.modifier', 'keyword.control'],
+      settings: { foreground: '#C8C6F2' },
+    },
+    { scope: ['string', 'string.quoted', 'string.template'], settings: { foreground: '#E5D7CA' } },
+    { scope: ['constant.numeric', 'constant.language'], settings: { foreground: '#E7B459' } },
+    {
+      scope: [
+        'entity.name.function',
+        'support.function',
+        'entity.name.type',
+        'support.type',
+        'entity.name.class',
+      ],
+      settings: { foreground: '#9EF2E2' },
+    },
+    {
+      scope: ['variable', 'variable.other', 'meta.object-literal.key', 'support.variable'],
+      settings: { foreground: '#F5F3FA' },
+    },
+    { scope: ['punctuation', 'meta.brace'], settings: { foreground: '#D9D5E6' } },
+  ],
+  type: 'dark',
+};
 
 const TABS = [
   {
@@ -150,10 +190,9 @@ export function CodeExamples() {
       const { createHighlighterCore } = await import('shiki/core');
       const { createJavaScriptRegexEngine } = await import('shiki/engine/javascript');
       const ts = await import('shiki/langs/typescript.mjs');
-      const theme = await import('shiki/themes/dracula.mjs');
 
       const highlighter = await createHighlighterCore({
-        themes: [theme.default],
+        themes: [BRAND_THEME],
         langs: [ts.default],
         engine: createJavaScriptRegexEngine(),
       });
@@ -161,7 +200,7 @@ export function CodeExamples() {
       const results = TABS.map((tab) =>
         highlighter.codeToHtml(tab.code, {
           lang: 'typescript',
-          theme: 'dracula',
+          theme: 'precisa',
         }),
       );
       if (!cancelled) {
@@ -176,88 +215,73 @@ export function CodeExamples() {
   }, []);
 
   return (
-    <section id="exemplos" className="min-h-[50svh] py-20 sm:py-28">
-      <div
-        className="mx-auto grid gap-4 px-4 md:px-0"
-        style={{
-          gridTemplateColumns: 'repeat(var(--grid-cols), 1fr)',
-          maxWidth: 'var(--grid-max-w)',
-          width: '100%',
-        }}
-      >
-        <div className="col-span-full text-center md:col-span-12 md:col-start-2 3xl:col-start-3">
-          <h2 className="font-margem text-3xl font-bold tracking-tight text-ps-violet-dark sm:text-4xl">
-            Comece em minutos
-          </h2>
-        </div>
-        <p className="col-span-full mb-8 text-center text-pretty font-pausa text-lg text-ps-violet-dark/60 md:col-span-8 md:col-start-4 3xl:col-start-5">
-          TypeScript-first, com tipagem completa e autocompletar no editor.
-        </p>
+    <GridSection id="exemplos">
+      <h2 className={TYPE.sectionTitle}>Comece em minutos</h2>
+      <p className="mt-4 max-w-[52ch] text-lg leading-relaxed text-pretty text-foreground/75">
+        TypeScript-first, com tipagem completa e autocompletar no editor.
+      </p>
 
-        <div className="col-span-full md:col-span-10 md:col-start-3 3xl:col-start-4">
-          <div className="mt-8 mb-4 lg:hidden">
-            <Select
-              value={TABS[activeTab].label}
-              onValueChange={(v) => setActiveTab(TABS.findIndex((t) => t.label === v))}
+      <div className="mt-8 mb-4 lg:hidden">
+        <Select
+          value={TABS[activeTab].label}
+          onValueChange={(v) => setActiveTab(TABS.findIndex((t) => t.label === v))}
+        >
+          <SelectTrigger className="w-full bg-card text-sm">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {TABS.map((tab) => (
+              <SelectItem key={tab.label} className="text-sm" value={tab.label}>
+                {tab.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="mt-8 mb-4 hidden lg:flex">
+        <div
+          className="relative inline-grid min-w-max rounded-full bg-card p-1 ring-1 ring-border"
+          role="tablist"
+          style={{ gridTemplateColumns: `repeat(${TABS.length}, 1fr)` }}
+        >
+          <div
+            className="absolute top-1 bottom-1 rounded-full bg-primary transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]"
+            style={{
+              left: `calc(4px + ${activeTab} * ((100% - 8px) / ${TABS.length}))`,
+              width: `calc((100% - 8px) / ${TABS.length})`,
+            }}
+          />
+          {TABS.map((tab, i) => (
+            <button
+              key={tab.label}
+              aria-selected={activeTab === i}
+              className={cn(
+                'relative z-10 rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors duration-200',
+                activeTab === i
+                  ? 'text-primary-foreground'
+                  : 'text-foreground/70 hover:text-foreground',
+              )}
+              role="tab"
+              onClick={() => setActiveTab(i)}
             >
-              <SelectTrigger className="w-full border-ps-violet-dark/15 bg-white/80 font-margem text-sm text-ps-violet-dark">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {TABS.map((tab) => (
-                  <SelectItem key={tab.label} value={tab.label} className="font-margem text-sm">
-                    {tab.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="mt-8 mb-4 hidden justify-center lg:flex">
-            <div
-              className="relative inline-grid min-w-max rounded-full border border-ps-violet-dark/10 bg-ps-sand/50 p-1"
-              role="tablist"
-              style={{ gridTemplateColumns: `repeat(${TABS.length}, 1fr)` }}
-            >
-              <div
-                className="absolute top-1 bottom-1 rounded-full bg-ps-violet-dark transition-all duration-300 ease-out"
-                style={{
-                  left: `calc(4px + ${activeTab} * ((100% - 8px) / ${TABS.length}))`,
-                  width: `calc((100% - 8px) / ${TABS.length})`,
-                }}
-              />
-              {TABS.map((tab, i) => (
-                <button
-                  key={tab.label}
-                  role="tab"
-                  aria-selected={activeTab === i}
-                  onClick={() => setActiveTab(i)}
-                  className={cn(
-                    'relative z-10 whitespace-nowrap rounded-full px-4 py-2 font-margem text-sm font-medium transition-colors duration-300',
-                    activeTab === i
-                      ? 'text-white'
-                      : 'text-ps-violet-dark/60 hover:text-ps-violet-dark',
-                  )}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="overflow-hidden rounded-xl border border-ps-violet-dark/10 bg-[#282a36]">
-            {highlightedCode.length > 0 ? (
-              <div
-                className="overflow-x-auto p-6 text-sm leading-relaxed [&_pre]:!bg-transparent"
-                dangerouslySetInnerHTML={{ __html: highlightedCode[activeTab] }}
-              />
-            ) : (
-              <pre className="overflow-x-auto p-6 text-sm leading-relaxed text-white/80">
-                <code>{TABS[activeTab].code}</code>
-              </pre>
-            )}
-          </div>
+              {tab.label}
+            </button>
+          ))}
         </div>
       </div>
-    </section>
+
+      <div className="overflow-hidden rounded-[0.625rem] border border-ps-violet/40 bg-[#463C6D]">
+        {highlightedCode.length > 0 ? (
+          <div
+            className="overflow-x-auto p-5 pb-6 font-mono text-sm leading-[1.65] [&_pre]:!bg-transparent"
+            dangerouslySetInnerHTML={{ __html: highlightedCode[activeTab] }}
+          />
+        ) : (
+          <pre className="overflow-x-auto p-5 pb-6 font-mono text-sm leading-[1.65] text-[#F5F3FA]">
+            <code>{TABS[activeTab].code}</code>
+          </pre>
+        )}
+      </div>
+    </GridSection>
   );
 }

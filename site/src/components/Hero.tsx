@@ -1,15 +1,21 @@
-import { Check, Copy } from 'lucide-react';
+import { ArrowRight, Check, Copy } from 'lucide-react';
 import { useState } from 'react';
+
+import { TYPE } from '../lib/typography';
+import { gridStyle } from './brand/GridSection';
+import { SectionBackdrop } from './brand/SectionBackdrop';
 
 const INSTALL_CMD = 'npm install @precisa-saude/fhir';
 
 const TRUST_BADGES = ['FHIR R4', 'LOINC', 'SBPC/ML', 'Apache-2.0'] as const;
 
-const gridStyle = {
-  gridTemplateColumns: 'repeat(var(--grid-cols), 1fr)',
-  maxWidth: 'var(--grid-max-w)',
-  width: '100%',
-} as const;
+// Três colunas cada: os quatro selos ocupam exatamente as 12 colunas úteis.
+const BADGE_COLUMNS = [
+  'md:col-start-2 3xl:col-start-3',
+  'md:col-start-5 3xl:col-start-6',
+  'md:col-start-8 3xl:col-start-9',
+  'md:col-start-11 3xl:col-start-12',
+];
 
 export function Hero() {
   const [copied, setCopied] = useState(false);
@@ -25,63 +31,71 @@ export function Hero() {
   };
 
   return (
-    <section className="relative min-h-[60svh] pt-16">
+    <section className="relative isolate overflow-hidden border-b bg-background pt-16 text-primary">
+      <SectionBackdrop opacity={0.85} />
       <div
-        className="relative z-10 mx-auto grid gap-4 px-4 py-10 sm:py-32 md:px-0 lg:py-40"
+        className="relative mx-auto grid items-center gap-x-4 gap-y-12 px-4 pt-16 pb-12 md:px-0 lg:min-h-[calc(100svh-4rem-5rem)] lg:pt-20"
         style={gridStyle}
       >
-        <div className="col-span-full text-center md:col-span-12 md:col-start-2 3xl:col-start-3">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary-foreground/15 bg-white/10 px-4 py-1.5 backdrop-blur-sm">
-            <span className="h-2 w-2 rounded-full bg-ps-mint" />
-            <span className="font-margem text-sm font-medium text-primary-foreground/70">
-              Código aberto · TypeScript · Zero deps
-            </span>
-          </div>
-
-          <h1 className="font-margem text-4xl font-bold leading-tight tracking-tight text-primary-foreground sm:text-5xl lg:text-6xl">
-            Toolkit FHIR R4 para o ecossistema de&nbsp;saúde&nbsp;brasileiro
+        <div className="col-span-full md:col-span-12 md:col-start-2 lg:col-span-6 lg:col-start-2 lg:pr-8 3xl:col-start-3">
+          <p className={`mb-5 ${TYPE.kicker}`}>Código aberto · TypeScript · Zero deps</p>
+          <h1 className={`max-w-[19ch] ${TYPE.h1}`}>
+            Toolkit FHIR R4 para o ecossistema de{' '}
+            <em className="brand-highlight">saúde&nbsp;brasileiro</em>
           </h1>
-
-          <p className="mx-auto mt-6 mb-4 font-pausa text-xl leading-snug text-primary-foreground/70 sm:text-2xl">
+          <p className="mt-6 mb-8 max-w-[46ch] text-lg leading-relaxed">
             A camada de infraestrutura que conecta dados de saúde fragmentados entre redes pública e
             privada — código aberto, com códigos LOINC e diretrizes SBPC/ML.
           </p>
 
-          <div className="mx-auto mt-10 flex w-full flex-col gap-3 md:w-[calc(4*var(--col-w)+3*1rem)]">
-            <button
-              onClick={handleCopy}
-              className="group flex w-full items-center justify-between rounded-full border border-primary-foreground/15 bg-white/10 px-4 py-2.5 font-mono text-sm text-white/90 transition-all hover:bg-white/20 sm:px-6 sm:py-3.5"
-            >
-              <span>
-                <span className="text-ps-mint/80">$</span> {INSTALL_CMD}
-              </span>
-              {copied ? (
-                <Check className="h-4 w-4 shrink-0 text-ps-mint" />
-              ) : (
-                <Copy className="h-4 w-4 shrink-0 text-white/40 transition-colors group-hover:text-white/70" />
-              )}
-            </button>
-            <a
-              href="https://github.com/Precisa-Saude/fhir-brasil/tree/main/docs"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex w-full items-center justify-center rounded-full border border-primary-foreground/20 bg-transparent px-6 py-3.5 font-margem text-sm font-medium text-primary-foreground transition-colors hover:border-ps-mint hover:bg-ps-mint hover:text-primary"
-            >
-              Ver documentação →
-            </a>
-          </div>
+          <a
+            className="group inline-flex h-12 items-center justify-center gap-2 rounded-full bg-primary px-8 text-sm font-medium whitespace-nowrap text-primary-foreground transition-colors hover:bg-primary/90"
+            href="https://github.com/Precisa-Saude/fhir-brasil/tree/main/docs"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Ver documentação
+            <ArrowRight
+              aria-hidden="true"
+              className="size-[18px] transition-transform duration-200 group-hover:translate-x-1"
+            />
+          </a>
 
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-3">
-            {TRUST_BADGES.map((badge) => (
-              <span
-                key={badge}
-                className="rounded-full border border-primary-foreground/10 bg-white/5 px-3 py-1 font-margem text-xs font-medium text-primary-foreground/60 backdrop-blur-sm"
-              >
-                {badge}
-              </span>
-            ))}
-          </div>
+          {/* Comando de instalação em superfície opaca sobre o fundo, como os
+              objetos da /laudos: é o dado que o desenvolvedor copia. */}
+          <button
+            aria-label={copied ? 'Comando copiado' : `Copiar: ${INSTALL_CMD}`}
+            className="group mt-5 flex w-full max-w-md items-center justify-between gap-4 rounded-md bg-white px-4 py-3 font-mono text-sm text-[#30264f] shadow-[0_0_0_1px_#463c6d24,0_6px_16px_#463c6d12] transition-shadow hover:shadow-[0_0_0_1px_#463c6d52,0_6px_16px_#463c6d12]"
+            type="button"
+            onClick={handleCopy}
+          >
+            <span className="truncate">
+              <span aria-hidden="true" className="text-ps-violet">
+                $
+              </span>{' '}
+              {INSTALL_CMD}
+            </span>
+            {copied ? (
+              <Check aria-hidden="true" className="h-4 w-4 shrink-0 text-primary" />
+            ) : (
+              <Copy
+                aria-hidden="true"
+                className="h-4 w-4 shrink-0 text-primary/50 transition-colors group-hover:text-primary"
+              />
+            )}
+          </button>
         </div>
+      </div>
+
+      <div className="relative mx-auto grid gap-4 px-4 pb-4 md:px-0" style={gridStyle}>
+        {TRUST_BADGES.map((badge, idx) => (
+          <span
+            key={badge}
+            className={`col-span-7 border-t border-primary/20 pt-4 text-sm md:col-span-3 ${BADGE_COLUMNS[idx]}`}
+          >
+            {badge}
+          </span>
+        ))}
       </div>
     </section>
   );

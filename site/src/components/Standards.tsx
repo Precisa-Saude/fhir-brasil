@@ -1,4 +1,5 @@
-import { useGridCol } from '@precisa-saude/ui/hooks';
+import { TYPE } from '../lib/typography';
+import { GridSection, INNER_GRID } from './brand/GridSection';
 
 const STANDARDS = [
   {
@@ -38,55 +39,33 @@ const STANDARDS = [
   },
 ] as const;
 
-const gridStyle = {
-  gridTemplateColumns: 'repeat(var(--grid-cols), 1fr)',
-  maxWidth: 'var(--grid-max-w)',
-  width: '100%',
-} as const;
-
-// Map each card to its grid column start position (desktop only)
-// Row 1: cols 1-4, 5-8, 9-12 (three cards, 4 cols each)
-// Row 2: cols 1-4, 5-8, 9-12 (three cards, 4 cols each)
-// Row 3: cols 5-8 (one card, centered)
-const COL_STARTS_14 = [2, 6, 10, 2, 6, 10, 6] as const;
-
 export function Standards() {
-  const col = useGridCol();
-
   return (
-    <section className="min-h-[50svh] py-20 sm:py-28">
-      <div className="mx-auto flex flex-col gap-4 px-4 md:grid md:px-0" style={gridStyle}>
-        <div className="text-center md:col-span-12 md:col-start-2 3xl:col-start-3">
-          <h2 className="font-margem text-3xl font-bold tracking-tight text-ps-violet-dark sm:text-4xl">
-            Padrões & Conformidade
-          </h2>
-        </div>
-        <p
-          className="col-span-full mb-8 text-center text-pretty font-pausa text-lg text-ps-violet-dark/60"
-          style={col(4, 8)}
-        >
-          Construído sobre padrões internacionais de interoperabilidade em saúde, adaptado para o
-          contexto brasileiro.
-        </p>
+    <GridSection
+      backdrop={{ cx: 1260, cy: 530, opacity: 0.72 }}
+      className={INNER_GRID}
+      id="padroes"
+    >
+      <h2 className={`col-span-full ${TYPE.sectionTitle}`}>Padrões &amp; Conformidade</h2>
+      <p className="col-span-full mb-8 max-w-[52ch] text-lg leading-relaxed text-pretty text-foreground/75">
+        Construído sobre padrões internacionais de interoperabilidade em saúde, adaptado para o
+        contexto brasileiro.
+      </p>
 
-        {STANDARDS.map((standard, i) => (
-          <a
-            key={standard.label}
-            href={standard.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex h-32 flex-col items-center justify-center gap-2 rounded-xl border border-ps-violet-dark/8 bg-white/60 px-4 text-center outline outline-1 outline-ps-violet-dark/5 backdrop-blur-sm transition-colors hover:border-ps-violet-dark/15 md:col-span-4"
-            style={col(COL_STARTS_14[i]!, 4)}
-          >
-            <span className="font-margem text-base font-bold text-ps-violet-dark">
-              {standard.label}
-            </span>
-            <span className="font-pausa text-sm leading-snug text-ps-violet-dark/50">
-              {standard.description}
-            </span>
-          </a>
-        ))}
-      </div>
-    </section>
+      {/* Sem aparência de selo (seção 9 do guia): cartões chapados, texto à
+          esquerda, a mesma superfície opaca dos objetos da /laudos. */}
+      {STANDARDS.map((standard) => (
+        <a
+          key={standard.label}
+          className="col-span-full flex flex-col gap-1.5 rounded-md bg-card p-5 shadow-[0_0_0_1px_#463c6d24,0_6px_16px_#463c6d12] transition-shadow hover:shadow-[0_0_0_1px_#463c6d52,0_6px_16px_#463c6d12] md:col-span-4"
+          href={standard.href}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <span className="text-base font-semibold text-primary">{standard.label}</span>
+          <span className="text-sm leading-snug text-foreground/70">{standard.description}</span>
+        </a>
+      ))}
+    </GridSection>
   );
 }

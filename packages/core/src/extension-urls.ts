@@ -21,7 +21,7 @@ const structureDefinition = (id: string): string => `${IG_CANONICAL}/StructureDe
  * nome da parte, como `page` ou `reading`. Ver o FSH de cada uma.
  */
 export const FHIR_BRASIL_EXTENSIONS = {
-  /** `Observation`: valor e faixa como impressos, quando houve conversão. */
+  /** `Observation`: valor e faixa como impressos, quando a Observation traz outros. */
   asPrinted: structureDefinition('as-printed'),
   /** `Observation`: extraída de PDF via OCR. */
   derivedFromOCR: structureDefinition('derived-from-ocr'),
@@ -33,4 +33,6 @@ export const FHIR_BRASIL_EXTENSIONS = {
   reprintedIn: structureDefinition('reprinted-in'),
   /** `Observation`: lido do documento, mas substituído por outro valor do mesmo laudo. */
   superseded: structureDefinition('superseded'),
+  /** `Observation`: unidade impressa ao lado de um resultado em texto. */
+  textValueUnit: structureDefinition('text-value-unit'),
 } as const;

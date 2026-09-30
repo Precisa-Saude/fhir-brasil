@@ -36,6 +36,12 @@ const FEATURES: Feature[] = [
       'Integração com a Rede Nacional de Dados em Saúde (DATASUS). Autenticação mTLS com certificado ICP-Brasil, zero dependências externas. Testado contra mock RNDS — validação contra infraestrutura real requer certificado ICP-Brasil.',
     links: [{ label: 'RNDS', href: 'https://rnds.saude.gov.br/' }],
   },
+  {
+    title: 'Do laudo ao FHIR R4',
+    description:
+      'O fhir-pdf lê a camada de texto do PDF de laudo e o fhir-ocr-utils ancora os biomarcadores que a página cita. A saída do modelo é conferida contra um contrato público de extração e contra essa ancoragem antes de virar Bundle FHIR R4.',
+    links: [{ label: 'FHIR R4', href: 'https://hl7.org/fhir/R4/' }],
+  },
 ];
 
 export function Features() {

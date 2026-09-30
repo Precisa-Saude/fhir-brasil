@@ -36,10 +36,16 @@ const PILLARS: Pillar[] = [
   },
 ];
 
+/**
+ * Os dois botões do encerramento em contorno, com o mesmo hover do botão
+ * GitHub do cabeçalho (`Nav.tsx`): preenche de menta e o texto vira roxo.
+ */
+const CTA_CLASS =
+  'inline-flex h-12 items-center justify-center rounded-full border border-white bg-transparent px-8 text-sm font-medium text-white transition-colors hover:border-ps-mint hover:bg-ps-mint hover:text-primary';
+
 export function OpenSource() {
   return (
-    // Encerramento em roxo, como o contato da /laudos: ação principal em menta
-    // sobre o roxo (seção 3 do guia).
+    // Encerramento em roxo, como o contato da /laudos (seção 3 do guia).
     <GridSection
       backdrop={{ cx: 1210, cy: 470, mint: true, opacity: 0.6 }}
       className={INNER_GRID}
@@ -71,7 +77,7 @@ export function OpenSource() {
 
       <div className="col-span-full mt-8 flex flex-col gap-3 sm:flex-row">
         <a
-          className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-ps-mint px-8 text-sm font-medium text-primary transition-colors hover:bg-ps-mint/85"
+          className={`gap-2 ${CTA_CLASS}`}
           href="https://github.com/Precisa-Saude/fhir-brasil"
           rel="noopener noreferrer"
           target="_blank"
@@ -82,7 +88,7 @@ export function OpenSource() {
           Ver no GitHub
         </a>
         <a
-          className="inline-flex h-12 items-center justify-center gap-1 rounded-full border border-primary-foreground/70 px-8 text-sm font-medium text-primary-foreground transition-colors hover:border-ps-mint hover:text-ps-mint"
+          className={`gap-1 ${CTA_CLASS}`}
           href="https://github.com/Precisa-Saude/fhir-brasil/blob/main/docs/contribuindo.md"
           rel="noopener noreferrer"
           target="_blank"

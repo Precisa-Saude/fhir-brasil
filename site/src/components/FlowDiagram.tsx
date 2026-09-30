@@ -77,7 +77,10 @@ export interface FlowDiagramProps {
 
 /** Moldura do diagrama: viewBox responsivo, fonte do site e acessibilidade. */
 export function FlowDiagram({ children, description, height, title, width }: FlowDiagramProps) {
-  const id = useId().replace(/:/g, '');
+  // O formato do `useId` muda entre versões do React (`:r0:`, `«r0»`,
+  // `_r_0_`); só letras, dígitos, `_` e `-` entram no id referenciado
+  // por `url(#…)` nos marcadores.
+  const id = useId().replace(/[^\w-]/g, '');
   const titleId = `${id}-titulo`;
   const descId = `${id}-descricao`;
 

@@ -2225,6 +2225,12 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'composicao-corporal',
     code: 'VATVolume',
+    // A tabela de tendência do DEXA traz a seção "Visceral Adipose Tissue (VAT)"
+    // com as colunas "Fat Mass" e "Volume", e o modelo nomeia a linha com o
+    // prefixo da seção. Antes do nome abaixo, o valor era gravado com o código
+    // `UNKNOWN_` que fica aqui como alias, e o `normalizeCode` na leitura
+    // devolve as observações já gravadas para este código.
+    codeAliases: ['UNKNOWN_Visceral_Adipose_Tissue_VAT_Volume'],
     // No official LOINC code exists for visceral adipose tissue volume
     names: {
       en: [
@@ -2232,6 +2238,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'VAT Volume',
         'VATVolume',
         'Visceral Adipose Tissue Volume',
+        'Visceral Adipose Tissue (VAT) Volume',
         'VAT',
         // "Visceral Fat" e "Gordura Visceral" nus não dizem qual das duas
         // medidas o laudo traz, então também estão no `VisceralFatLevel`. O
@@ -2253,6 +2260,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'composicao-corporal',
     code: 'VATMass',
+    // Mesmo caso do `VATVolume`: a coluna da tendência do DEXA é "Fat Mass", e
+    // o nome chega como "Visceral Adipose Tissue (VAT) Fat Mass".
+    codeAliases: ['UNKNOWN_Visceral_Adipose_Tissue_VAT_Fat_Mass'],
     // No official LOINC code exists for visceral adipose tissue mass
     names: {
       en: [
@@ -2260,6 +2270,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'VAT Mass',
         'VATMass',
         'Visceral Adipose Tissue Mass',
+        'Visceral Adipose Tissue (VAT) Fat Mass',
+        'Visceral Adipose Tissue Fat Mass',
+        'VAT Fat Mass',
         'Visceral Adipose Tissue',
         'Visceral Mass',
       ],

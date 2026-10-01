@@ -103,6 +103,36 @@ describe('BIOMARKER_DEFINITIONS', () => {
     const uniqueCodes = new Set(codes);
     expect(uniqueCodes.size).toBe(codes.length);
   });
+
+  // Um alias de código que aponta para dois exames resolveria para qualquer um
+  // deles, conforme a ordem do catálogo.
+  it('não tem alias de código em dois exames, nem igual ao código de outro', () => {
+    const owners = new Map<string, string[]>();
+    for (const d of BIOMARKER_DEFINITIONS) {
+      for (const alias of d.codeAliases ?? []) {
+        owners.set(alias, [...(owners.get(alias) ?? []), d.code]);
+      }
+    }
+    const codes = new Set(BIOMARKER_DEFINITIONS.map((d) => d.code));
+    expect([...owners].filter(([, list]) => list.length > 1)).toEqual([]);
+    expect([...owners.keys()].filter((alias) => codes.has(alias))).toEqual([]);
+  });
+
+  // Todo nome do catálogo volta para o próprio exame pela mesma busca que o
+  // parser usa. Os nomes da lista são ambíguos de propósito: "A/G" é razão
+  // albumina/globulina no hemograma e androide/ginoide no DEXA, e "gordura
+  // visceral" é volume no DEXA e nível na bioimpedância. O contexto do laudo
+  // decide, no pré-scan. Nome novo que colide com outro exame cai aqui.
+  it('cada nome resolve para o próprio exame, fora as ambiguidades conhecidas', () => {
+    const ambiguous = new Set(['A/G Ratio', 'Razão A/G', 'Visceral Fat', 'Gordura Visceral']);
+    const wrong = BIOMARKER_DEFINITIONS.flatMap((d) =>
+      Object.values(d.names)
+        .flat()
+        .filter((name) => !ambiguous.has(name) && findCodeByName(name) !== d.code)
+        .map((name) => `${name}: ${d.code} -> ${String(findCodeByName(name))}`),
+    );
+    expect(wrong).toEqual([]);
+  });
 });
 
 describe('loincToCode', () => {
@@ -703,6 +733,31 @@ describe('findCodeByName — sítios de dobra em inglês', () => {
     // cair no alias nu. A desambiguação por contexto vive no pré-scan.
     expect(findCodeByName('Thigh Circumference')).not.toBe('SkinfoldThigh');
     expect(findCodeByName('Chest Circumference')).not.toBe('SkinfoldChest');
+  });
+});
+
+describe('gordura visceral com o prefixo da seção do laudo', () => {
+  // A tabela de tendência do DEXA traz a seção "Visceral Adipose Tissue (VAT)"
+  // e as colunas "Fat Mass (lbs)" e "Volume (in³)". O modelo nomeia a linha
+  // com o prefixo da seção, e os dois nomes não resolviam.
+  it.each([
+    ['Visceral Adipose Tissue (VAT) Volume', 'VATVolume'],
+    ['Visceral Adipose Tissue (VAT) Fat Mass', 'VATMass'],
+    ['Visceral Adipose Tissue Fat Mass', 'VATMass'],
+    ['VAT Fat Mass', 'VATMass'],
+  ])('resolves %s', (nome, code) => {
+    expect(findCodeByName(nome)).toBe(code);
+  });
+
+  it('maps the UNKNOWN_ codes already stored to the canonical code', () => {
+    expect(normalizeCode('UNKNOWN_Visceral_Adipose_Tissue_VAT_Volume')).toBe('VATVolume');
+    expect(normalizeCode('UNKNOWN_Visceral_Adipose_Tissue_VAT_Fat_Mass')).toBe('VATMass');
+  });
+
+  it('keeps the names that already resolved', () => {
+    expect(findCodeByName('Visceral Adipose Tissue')).toBe('VATMass');
+    expect(findCodeByName('VAT Volume')).toBe('VATVolume');
+    expect(findCodeByName('VAT Mass')).toBe('VATMass');
   });
 });
 

@@ -1,3 +1,14 @@
+## [0.31.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.30.0...v0.31.0) (2026-10-01)
+
+### Features
+
+* **docs:** adota a linguagem visual da /laudos na landing ([#118](https://github.com/Precisa-Saude/fhir-brasil/issues/118)) ([a4d2256](https://github.com/Precisa-Saude/fhir-brasil/commit/a4d225648e8bf63bf19f2ccc4b1e38a7f5bb5dc8))
+* **docs:** diagramas em SVG no problema, quarto bloco da solução e botões em contorno ([#119](https://github.com/Precisa-Saude/fhir-brasil/issues/119)) ([c3a40fc](https://github.com/Precisa-Saude/fhir-brasil/commit/c3a40fc65dd6738624af7b949fbcfcfbd32077bc))
+
+### Bug Fixes
+
+* **core:** "Segmentados" resolve para os neutrófilos ([#120](https://github.com/Precisa-Saude/fhir-brasil/issues/120)) ([2e9d8bb](https://github.com/Precisa-Saude/fhir-brasil/commit/2e9d8bb13ef416959a99d94f354310743996ed02))
+
 ## [0.30.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.29.0...v0.30.0) (2026-09-29)
 
 ### Features

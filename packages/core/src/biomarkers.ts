@@ -528,7 +528,12 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     loinc: '770-8',
     names: {
       en: ['Neutrophils', 'Neutrophils %'],
-      pt: ['Neutrófilos', 'Neutrófilos %'],
+      // "Segmentados" é como o hemograma brasileiro automatizado imprime os
+      // neutrófilos: o bastonete só aparece quando passa de um limiar (o
+      // Weinmann informa acima de 5%), e a linha "Segmentados" carrega a
+      // contagem. Sem o nome, a leitura de histórico do laudo evolutivo saía
+      // `UNKNOWN_Segmentados`. A unidade (/µL) é que separa o absoluto.
+      pt: ['Neutrófilos', 'Neutrófilos %', 'Neutrófilos Segmentados', 'Segmentados'],
     },
     unit: '%',
   },

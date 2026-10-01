@@ -1,3 +1,9 @@
+## [0.31.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.31.0...v0.31.1) (2026-10-01)
+
+### Bug Fixes
+
+* **core:** gordura visceral com o prefixo da seção do DEXA resolve no catálogo ([#122](https://github.com/Precisa-Saude/fhir-brasil/issues/122)) ([858ec97](https://github.com/Precisa-Saude/fhir-brasil/commit/858ec975e76f29efc6f389e679cf9f838d366a38))
+
 ## [0.31.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.30.0...v0.31.0) (2026-10-01)
 
 ### Features

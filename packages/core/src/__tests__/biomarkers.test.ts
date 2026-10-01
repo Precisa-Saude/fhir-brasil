@@ -513,6 +513,13 @@ describe('findCodeByName', () => {
     expect(findCodeByName('Hemoglobina')).toBe('Hgb');
   });
 
+  // O hemograma brasileiro automatizado imprime os neutrófilos como
+  // "Segmentados"; sem o nome, o código não resolvia.
+  it('resolve "Segmentados" e "Neutrófilos Segmentados" para os neutrófilos', () => {
+    expect(findCodeByName('Segmentados')).toBe('Neutrophils');
+    expect(findCodeByName('Neutrófilos Segmentados')).toBe('Neutrophils');
+  });
+
   it('should resolve code-like names that are valid biomarker codes', () => {
     expect(findCodeByName('Omega3_DHA')).toBe('Omega3_DHA');
   });

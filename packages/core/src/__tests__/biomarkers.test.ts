@@ -103,6 +103,36 @@ describe('BIOMARKER_DEFINITIONS', () => {
     const uniqueCodes = new Set(codes);
     expect(uniqueCodes.size).toBe(codes.length);
   });
+
+  // Um alias de código que aponta para dois exames resolveria para qualquer um
+  // deles, conforme a ordem do catálogo.
+  it('não tem alias de código em dois exames, nem igual ao código de outro', () => {
+    const owners = new Map<string, string[]>();
+    for (const d of BIOMARKER_DEFINITIONS) {
+      for (const alias of d.codeAliases ?? []) {
+        owners.set(alias, [...(owners.get(alias) ?? []), d.code]);
+      }
+    }
+    const codes = new Set(BIOMARKER_DEFINITIONS.map((d) => d.code));
+    expect([...owners].filter(([, list]) => list.length > 1)).toEqual([]);
+    expect([...owners.keys()].filter((alias) => codes.has(alias))).toEqual([]);
+  });
+
+  // Todo nome do catálogo volta para o próprio exame pela mesma busca que o
+  // parser usa. Os nomes da lista são ambíguos de propósito: "A/G" é razão
+  // albumina/globulina no hemograma e androide/ginoide no DEXA, e "gordura
+  // visceral" é volume no DEXA e nível na bioimpedância. O contexto do laudo
+  // decide, no pré-scan. Nome novo que colide com outro exame cai aqui.
+  it('cada nome resolve para o próprio exame, fora as ambiguidades conhecidas', () => {
+    const ambiguous = new Set(['A/G Ratio', 'Razão A/G', 'Visceral Fat', 'Gordura Visceral']);
+    const wrong = BIOMARKER_DEFINITIONS.flatMap((d) =>
+      Object.values(d.names)
+        .flat()
+        .filter((name) => !ambiguous.has(name) && findCodeByName(name) !== d.code)
+        .map((name) => `${name}: ${d.code} -> ${String(findCodeByName(name))}`),
+    );
+    expect(wrong).toEqual([]);
+  });
 });
 
 describe('loincToCode', () => {

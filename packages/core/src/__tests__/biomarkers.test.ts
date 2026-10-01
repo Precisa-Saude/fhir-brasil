@@ -706,6 +706,31 @@ describe('findCodeByName — sítios de dobra em inglês', () => {
   });
 });
 
+describe('gordura visceral com o prefixo da seção do laudo', () => {
+  // A tabela de tendência do DEXA traz a seção "Visceral Adipose Tissue (VAT)"
+  // e as colunas "Fat Mass (lbs)" e "Volume (in³)". O modelo nomeia a linha
+  // com o prefixo da seção, e os dois nomes não resolviam.
+  it.each([
+    ['Visceral Adipose Tissue (VAT) Volume', 'VATVolume'],
+    ['Visceral Adipose Tissue (VAT) Fat Mass', 'VATMass'],
+    ['Visceral Adipose Tissue Fat Mass', 'VATMass'],
+    ['VAT Fat Mass', 'VATMass'],
+  ])('resolves %s', (nome, code) => {
+    expect(findCodeByName(nome)).toBe(code);
+  });
+
+  it('maps the UNKNOWN_ codes already stored to the canonical code', () => {
+    expect(normalizeCode('UNKNOWN_Visceral_Adipose_Tissue_VAT_Volume')).toBe('VATVolume');
+    expect(normalizeCode('UNKNOWN_Visceral_Adipose_Tissue_VAT_Fat_Mass')).toBe('VATMass');
+  });
+
+  it('keeps the names that already resolved', () => {
+    expect(findCodeByName('Visceral Adipose Tissue')).toBe('VATMass');
+    expect(findCodeByName('VAT Volume')).toBe('VATVolume');
+    expect(findCodeByName('VAT Mass')).toBe('VATMass');
+  });
+});
+
 describe('isDexaDocument — classes além da densitometria', () => {
   // Medido em produção: um laudo de adipometria traz dobras, circunferência e
   // IMC, e nenhum indicador de densitometria. Antesta mudança ele caía no

@@ -360,6 +360,29 @@ describe('getReferenceRange', () => {
       expect(biomarkerRangeDefinitions.Glucose).toBeUndefined();
     });
 
+    it('leaves the percentage WBC differential without a range', () => {
+      // O artigo da PNS (pns-hemograma-2019) publica o diferencial só em
+      // contagem absoluta por mm³, nunca em %. Sem fonte para o intervalo
+      // percentual, o consumidor usa a faixa impressa no laudo.
+      for (const code of ['Basophils', 'Eosinophils', 'Lymphocytes', 'Monocytes', 'Neutrophils']) {
+        expect(biomarkerRangeDefinitions[code]).toBeUndefined();
+        expect(getReferenceRange(code)).toBeUndefined();
+        expect(getReferenceRange(code, { age: 40, biologicalSex: 'F' })).toBeUndefined();
+      }
+    });
+
+    it('keeps the absolute WBC differential ranges', () => {
+      for (const code of [
+        'Basophils_Abs',
+        'Eosinophils_Abs',
+        'Lymphocytes_Abs',
+        'Monocytes_Abs',
+        'Neutrophils_Abs',
+      ]) {
+        expect(getReferenceRange(code)?.unit).toBe('K/uL');
+      }
+    });
+
     it('marks Triglycerides as preferred fasting (non-fasting acceptable per SBC)', () => {
       expect(biomarkerRangeDefinitions.Triglycerides.default.fastingRequired).toBe('preferred');
     });

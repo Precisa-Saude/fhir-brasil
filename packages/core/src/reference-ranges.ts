@@ -330,11 +330,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     ],
   },
 
-  Basophils: {
-    default: { max: 1, min: 0, optimalMax: 0.5, optimalMin: 0, unit: '%' },
-    source: 'pns-hemograma-2019',
-  },
-
+  // `Basophils` (%) sem faixa de propósito: ver o comentário em `Neutrophils_Abs`.
   Basophils_Abs: {
     default: { max: 0.1, min: 0, optimalMax: 0.05, optimalMin: 0, unit: 'K/uL' },
     source: 'pns-hemograma-2019',
@@ -668,12 +664,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'kdigo-ckd-2024',
   },
 
-  Eosinophils: {
-    default: { max: 5, min: 0, optimalMax: 4, optimalMin: 1, unit: '%' },
-    direction: 'lower-better',
-    source: 'pns-hemograma-2019',
-  },
-
+  // `Eosinophils` (%) sem faixa de propósito: ver o comentário em `Neutrophils_Abs`.
   Eosinophils_Abs: {
     default: { max: 0.5, min: 0, optimalMax: 0.3, optimalMin: 0, unit: 'K/uL' },
     source: 'pns-hemograma-2019',
@@ -1167,11 +1158,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'sbc-lipids-2025',
   },
 
-  Lymphocytes: {
-    default: { max: 40, min: 20, optimalMax: 35, optimalMin: 25, unit: '%' },
-    source: 'pns-hemograma-2019',
-  },
-
+  // `Lymphocytes` (%) sem faixa de propósito: ver o comentário em `Neutrophils_Abs`.
   Lymphocytes_Abs: {
     default: { max: 4.0, min: 1.0, optimalMax: 3.0, optimalMin: 1.5, unit: 'K/uL' },
     source: 'pns-hemograma-2019',
@@ -1217,11 +1204,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'tietz-7ed-2015',
   },
 
-  Monocytes: {
-    default: { max: 8, min: 2, optimalMax: 7, optimalMin: 3, unit: '%' },
-    source: 'pns-hemograma-2019',
-  },
-
+  // `Monocytes` (%) sem faixa de propósito: ver o comentário em `Neutrophils_Abs`.
   Monocytes_Abs: {
     default: { max: 0.8, min: 0.2, optimalMax: 0.7, optimalMin: 0.3, unit: 'K/uL' },
     source: 'pns-hemograma-2019',
@@ -1238,12 +1221,17 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'meuwese-mpo-2007',
   },
 
-  // WBC Differential (%)
-  Neutrophils: {
-    default: { max: 70, min: 40, optimalMax: 65, optimalMin: 50, unit: '%' },
-    source: 'pns-hemograma-2019',
-  },
-
+  // Leucograma diferencial em percentual (`Neutrophils`, `Lymphocytes`,
+  // `Monocytes`, `Eosinophils`, `Basophils`) fica sem faixa de propósito.
+  // As faixas em % que existiam aqui citavam `pns-hemograma-2019`, mas o
+  // artigo (ROSENFELD et al., Rev. Bras. Epidemiol., v. 22, supl. 2, 2019,
+  // DOI 10.1590/1980-549720190003.supl.2) publica o diferencial só em
+  // contagem absoluta por mm³, separado por sexo (Tabela 2: basófilos 0–62
+  // em homens e 0–72 em mulheres, eosinófilos 0–660 e 0–550, e assim por
+  // diante). Não há intervalo percentual em nenhuma tabela. Sem fonte, a
+  // lacuna é melhor que um intervalo inventado: o consumidor usa a faixa
+  // impressa no laudo, como já acontece com `Glucose`.
+  //
   // WBC Differential (Absolute)
   Neutrophils_Abs: {
     default: { max: 8.0, min: 1.5, optimalMax: 6.0, optimalMin: 2.0, unit: 'K/uL' },

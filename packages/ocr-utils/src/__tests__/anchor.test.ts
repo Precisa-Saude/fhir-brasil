@@ -607,3 +607,85 @@ describe('findBiomarkersInText: rótulo de região na densitometria', () => {
     expect(codesOf('Arms 17.6% Total Fat Mass 45.6 lbs')).toContain('FatMass');
   });
 });
+
+describe('findBiomarkersInText: "Total Fat" e "Total Lean" da densitometria', () => {
+  const codesOf = (text: string) => findBiomarkersInText(text).matches.map((m) => m.code);
+  const WHOLE_BODY = ['BodyFatPct', 'FatMass', 'LeanMass', 'TotalMass'];
+  const wholeBodyOf = (text: string) => codesOf(text).filter((c) => WHOLE_BODY.includes(c));
+
+  it('anchors the trend-table columns to the whole-body codes', () => {
+    expect(codesOf('Total Fat (lbs) 43.6')).toEqual(['FatMass']);
+    expect(codesOf('Total Lean (lbs) 138.4')).toEqual(['LeanMass']);
+    expect(codesOf('Total Fat 43.6 lbs')).toEqual(['FatMass']);
+    expect(codesOf('Total Lean 138.4 lbs')).toEqual(['LeanMass']);
+  });
+
+  // A coluna em percentual tem o mesmo rótulo da coluna em lbs. A citação do
+  // percentual não pode ancorar a massa de gordura, senão a leitura do
+  // percentual era recusada por citar outro exame.
+  it.each(['Total Fat (%) 23.1%', 'Total Fat % 23.1%', 'Total Fat % 23.1'])(
+    'anchors the percentage, not the fat mass, in %s',
+    (line) => {
+      expect(codesOf(line)).toEqual(['BodyFatPct']);
+    },
+  );
+
+  it.each(['Total Fat 23.1%', 'Total Fat 23,1 %', 'Total Lean 76.4%', 'Fat Mass (%) 23.1'])(
+    'does not anchor a whole-body mass when a percentage follows it: %s',
+    (line) => {
+      expect(codesOf(line)).not.toEqual(
+        expect.arrayContaining([expect.stringMatching(/^(FatMass|LeanMass)$/)]),
+      );
+    },
+  );
+
+  it('reads every column of the trend-table header', () => {
+    const header =
+      'Measured Date Total Mass (lbs) Total Fat (%) Total Fat (lbs) Total Lean (lbs) ' +
+      'Trunk Fat (lbs) Trunk Lean (lbs) Arms Fat (lbs) Arms Lean (lbs) Legs Fat (lbs) Legs Lean (lbs)';
+    expect(codesOf(header).sort()).toEqual(
+      [
+        'ArmsFatMass',
+        'ArmsLeanMass',
+        'BodyFatPct',
+        'FatMass',
+        'LeanMass',
+        'LegsFatMass',
+        'LegsLeanMass',
+        'TotalMass',
+        'TrunkFatMass',
+        'TrunkLeanMass',
+      ].sort(),
+    );
+  });
+
+  // Na tabela regional da página 1, "Total Fat %" é o cabeçalho de uma coluna
+  // cujas linhas são regiões, e o modelo junta a linha com a coluna no nome.
+  // A região na frente tira o nome do corpo inteiro, como no #127.
+  it.each([
+    'Arms Total Fat % 17.1%',
+    'Legs Total Fat % 21.4%',
+    'Trunk Total Fat % 26.3%',
+    'Android Total Fat % 29.5%',
+    'Arms Total Fat 4.0 lbs',
+    'Legs Total Lean 48.2 lbs',
+    'Arms Total Lean % 78.6%',
+  ])('does not anchor a whole-body code inside the regional label %s', (line) => {
+    expect(wholeBodyOf(line)).toEqual([]);
+  });
+
+  it('anchors the percentage in the regional table header, and not the fat mass', () => {
+    const header =
+      'Region Total Fat % Total Mass (lbs) Fat Tissue (lbs) Lean Tissue (lbs) BMC (lbs) Fat Free (lbs)';
+    const codes = codesOf(header);
+    expect(codes).toContain('BodyFatPct');
+    expect(codes).toContain('TotalMass');
+    expect(codes).not.toContain('FatMass');
+  });
+
+  it('keeps the guards of #127 working with the new names', () => {
+    expect(codesOf('Arms Total Fat Mass 4.8 lbs')).toEqual(['ArmsFatMass']);
+    expect(codesOf('Legs Total Lean Mass 50.8 lbs')).toEqual(['LegsLeanMass']);
+    expect(codesOf('Fat Mass 45.6 lbs')).toEqual(['FatMass']);
+  });
+});

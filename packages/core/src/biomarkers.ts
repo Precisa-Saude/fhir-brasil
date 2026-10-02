@@ -2148,6 +2148,13 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Percent Body Fat',
         '% Body Fat',
         'Total Body % Fat',
+        // A Live Lean imprime "Total Fat %" na tabela regional da página 1 (a
+        // linha "Total" é o percentual do corpo inteiro) e "Total Fat (%)" na
+        // tabela de tendência. Os dois são o "Total Body Fat %" da mesma data.
+        // Sem eles, o "Total Fat" da massa de gordura, logo abaixo, ancorava
+        // `FatMass` na citação do percentual.
+        'Total Fat %',
+        'Total Fat (%)',
       ],
       pt: [
         'Percentual de Gordura Corporal',
@@ -2165,7 +2172,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     code: 'FatMass',
     loinc: '73708-0',
     names: {
-      en: ['Fat Mass', 'Total Fat Mass', 'Body Fat Mass', 'Fat Tissue Mass'],
+      // "Total Fat" é a coluna "Total Fat (lbs)" da tabela de tendência da
+      // densitometria Live Lean, e traz o mesmo número do "Fat Mass" da página
+      // 1 em todas as datas que as duas tabelas imprimem.
+      en: ['Fat Mass', 'Total Fat Mass', 'Body Fat Mass', 'Fat Tissue Mass', 'Total Fat'],
       pt: ['Massa de Gordura', 'Massa Gorda', 'Massa de Gordura Total', 'Tecido Adiposo'],
     },
     unit: 'kg',
@@ -2185,7 +2195,18 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     category: 'composicao-corporal',
     code: 'LeanMass',
     names: {
-      en: ['Lean Mass', 'Lean Body Mass', 'Lean Tissue Mass', 'Total Lean Mass', 'LBM'],
+      // "Total Lean" é a coluna "Total Lean (lbs)" da mesma tabela de
+      // tendência: tecido magro, igual ao "Lean Mass" da página 1, e não a
+      // massa livre de gordura, que soma o mineral ósseo e fica em
+      // `FatFreeMass`.
+      en: [
+        'Lean Mass',
+        'Lean Body Mass',
+        'Lean Tissue Mass',
+        'Total Lean Mass',
+        'LBM',
+        'Total Lean',
+      ],
       pt: ['Massa Magra', 'Massa Corporal Magra', 'Tecido Magro', 'Massa Magra Total'],
     },
     unit: 'kg',

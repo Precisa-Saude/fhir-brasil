@@ -927,3 +927,25 @@ describe('linha "Arms Total" e "Legs Total" da densitometria', () => {
     expect(findCodeByName(nome)).toBeUndefined();
   });
 });
+
+describe('colunas "Total Fat" e "Total Lean" da tendência da densitometria', () => {
+  // A tabela de tendência da Live Lean tem as colunas "Total Fat (%)", "Total
+  // Fat (lbs)" e "Total Lean (lbs)". Nos cinco laudos de dev, os números da
+  // coluna em lbs são, data a data, o "Fat Mass" e o "Lean Mass" da página 1, e
+  // o da coluna em % é o "Total Body Fat %".
+  it.each([
+    ['Total Fat', 'FatMass'],
+    ['Total Lean', 'LeanMass'],
+    ['Total Fat %', 'BodyFatPct'],
+    ['Total Fat (%)', 'BodyFatPct'],
+  ])('resolves %s to %s', (nome, code) => {
+    expect(findCodeByName(nome)).toBe(code);
+    expect(validateLoincNameMatch('', nome).code).toBe(code);
+  });
+
+  it('keeps fat-free mass apart from lean mass', () => {
+    // Fat Free = Lean + BMC no próprio laudo; "Total Lean" é só o tecido magro.
+    expect(findCodeByName('Fat Free')).toBe('FatFreeMass');
+    expect(findCodeByName('Total Lean')).not.toBe('FatFreeMass');
+  });
+});

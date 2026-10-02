@@ -70,3 +70,32 @@ export function qualifiedByBodyRegion(code: string, before: string): boolean {
   }
   return false;
 }
+
+/** Medidas de massa do corpo inteiro: as de `WHOLE_BODY_COMPOSITION_CODES` menos o percentual. */
+const WHOLE_BODY_MASS_CODES = new Set(
+  [...WHOLE_BODY_COMPOSITION_CODES].filter((code) => code !== 'BodyFatPct'),
+);
+
+/**
+ * Texto que começa num percentual: o sinal sozinho, entre parênteses, ou
+ * colado a um número ("%", "(%)", "23.1%", "23,1 %").
+ */
+const STARTS_WITH_PERCENT = /^ ?(?:\( ?% ?\)|%|[-+]?\d+(?:[.,]\d+)? ?%)/;
+
+/**
+ * O nome de uma massa do corpo inteiro casou, e o que vem logo depois dele é
+ * um percentual.
+ *
+ * A tabela de tendência da densitometria Live Lean tem duas colunas "Total
+ * Fat", uma em "(%)" e outra em "(lbs)", e só a segunda é a massa de gordura.
+ * A citação do percentual chega como "Total Fat 23.1%", e sem esta guarda o
+ * "Total Fat" ancorava `FatMass` nela. O percentual tem nome próprio no
+ * catálogo quando o laudo o escreve colado ao rótulo ("Total Fat %", "Total
+ * Fat (%)"), e o nome mais longo já ganha; esta guarda cobre a citação em que o
+ * sinal só aparece no número.
+ *
+ * Só olha o que vem imediatamente depois do nome, na mesma linha.
+ */
+export function followedByPercent(code: string, after: string): boolean {
+  return WHOLE_BODY_MASS_CODES.has(code) && STARTS_WITH_PERCENT.test(after);
+}

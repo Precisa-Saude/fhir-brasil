@@ -1,3 +1,9 @@
+## [0.31.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.31.1...v0.31.2) (2026-10-02)
+
+### Bug Fixes
+
+* **core:** diferencial do leucograma segue o que a PNS 2019 publica ([#123](https://github.com/Precisa-Saude/fhir-brasil/issues/123)) ([a714adc](https://github.com/Precisa-Saude/fhir-brasil/commit/a714adcfea943d52d80331037e9bb5014b9c471b))
+
 ## [0.31.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.31.0...v0.31.1) (2026-10-01)
 
 ### Bug Fixes

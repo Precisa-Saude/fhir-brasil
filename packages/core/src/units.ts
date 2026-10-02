@@ -852,13 +852,15 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   },
   // Troponina T: canônica em ng/L (hs-cTnT). O ensaio convencional imprime em
   // ng/mL, que é a mesma grandeza que µg/L; converte por fator exato
-  // (ng/mL × 1000 = ng/L, em FIXED_FACTORS).
+  // (ng/mL × 1000 = ng/L, em FIXED_FACTORS). pg/mL é a mesma unidade que ng/L
+  // e entra como alias, como em VitaminB12.
   TroponinT: {
     aliases: {
       'mcg/l': 'ng/mL',
       'microg/l': 'ng/mL',
       'ng/l': 'ng/L',
       'ng/ml': 'ng/mL',
+      'pg/ml': 'ng/L',
       'ug/l': 'ng/mL',
       'µg/l': 'ng/mL',
     },

@@ -146,6 +146,11 @@ describe('troponin T reported in ng/mL', () => {
     },
   );
 
+  it.each(['pg/mL', 'pg/ml'])('reads 12 %s as 12 ng/L (same unit)', (unit) => {
+    const result = convertUnit(12, unit, 'ng/L', 'TroponinT');
+    expect(result).toEqual({ unit: 'ng/L', value: 12 });
+  });
+
   it('converts the canonical ng/L back to ng/mL (× 0.001)', () => {
     const result = convertUnit(12, 'ng/L', 'ng/mL', 'TroponinT');
     expect(result?.unit).toBe('ng/mL');

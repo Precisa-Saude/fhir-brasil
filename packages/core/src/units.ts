@@ -522,17 +522,20 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'umol/L',
     siUnit: 'µmol/L',
   },
+  // Imunoglobulinas: canônica em mg/dL, a unidade da faixa de referência
+  // (Tietz) e a que laboratórios brasileiros e americanos imprimem. g/L fica
+  // como unidade SI; a conversão é exata (g/L × 100 = mg/dL, em FIXED_FACTORS).
   IgA: {
     aliases: { 'g/l': 'g/L', 'mg/dl': 'mg/dL' },
-    canonicalUcum: 'g/L',
-    canonicalUnit: 'g/L',
+    canonicalUcum: 'mg/dL',
+    canonicalUnit: 'mg/dL',
     siUcum: 'g/L',
     siUnit: 'g/L',
   },
   IgG: {
     aliases: { 'g/l': 'g/L', 'mg/dl': 'mg/dL' },
-    canonicalUcum: 'g/L',
-    canonicalUnit: 'g/L',
+    canonicalUcum: 'mg/dL',
+    canonicalUnit: 'mg/dL',
     siUcum: 'g/L',
     siUnit: 'g/L',
   },

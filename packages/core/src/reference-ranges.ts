@@ -1459,7 +1459,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   Selenium: {
-    default: { max: 150, min: 70, optimalMax: 125, optimalMin: 85, unit: 'mcg/L' },
+    default: { max: 150, min: 70, optimalMax: 125, optimalMin: 85, unit: 'µg/L' },
     source: 'tietz-7ed-2015',
   },
 

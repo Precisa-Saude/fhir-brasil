@@ -360,15 +360,57 @@ describe('getReferenceRange', () => {
       expect(biomarkerRangeDefinitions.Glucose).toBeUndefined();
     });
 
-    it('leaves the percentage WBC differential without a range', () => {
-      // O artigo da PNS (pns-hemograma-2019) publica o diferencial só em
-      // contagem absoluta por mm³, nunca em %. Sem fonte para o intervalo
-      // percentual, o consumidor usa a faixa impressa no laudo.
-      for (const code of ['Basophils', 'Eosinophils', 'Lymphocytes', 'Monocytes', 'Neutrophils']) {
-        expect(biomarkerRangeDefinitions[code]).toBeUndefined();
-        expect(getReferenceRange(code)).toBeUndefined();
-        expect(getReferenceRange(code, { age: 40, biologicalSex: 'F' })).toBeUndefined();
+    describe('percentage WBC differential (Valdati et al. 2011, Tabela 1)', () => {
+      // A PNS 2019 publica o diferencial só em contagem absoluta. Os limites
+      // em % vêm da Tabela 1 da carta de Curitiba (percentis 2,5 e 97,5),
+      // por sexo, numa amostra de 12 a 60 anos.
+      const table1: Record<
+        string,
+        { F: [number, number]; M: [number, number]; union: [number, number] }
+      > = {
+        Basophils: { F: [0, 1], M: [0, 2], union: [0, 2] },
+        Eosinophils: { F: [0, 11], M: [1, 13], union: [0, 13] },
+        Lymphocytes: { F: [21, 48], M: [19, 49], union: [19, 49] },
+        Monocytes: { F: [4, 11], M: [3, 12], union: [3, 12] },
+        Neutrophils: { F: [40, 70], M: [35, 69], union: [35, 70] },
+      };
+
+      for (const [code, limits] of Object.entries(table1)) {
+        it(`${code} uses the article's limits for each sex between 12 and 60 years`, () => {
+          for (const sex of ['M', 'F'] as const) {
+            for (const age of [12, 40, 60]) {
+              const range = getReferenceRange(code, { age, biologicalSex: sex });
+              expect([range?.min, range?.max]).toEqual(limits[sex]);
+              expect(range?.unit).toBe('%');
+              expect(range?.source).toBe('valdati-curitiba-2011');
+              // O artigo não publica faixa ótima.
+              expect(range?.optimalMin).toBeUndefined();
+              expect(range?.optimalMax).toBeUndefined();
+            }
+          }
+        });
+
+        it(`${code} falls back to the union of both sexes outside the sampled ages or without sex`, () => {
+          for (const context of [
+            undefined,
+            { age: 40 },
+            { age: 61, biologicalSex: 'M' as const },
+            { age: 11, biologicalSex: 'F' as const },
+          ]) {
+            const range = getReferenceRange(code, context);
+            expect([range?.min, range?.max]).toEqual(limits.union);
+            expect(range?.unit).toBe('%');
+            expect(range?.source).toBe('valdati-curitiba-2011');
+          }
+        });
       }
+
+      it('registers the Curitiba letter with its verified citation', () => {
+        const ref = SOURCE_REGISTRY['valdati-curitiba-2011'];
+        expect(ref?.doi).toBe('10.5581/1516-8484.20110106');
+        expect(ref?.url).toBe('https://pubmed.ncbi.nlm.nih.gov/23049347/');
+        expect(ref?.abnt).toContain('v. 33, n. 5, p. 395-396');
+      });
     });
 
     describe('absolute WBC differential (PNS 2019, Tabela 2)', () => {

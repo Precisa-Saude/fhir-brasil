@@ -146,7 +146,7 @@ Medido no `@precisa-saude/fhir@0.31.2`, gerado por `pnpm catalog:counts`.
 
 - **226 biomarcadores** definidos, dos quais **188 têm código LOINC** (83,2%) e 38 não têm.
 - **189 códigos LOINC aceitos** na busca por código: os 188 canônicos mais os aliases de códigos que o LOINC aposentou.
-- **203 faixas de referência**, com variantes por sexo e idade.
+- **208 faixas de referência**, com variantes por sexo e idade.
 - **10 categorias clínicas** de primeiro nível sobre 20 subcategorias.
 
 | Categoria                            | Biomarcadores | Com LOINC | Exemplos                                                            |

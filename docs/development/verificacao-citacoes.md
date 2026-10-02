@@ -85,8 +85,13 @@
 
 ### Diferencial Leucocitario
 
-Os códigos em % (`Neutrophils`, `Lymphocytes`, `Monocytes`, `Eosinophils`, `Basophils`) não têm faixa: o artigo da PNS publica o diferencial só em contagem absoluta por mm³, e as faixas em % que citavam a PNS foram removidas. Os absolutos usam os limites da Tabela 2, por sexo, convertidos de /mm³ para K/uL.
+Os códigos em % usam a Tabela 1 de Valdati et al. (2011), por sexo, em uma amostra de 12 a 60 anos de Curitiba; a PNS publica o diferencial só em contagem absoluta por mm³. Os absolutos usam os limites da Tabela 2 da PNS, por sexo, convertidos de /mm³ para K/uL.
 
+- [x] Neutrophils - `valdati-curitiba-2011` Tabela 1: H 35-69, M 40-70 % confere
+- [x] Lymphocytes - `valdati-curitiba-2011` Tabela 1: H 19-49, M 21-48 % confere
+- [x] Monocytes - `valdati-curitiba-2011` Tabela 1: H 3-12, M 4-11 % confere
+- [x] Eosinophils - `valdati-curitiba-2011` Tabela 1: H 1-13, M 0-11 % confere
+- [x] Basophils - `valdati-curitiba-2011` Tabela 1: H 0-2, M 0-1 % confere
 - [x] Neutrophils_Abs - `pns-hemograma-2019` Tabela 2: H 576-5.971, M 612-6.474 /mm³ confere
 - [x] Lymphocytes_Abs - `pns-hemograma-2019` Tabela 2: H 720-3.370, M 796-3.414 /mm³ confere
 - [x] Monocytes_Abs - `pns-hemograma-2019` Tabela 2: H 11-812, M 22-692 /mm³ confere
@@ -344,7 +349,7 @@ Os códigos em % (`Neutrophils`, `Lymphocytes`, `Monocytes`, `Eosinophils`, `Bas
 | Chave                         | Referência completa                                                                                                                              | Biomarcadores |
 | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | :-----------: |
 | `tietz-7ed-2015`              | BURTIS, C. A.; BRUNS, D. E. Tietz Fundamentals of Clinical Chemistry and Molecular Diagnostics. 7. ed. Elsevier Saunders, 2015                   |      103      |
-| `pns-hemograma-2019`          | ROSENFELD, L. G. et al. Valores de referência para exames laboratoriais de hemograma da população adulta brasileira. Rev. Bras. Epidemiol., 2019 |      21       |
+| `pns-hemograma-2019`          | ROSENFELD, L. G. et al. Valores de referência para exames laboratoriais de hemograma da população adulta brasileira. Rev. Bras. Epidemiol., 2019 |      16       |
 | `kelly-dxa-2009`              | KELLY, T. L. et al. Dual energy X-ray absorptiometry body composition reference values from NHANES. PLoS One, 2009                               |       8       |
 | `harris-omega3-2004`          | HARRIS, W. S.; VON SCHACKY, C. The Omega-3 Index: a new risk factor for death from coronary heart disease? Prev. Med., 2004                      |       7       |
 | `rumberger-cac-1999`          | RUMBERGER, J. A. et al. Electron beam computed tomographic coronary calcium scanning. Mayo Clin. Proc., 1999                                     |       7       |
@@ -352,6 +357,7 @@ Os códigos em % (`Neutrophils`, `Lymphocytes`, `Monocytes`, `Eosinophils`, `Bas
 | `sturgeon-nacb-2008`          | STURGEON, C. M. et al. NACB Laboratory Medicine Practice Guidelines for use of tumor markers. Clin. Chem., 2008                                  |       7       |
 | `caulfield-ionmobility-2008`  | CAULFIELD, M. P. et al. Direct determination of lipoprotein particle sizes and concentrations by ion mobility analysis. Clin. Chem., 2008        |       5       |
 | `simopoulos-omega-ratio-2002` | SIMOPOULOS, A. P. The importance of the ratio of omega-6/omega-3 essential fatty acids. Biomed. Pharmacother., 2002                              |       5       |
+| `valdati-curitiba-2011`       | VALDATI, K. D. et al. Hematological reference ranges among healthy adults of Curitiba, PR, Brazil. Rev. Bras. Hematol. Hemoter., 2011            |       5       |
 | `nr7-pcmso-2020`              | BRASIL. NR-7 — PCMSO, Quadro 1: Indicadores biológicos. Portaria n. 6.734, 2020                                                                  |       4       |
 | `kdigo-ckd-2024`              | KDIGO CKD Work Group. KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of CKD. Kidney Int., 2024                         |       3       |
 | `who-osteoporosis-1994`       | WHO Study Group. Assessment of fracture risk and its application to screening for postmenopausal osteoporosis. WHO Tech. Rep. Series, 1994       |       3       |

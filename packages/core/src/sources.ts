@@ -374,6 +374,15 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     url: 'https://pubmed.ncbi.nlm.nih.gov/40783537/',
   },
   // ---------------------------------------------------------------------------
+  // Fontes brasileiras — Hematologia
+  // ---------------------------------------------------------------------------
+  'valdati-curitiba-2011': {
+    abnt: 'VALDATI, K. D.; HENNEBERG, R.; NASCIMENTO, A. J. do. Hematological reference ranges among healthy adults of Curitiba, PR, Brazil. Revista Brasileira de Hematologia e Hemoterapia, v. 33, n. 5, p. 395-396, out. 2011.',
+    doi: '10.5581/1516-8484.20110106',
+    key: 'valdati-curitiba-2011',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/23049347/',
+  },
+  // ---------------------------------------------------------------------------
   // Fontes internacionais — Coagulação
   // ---------------------------------------------------------------------------
   'wells-ddimer-2003': {

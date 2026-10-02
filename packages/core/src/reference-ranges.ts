@@ -330,8 +330,19 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     ],
   },
 
-  // `Basophils` (%) fica sem faixa de propósito e `Basophils_Abs` usa os limites da
-  // Tabela 2 da PNS 2019. Ver o comentário em `Neutrophils_Abs`.
+  // `Basophils` (%) segue a Tabela 1 de Valdati et al. (2011). Ver o comentário
+  // em `Neutrophils`.
+  Basophils: {
+    default: { max: 2, min: 0, unit: '%' },
+    source: 'valdati-curitiba-2011',
+    variants: [
+      { ageMax: 60, ageMin: 12, range: { max: 2, min: 0, unit: '%' }, sex: 'M' },
+      { ageMax: 60, ageMin: 12, range: { max: 1, min: 0, unit: '%' }, sex: 'F' },
+    ],
+  },
+
+  // `Basophils_Abs` usa os limites da Tabela 2 da PNS 2019. Ver o comentário em
+  // `Neutrophils_Abs`.
   Basophils_Abs: {
     default: { max: 0.072, min: 0, unit: 'K/uL' },
     source: 'pns-hemograma-2019',
@@ -669,8 +680,19 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'kdigo-ckd-2024',
   },
 
-  // `Eosinophils` (%) fica sem faixa de propósito e `Eosinophils_Abs` usa os limites da
-  // Tabela 2 da PNS 2019. Ver o comentário em `Neutrophils_Abs`.
+  // `Eosinophils` (%) segue a Tabela 1 de Valdati et al. (2011). Ver o comentário
+  // em `Neutrophils`.
+  Eosinophils: {
+    default: { max: 13, min: 0, unit: '%' },
+    source: 'valdati-curitiba-2011',
+    variants: [
+      { ageMax: 60, ageMin: 12, range: { max: 13, min: 1, unit: '%' }, sex: 'M' },
+      { ageMax: 60, ageMin: 12, range: { max: 11, min: 0, unit: '%' }, sex: 'F' },
+    ],
+  },
+
+  // `Eosinophils_Abs` usa os limites da Tabela 2 da PNS 2019. Ver o comentário em
+  // `Neutrophils_Abs`.
   Eosinophils_Abs: {
     default: { max: 0.66, min: 0, unit: 'K/uL' },
     source: 'pns-hemograma-2019',
@@ -1168,8 +1190,19 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'sbc-lipids-2025',
   },
 
-  // `Lymphocytes` (%) fica sem faixa de propósito e `Lymphocytes_Abs` usa os limites da
-  // Tabela 2 da PNS 2019. Ver o comentário em `Neutrophils_Abs`.
+  // `Lymphocytes` (%) segue a Tabela 1 de Valdati et al. (2011). Ver o comentário
+  // em `Neutrophils`.
+  Lymphocytes: {
+    default: { max: 49, min: 19, unit: '%' },
+    source: 'valdati-curitiba-2011',
+    variants: [
+      { ageMax: 60, ageMin: 12, range: { max: 49, min: 19, unit: '%' }, sex: 'M' },
+      { ageMax: 60, ageMin: 12, range: { max: 48, min: 21, unit: '%' }, sex: 'F' },
+    ],
+  },
+
+  // `Lymphocytes_Abs` usa os limites da Tabela 2 da PNS 2019. Ver o comentário em
+  // `Neutrophils_Abs`.
   Lymphocytes_Abs: {
     default: { max: 3.414, min: 0.72, unit: 'K/uL' },
     source: 'pns-hemograma-2019',
@@ -1219,8 +1252,19 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'tietz-7ed-2015',
   },
 
-  // `Monocytes` (%) fica sem faixa de propósito e `Monocytes_Abs` usa os limites da
-  // Tabela 2 da PNS 2019. Ver o comentário em `Neutrophils_Abs`.
+  // `Monocytes` (%) segue a Tabela 1 de Valdati et al. (2011). Ver o comentário
+  // em `Neutrophils`.
+  Monocytes: {
+    default: { max: 12, min: 3, unit: '%' },
+    source: 'valdati-curitiba-2011',
+    variants: [
+      { ageMax: 60, ageMin: 12, range: { max: 12, min: 3, unit: '%' }, sex: 'M' },
+      { ageMax: 60, ageMin: 12, range: { max: 11, min: 4, unit: '%' }, sex: 'F' },
+    ],
+  },
+
+  // `Monocytes_Abs` usa os limites da Tabela 2 da PNS 2019. Ver o comentário em
+  // `Neutrophils_Abs`.
   Monocytes_Abs: {
     default: { max: 0.812, min: 0.011, unit: 'K/uL' },
     source: 'pns-hemograma-2019',
@@ -1242,24 +1286,41 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   // Leucograma diferencial em percentual (`Neutrophils`, `Lymphocytes`,
-  // `Monocytes`, `Eosinophils`, `Basophils`) fica sem faixa de propósito.
-  // As faixas em % que existiam aqui citavam `pns-hemograma-2019`, mas o
-  // artigo (ROSENFELD et al., Rev. Bras. Epidemiol., v. 22, supl. 2, 2019,
-  // DOI 10.1590/1980-549720190003.supl.2) publica o diferencial só em
-  // contagem absoluta por mm³, separado por sexo (Tabela 2: basófilos 0–62
-  // em homens e 0–72 em mulheres, eosinófilos 0–660 e 0–550, e assim por
-  // diante). Não há intervalo percentual em nenhuma tabela. Sem fonte, a
-  // lacuna é melhor que um intervalo inventado: o consumidor usa a faixa
-  // impressa no laudo, como já acontece com `Glucose`.
+  // `Monocytes`, `Eosinophils`, `Basophils`): limites da Tabela 1 de
+  // VALDATI, HENNEBERG e NASCIMENTO (Rev. Bras. Hematol. Hemoter., v. 33,
+  // n. 5, p. 395-396, 2011, DOI 10.5581/1516-8484.20110106), por sexo,
+  // exatamente como publicados. A PNS 2019 (`pns-hemograma-2019`) não serve
+  // aqui porque publica o diferencial só em contagem absoluta por mm³.
   //
+  // O estudo é uma carta ao editor com 1.000 hemogramas de rotina (500
+  // mulheres, 500 homens) do Laboratório Municipal de Curitiba, colhidos de
+  // junho a outubro de 2007 e medidos num ABX Pentra 120. Os limites são os
+  // percentis 2,5 e 97,5. A amostra inclui pessoas de 12 a 60 anos, por isso
+  // as variantes por sexo valem só nessa faixa etária; fora dela, ou sem sexo
+  // informado, vale o default, que é a união das duas faixas (menor mínimo e
+  // maior máximo entre homens e mulheres). Os próprios autores pedem cautela
+  // na comparação, porque o laboratório atende a população mais carente da
+  // cidade. O artigo não publica faixa ótima, por isso não há
+  // optimalMin/optimalMax.
+  Neutrophils: {
+    default: { max: 70, min: 35, unit: '%' },
+    source: 'valdati-curitiba-2011',
+    variants: [
+      { ageMax: 60, ageMin: 12, range: { max: 69, min: 35, unit: '%' }, sex: 'M' },
+      { ageMax: 60, ageMin: 12, range: { max: 70, min: 40, unit: '%' }, sex: 'F' },
+    ],
+  },
+
   // Diferencial absoluto (`*_Abs`): limites inferior e superior da Tabela 2
-  // do mesmo artigo, por sexo, exatamente como publicados. São limites da
-  // distribuição amostral de adultos (18 anos ou mais), não cortes clínicos.
-  // O artigo informa células/mm³ (= células/µL); aqui a unidade é K/uL, então
-  // cada limite foi dividido por 1.000 sem arredondar (62/mm³ = 0,062 K/uL).
-  // O artigo não publica faixa ótima, por isso não há optimalMin/optimalMax.
-  // Quando o sexo não é informado, o default é a união das duas faixas
-  // (menor mínimo e maior máximo entre homens e mulheres).
+  // de ROSENFELD et al. (Rev. Bras. Epidemiol., v. 22, supl. 2, 2019,
+  // DOI 10.1590/1980-549720190003.supl.2), por sexo, exatamente como
+  // publicados. São limites da distribuição amostral de adultos (18 anos ou
+  // mais), não cortes clínicos. O artigo informa células/mm³ (= células/µL);
+  // aqui a unidade é K/uL, então cada limite foi dividido por 1.000 sem
+  // arredondar (62/mm³ = 0,062 K/uL). O artigo não publica faixa ótima, por
+  // isso não há optimalMin/optimalMax. Quando o sexo não é informado, o
+  // default é a união das duas faixas (menor mínimo e maior máximo entre
+  // homens e mulheres).
   Neutrophils_Abs: {
     default: { max: 6.474, min: 0.576, unit: 'K/uL' },
     source: 'pns-hemograma-2019',

@@ -18,7 +18,7 @@ ROSENFELD, L. G. et al. Valores de referencia para exames laboratoriais de hemog
 
 Disponivel em: <https://pubmed.ncbi.nlm.nih.gov/31596374/>.
 
-**Valores utilizados:** CBC completo (RBC, WBC, Hgb, Hct, Platelets, MCV, MCH, MCHC, RDW, MPV, Reticulocytes) e diferencial leucocitario, baseados em n=8.952 adultos brasileiros.
+**Valores utilizados:** CBC completo (RBC, WBC, Hgb, Hct, Platelets, MCV, MCH, MCHC, RDW, MPV, Reticulocytes) e diferencial leucocitário em contagem absoluta, baseados em n=8.952 adultos brasileiros. O artigo não publica o diferencial em %, que vem de `valdati-curitiba-2011`.
 
 ### pns-bioquimica-2019
 
@@ -122,6 +122,14 @@ MAEDA, S. S. et al. Recomendações da Sociedade Brasileira de Endocrinologia e 
 Disponível em: <https://pubmed.ncbi.nlm.nih.gov/25166032/>.
 
 **Valores utilizados:** Vitamina D: suficiência >30, insuficiência 20-29, deficiência <20 ng/mL.
+
+### valdati-curitiba-2011
+
+VALDATI, K. D.; HENNEBERG, R.; NASCIMENTO, A. J. do. Hematological reference ranges among healthy adults of Curitiba, PR, Brazil. **Revista Brasileira de Hematologia e Hemoterapia**, v. 33, n. 5, p. 395-396, out. 2011. DOI: [10.5581/1516-8484.20110106](https://doi.org/10.5581/1516-8484.20110106).
+
+Disponível em: <https://pubmed.ncbi.nlm.nih.gov/23049347/>.
+
+**Valores utilizados:** diferencial leucocitário em %, Tabela 1, percentis 2,5 e 97,5 por sexo. Mulheres: neutrófilos 40-70, linfócitos 21-48, monócitos 4-11, eosinófilos 0-11, basófilos 0-1. Homens: neutrófilos 35-69, linfócitos 19-49, monócitos 3-12, eosinófilos 1-13, basófilos 0-2. Carta ao editor com 1.000 hemogramas de rotina (500 mulheres, 500 homens, de 12 a 60 anos) do Laboratório Municipal de Curitiba, colhidos em 2007 e medidos num ABX Pentra 120.
 
 ### who-iron-2020
 

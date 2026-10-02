@@ -850,8 +850,18 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'ng/mL',
     siUnit: 'ng/mL',
   },
+  // Troponina T: canônica em ng/L (hs-cTnT). O ensaio convencional imprime em
+  // ng/mL, que é a mesma grandeza que µg/L; converte por fator exato
+  // (ng/mL × 1000 = ng/L, em FIXED_FACTORS).
   TroponinT: {
-    aliases: { 'ng/l': 'ng/L' },
+    aliases: {
+      'mcg/l': 'ng/mL',
+      'microg/l': 'ng/mL',
+      'ng/l': 'ng/L',
+      'ng/ml': 'ng/mL',
+      'ug/l': 'ng/mL',
+      'µg/l': 'ng/mL',
+    },
     canonicalUcum: 'ng/L',
     canonicalUnit: 'ng/L',
     siUcum: 'ng/L',
@@ -956,6 +966,8 @@ const FIXED_FACTORS: Record<string, number> = {
   'mg/dL -> g/L': 0.01,
   'mmol/L -> mEq/L': 1,
   'ng/dL -> pg/mL': 10,
+  'ng/L -> ng/mL': 0.001,
+  'ng/mL -> ng/L': 1000,
   'ng/mL -> µg/L': 1,
   'pg/mL -> ng/dL': 0.1,
   'µg/L -> ng/mL': 1,

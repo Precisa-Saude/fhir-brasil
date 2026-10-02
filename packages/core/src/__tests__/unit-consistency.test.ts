@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
 import { BIOMARKER_DEFINITIONS } from '../biomarkers';
-import { applyFallbackReferenceRanges, biomarkerRangeDefinitions } from '../reference-ranges';
+import {
+  applyFallbackReferenceRanges,
+  biomarkerRangeDefinitions,
+  getReferenceRange,
+} from '../reference-ranges';
 import { BIOMARKER_UNITS, convertUnit, getCanonicalUnit, getSIUnit } from '../units';
 
 /**
@@ -129,5 +133,43 @@ describe('immunoglobulins in mg/dL', () => {
   it('does not apply the mg/dL fallback range to an IgA value in g/L', () => {
     const biomarkers = [{ code: 'IgA', unit: 'g/L', value: 3.73 }];
     expect(applyFallbackReferenceRanges(biomarkers)).toBe(0);
+  });
+});
+
+describe('troponin T reported in ng/mL', () => {
+  it.each(['ng/mL', 'ng/ml', 'µg/L', 'ug/L', 'mcg/L'])(
+    'converts 0.012 %s to 12 ng/L (× 1000)',
+    (unit) => {
+      const result = convertUnit(0.012, unit, 'ng/L', 'TroponinT');
+      expect(result?.unit).toBe('ng/L');
+      expect(result?.value).toBeCloseTo(12, 10);
+    },
+  );
+
+  it('converts the canonical ng/L back to ng/mL (× 0.001)', () => {
+    const result = convertUnit(12, 'ng/L', 'ng/mL', 'TroponinT');
+    expect(result?.unit).toBe('ng/mL');
+    expect(result?.value).toBeCloseTo(0.012, 10);
+  });
+
+  it('compares the converted value against the 14 ng/L range in the same unit', () => {
+    const range = getReferenceRange('TroponinT');
+    expect(range?.unit).toBe('ng/L');
+    expect(range?.max).toBe(14);
+
+    const within = convertUnit(0.012, 'ng/mL', getCanonicalUnit('TroponinT') ?? '', 'TroponinT');
+    expect(within?.unit).toBe(range?.unit);
+    expect(within?.value).toBeLessThanOrEqual(range?.max ?? Number.NaN);
+
+    const above = convertUnit(0.03, 'ng/mL', getCanonicalUnit('TroponinT') ?? '', 'TroponinT');
+    expect(above?.value).toBeGreaterThan(range?.max ?? Number.NaN);
+  });
+
+  it('applies the fallback range only once the value is in ng/L', () => {
+    const raw = [{ code: 'TroponinT', unit: 'ng/mL', value: 0.012 }];
+    expect(applyFallbackReferenceRanges(raw)).toBe(0);
+
+    const converted = [{ code: 'TroponinT', unit: 'ng/L', value: 12 }];
+    expect(applyFallbackReferenceRanges(converted)).toBe(1);
   });
 });

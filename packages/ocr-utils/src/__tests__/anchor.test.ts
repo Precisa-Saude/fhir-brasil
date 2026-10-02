@@ -408,3 +408,82 @@ describe('findBiomarkersInText: sinônimo genérico não puxa linha alheia', () 
     },
   );
 });
+
+describe('findBiomarkersInText: nome quebrado em duas linhas', () => {
+  const codesOf = (text: string) => findBiomarkersInText(text).matches.map((m) => m.code);
+
+  // Layout real da Quest (valores alterados): o nome do exame quebra na
+  // vírgula e o resultado fica na segunda linha. Antes, o pré-scan não via o
+  // tTG e ancorava IgA pelo "IGA" solto da segunda linha.
+  const QUEST_TTG = 'TISSUE TRANSGLUTAMINASE\nAB, IGA <1.5 U/mL';
+
+  it('ancora o tTG IgA e não a IgA total', () => {
+    const result = findBiomarkersInText(QUEST_TTG);
+    expect(getMatchedCodes(result)).toEqual(['tTG_IgA']);
+    expect(result.matches[0]?.confidence).toBe(CONFIDENCE_VALUE_ADJACENT);
+    expect(result.matches[0]?.position).toBe(0);
+  });
+
+  it('vale para o tTG IgG no mesmo layout', () => {
+    expect(codesOf('TISSUE TRANSGLUTAMINASE\nAB, IGG 2.4 U/mL')).toEqual(['tTG_IgG']);
+  });
+
+  it('aceita espaço sobrando em volta da quebra de linha', () => {
+    expect(codesOf('  TISSUE TRANSGLUTAMINASE   \n   AB, IGA <1.5 U/mL')).toEqual(['tTG_IgA']);
+  });
+
+  it('continua ancorando a IgA total pela linha própria', () => {
+    expect(codesOf('IMMUNOGLOBULIN A 352 H 47-310 mg/dL')).toEqual(['IgA']);
+    expect(codesOf(`IMMUNOGLOBULIN A 352 H 47-310 mg/dL\n${QUEST_TTG}`).sort()).toEqual([
+      'IgA',
+      'tTG_IgA',
+    ]);
+  });
+
+  it('não junta linhas quando a primeira já é um exame inteiro', () => {
+    // "Colesterol" sozinho é nome de catálogo: a linha seguinte é outro exame,
+    // e juntar daria "Colesterol HDL".
+    const codes = codesOf('Colesterol\nHDL 52 mg/dL');
+    expect(codes).toContain('Cholesterol');
+    expect(codes).toContain('HDL');
+  });
+
+  it('não junta linhas quando a primeira já traz um valor', () => {
+    // A linha com valor é um resultado completo; o nome não continua embaixo.
+    expect(codesOf('TISSUE 3,1\nTRANSGLUTAMINASE AB, IGA')).not.toContain('tTG_IgA');
+  });
+
+  it('não junta mais de duas linhas', () => {
+    expect(codesOf('TISSUE\nTRANSGLUTAMINASE\nAB, IGA <1.5 U/mL')).not.toContain('tTG_IgA');
+  });
+});
+
+describe('findBiomarkersInText: nome mais específico ganha do mais curto', () => {
+  const codesOf = (text: string) => findBiomarkersInText(text).matches.map((m) => m.code);
+
+  it('ancora o PSA livre, e não o PSA total, em "PSA, FREE"', () => {
+    expect(codesOf('PSA, FREE 0.4 ng/mL')).toEqual(['PSA_Free']);
+  });
+
+  it('separa total, livre e relação no painel da Quest', () => {
+    const codes = codesOf('PSA, TOTAL 1.3 ng/mL\nPSA, FREE 0.4 ng/mL\nPSA, % FREE 31 %');
+    expect(codes).toEqual(['PSA', 'PSA_Free', 'PSA_FreeRatio']);
+  });
+
+  it('casa a grafia com vírgula mesmo quando o catálogo não a traz', () => {
+    expect(codesOf('MAGNESIUM, RBC 5.2 mg/dL')).toEqual(['Magnesium_RBC']);
+  });
+
+  it('não perde exame de uma lista com vírgula quando o laudo traz o resultado', () => {
+    // "Colesterol, HDL" vira "colesterol hdl", que é nome do HDL. Na lista de
+    // exames solicitados o colesterol total some daquela linha, mas a linha
+    // de resultado ancora o código.
+    const codes = codesOf('Exames: Colesterol, HDL\nColesterol Total 182 mg/dL\nHDL 51 mg/dL');
+    expect(codes).toContain('Cholesterol');
+    expect(codes).toContain('HDL');
+  });
+
+  it('mantém a vírgula decimal intacta', () => {
+    expect(codesOf('PSA Livre 0,4 ng/mL')).toEqual(['PSA_Free']);
+  });
+});

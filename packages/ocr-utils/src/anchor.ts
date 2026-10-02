@@ -18,6 +18,12 @@ import {
   UNIT_TO_UCUM,
 } from '@precisa-saude/fhir';
 
+import {
+  CONTEXT_REQUIRED_NAMES,
+  QUALITATIVE_VALUE_TERMS,
+  UNAMBIGUOUS_SHORT_NAMES,
+} from './anchor-lexicon';
+
 export interface AnchorMatch {
   code: string;
   confidence: number;
@@ -84,6 +90,12 @@ const MAX_OCCURRENCES_PER_NAME = 5;
  * O pré-filtro de substring do `collectCandidates` compara a chave com o texto
  * já normalizado, então a equivalência precisa nascer aqui: aplicada só na
  * regex, o `includes` descartaria o nome antes de ela rodar.
+ *
+ * A vírgula entre palavras segue a mesma lógica. A Quest imprime o exame no
+ * formato "EXAME, QUALIFICADOR" ("PSA, FREE", "TISSUE TRANSGLUTAMINASE AB,
+ * IGA"), e o catálogo nem sempre traz a grafia com vírgula. Sem ela, "psa, free"
+ * não casava "PSA Free" e o PSA total ancorava pelo "psa" solto. Só vale com
+ * letra dos dois lados, então a vírgula decimal ("0,4") fica intacta.
  */
 function normalize(text: string): string {
   return text
@@ -91,127 +103,9 @@ function normalize(text: string): string {
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .replace(/(?<=\p{L})-(?=[\p{L}\p{N}])/gu, ' ')
+    .replace(/(?<=\p{L}),(?=[^\S\n]*\p{L})/gu, ' ')
     .replace(/[^\S\n]+/g, ' ');
 }
-
-const UNAMBIGUOUS_SHORT_NAMES = new Set([
-  'hdl',
-  'ldl',
-  'lh',
-  'tsh',
-  'crp',
-  'pcr',
-  'ggt',
-  'alt',
-  'ast',
-  'bun',
-  'wbc',
-  'rbc',
-  'mcv',
-  'mch',
-  'rdw',
-  'mpv',
-  'psa',
-  'fsh',
-  'hba1c',
-  'egfr',
-  'acr',
-  'esr',
-  'vhs',
-  'bmc',
-  'bmd',
-  'vat',
-  'dxa',
-  'dmo',
-  'cmo',
-  'ffm',
-  'lbm',
-  'mlg',
-  'tav',
-]);
-
-/**
- * Single-word catalog names that are ordinary words in EN/PT, so seeing them
- * proves nothing on its own. They only anchor when the line also carries a
- * value. Qualitative urine markers (`Color`, `Protein`, `Blood`, …) are
- * detected automatically — see `isQualitativeUrine` — and don't belong here.
- */
-const CONTEXT_REQUIRED_NAMES = new Set([
-  'bacteria', // Bacteria_Urine — tem unidade, escapa da regra automática
-  'bacterias', // Bacteria_Urine
-  'lead', // Lead — verbo/substantivo comuníssimo em inglês
-  'peso', // TotalMass
-  'saturation', // TransferrinSaturation — "oxygen saturation", "saturation index"
-  'tap', // ProthrombinTime — "tap" em inglês
-  'volume', // VATVolume
-  'weight', // TotalMass
-  // Sítios de dobra pelo nome nu. São partes do corpo antes de serem medidas,
-  // e aparecem em prosa: num laudo de DEXA real, "hips and thighs" e
-  // "abdominal region" ancoravam dobra cutânea que o documento não tem.
-  // Exigir valor na linha separa a tabela do parágrafo.
-  'abdominal',
-  'chest',
-  'coxa',
-  'peitoral',
-  'subescapular',
-  'subscapular',
-  'suprailiac',
-  'thigh',
-  'triceps',
-  'tricipital',
-]);
-
-/**
- * Qualitative results expected next to a non-numeric biomarker
- * (urine dipstick, sediment, appearance). Normalized, single tokens —
- * "não reagente" is covered by `reagente`, "não detectado" by `detectado`.
- */
-const QUALITATIVE_VALUE_TERMS = new Set([
-  'absent',
-  'alguns',
-  'amarela',
-  'amarelo',
-  'anormal',
-  'ausencia',
-  'ausente',
-  'ausentes',
-  'citrino',
-  'claro',
-  'clear',
-  'cloudy',
-  'colorless',
-  'detectado',
-  'detected',
-  'escuro',
-  'incolor',
-  'indetectavel',
-  'limpido',
-  'moderada',
-  'moderado',
-  'negativa',
-  'negative',
-  'negativo',
-  'normais',
-  'normal',
-  'numerosos',
-  'ocasional',
-  'positiva',
-  'positive',
-  'positivo',
-  'present',
-  'presente',
-  'presentes',
-  'raras',
-  'raro',
-  'raros',
-  'reagente',
-  'trace',
-  'traces',
-  'tracos',
-  'turvo',
-  'undetectable',
-  'yellow',
-]);
 
 /**
  * Signals that a line comes from a genetic/molecular report rather than from a
@@ -355,7 +249,8 @@ function escapeRegExp(text: string): string {
  * print, consecutive lines are separate biomarkers, and allowing a line break
  * inside a name turns "Colesterol\nHDL" into the name "Colesterol HDL".
  * A wrapped name still anchors through its head token when that token is a
- * name of its own ("Colesterol\nTotal" → `Cholesterol`).
+ * name of its own ("Colesterol\nTotal" → `Cholesterol`). A name whose head is
+ * not a name of its own is recovered by `collectWrappedCandidates`.
  *
  * The trailing optional `s` keeps the plurals labs actually print
  * ("Proteínas", "Cetonas") anchored to the singular catalog name — without
@@ -469,6 +364,82 @@ function collectCandidates(normalizedText: string): Candidate[] {
 }
 
 /**
+ * Junta cada quebra de linha, com o espaço em volta, num espaço só, e guarda
+ * para cada caractere do texto juntado a posição dele no texto original.
+ */
+function joinLines(text: string): { joined: string; offsets: number[] } {
+  const parts: string[] = [];
+  const offsets: number[] = [];
+  let cursor = 0;
+  for (const lineBreak of text.matchAll(/[^\S\n]*\n[^\S\n]*/g)) {
+    for (let i = cursor; i < lineBreak.index; i += 1) {
+      offsets.push(i);
+    }
+    parts.push(text.slice(cursor, lineBreak.index), ' ');
+    offsets.push(lineBreak.index + lineBreak[0].indexOf('\n'));
+    cursor = lineBreak.index + lineBreak[0].length;
+  }
+  for (let i = cursor; i < text.length; i += 1) {
+    offsets.push(i);
+  }
+  parts.push(text.slice(cursor));
+  return { joined: parts.join(''), offsets };
+}
+
+/**
+ * Nomes quebrados em duas linhas.
+ *
+ * A Quest imprime "TISSUE TRANSGLUTAMINASE" numa linha e "AB, IGA <1.0 U/mL"
+ * na seguinte. Linha a linha, nenhum nome do tTG aparece inteiro, e o "IGA"
+ * solto da segunda linha ancorava a IgA total. Aqui o texto é lido também com
+ * cada linha emendada na seguinte, e o casamento que atravessa a quebra entra
+ * como candidato normal: o `resolveOverlaps` faz o nome longo engolir o
+ * "IGA" que está dentro dele.
+ *
+ * Emendar linhas é o que a regra de uma linha por nome evita, então só vale
+ * com três guardas. O nome atravessa exatamente uma quebra. O pedaço antes da
+ * quebra não é, sozinho, um nome do catálogo: "Colesterol\nHDL" são dois
+ * exames na coluna, não "Colesterol HDL". E a primeira linha não traz valor,
+ * porque uma linha com resultado já é uma linha completa.
+ */
+function collectWrappedCandidates(normalizedText: string): Candidate[] {
+  if (!normalizedText.includes('\n')) {
+    return [];
+  }
+  const { joined, offsets } = joinLines(normalizedText);
+  const namePatterns = getNamePatterns();
+  const candidates: Candidate[] = [];
+  for (const [name, slot] of namePatterns) {
+    if (!name.includes(' ') || !joined.includes(name)) {
+      continue;
+    }
+    const regex = (slot.regex ??= buildNamePattern(name));
+    regex.lastIndex = 0;
+    let occurrences = 0;
+    let match = regex.exec(joined);
+    while (match !== null && occurrences < MAX_OCCURRENCES_PER_NAME) {
+      const start = offsets[match.index]!;
+      const end = offsets[match.index + match[0].length - 1]! + 1;
+      const lineBreak = normalizedText.indexOf('\n', start);
+      const nextBreak = normalizedText.indexOf('\n', lineBreak + 1);
+      const wrapped = lineBreak !== -1 && lineBreak < end && (nextBreak === -1 || nextBreak >= end);
+      if (
+        wrapped &&
+        !namePatterns.has(normalizedText.slice(start, lineBreak).trim()) &&
+        !hasValueEvidence(
+          normalizedText.slice(getLineBounds(normalizedText, start).start, lineBreak),
+        )
+      ) {
+        candidates.push({ end, entries: slot.entries, start });
+        occurrences += 1;
+      }
+      match = regex.exec(joined);
+    }
+  }
+  return candidates;
+}
+
+/**
  * Longest match wins: drop a match fully contained in a longer one, so
  * `Cholesterol` doesn't anchor inside `HDL Cholesterol` and `Blood` doesn't
  * anchor inside `Blood Glucose`.
@@ -499,6 +470,12 @@ function resolveOverlaps(candidates: Candidate[]): Candidate[] {
   return accepted;
 }
 
+interface LineContext {
+  genetic: boolean;
+  girth: boolean;
+  hasValue: boolean;
+}
+
 /**
  * Find all biomarker names present in OCR text.
  *
@@ -511,32 +488,30 @@ export function findBiomarkersInText(ocrText: string): AnchorResult {
   const startTime = Date.now();
   const normalizedText = normalize(ocrText);
   const bestByCode = new Map<string, AnchorMatch>();
-  const geneticLines = new Map<number, boolean>();
-  const valueLines = new Map<number, boolean>();
-  const girthLines = new Map<number, boolean>();
+  const contexts = new Map<string, LineContext>();
+  const candidates = [
+    ...collectCandidates(normalizedText),
+    ...collectWrappedCandidates(normalizedText),
+  ];
 
-  for (const candidate of resolveOverlaps(collectCandidates(normalizedText))) {
-    const { end: lineEnd, start: lineStart } = getLineBounds(normalizedText, candidate.start);
-
-    let genetic = geneticLines.get(lineStart);
-    if (genetic === undefined) {
-      genetic = hasGeneticContext(normalizedText.slice(lineStart, lineEnd));
-      geneticLines.set(lineStart, genetic);
+  for (const candidate of resolveOverlaps(candidates)) {
+    // O contexto é a linha do nome, ou as duas linhas de um nome quebrado.
+    const lineStart = getLineBounds(normalizedText, candidate.start).start;
+    const lineEnd = getLineBounds(normalizedText, candidate.end - 1).end;
+    const key = `${lineStart}:${lineEnd}`;
+    let context = contexts.get(key);
+    if (!context) {
+      const line = normalizedText.slice(lineStart, lineEnd);
+      context = {
+        genetic: hasGeneticContext(line),
+        girth: hasGirthContext(line),
+        hasValue: hasValueEvidence(line),
+      };
+      contexts.set(key, context);
     }
+    const { genetic, girth, hasValue } = context;
     if (genetic) {
       continue;
-    }
-
-    let hasValue = valueLines.get(lineStart);
-    if (hasValue === undefined) {
-      hasValue = hasValueEvidence(normalizedText.slice(lineStart, lineEnd));
-      valueLines.set(lineStart, hasValue);
-    }
-
-    let girth = girthLines.get(lineStart);
-    if (girth === undefined) {
-      girth = hasGirthContext(normalizedText.slice(lineStart, lineEnd));
-      girthLines.set(lineStart, girth);
     }
 
     for (const entry of candidate.entries) {

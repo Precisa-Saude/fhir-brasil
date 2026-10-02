@@ -1,3 +1,4 @@
+import { getAllSearchPatterns } from '@precisa-saude/fhir';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -474,13 +475,57 @@ describe('findBiomarkersInText: nome mais específico ganha do mais curto', () =
     expect(codesOf('MAGNESIUM, RBC 5.2 mg/dL')).toEqual(['Magnesium_RBC']);
   });
 
-  it('não perde exame de uma lista com vírgula quando o laudo traz o resultado', () => {
-    // "Colesterol, HDL" vira "colesterol hdl", que é nome do HDL. Na lista de
-    // exames solicitados o colesterol total some daquela linha, mas a linha
-    // de resultado ancora o código.
-    const codes = codesOf('Exames: Colesterol, HDL\nColesterol Total 182 mg/dL\nHDL 51 mg/dL');
-    expect(codes).toContain('Cholesterol');
-    expect(codes).toContain('HDL');
+  it('não junta os itens de uma lista separada por vírgula', () => {
+    // Depois de cada vírgula vem um exame próprio, então a vírgula fica, e
+    // "Colesterol, HDL" não vira o nome "Colesterol HDL".
+    expect(codesOf('Colesterol, HDL, LDL').sort()).toEqual(['Cholesterol', 'HDL', 'LDL']);
+  });
+
+  // Todo nome do catálogo formado por dois nomes do catálogo ("colesterol" +
+  // "hdl", "blood" + "glucose", "bmd" + "t score") é uma lista em potencial.
+  // Escrito com vírgula, o primeiro item tem que continuar ancorando, a menos
+  // que o catálogo liste a própria grafia com vírgula ("Magnesium, RBC").
+  it('nenhum nome composto de dois nomes junta uma lista com vírgula', () => {
+    const fold = (text: string) =>
+      text
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/(?<=\p{L})-(?=[\p{L}\p{N}])/gu, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    const codesByName = new Map<string, Set<string>>();
+    for (const pattern of getAllSearchPatterns()) {
+      for (const name of pattern.names) {
+        const key = fold(name);
+        codesByName.set(key, (codesByName.get(key) ?? new Set()).add(pattern.code));
+      }
+    }
+    const compounds: string[] = [];
+    const lost: string[] = [];
+    for (const name of codesByName.keys()) {
+      const words = name.split(' ');
+      for (let i = 1; i < words.length; i += 1) {
+        const head = words.slice(0, i).join(' ');
+        const tail = words.slice(i).join(' ');
+        if (!codesByName.has(head) || !codesByName.has(tail)) {
+          continue;
+        }
+        compounds.push(name);
+        if (codesByName.has(`${head}, ${tail}`)) {
+          continue;
+        }
+        // O valor no fim da linha libera os nomes genéricos ("Blood", "Lead"),
+        // que sem ele não ancoram e dariam falso alarme aqui.
+        const found = codesOf(`${head}, ${tail} 12`);
+        const missing = [...codesByName.get(head)!].filter((code) => !found.includes(code));
+        if (missing.length > 0) {
+          lost.push(`${head}, ${tail} -> [${found.join(', ')}]`);
+        }
+      }
+    }
+    expect(compounds.length).toBeGreaterThanOrEqual(31);
+    expect(lost).toEqual([]);
   });
 
   it('mantém a vírgula decimal intacta', () => {

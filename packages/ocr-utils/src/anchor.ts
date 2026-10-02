@@ -91,20 +91,82 @@ const MAX_OCCURRENCES_PER_NAME = 5;
  * já normalizado, então a equivalência precisa nascer aqui: aplicada só na
  * regex, o `includes` descartaria o nome antes de ela rodar.
  *
- * A vírgula entre palavras segue a mesma lógica. A Quest imprime o exame no
- * formato "EXAME, QUALIFICADOR" ("PSA, FREE", "TISSUE TRANSGLUTAMINASE AB,
- * IGA"), e o catálogo nem sempre traz a grafia com vírgula. Sem ela, "psa, free"
- * não casava "PSA Free" e o PSA total ancorava pelo "psa" solto. Só vale com
- * letra dos dois lados, então a vírgula decimal ("0,4") fica intacta.
+ * A vírgula entre palavras é tratada à parte, em `foldCommas`.
  */
-function normalize(text: string): string {
+function normalizeBase(text: string): string {
   return text
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .replace(/(?<=\p{L})-(?=[\p{L}\p{N}])/gu, ' ')
-    .replace(/(?<=\p{L}),(?=[^\S\n]*\p{L})/gu, ' ')
     .replace(/[^\S\n]+/g, ' ');
+}
+
+function normalize(text: string): string {
+  return foldCommas(normalizeBase(text));
+}
+
+/** Nomes do catálogo já normalizados, indexados pela primeira palavra. */
+let cachedNamesByHead: Map<string, string[]> | null = null;
+
+function isIndexedName(normalized: string): boolean {
+  return normalized.length >= 3 || UNAMBIGUOUS_SHORT_NAMES.has(normalized);
+}
+
+function getNamesByHead(): Map<string, string[]> {
+  if (!cachedNamesByHead) {
+    const map = new Map<string, string[]>();
+    for (const pattern of getPatterns()) {
+      for (const name of pattern.names) {
+        const normalized = normalizeBase(name).trim();
+        if (!normalized || !isIndexedName(normalized)) {
+          continue;
+        }
+        const head = normalized.split(' ')[0]!;
+        map.set(head, [...(map.get(head) ?? []), normalized]);
+      }
+    }
+    cachedNamesByHead = map;
+  }
+  return cachedNamesByHead;
+}
+
+/** Algum nome do catálogo começa, como palavra inteira, no início de `text`? */
+function startsWithCatalogName(text: string): boolean {
+  const head = /^[\p{L}\p{N}]+/u.exec(text)?.[0];
+  if (!head) {
+    return false;
+  }
+  return (getNamesByHead().get(head) ?? []).some((name) => {
+    if (!text.startsWith(name)) {
+      return false;
+    }
+    const after = text.slice(name.length).replace(/^s/, '');
+    return !/^[\p{L}\p{N}]/u.test(after);
+  });
+}
+
+/**
+ * A vírgula entre palavras vira espaço quando o que vem depois dela não é,
+ * sozinho, um nome do catálogo.
+ *
+ * A Quest imprime o exame no formato "EXAME, QUALIFICADOR" ("PSA, FREE"), e o
+ * catálogo nem sempre traz a grafia com vírgula. Sem a troca, "psa, free" não
+ * casava "PSA Free" e o PSA total ancorava pelo "psa" solto.
+ *
+ * A guarda é a mesma da quebra de linha: numa lista "Colesterol, HDL, LDL",
+ * cada item depois da vírgula é um exame próprio, e juntar daria "Colesterol
+ * HDL" e perderia o colesterol total. Quando o catálogo precisa da vírgula
+ * mesmo assim, ele lista a grafia com vírgula ("Magnesium, RBC"), e ela casa
+ * literalmente, porque o nome do catálogo passa pela mesma regra.
+ *
+ * Só vale com letra dos dois lados, então a vírgula decimal ("0,4") fica
+ * intacta.
+ */
+function foldCommas(text: string): string {
+  return text.replace(/(?<=\p{L}),([^\S\n]*)(?=\p{L})/gu, (comma, space: string, offset: number) =>
+    startsWithCatalogName(text.slice(offset + 1 + space.length)) ? comma : ' ',
+  );
 }
 
 /**
@@ -285,10 +347,7 @@ function getNamePatterns(): Map<string, NamePattern> {
     for (const pattern of getPatterns()) {
       for (const name of pattern.names) {
         const normalized = normalize(name).trim();
-        if (!normalized) {
-          continue;
-        }
-        if (normalized.length < 3 && !UNAMBIGUOUS_SHORT_NAMES.has(normalized)) {
+        if (!normalized || !isIndexedName(normalized)) {
           continue;
         }
         let slot = map.get(normalized);

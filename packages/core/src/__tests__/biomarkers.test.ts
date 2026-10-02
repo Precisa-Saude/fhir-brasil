@@ -881,3 +881,49 @@ describe('glicose genérica e glicemia de jejum', () => {
     }
   });
 });
+
+describe('linha "Arms Total" e "Legs Total" da densitometria', () => {
+  // Na tabela de equilíbrio muscular da Live Lean, "Arms Total" é a soma dos
+  // dois braços, a mesma medida das colunas "Arms Fat" e "Arms Lean" da
+  // tabela de tendência. O modelo nomeia a linha com o "Total" no meio, e o
+  // nome não resolvia: a série partia entre `ArmsFatMass` e `UNKNOWN_`.
+  it.each([
+    ['Arms Total Fat Mass', 'ArmsFatMass'],
+    ['Arms Total Lean Mass', 'ArmsLeanMass'],
+    ['Legs Total Fat Mass', 'LegsFatMass'],
+    ['Legs Total Lean Mass', 'LegsLeanMass'],
+  ])('resolves %s to %s', (nome, code) => {
+    expect(findCodeByName(nome)).toBe(code);
+    expect(validateLoincNameMatch('', nome).code).toBe(code);
+  });
+
+  it('maps the UNKNOWN_ codes already stored to the regional code', () => {
+    expect(normalizeCode('UNKNOWN_Arms_Total_Fat_Mass')).toBe('ArmsFatMass');
+    expect(normalizeCode('UNKNOWN_Arms_Total_Lean_Mass')).toBe('ArmsLeanMass');
+    expect(normalizeCode('UNKNOWN_Legs_Total_Fat_Mass')).toBe('LegsFatMass');
+    expect(normalizeCode('UNKNOWN_Legs_Total_Lean_Mass')).toBe('LegsLeanMass');
+  });
+
+  it('wins over the whole-body LOINC the model may send for the row', () => {
+    // 73708-0 é a massa gorda do corpo inteiro.
+    expect(validateLoincNameMatch('73708-0', 'Arms Total Fat Mass')).toEqual({
+      code: 'ArmsFatMass',
+      corrected: true,
+    });
+  });
+
+  // Percentual, massa total do membro, um lado só e diferença entre lados não
+  // têm código regional no catálogo. Ficam sem código, e não no do corpo todo.
+  it.each([
+    'Arms Total Fat %',
+    'Arms Total Lean %',
+    'Arms Total Mass',
+    'Legs Total Mass',
+    'Right Arm Fat Mass',
+    'Left Leg Lean Mass',
+    'Arms Difference Fat Mass',
+    'Legs Difference Total Mass',
+  ])('leaves %s without a code', (nome) => {
+    expect(findCodeByName(nome)).toBeUndefined();
+  });
+});

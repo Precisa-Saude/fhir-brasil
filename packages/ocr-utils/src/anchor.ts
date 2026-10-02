@@ -23,6 +23,7 @@ import {
   QUALITATIVE_VALUE_TERMS,
   UNAMBIGUOUS_SHORT_NAMES,
 } from './anchor-lexicon';
+import { qualifiedByBodyRegion } from './body-region';
 
 export interface AnchorMatch {
   code: string;
@@ -573,8 +574,13 @@ export function findBiomarkersInText(ocrText: string): AnchorResult {
       continue;
     }
 
+    const before = normalizedText.slice(lineStart, candidate.start);
     for (const entry of candidate.entries) {
       if (entry.ambiguous && !hasValue) {
+        continue;
+      }
+
+      if (qualifiedByBodyRegion(entry.code, before)) {
         continue;
       }
 

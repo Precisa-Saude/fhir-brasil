@@ -371,15 +371,39 @@ describe('getReferenceRange', () => {
       }
     });
 
-    it('keeps the absolute WBC differential ranges', () => {
-      for (const code of [
-        'Basophils_Abs',
-        'Eosinophils_Abs',
-        'Lymphocytes_Abs',
-        'Monocytes_Abs',
-        'Neutrophils_Abs',
-      ]) {
-        expect(getReferenceRange(code)?.unit).toBe('K/uL');
+    describe('absolute WBC differential (PNS 2019, Tabela 2)', () => {
+      // Limites publicados em células/mm³, divididos por 1.000 para K/uL.
+      const table2: Record<
+        string,
+        { F: [number, number]; M: [number, number]; union: [number, number] }
+      > = {
+        Basophils_Abs: { F: [0, 0.072], M: [0, 0.062], union: [0, 0.072] },
+        Eosinophils_Abs: { F: [0, 0.55], M: [0, 0.66], union: [0, 0.66] },
+        Lymphocytes_Abs: { F: [0.796, 3.414], M: [0.72, 3.37], union: [0.72, 3.414] },
+        Monocytes_Abs: { F: [0.022, 0.692], M: [0.011, 0.812], union: [0.011, 0.812] },
+        Neutrophils_Abs: { F: [0.612, 6.474], M: [0.576, 5.971], union: [0.576, 6.474] },
+      };
+
+      for (const [code, limits] of Object.entries(table2)) {
+        it(`${code} uses the article's limits for each sex`, () => {
+          for (const sex of ['M', 'F'] as const) {
+            const range = getReferenceRange(code, { age: 40, biologicalSex: sex });
+            expect([range?.min, range?.max]).toEqual(limits[sex]);
+            expect(range?.unit).toBe('K/uL');
+            expect(range?.source).toBe('pns-hemograma-2019');
+            // O artigo não publica faixa ótima.
+            expect(range?.optimalMin).toBeUndefined();
+            expect(range?.optimalMax).toBeUndefined();
+          }
+        });
+
+        it(`${code} falls back to the union of both sexes when sex is unknown`, () => {
+          for (const context of [undefined, { age: 40 }]) {
+            const range = getReferenceRange(code, context);
+            expect([range?.min, range?.max]).toEqual(limits.union);
+            expect(range?.unit).toBe('K/uL');
+          }
+        });
       }
     });
 

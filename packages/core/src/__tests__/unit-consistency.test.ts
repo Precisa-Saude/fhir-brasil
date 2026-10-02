@@ -159,6 +159,7 @@ describe('troponin T reported in ng/mL', () => {
 
   it('compares the converted value against the 14 ng/L range in the same unit', () => {
     const range = getReferenceRange('TroponinT');
+    expect(range).toBeDefined();
     expect(range?.unit).toBe('ng/L');
     expect(range?.max).toBe(14);
 

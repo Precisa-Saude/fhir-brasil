@@ -1,3 +1,9 @@
+## [0.31.3](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.31.2...v0.31.3) (2026-10-02)
+
+### Bug Fixes
+
+* **core:** unidade canônica, da definição e da faixa concordam no catálogo ([#124](https://github.com/Precisa-Saude/fhir-brasil/issues/124)) ([743ec18](https://github.com/Precisa-Saude/fhir-brasil/commit/743ec18556af454a6815603a00308ae12f5ab284))
+
 ## [0.31.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.31.1...v0.31.2) (2026-10-02)
 
 ### Bug Fixes

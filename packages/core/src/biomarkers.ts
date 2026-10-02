@@ -2700,13 +2700,30 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // Regional Body Composition (DEXA)
   // Note: No official LOINC codes exist for regional lean/fat mass measurements
   // Hidden from UI for now - may be shown in future regional breakdown view
+  //
+  // "Arms Total" e "Legs Total" são a linha dos dois membros somados na tabela
+  // de equilíbrio muscular do laudo da Live Lean (GE Lunar Prodigy). Conferido
+  // em cinco laudos: a massa gorda e a magra dessa linha são a soma do lado
+  // direito com o esquerdo, e são o mesmo número das colunas "Arms Fat" e
+  // "Arms Lean" da tabela de tendência e da linha "Arms" da tabela regional.
+  // O modelo nomeia a linha "Arms Total Fat Mass", e sem o nome ela virava
+  // `UNKNOWN_`, enquanto a mesma medida em outra página ia para `ArmsFatMass`:
+  // a série do gráfico partia em dois códigos. O `codeAliases` cobre o que já
+  // foi gravado assim.
+  //
+  // As outras colunas da mesma linha ficam sem código de propósito. "Fat %" e
+  // "Lean %" são percentual do membro, e "Total Mass" é a massa do membro;
+  // o catálogo não tem código regional para nenhum dos dois. "Right Arm" e
+  // "Left Arm" são um lado só, e "Arms Difference" é direito menos esquerdo.
   {
     category: 'composicao-corporal',
     code: 'ArmsLeanMass',
+    codeAliases: ['UNKNOWN_Arms_Total_Lean_Mass'],
     hidden: true,
     names: {
       en: [
         'Arms Lean Mass',
+        'Arms Total Lean Mass',
         'Arms Lean',
         'Arms Lean Tissue',
         'Arm Lean Mass',
@@ -2733,10 +2750,12 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'composicao-corporal',
     code: 'ArmsFatMass',
+    codeAliases: ['UNKNOWN_Arms_Total_Fat_Mass'],
     hidden: true,
     names: {
       en: [
         'Arms Fat Mass',
+        'Arms Total Fat Mass',
         'Arms Fat',
         'Arms Fat Tissue',
         'Arm Fat Mass',
@@ -2764,10 +2783,12 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'composicao-corporal',
     code: 'LegsLeanMass',
+    codeAliases: ['UNKNOWN_Legs_Total_Lean_Mass'],
     hidden: true,
     names: {
       en: [
         'Legs Lean Mass',
+        'Legs Total Lean Mass',
         'Legs Lean',
         'Legs Lean Tissue',
         'Leg Lean Mass',
@@ -2794,10 +2815,12 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'composicao-corporal',
     code: 'LegsFatMass',
+    codeAliases: ['UNKNOWN_Legs_Total_Fat_Mass'],
     hidden: true,
     names: {
       en: [
         'Legs Fat Mass',
+        'Legs Total Fat Mass',
         'Legs Fat',
         'Legs Fat Tissue',
         'Leg Fat Mass',

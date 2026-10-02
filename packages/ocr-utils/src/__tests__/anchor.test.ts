@@ -532,3 +532,78 @@ describe('findBiomarkersInText: nome mais específico ganha do mais curto', () =
     expect(codesOf('PSA Livre 0,4 ng/mL')).toEqual(['PSA_Free']);
   });
 });
+
+describe('findBiomarkersInText: rótulo de região na densitometria', () => {
+  const codesOf = (text: string) => findBiomarkersInText(text).matches.map((m) => m.code);
+
+  // A tabela de equilíbrio muscular tem linhas "Arms Total", "Right Arm" e
+  // "Arms Difference", e o modelo junta a linha com a coluna no nome. O "fat
+  // mass" de dentro desses rótulos ancorava a gordura do corpo inteiro.
+  it.each([
+    ['Arms Total Fat Mass 4.8 lbs', ['ArmsFatMass']],
+    ['Arms Total Lean Mass 16.9 lbs', ['ArmsLeanMass']],
+    ['Legs Total Fat Mass 17.9 lbs', ['LegsFatMass']],
+    ['Legs Total Lean Mass 50.8 lbs', ['LegsLeanMass']],
+  ])('anchors %s to the regional code only', (line, codes) => {
+    expect(codesOf(line)).toEqual(codes);
+  });
+
+  it.each([
+    'Arms Total Mass 22.7 lbs',
+    'Legs Total Mass 71.7 lbs',
+    'Arms Difference Fat Mass 0.2 lbs',
+    'Arms Difference Lean Mass 0.4 lbs',
+    'Legs Difference Total Mass -2.8%',
+    'Right Arm Total Mass 11.3 lbs',
+  ])('does not anchor a whole-body code inside %s', (line) => {
+    expect(codesOf(line)).not.toEqual(
+      expect.arrayContaining([expect.stringMatching(/^(FatMass|LeanMass|TotalMass)$/)]),
+    );
+  });
+
+  // "Arm Fat Mass" é sinônimo de `ArmsFatMass`, os dois braços somados. Com o
+  // lado na frente, a linha é de um braço só.
+  it.each(['Right Arm Fat Mass 2.4 lbs', 'Left Leg Lean Mass 25.3 lbs'])(
+    'does not anchor the two-limb code for one side: %s',
+    (line) => {
+      expect(codesOf(line)).toEqual([]);
+    },
+  );
+
+  // A região pode vir no singular ou no plural, em inglês ou em português, e
+  // com o lado ou a linha da tabela entre ela e o nome.
+  it.each([
+    'Arm Total Mass 22.7 lbs',
+    'Leg Difference Lean Mass 0.4 lbs',
+    'Trunk Total Mass 91.6 lbs',
+    'Braço Direito Massa Magra 8,4 kg',
+    'Braços Massa Total 10,3 kg',
+    'Pernas Massa Total 32,5 kg',
+    'Perna Esquerda Massa Gorda 4,0 kg',
+    'Tronco Massa Total 41,5 kg',
+  ])('does not anchor a whole-body code after a region spelled as in %s', (line) => {
+    expect(codesOf(line).filter((c) => ['FatMass', 'LeanMass', 'TotalMass'].includes(c))).toEqual(
+      [],
+    );
+  });
+
+  it('still anchors the whole-body names in the table header', () => {
+    const header =
+      'Left / Right Side Date Lean Mass (lbs) Lean % Fat Mass (lbs) Fat % Total Mass (lbs)';
+    expect(codesOf(header).sort()).toEqual(['FatMass', 'LeanMass', 'TotalMass']);
+  });
+
+  it('still anchors whole-body and regional names on their own', () => {
+    expect(codesOf('Fat Mass 45.6 lbs')).toEqual(['FatMass']);
+    expect(codesOf('Total Mass 193.9 lbs')).toEqual(['TotalMass']);
+    expect(codesOf('Arms Fat Mass 4.2 lbs')).toEqual(['ArmsFatMass']);
+    expect(codesOf('Arm Lean Mass 18.5 lbs')).toEqual(['ArmsLeanMass']);
+  });
+
+  it('ignores a region elsewhere on the line', () => {
+    // Só o que vem logo antes do nome qualifica: a região numa coluna vizinha
+    // não transforma a medida do corpo todo em regional.
+    expect(codesOf('Trunk 26.8%   Fat Mass 45.6 lbs')).toContain('FatMass');
+    expect(codesOf('Arms 17.6% Total Fat Mass 45.6 lbs')).toContain('FatMass');
+  });
+});

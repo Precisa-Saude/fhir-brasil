@@ -522,17 +522,20 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'umol/L',
     siUnit: 'µmol/L',
   },
+  // Imunoglobulinas: canônica em mg/dL, a unidade da faixa de referência
+  // (Tietz) e a que laboratórios brasileiros e americanos imprimem. g/L fica
+  // como unidade SI; a conversão é exata (g/L × 100 = mg/dL, em FIXED_FACTORS).
   IgA: {
     aliases: { 'g/l': 'g/L', 'mg/dl': 'mg/dL' },
-    canonicalUcum: 'g/L',
-    canonicalUnit: 'g/L',
+    canonicalUcum: 'mg/dL',
+    canonicalUnit: 'mg/dL',
     siUcum: 'g/L',
     siUnit: 'g/L',
   },
   IgG: {
     aliases: { 'g/l': 'g/L', 'mg/dl': 'mg/dL' },
-    canonicalUcum: 'g/L',
-    canonicalUnit: 'g/L',
+    canonicalUcum: 'mg/dL',
+    canonicalUnit: 'mg/dL',
     siUcum: 'g/L',
     siUnit: 'g/L',
   },
@@ -847,8 +850,20 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'ng/mL',
     siUnit: 'ng/mL',
   },
+  // Troponina T: canônica em ng/L (hs-cTnT). O ensaio convencional imprime em
+  // ng/mL, que é a mesma grandeza que µg/L; converte por fator exato
+  // (ng/mL × 1000 = ng/L, em FIXED_FACTORS). pg/mL é a mesma unidade que ng/L
+  // e entra como alias, como em VitaminB12.
   TroponinT: {
-    aliases: { 'ng/l': 'ng/L' },
+    aliases: {
+      'mcg/l': 'ng/mL',
+      'microg/l': 'ng/mL',
+      'ng/l': 'ng/L',
+      'ng/ml': 'ng/mL',
+      'pg/ml': 'ng/L',
+      'ug/l': 'ng/mL',
+      'µg/l': 'ng/mL',
+    },
     canonicalUcum: 'ng/L',
     canonicalUnit: 'ng/L',
     siUcum: 'ng/L',
@@ -953,6 +968,8 @@ const FIXED_FACTORS: Record<string, number> = {
   'mg/dL -> g/L': 0.01,
   'mmol/L -> mEq/L': 1,
   'ng/dL -> pg/mL': 10,
+  'ng/L -> ng/mL': 0.001,
+  'ng/mL -> ng/L': 1000,
   'ng/mL -> µg/L': 1,
   'pg/mL -> ng/dL': 0.1,
   'µg/L -> ng/mL': 1,

@@ -2985,7 +2985,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Troponin T', 'cTnT', 'Cardiac Troponin T', 'hs-TnT', 'High-Sensitivity Troponin T'],
       pt: ['Troponina T', 'cTnT', 'Troponina T Cardíaca', 'Troponina T Ultrassensível'],
     },
-    unit: 'ng/mL',
+    unit: 'ng/L',
   },
 
   // ============================================================================

@@ -614,23 +614,23 @@ describe('findBiomarkersInText: "Total Fat" e "Total Lean" da densitometria', ()
   const wholeBodyOf = (text: string) => codesOf(text).filter((c) => WHOLE_BODY.includes(c));
 
   it('anchors the trend-table columns to the whole-body codes', () => {
-    expect(codesOf('Total Fat (lbs) 43.6')).toEqual(['FatMass']);
-    expect(codesOf('Total Lean (lbs) 138.4')).toEqual(['LeanMass']);
-    expect(codesOf('Total Fat 43.6 lbs')).toEqual(['FatMass']);
-    expect(codesOf('Total Lean 138.4 lbs')).toEqual(['LeanMass']);
+    expect(codesOf('Total Fat (lbs) 41.2')).toEqual(['FatMass']);
+    expect(codesOf('Total Lean (lbs) 130.5')).toEqual(['LeanMass']);
+    expect(codesOf('Total Fat 41.2 lbs')).toEqual(['FatMass']);
+    expect(codesOf('Total Lean 130.5 lbs')).toEqual(['LeanMass']);
   });
 
   // A coluna em percentual tem o mesmo rótulo da coluna em lbs. A citação do
   // percentual não pode ancorar a massa de gordura, senão a leitura do
   // percentual era recusada por citar outro exame.
-  it.each(['Total Fat (%) 23.1%', 'Total Fat % 23.1%', 'Total Fat % 23.1'])(
+  it.each(['Total Fat (%) 24.3%', 'Total Fat % 24.3%', 'Total Fat % 24.3'])(
     'anchors the percentage, not the fat mass, in %s',
     (line) => {
       expect(codesOf(line)).toEqual(['BodyFatPct']);
     },
   );
 
-  it.each(['Total Fat 23.1%', 'Total Fat 23,1 %', 'Total Lean 76.4%', 'Fat Mass (%) 23.1'])(
+  it.each(['Total Fat 24.3%', 'Total Fat 24,3 %', 'Total Lean 71.8%', 'Fat Mass (%) 24.3'])(
     'does not anchor a whole-body mass when a percentage follows it: %s',
     (line) => {
       expect(codesOf(line)).not.toEqual(
@@ -663,13 +663,13 @@ describe('findBiomarkersInText: "Total Fat" e "Total Lean" da densitometria', ()
   // cujas linhas são regiões, e o modelo junta a linha com a coluna no nome.
   // A região na frente tira o nome do corpo inteiro, como no #127.
   it.each([
-    'Arms Total Fat % 17.1%',
-    'Legs Total Fat % 21.4%',
-    'Trunk Total Fat % 26.3%',
-    'Android Total Fat % 29.5%',
-    'Arms Total Fat 4.0 lbs',
-    'Legs Total Lean 48.2 lbs',
-    'Arms Total Lean % 78.6%',
+    'Arms Total Fat % 18.2%',
+    'Legs Total Fat % 22.6%',
+    'Trunk Total Fat % 27.5%',
+    'Android Total Fat % 31.4%',
+    'Arms Total Fat 4.4 lbs',
+    'Legs Total Lean 46.1 lbs',
+    'Arms Total Lean % 77.9%',
   ])('does not anchor a whole-body code inside the regional label %s', (line) => {
     expect(wholeBodyOf(line)).toEqual([]);
   });
@@ -684,8 +684,8 @@ describe('findBiomarkersInText: "Total Fat" e "Total Lean" da densitometria', ()
   });
 
   it('keeps the guards of #127 working with the new names', () => {
-    expect(codesOf('Arms Total Fat Mass 4.8 lbs')).toEqual(['ArmsFatMass']);
-    expect(codesOf('Legs Total Lean Mass 50.8 lbs')).toEqual(['LegsLeanMass']);
-    expect(codesOf('Fat Mass 45.6 lbs')).toEqual(['FatMass']);
+    expect(codesOf('Arms Total Fat Mass 5.1 lbs')).toEqual(['ArmsFatMass']);
+    expect(codesOf('Legs Total Lean Mass 52.3 lbs')).toEqual(['LegsLeanMass']);
+    expect(codesOf('Fat Mass 47.9 lbs')).toEqual(['FatMass']);
   });
 });

@@ -1,3 +1,9 @@
+## [0.31.4](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.31.3...v0.31.4) (2026-10-02)
+
+### Bug Fixes
+
+* nome em caixa diferente e nome quebrado em duas linhas ([#126](https://github.com/Precisa-Saude/fhir-brasil/issues/126)) ([ff48beb](https://github.com/Precisa-Saude/fhir-brasil/commit/ff48beb41962d1ec718a54071f2d06e7b4bd8fc3))
+
 ## [0.31.3](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.31.2...v0.31.3) (2026-10-02)
 
 ### Bug Fixes

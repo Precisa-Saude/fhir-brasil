@@ -65,7 +65,7 @@
   ],
   "categoryGroups": 10,
   "loincCoveragePct": 83.2,
-  "referenceRanges": 208,
+  "referenceRanges": 203,
   "subcategories": 20,
   "version": "0.31.1",
   "withLoinc": 188,

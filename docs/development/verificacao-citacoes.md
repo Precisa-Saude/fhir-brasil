@@ -85,16 +85,13 @@
 
 ### Diferencial Leucocitario
 
-- [x] Neutrophils - `pns-hemograma-2019`
-- [x] Neutrophils_Abs - `pns-hemograma-2019`
-- [x] Lymphocytes - `pns-hemograma-2019`
-- [x] Lymphocytes_Abs - `pns-hemograma-2019`
-- [x] Monocytes - `pns-hemograma-2019`
-- [x] Monocytes_Abs - `pns-hemograma-2019`
-- [x] Eosinophils - `pns-hemograma-2019`
-- [x] Eosinophils_Abs - `pns-hemograma-2019`
-- [x] Basophils - `pns-hemograma-2019`
-- [x] Basophils_Abs - `pns-hemograma-2019`
+Os códigos em % (`Neutrophils`, `Lymphocytes`, `Monocytes`, `Eosinophils`, `Basophils`) não têm faixa: o artigo da PNS publica o diferencial só em contagem absoluta por mm³, e as faixas em % que citavam a PNS foram removidas. Os absolutos usam os limites da Tabela 2, por sexo, convertidos de /mm³ para K/uL.
+
+- [x] Neutrophils_Abs - `pns-hemograma-2019` Tabela 2: H 576-5.971, M 612-6.474 /mm³ confere
+- [x] Lymphocytes_Abs - `pns-hemograma-2019` Tabela 2: H 720-3.370, M 796-3.414 /mm³ confere
+- [x] Monocytes_Abs - `pns-hemograma-2019` Tabela 2: H 11-812, M 22-692 /mm³ confere
+- [x] Eosinophils_Abs - `pns-hemograma-2019` Tabela 2: H 0-660, M 0-550 /mm³ confere
+- [x] Basophils_Abs - `pns-hemograma-2019` Tabela 2: H 0-62, M 0-72 /mm³ confere
 
 ### Coagulacao
 

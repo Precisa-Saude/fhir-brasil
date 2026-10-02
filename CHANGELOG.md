@@ -1,3 +1,9 @@
+## [0.31.5](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.31.4...v0.31.5) (2026-10-02)
+
+### Bug Fixes
+
+* linha "Arms Total" do DEXA vai para o código regional ([#127](https://github.com/Precisa-Saude/fhir-brasil/issues/127)) ([22bfcd1](https://github.com/Precisa-Saude/fhir-brasil/commit/22bfcd1d6d335b7bbb579d93f41b5e195ef68d72))
+
 ## [0.31.4](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.31.3...v0.31.4) (2026-10-02)
 
 ### Bug Fixes

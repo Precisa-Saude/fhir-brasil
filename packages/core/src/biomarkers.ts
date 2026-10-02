@@ -3615,11 +3615,39 @@ function normalizeText(text: string): string {
   );
 }
 
+/**
+ * Chave sem distinção de caixa, para a segunda tentativa do `findCodeByName`.
+ *
+ * O `normalizeText` separa camelCase antes de baixar a caixa, e por isso a
+ * mesma sigla em caixas diferentes vira chaves diferentes: "IgA" vira "ig a",
+ * "IGA" vira "iga". Um nome correto escrito na caixa que o catálogo não usa
+ * deixava de resolver, e um LOINC errado decidia o código. Aqui a caixa cai
+ * primeiro, então "IgA", "IGA" e "iga" dão a mesma chave. A vírgula entre
+ * palavras também cai, porque o laudo imprime "PSA, FREE" onde o catálogo
+ * tem "PSA Free".
+ */
+function foldText(text: string): string {
+  return text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[_\-/,]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 // Build a normalized name map for fast lookups
 const normalizedNameToCodeMap = new Map<string, string>();
+// Mesma coisa pela chave sem caixa. Quando dois exames dão a mesma chave, ela
+// fica `null`: a busca devolve nada em vez de escolher um pela ordem do
+// catálogo.
+const foldedNameToCodeMap = new Map<string, string | null>();
 for (const def of BIOMARKER_DEFINITIONS) {
   for (const name of [...def.names.en, ...def.names.pt]) {
     normalizedNameToCodeMap.set(normalizeText(name), def.code);
+    const folded = foldText(name);
+    const owner = foldedNameToCodeMap.get(folded);
+    foldedNameToCodeMap.set(folded, owner === undefined || owner === def.code ? def.code : null);
   }
 }
 
@@ -3641,8 +3669,11 @@ export function findCodeByName(name: string): string | undefined {
     return canonical;
   }
 
-  const normalized = normalizeText(name);
-  return normalizedNameToCodeMap.get(normalized);
+  const normalized = normalizedNameToCodeMap.get(normalizeText(name));
+  if (normalized) {
+    return normalized;
+  }
+  return foldedNameToCodeMap.get(foldText(name)) ?? undefined;
 }
 
 /**

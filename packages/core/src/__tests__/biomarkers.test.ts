@@ -22,6 +22,7 @@ import {
   loincToCode,
   normalizeCode,
   toBiomarkerTests,
+  validateLoincNameMatch,
 } from '../biomarkers';
 
 describe('BIOMARKER_DEFINITIONS', () => {
@@ -130,6 +131,27 @@ describe('BIOMARKER_DEFINITIONS', () => {
         .flat()
         .filter((name) => !ambiguous.has(name) && findCodeByName(name) !== d.code)
         .map((name) => `${name}: ${d.code} -> ${String(findCodeByName(name))}`),
+    );
+    expect(wrong).toEqual([]);
+  });
+
+  // O modelo devolve o nome na caixa que o laudo imprime, e a Quest imprime
+  // tudo em maiúsculas. "Tissue Transglutaminase AB, IgA" não resolvia porque
+  // o catálogo escreve "IGA", e a quebra de camelCase separava "IgA" em
+  // "ig a". O nome certo tem que achar o mesmo exame em qualquer caixa.
+  it('cada nome resolve para o mesmo exame em maiúsculas, minúsculas e título', () => {
+    const ambiguous = new Set(['A/G Ratio', 'Razão A/G', 'Visceral Fat', 'Gordura Visceral']);
+    const titleCase = (name: string) =>
+      name.toLowerCase().replace(/(^|[\s(/-])(\p{L})/gu, (_, sep: string, letter: string) => {
+        return sep + letter.toUpperCase();
+      });
+    const wrong = BIOMARKER_DEFINITIONS.flatMap((d) =>
+      Object.values(d.names)
+        .flat()
+        .filter((name) => !ambiguous.has(name))
+        .flatMap((name) => [name.toUpperCase(), name.toLowerCase(), titleCase(name)])
+        .filter((variant) => findCodeByName(variant) !== d.code)
+        .map((variant) => `${variant}: ${d.code} -> ${String(findCodeByName(variant))}`),
     );
     expect(wrong).toEqual([]);
   });
@@ -560,6 +582,31 @@ describe('findCodeByName', () => {
 
   it('should return undefined for unknown names', () => {
     expect(findCodeByName('CompletelyFakeTestXYZ')).toBeUndefined();
+  });
+
+  // Laudo da Quest: o modelo leu o nome certo, mas em caixa diferente do
+  // alias do catálogo ("IgA" contra "IGA"). Sem resolver pelo nome, o LOINC
+  // de IgA que veio junto decidia o código.
+  it('resolve sigla em caixa mista igual à do catálogo', () => {
+    expect(findCodeByName('Tissue Transglutaminase AB, IgA')).toBe('tTG_IgA');
+    expect(findCodeByName('TISSUE TRANSGLUTAMINASE AB, IGA')).toBe('tTG_IgA');
+    expect(findCodeByName('tissue transglutaminase ab, iga')).toBe('tTG_IgA');
+    expect(validateLoincNameMatch('2458-8', 'Tissue Transglutaminase AB, IgA')).toEqual({
+      code: 'tTG_IgA',
+      corrected: true,
+    });
+  });
+
+  it('ignora a vírgula do formato "EXAME, QUALIFICADOR"', () => {
+    expect(findCodeByName('PSA, FREE')).toBe('PSA_Free');
+    expect(findCodeByName('PSA, Free')).toBe('PSA_Free');
+  });
+
+  // "HDLCholesterol" e "TotalCholesterol" não são códigos: só resolvem
+  // porque a quebra de camelCase gera "hdl cholesterol" e "total cholesterol".
+  it('mantém a quebra de camelCase para nome escrito como identificador', () => {
+    expect(findCodeByName('HDLCholesterol')).toBe('HDL');
+    expect(findCodeByName('TotalCholesterol')).toBe('Cholesterol');
   });
 });
 

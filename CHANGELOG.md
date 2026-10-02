@@ -1,3 +1,9 @@
+## [0.31.6](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.31.5...v0.31.6) (2026-10-02)
+
+### Bug Fixes
+
+* colunas "Total Fat" e "Total Lean" da tendência do DEXA resolvem no catálogo ([#128](https://github.com/Precisa-Saude/fhir-brasil/issues/128)) ([ccd250d](https://github.com/Precisa-Saude/fhir-brasil/commit/ccd250dc19d41034ed681a4b0da83c915bfe6029)), closes [#127](https://github.com/Precisa-Saude/fhir-brasil/issues/127)
+
 ## [0.31.5](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.31.4...v0.31.5) (2026-10-02)
 
 ### Bug Fixes

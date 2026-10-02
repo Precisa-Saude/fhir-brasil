@@ -570,6 +570,23 @@ describe('findBiomarkersInText: rótulo de região na densitometria', () => {
     },
   );
 
+  // A região pode vir no singular ou no plural, em inglês ou em português, e
+  // com o lado ou a linha da tabela entre ela e o nome.
+  it.each([
+    'Arm Total Mass 22.7 lbs',
+    'Leg Difference Lean Mass 0.4 lbs',
+    'Trunk Total Mass 91.6 lbs',
+    'Braço Direito Massa Magra 8,4 kg',
+    'Braços Massa Total 10,3 kg',
+    'Pernas Massa Total 32,5 kg',
+    'Perna Esquerda Massa Gorda 4,0 kg',
+    'Tronco Massa Total 41,5 kg',
+  ])('does not anchor a whole-body code after a region spelled as in %s', (line) => {
+    expect(codesOf(line).filter((c) => ['FatMass', 'LeanMass', 'TotalMass'].includes(c))).toEqual(
+      [],
+    );
+  });
+
   it('still anchors the whole-body names in the table header', () => {
     const header =
       'Left / Right Side Date Lean Mass (lbs) Lean % Fat Mass (lbs) Fat % Total Mass (lbs)';

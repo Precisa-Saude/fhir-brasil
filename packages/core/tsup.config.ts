@@ -18,6 +18,7 @@ export default defineConfig([
       importer: 'src/importer.ts',
       index: 'src/index.ts',
       'reference-ranges': 'src/reference-ranges.ts',
+      sources: 'src/sources.ts',
       units: 'src/units.ts',
       validators: 'src/validators.ts',
     },

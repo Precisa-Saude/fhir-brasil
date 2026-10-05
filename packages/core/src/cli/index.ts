@@ -1,6 +1,5 @@
-import { parseArgs } from 'node:util';
-
 import { exitWithError } from '../cli-utils.js';
+import { dividirArgv } from './argv.js';
 import { categories } from './commands/categories.js';
 import { convert } from './commands/convert.js';
 import { importBundle } from './commands/import.js';
@@ -8,6 +7,7 @@ import { list } from './commands/list.js';
 import { loincMap } from './commands/loinc-map.js';
 import { lookup, lookupLoinc } from './commands/lookup.js';
 import { range } from './commands/range.js';
+import { source } from './commands/source.js';
 import { units } from './commands/units.js';
 import { validate } from './commands/validate.js';
 
@@ -23,6 +23,7 @@ Comandos:
   list                    Listar todos os biomarcadores
   categories              Listar biomarcadores agrupados por categoria
   range <código>          Faixa de referência para um biomarcador
+  source [chave]          Citação de uma fonte, ou a lista toda
   units <código>          Informações de unidade de um biomarcador
   convert <arquivo>       Converter dados lab (JSON) para FHIR Bundle
   validate <arquivo>      Validar recurso FHIR (Bundle, Observation ou DiagnosticReport)
@@ -46,29 +47,20 @@ const COMMANDS: Record<string, CommandFn> = {
   lookup,
   'lookup-loinc': lookupLoinc,
   range,
+  source,
   units,
   validate,
 };
 
 async function main(): Promise<void> {
-  const { positionals, values } = parseArgs({
-    allowPositionals: true,
-    options: {
-      help: { default: false, short: 'h', type: 'boolean' },
-      json: { default: false, type: 'boolean' },
-      version: { default: false, short: 'v', type: 'boolean' },
-    },
-    strict: false,
-  });
+  const { command, help, json, resto, version } = dividirArgv(process.argv.slice(2));
 
-  if (values.version) {
+  if (version) {
     process.stdout.write(`${__VERSION__}\n`);
     return;
   }
 
-  const [command, ...rest] = positionals;
-
-  if (values.help || !command) {
+  if (help || !command) {
     process.stdout.write(HELP);
     return;
   }
@@ -78,7 +70,7 @@ async function main(): Promise<void> {
     exitWithError(`Comando desconhecido: ${command}\nUse --help para ver os comandos disponíveis.`);
   }
 
-  await handler(rest, Boolean(values.json));
+  await handler(resto, json);
 }
 
 main().catch((err: Error) => exitWithError(err.message));

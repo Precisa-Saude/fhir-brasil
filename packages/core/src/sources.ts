@@ -1,8 +1,9 @@
 /**
  * Registro de fontes bibliográficas para faixas de referência de biomarcadores.
  *
- * Este arquivo NÃO é exportado na API pública do pacote.
- * Usado apenas para validação em testes e geração de documentação.
+ * Exportado na API pública desde a 0.32: o campo `source` de cada faixa é uma
+ * chave, e sem o registro ao lado ela não resolve para lugar nenhum. Quem
+ * consome via `@precisa-saude/fhir/sources` ou pelo `fhir-bio source`.
  *
  * Todas as citações seguem o formato ABNT (NBR 6023).
  */

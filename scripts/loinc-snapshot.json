@@ -1,5 +1,5 @@
 {
-  "_checkedAt": "2026-09-05",
+  "_checkedAt": "2026-10-05",
   "_loincVersion": "2.83",
   "_notice": "This material contains content from LOINC (http://loinc.org). LOINC is copyright © Regenstrief Institute, Inc. and the Logical Observation Identifiers Names and Codes (LOINC) Committee and is available at no cost under the license at http://loinc.org/license. LOINC® is a registered United States trademark of Regenstrief Institute, Inc.",
   "codes": {
@@ -73,6 +73,10 @@
     },
     "15067-2": {
       "display": "Follitropin [Units/volume] in Serum or Plasma",
+      "status": "ACTIVE"
+    },
+    "1558-6": {
+      "display": "Fasting glucose [Mass/volume] in Serum or Plasma",
       "status": "ACTIVE"
     },
     "1742-6": {
@@ -149,10 +153,6 @@
     },
     "1988-5": {
       "display": "C reactive protein [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
-    },
-    "1989-3": {
-      "display": "25-hydroxyvitamin D3 [Mass/volume] in Serum or Plasma",
       "status": "ACTIVE"
     },
     "2028-9": {
@@ -553,6 +553,10 @@
     },
     "5905-5": {
       "display": "Monocytes/Leukocytes in Blood by Automated count",
+      "status": "ACTIVE"
+    },
+    "62292-8": {
+      "display": "25-Hydroxyvitamin D3+25-Hydroxyvitamin D2 [Mass/volume] in Serum or Plasma",
       "status": "ACTIVE"
     },
     "630-4": {

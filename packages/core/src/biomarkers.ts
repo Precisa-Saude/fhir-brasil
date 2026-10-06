@@ -456,6 +456,22 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     category: 'tireoide',
+    code: 'T3Total',
+    // 3053-6 é "Triiodothyronine (T3) [Mass/volume] in Serum or Plasma", o T3
+    // total, conferido no fhir.loinc.org em out/2026. O catálogo só tinha o
+    // livre (3051-0), e o SUS fatura o T3 num código só (SIGTAP 0202060390,
+    // "Dosagem de triiodotironina"), que é o total (fhir-brasil#132). Os nomes
+    // seguem os do `T4Total`. Sem faixa por enquanto: nenhuma fonte conferida
+    // publica o intervalo do T3 total para adultos aqui.
+    loinc: '3053-6',
+    names: {
+      en: ['Triiodothyronine', 'T3 Total', 'Total T3', 'Triiodothyronine (T3)'],
+      pt: ['Triiodotironina', 'T3 Total', 'Triiodotironina Total', 'Triiodotironina (T3)'],
+    },
+    unit: 'ng/dL',
+  },
+  {
+    category: 'tireoide',
     code: 'T4Total',
     codeAliases: ['Tiroxina_T4', 'Thyroxine_T4_serum'],
     loinc: '3026-2',

@@ -373,6 +373,13 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
   SpecificGravity_Urine: nameOnly('5811-5'),
   SquamousEpithelial_Urine: nameOnly('11277-1'),
   T3Free: nameOnly('3051-0'),
+  T3Total: {
+    evidence: ['name', 'unit'],
+    loinc: '3053-6',
+    note: 'T3 total em massa/volume; o livre é o 3051-0. Pedido no fhir-brasil#132.',
+    settledBy: 'name',
+    siblingsRejected: [],
+  },
   T4Free: nameOnly('3024-7'),
   T4Total: nameOnly('3026-2'),
   Testosterone: nameOnly('2986-8'),

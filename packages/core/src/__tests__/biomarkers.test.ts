@@ -1001,3 +1001,25 @@ describe('colunas "Total Fat" e "Total Lean" da tendência da densitometria', ()
     expect(findCodeByName('Total Lean')).not.toBe('FatFreeMass');
   });
 });
+
+describe('T3 total e T3 livre', () => {
+  // O catálogo só tinha o livre; o SUS fatura o T3 num código só, o total
+  // (fhir-brasil#132). As grafias do total não podem cair no livre, nem o
+  // inverso.
+  it('separa os dois códigos LOINC', () => {
+    expect(getDefinitionByCode('T3Total')?.loinc).toBe('3053-6');
+    expect(getDefinitionByCode('T3Free')?.loinc).toBe('3051-0');
+  });
+
+  it.each([
+    ['T3 Total', 'T3Total'],
+    ['Triiodotironina', 'T3Total'],
+    ['Triiodotironina Total', 'T3Total'],
+    ['Triiodothyronine (T3)', 'T3Total'],
+    ['T3 Livre', 'T3Free'],
+    ['Triiodotironina Livre', 'T3Free'],
+    ['Free T3', 'T3Free'],
+  ])('resolve %s para %s', (grafia, esperado) => {
+    expect(findCodeByName(grafia)).toBe(esperado);
+  });
+});

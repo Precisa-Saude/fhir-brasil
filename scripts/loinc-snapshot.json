@@ -1226,6 +1226,21 @@
       "system": "Ser/Plas",
       "time": "Pt"
     },
+    "3053-6": {
+      "component": "Triiodothyronine",
+      "display": "Triiodothyronine (T3) [Mass/volume] in Serum or Plasma",
+      "groups": {
+        "LG11953-3": "Triiodothyronine|MCnc|Pt|ANYBldSerPl",
+        "LG49720-2": "Triiodothyronine|Pt|Ser/Plas|650.977 g/mole",
+        "LG51986-4": "Triiodothyronine|Pt|ANYBldSerPl|650.977 g/mole"
+      },
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas",
+      "time": "Pt"
+    },
     "3084-1": {
       "component": "Urate",
       "display": "Urate [Mass/volume] in Serum or Plasma",

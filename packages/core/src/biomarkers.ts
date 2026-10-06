@@ -1451,7 +1451,12 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     code: 'TotalProtein',
     loinc: '2885-2',
     names: {
-      en: ['Total Protein', 'Serum Protein'],
+      // "Protein, Total" é a grafia da Quest, no formato "EXAME, QUALIFICADOR".
+      // A troca de vírgula do pré-scan não basta aqui: dobrada, a linha vira
+      // "protein total", que não é nome do catálogo, e sobrava o "Protein"
+      // solto, sinônimo de `Protein_Urine`. A proteína do soro ancorava como
+      // proteína da urina. Com a grafia literal, o nome longo engole o curto.
+      en: ['Total Protein', 'Serum Protein', 'Protein, Total'],
       pt: ['Proteína Total', 'Proteínas Totais'],
     },
     unit: 'g/dL',
@@ -1714,6 +1719,26 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     names: {
       en: ['Urea'],
       pt: ['Ureia', 'Uréia'],
+    },
+    unit: 'mg/dL',
+  },
+  {
+    // 3094-0 é "Urea nitrogen [Mass/volume] in Serum or Plasma", o BUN que o
+    // laudo americano imprime ("UREA NITROGEN (BUN)" na Quest). É outro
+    // componente que `Urea` (3091-6): o BUN conta só o nitrogênio da molécula,
+    // e ureia ≈ BUN × 2,14. Por isso os nomes de BUN saíram de `Urea` na
+    // issue #41, e voltam aqui, numa entrada própria. Sem a entrada, o "urea"
+    // de dentro de "UREA NITROGEN" ancorava a ureia, e o valor de BUN era lido
+    // contra a faixa de 15-50 mg/dL da ureia.
+    //
+    // Sem faixa de referência: nenhuma fonte de `sources.ts` foi conferida
+    // para o intervalo do BUN, e faixa sem citação conferida não entra.
+    category: 'rins',
+    code: 'BUN',
+    loinc: '3094-0',
+    names: {
+      en: ['Urea Nitrogen (BUN)', 'Urea Nitrogen', 'BUN'],
+      pt: ['Nitrogênio Ureico'],
     },
     unit: 'mg/dL',
   },

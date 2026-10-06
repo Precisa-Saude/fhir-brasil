@@ -83,6 +83,16 @@ Por isso a correspondência é conservadora:
   a linha carregar um valor: um número, uma unidade conhecida, ou um termo
   qualitativo esperado ("Negativo", "Ausente", "Amarelo Citrino"). "Specimen
   type: Blood" não ancora; "Sangue Oculto: Negativo" ancora.
+- **Seção de urinálise** — debaixo de um cabeçalho de urinálise
+  ("URINALYSIS", "Urina tipo I", "Rotina de urina", "EAS", "Urinálise"), os
+  nomes nus do exame de urina passam a ser o analito da urina: "GLUCOSE"
+  ancora `Glucose_Urine`, "WBC" ancora `Leukocytes_Urine`, "RBC" ancora
+  `RBC_Urine`, "PH" ancora `pH_Urine`, e "COLOR", "KETONES", "PROTEIN" e
+  companhia ancoram mesmo sem valor na linha (texto em colunas). O código do
+  sangue não ancora pela mesma linha. A seção acaba na primeira linha com
+  exame de outro painel ou na primeira linha sem valor e sem nome conhecido
+  (o jeito de um cabeçalho); na dúvida ela acaba, e o nome volta ao sentido de
+  fora da seção. Fora dela nada muda.
 - **Contexto genético é descartado** — símbolos de gene colidem com nomes de
   biomarcador (o gene `APOB` vs. a lipoproteína `ApoB`). Linhas com acesso
   RefSeq (`NM_000384.2`), notação HGVS (`p.Trp448*`, `c.1234A>G`), `rs` do dbSNP

@@ -1279,6 +1279,20 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       system: 'Ser/Plas',
       time: 'Pt',
     },
+    '3094-0': {
+      component: 'Urea nitrogen',
+      display: 'Urea nitrogen [Mass/volume] in Serum or Plasma',
+      groups: {
+        'LG1314-6': 'Urea nitrogen|MCnc|Pt|ANYBldSerPl',
+        'LG49763-2': 'Urea nitrogen|Pt|Ser/Plas',
+      },
+      method: null,
+      property: 'MCnc',
+      scale: 'Qn',
+      status: 'ACTIVE',
+      system: 'Ser/Plas',
+      time: 'Pt',
+    },
     '3097-3': {
       component: 'Urea nitrogen/Creatinine',
       display: 'Urea nitrogen/Creatinine [Mass Ratio] in Serum or Plasma',

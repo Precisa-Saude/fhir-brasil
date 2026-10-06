@@ -1,6 +1,6 @@
 {
-  "acceptedLoincCodes": 199,
-  "biomarkers": 227,
+  "acceptedLoincCodes": 200,
+  "biomarkers": 228,
   "byCategory": [
     {
       "count": 29,
@@ -51,16 +51,16 @@
       "withLoinc": 6
     },
     {
-      "count": 30,
+      "count": 31,
       "examples": [
         "Microalbumin_Urine",
         "Urea",
+        "BUN",
         "BUN_Creatinine_Ratio",
-        "Urea_Creatinine_Ratio",
-        "Creatinine"
+        "Urea_Creatinine_Ratio"
       ],
       "pt": "Renal e Eletrolítico",
-      "withLoinc": 30
+      "withLoinc": 31
     },
     {
       "count": 15,
@@ -70,12 +70,12 @@
     }
   ],
   "categoryGroups": 10,
-  "decisions": { "nameOnly": 173, "reviewed": 0, "withEvidence": 16 },
+  "decisions": { "nameOnly": 173, "reviewed": 0, "withEvidence": 17 },
   "loincCoveragePct": 83.3,
   "referenceRanges": 203,
   "subcategories": 20,
   "version": "0.37.2",
-  "withLoinc": 189,
+  "withLoinc": 190,
   "withoutLoinc": 38,
   "withoutLoincByReason": { "ambiguous": 1, "no-concept": 30, "pending-review": 7 }
 }

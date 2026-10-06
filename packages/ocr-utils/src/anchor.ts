@@ -30,6 +30,7 @@ import {
   SKINFOLD_SITE_CODES,
 } from './body-region';
 import { attachMethodVariants, recordAnchorLine } from './method-variant';
+import { applyUrinalysisSection, type SectionDeps, sectionDepsFrom } from './urinalysis-section';
 
 export interface AnchorMatch {
   code: string;
@@ -488,6 +489,16 @@ function resolveOverlaps(candidates: Candidate[]): Candidate[] {
   return accepted;
 }
 
+/** As peças do `anchor.ts` que a regra de seção usa. Ver `urinalysis-section.ts`. */
+let cachedSectionDeps: SectionDeps | null = null;
+const getSectionDeps = (): SectionDeps =>
+  (cachedSectionDeps ??= sectionDepsFrom(
+    getPatterns(),
+    buildNamePattern,
+    hasValueEvidence,
+    resolveOverlaps,
+  ));
+
 interface LineContext {
   genetic: boolean;
   girth: boolean;
@@ -513,7 +524,7 @@ export function findBiomarkersInText(ocrText: string): AnchorResult {
     ...collectWrappedCandidates(normalizedText),
   ];
 
-  for (const candidate of resolveOverlaps(candidates)) {
+  for (const candidate of applyUrinalysisSection(normalizedText, candidates, getSectionDeps())) {
     // O contexto é a linha do nome, ou as duas linhas de um nome quebrado.
     const lineStart = getLineBounds(normalizedText, candidate.start).start;
     const lineEnd = getLineBounds(normalizedText, candidate.end - 1).end;

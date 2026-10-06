@@ -32,8 +32,8 @@ a partir dele.
 
 1. **Existência** — o código resolve no servidor oficial. Pega erro de digitação
    e código que o LOINC aposentou.
-2. **Deriva** — o nome oficial, o status ou um dos eixos (propriedade,
-   sistema, escala, método) mudaram no LOINC desde que mapeamos. É o que
+2. **Deriva** — o nome oficial, o status ou um dos seis eixos (componente,
+   propriedade, tempo, sistema, escala, método) mudaram no LOINC desde que mapeamos. É o que
    realmente paga: transforma uma edição silenciosa de terceiro em check
    vermelho, em vez de descobrir meses depois.
 
@@ -54,7 +54,7 @@ snapshot e confere por regra o que dá para conferir por regra: a propriedade do
 código tem que combinar com a unidade declarada (% é fração, mg/dL é
 massa/volume, /HPF é número/área), o sistema tem que caber no catálogo (urina
 para `_Urine`, sangue e derivados para o resto, líquido amniótico para ninguém),
-e quem tem unidade é quantitativo. Existe porque em outubro de 2026 uma revisão
+quem tem unidade é quantitativo e quem não tem não é, e o tempo é pontual. Existe porque em outubro de 2026 uma revisão
 externa encontrou onze códigos errados num desses eixos, todos existentes, todos
 `ACTIVE`, todos verdes neste check: beta-hidroxibutirato apontava para
 butirilcarnitina em líquido amniótico, bactérias na urina para urocultura, e os
@@ -85,13 +85,23 @@ antes de entrar.
 
 ### Sobre o snapshot
 
-`loinc-snapshot.json` guarda, por código, o nome oficial, o status e os quatro
-eixos (propriedade, sistema, escala, método) na grafia em que o LOINC os exibe,
-mais a versão do LOINC e a data da conferência. Os eixos entraram em outubro de
-2026, preenchidos a partir do `tx.fhir.org` (LOINC 2.82) porque o
-`fhir.loinc.org` exige credencial e a conta fica no CI; o campo `_axesNote`
-registra isso e some na próxima gravação pelo workflow, que escreve tudo da
-mesma consulta.
+`loinc-snapshot.json` guarda, por código, o nome oficial, o status, os seis
+eixos (componente, propriedade, tempo, sistema, escala, método) na grafia em que
+o LOINC os exibe e os LOINC Groups (`LG…`) a que o código pertence, com o nome de
+cada um, mais a versão do LOINC e a data da conferência. O grupo junta códigos
+que medem a mesma coisa e diferem num eixo que o agrupamento ignora, e é onde se
+procura o irmão de um código antes de trocar o mapeamento. Nem todo código tem
+grupo.
+
+Os grupos só vêm do `fhir.loinc.org`, que os publica como `parent` do código. Um
+servidor alternativo em `LOINC_LOOKUP_URL`, como o `tx.fhir.org`, não os publica:
+um código gravado por ele entra sem `groups`, e o check não acusa a ausência
+como deriva. A gravação seguinte pelo workflow preenche.
+
+Localmente, `pnpm loinc:check` e `pnpm loinc:update` leem `LOINC_USER` e
+`LOINC_PASSWORD` do `.env` na raiz (`node --env-file-if-exists`), sem
+interpretar o valor. Carregar o `.env` com `source` expande `$` e crase dentro
+da senha, e o servidor responde 401.
 
 Guardar o nome não é só diagnóstico. A **seção 10.3 da licença do LOINC** exige
 que informação extraída venha sempre acompanhada do identificador **e do display

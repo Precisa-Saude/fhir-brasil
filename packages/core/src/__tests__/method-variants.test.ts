@@ -56,9 +56,8 @@ describe('variantes por método no catálogo', () => {
       expect(entry, v.loinc).toBeDefined();
       expect(entry?.status, v.loinc).toBe('ACTIVE');
       expect(entry?.method, v.loinc).toBe(v.method);
-      expect([entry?.property, entry?.system, entry?.scale], `${v.loinc} contra ${v.base}`).toEqual(
-        [base?.property, base?.system, base?.scale],
-      );
+      const outros = (e: typeof entry) => [e?.component, e?.property, e?.time, e?.system, e?.scale];
+      expect(outros(entry), `${v.loinc} contra ${v.base}`).toEqual(outros(base));
     }
   });
 

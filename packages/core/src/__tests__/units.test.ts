@@ -64,6 +64,15 @@ describe('UNIT_TO_UCUM', () => {
   });
 });
 
+describe('UNIT_TO_UCUM só aponta para UCUM', () => {
+  it('todo valor da tabela passa no isUcumCode', () => {
+    // Uma entrada errada aqui sairia no FHIR sob o system do UCUM sem ser
+    // UCUM, que é exatamente o que a tabela existe para impedir.
+    const ruins = Object.entries(UNIT_TO_UCUM).filter(([, ucum]) => !isUcumCode(ucum));
+    expect(ruins).toEqual([]);
+  });
+});
+
 describe('BIOMARKER_DEFAULT_UNIT deriva de biomarkers.ts', () => {
   it('tem a mesma unidade da definição, e não uma segunda grafia', () => {
     // Até out/2026 TSH era `µUI/mL` aqui e `uIU/mL` na definição.

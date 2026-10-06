@@ -17,14 +17,16 @@ import { BIOMARKER_UNITS, isUcumCode, resolveUcum } from '../units';
  * ordinal, e os ácidos graxos para quantidade por hemácia enquanto o laudo
  * imprime %. Todos existiam, todos ACTIVE, todos verdes.
  *
- * Este teste lê os eixos que o snapshot guarda (propriedade, sistema, escala,
- * método) e confere, sem rede, o que dá para conferir por regra:
+ * Este teste lê os seis eixos que o snapshot guarda (componente, propriedade,
+ * tempo, sistema, escala, método) e confere, sem rede, o que dá para conferir
+ * por regra:
  *
  * - a **propriedade** do código tem que combinar com a dimensão da unidade
  *   declarada: % é fração, mg/dL é massa/volume, /HPF é número/área;
  * - o **sistema** tem que caber no catálogo: urina para `_Urine`, sangue e
  *   derivados para o resto, e líquido amniótico para ninguém;
- * - a **escala** de quem tem unidade é quantitativa.
+ * - a **escala** de quem tem unidade é quantitativa, e a de quem não tem não é;
+ * - o **tempo** é pontual: o catálogo lê um resultado, e não uma coleta de 24 h.
  *
  * O que escapa da regra está em `KNOWN_AXIS_MISMATCHES`, com o motivo. Essa
  * lista é o lugar onde um compromisso vira visível em vez de ficar enterrado
@@ -33,12 +35,14 @@ import { BIOMARKER_UNITS, isUcumCode, resolveUcum } from '../units';
  */
 
 interface SnapshotEntry {
+  component: string | null;
   display: string;
   method: string | null;
   property: string | null;
   scale: string | null;
   status: string | null;
   system: string | null;
+  time: string | null;
 }
 
 const snapshot = JSON.parse(
@@ -110,9 +114,6 @@ const PROPERTIES_BY_UNIT: Record<string, string[]> = {
  * no comentário da definição em `biomarkers.ts`.
  */
 const KNOWN_AXIS_MISMATCHES: Record<string, string> = {
-  CalfCircumference:
-    '107112-5 é o item ordinal do MNA ("Calf circumference in cm", Find/Ord). ' +
-    'O LOINC 2.82 só tem a medida quantitativa por lado (8282-6, 8283-4).',
   Omega3_Total:
     '99620-7 é moles/volume em RBC.lysate; o laudo imprime % e não há fração para o total.',
   Omega6_Total:
@@ -163,9 +164,10 @@ describe('snapshot cobre o catálogo', () => {
     expect(faltando).toEqual([]);
   });
 
-  it('toda entrada do snapshot traz os quatro eixos', () => {
+  // Método é o único eixo que pode faltar: a maioria dos códigos não afirma um.
+  it('toda entrada do snapshot traz os eixos obrigatórios', () => {
     const semEixo = Object.entries(snapshot.codes)
-      .filter(([, e]) => !e.property || !e.system || !e.scale)
+      .filter(([, e]) => !e.component || !e.property || !e.time || !e.system || !e.scale)
       .map(([c]) => c);
     expect(semEixo).toEqual([]);
   });
@@ -220,6 +222,28 @@ describe('escala de quem tem unidade é quantitativa', () => {
       const ok = scale === 'Qn' || scale === 'SemiQn';
       if (b.code in KNOWN_AXIS_MISMATCHES) return;
       expect(ok, `escala ${scale}`).toBe(true);
+    });
+  }
+});
+
+// Sem unidade, o laudo imprime uma palavra ou uma cruz (positivo, ++, amarelo
+// citrino). Um código Qn ali pede um número que o laudo não tem.
+describe('escala de quem não tem unidade não é quantitativa', () => {
+  for (const b of coded) {
+    if (b.unit) continue;
+    it(`${b.code} (${b.loinc})`, () => {
+      expect(entryOf(b.loinc).scale, `escala de ${b.code}`).not.toBe('Qn');
+    });
+  }
+});
+
+// Urina de 24 h e clearance têm tempo 24H no LOINC, e o catálogo ainda não tem
+// esses gêmeos. Quando entrarem, o tempo vem da coleta impressa, e esta regra
+// ganha a exceção junto.
+describe('tempo do LOINC é pontual', () => {
+  for (const b of coded) {
+    it(`${b.code} (${b.loinc})`, () => {
+      expect(entryOf(b.loinc).time, `tempo de ${b.code}`).toBe('Pt');
     });
   }
 });

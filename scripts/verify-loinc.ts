@@ -22,8 +22,9 @@
  *
  *   1. **Existência** — o código resolve no servidor oficial. Pega erro de
  *      digitação e código aposentado.
- *   2. **Deriva** — o nome oficial, o status ou um dos eixos (propriedade,
- *      sistema, escala, método) mudaram no LOINC desde que mapeamos.
+ *   2. **Deriva** — o nome oficial, o status ou um dos seis eixos
+ *      (componente, propriedade, tempo, sistema, escala, método) mudaram no
+ *      LOINC desde que mapeamos.
  *      Transforma uma edição silenciosa de terceiro em check vermelho.
  *
  * **Não** garante adequação semântica: se `43583-4` é o código *certo* para
@@ -90,16 +91,28 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
  * imprime na página do código.
  */
 interface Axes {
+  component: string | null;
   method: string | null;
   property: string | null;
   scale: string | null;
   system: string | null;
+  time: string | null;
 }
+
+/**
+ * LOINC Groups (`LG…`) a que o código pertence, com o nome de cada um. O grupo
+ * junta códigos que medem a mesma coisa e diferem num eixo que o agrupamento
+ * ignora (método, sistema equivalente), e é onde se procura o irmão de um
+ * código antes de trocar o mapeamento.
+ */
+type Groups = Record<string, string>;
 
 interface LookupResult extends Partial<Axes> {
   /** Código respondeu que não existe. Diferente de não ter dado para perguntar. */
   ausente?: boolean;
   display?: string;
+  /** Ausente quando o servidor não publica grupos, como o tx.fhir.org. */
+  groups?: Groups;
   /** Falha de rede, auth ou 5xx: não dá para concluir nada sobre o código. */
   indisponivel?: string;
   status?: string;
@@ -112,6 +125,8 @@ const EIXOS: ReadonlyArray<[keyof Axes, string]> = [
   ['system', 'SYSTEM'],
   ['scale', 'SCALE_TYP'],
   ['method', 'METHOD_TYP'],
+  ['time', 'TIME_ASPCT'],
+  ['component', 'COMPONENT'],
 ];
 
 /**
@@ -168,6 +183,28 @@ function lerPropriedade(parameters: unknown[], nome: string): string | undefined
 }
 
 const PARTE_LOINC = /^LP\d+-\d$/;
+const GRUPO_LOINC = /^LG\d+-\d$/;
+
+/**
+ * O fhir.loinc.org publica os grupos como `parent` do código, ao lado dos
+ * pais da hierarquia multiaxial (`LP…`). Só os `LG…` interessam aqui.
+ */
+function lerGrupos(parameters: unknown[]): Groups | undefined {
+  const grupos: Groups = {};
+  for (const p of parameters) {
+    const param = p as { name?: string; part?: { name?: string; [k: string]: unknown }[] };
+    if (param.name !== 'property' || !Array.isArray(param.part)) continue;
+    const code = param.part.find((x) => x.name === 'code');
+    if ((code?.valueCode ?? code?.valueString) !== 'parent') continue;
+    const value = param.part.find((x) => x.name === 'value');
+    const coding = value?.valueCoding as { code?: string; display?: string } | undefined;
+    if (coding?.code && GRUPO_LOINC.test(coding.code)) {
+      grupos[coding.code] = coding.display ?? coding.code;
+    }
+  }
+  if (!Object.keys(grupos).length) return undefined;
+  return Object.fromEntries(Object.entries(grupos).sort(([a], [b]) => a.localeCompare(b)));
+}
 
 /** Display de uma parte do LOINC (`LP6860-3` → `SCnc`), com cache. */
 async function displayDaParte(parte: string): Promise<string | LookupResult> {
@@ -183,9 +220,16 @@ async function displayDaParte(parte: string): Promise<string | LookupResult> {
   return display;
 }
 
-/** Os quatro eixos de um código, já com as partes resolvidas em display. */
+/** Os seis eixos de um código, já com as partes resolvidas em display. */
 async function lerEixos(parameters: unknown[]): Promise<Axes | LookupResult> {
-  const eixos: Axes = { method: null, property: null, scale: null, system: null };
+  const eixos: Axes = {
+    component: null,
+    method: null,
+    property: null,
+    scale: null,
+    system: null,
+    time: null,
+  };
   for (const [campo, nome] of EIXOS) {
     const bruto = lerPropriedade(parameters, nome);
     if (bruto === undefined) continue;
@@ -274,6 +318,7 @@ async function lookup(code: string): Promise<LookupResult> {
       return {
         ...eixos,
         display: displayParam?.valueString,
+        groups: lerGrupos(data.parameter),
         status: lerPropriedade(data.parameter, 'STATUS'),
         version: versionParam?.valueString,
       };
@@ -296,7 +341,7 @@ interface Snapshot {
   _checkedAt: string;
   _loincVersion: string | null;
   _notice: string;
-  codes: Record<string, { display: string; status: string | null } & Axes>;
+  codes: Record<string, { display: string; groups?: Groups; status: string | null } & Axes>;
 }
 
 function lerSnapshot(): Snapshot | null {
@@ -370,12 +415,15 @@ async function main() {
         continue;
       }
       codes[code] = {
+        component: r.component ?? null,
         display: r.display,
+        ...(r.groups && { groups: r.groups }),
         method: r.method ?? null,
         property: r.property ?? null,
         scale: r.scale ?? null,
         status: r.status ?? null,
         system: r.system ?? null,
+        time: r.time ?? null,
       };
     }
     const semNome = [...naoResolvem, ...semDisplay];
@@ -470,6 +518,13 @@ async function main() {
       if (vivo !== antigo[campo]) {
         derivas.push({ campo, code, de: String(antigo[campo]), para: String(vivo) });
       }
+    }
+    // Grupo só é comparável quando os dois lados vieram de servidor que o
+    // publica; o tx.fhir.org não publica, e isso não é deriva.
+    if (r.groups && antigo.groups) {
+      const de = Object.keys(antigo.groups).join(', ');
+      const para = Object.keys(r.groups).join(', ');
+      if (de !== para) derivas.push({ campo: 'groups', code, de, para });
     }
   }
 

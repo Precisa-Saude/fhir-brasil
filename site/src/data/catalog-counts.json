@@ -72,7 +72,7 @@
   "categoryGroups": 10,
   "decisions": { "nameOnly": 173, "reviewed": 0, "withEvidence": 17 },
   "loincCoveragePct": 83.3,
-  "referenceRanges": 203,
+  "referenceRanges": 204,
   "subcategories": 20,
   "version": "0.37.2",
   "withLoinc": 190,

@@ -1731,8 +1731,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     // de dentro de "UREA NITROGEN" ancorava a ureia, e o valor de BUN era lido
     // contra a faixa de 15-50 mg/dL da ureia.
     //
-    // Sem faixa de referência: nenhuma fonte de `sources.ts` foi conferida
-    // para o intervalo do BUN, e faixa sem citação conferida não entra.
+    // Faixa (out/2026): 5 a 20 mg/dL, de Hosten, "BUN and Creatinine",
+    // Clinical Methods, 3. ed., cap. 193: "The normal range of urea nitrogen in
+    // blood or serum is 5 to 20 mg/dl, or 1.8 to 7.1 mmol urea per liter." O
+    // capítulo não publica intervalo ótimo, e a faixa fica sem um.
     category: 'rins',
     code: 'BUN',
     loinc: '3094-0',

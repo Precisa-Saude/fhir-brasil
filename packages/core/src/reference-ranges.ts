@@ -485,6 +485,16 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'tietz-7ed-2015',
   },
 
+  // BUN (nitrogênio ureico): "The normal range of urea nitrogen in blood or
+  // serum is 5 to 20 mg/dl" (Hosten, Clinical Methods, cap. 193). O capítulo
+  // não publica intervalo ótimo nem partição por sexo ou idade; a queda na
+  // gestação (5 a 7 mg/dL) aparece como contexto, não como intervalo próprio.
+  BUN: {
+    default: { max: 20, min: 5, unit: 'mg/dL' },
+    kind: 'reference-interval',
+    source: 'hosten-clinical-methods-1990',
+  },
+
   CA125: {
     default: { max: 35, min: 0, optimalMax: 25, optimalMin: 0, unit: 'U/mL' },
     kind: 'reference-interval',

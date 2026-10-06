@@ -45,6 +45,24 @@ Só entra pista que aparece em laudo real. Medido em out/2026 sobre três dezena
 
 `loincToCode` resolve o código por método para o biomarcador, `codeToLoinc` continua devolvendo o código sem método, e `methodVariantOf(code, loinc)` diz se um código é variante declarada daquele biomarcador. Toda variante está no `loinc-snapshot.json`, conferida pelo `verify-loinc.ts`, e no `BRLabTestVS`.
 
+### Registro de decisão
+
+O catálogo guarda a conclusão; `mapping-decisions.ts` guarda o porquê. Cada biomarcador com LOINC tem um registro com a evidência que o laudo mostrou (`name`, `unit`, `method-line`, `specimen`, `assay-insert`), qual delas decidiu (`settledBy`), os irmãos descartados com o motivo (`siblingsRejected`) e, quando houver revisão independente, `reviewer`, `reviewedAt` e `loincVersion`.
+
+A maioria dos registros é só nome: o código foi escolhido pelo nome do exame, sem outra evidência registrada. É o registro honesto do que existe, e a revisão independente vai preenchendo o resto. O registro repete o `loinc` do catálogo, e um teste falha quando os dois divergem: trocar o código sem atualizar o registro não passa.
+
+Entrada sem LOINC tem um motivo em `NO_LOINC_DECISIONS`: `no-concept` (procurado, e o LOINC não tem), `ambiguous` (há candidatos, e nenhum é a mesma grandeza), `pending-review` (ninguém registrou a busca) ou `not-lab`. A lista está no README, gerada por `pnpm catalog:counts`.
+
+`fhir-bio decision <código ou LOINC>` imprime a ficha no formato da planilha de um mapeador: nome local, unidade, material, método, candidatos com os seis eixos, escolhido, rejeitados, grupos LOINC, revisor e versão. Os eixos e os grupos vêm de uma cópia do snapshot publicada no pacote (`LOINC_SNAPSHOT`, com o aviso da licença do LOINC), e `getMappingSheet()` devolve a mesma ficha como objeto.
+
+```typescript
+import { getMappingSheet } from '@precisa-saude/fhir';
+
+const ficha = getMappingSheet('2089-1');
+// ficha.code === 'LDL', ficha.specimen === 'Ser/Plas', ficha.method === null
+// ficha.candidates: o escolhido e as três variantes por método
+```
+
 ## Categorias
 
 Os biomarcadores são organizados nas seguintes categorias clínicas:

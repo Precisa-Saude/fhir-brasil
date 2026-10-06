@@ -55,6 +55,8 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { BIOMARKER_DEFINITIONS } from '../packages/core/src/biomarkers.ts';
+import { MAPPING_DECISIONS } from '../packages/core/src/mapping-decisions.ts';
+import { gerarModuloDoSnapshot } from './generate-loinc-snapshot-module.ts';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SNAPSHOT_PATH = resolve(__dirname, 'loinc-snapshot.json');
@@ -358,7 +360,17 @@ async function main() {
     ...BIOMARKER_DEFINITIONS.flatMap((b) =>
       (b.methodVariants ?? []).map((v) => ({ code: b.code, loinc: v.loinc })),
     ),
-  ].sort((a, b) => String(a.loinc).localeCompare(String(b.loinc)));
+  ];
+  const emitidos = new Set(comLoinc.map((b) => String(b.loinc)));
+  // Os irmãos rejeitados no registro de decisão também entram: a rejeição só
+  // vale como evidência se o código existe, e a ficha mostra os eixos dele ao
+  // lado do escolhido. Não são emitidos, então status DEPRECATED não falha.
+  for (const [code, d] of Object.entries(MAPPING_DECISIONS)) {
+    for (const s of d.siblingsRejected) {
+      if (!emitidos.has(s.loinc)) comLoinc.push({ code: `${code} (rejeitado)`, loinc: s.loinc });
+    }
+  }
+  comLoinc.sort((a, b) => String(a.loinc).localeCompare(String(b.loinc)));
 
   const unicosDoCatalogo = new Set(comLoinc.map((b) => String(b.loinc)));
 
@@ -467,6 +479,9 @@ async function main() {
       codes,
     };
     writeFileSync(SNAPSHOT_PATH, `${JSON.stringify(snapshot, null, 2)}\n`, 'utf8');
+    // O core publica uma cópia do snapshot; sem regravar aqui, o PR do
+    // workflow sairia com o módulo defasado e o teste de sincronia vermelho.
+    await gerarModuloDoSnapshot();
     console.error(
       `\nSnapshot gravado: ${Object.keys(codes).length} códigos, LOINC ${versao ?? '?'}`,
     );
@@ -491,7 +506,7 @@ async function main() {
       ausentes.push(code);
       continue;
     }
-    if (r.status && STATUS_PROIBIDOS.has(r.status.toUpperCase())) {
+    if (emitidos.has(code) && r.status && STATUS_PROIBIDOS.has(r.status.toUpperCase())) {
       proibidos.push({ code, status: r.status });
     }
     const antigo = snapshot.codes[code];

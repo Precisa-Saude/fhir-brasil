@@ -93,6 +93,16 @@ que medem a mesma coisa e diferem num eixo que o agrupamento ignora, e é onde s
 procura o irmão de um código antes de trocar o mapeamento. Nem todo código tem
 grupo.
 
+Além dos códigos que o catálogo emite, o snapshot guarda os irmãos rejeitados
+no registro de decisão (`packages/core/src/mapping-decisions.ts`): a rejeição
+só vale como evidência se o código existe, e a ficha do `fhir-bio decision`
+mostra os eixos dele. Status `DEPRECATED` de um rejeitado não falha o check,
+porque ele não é emitido.
+
+O `--update` regrava também `packages/core/src/loinc-snapshot.generated.ts`, a
+cópia que o pacote publica para a ficha funcionar fora do repositório, e um
+teste falha se as duas divergirem.
+
 Os grupos só vêm do `fhir.loinc.org`, que os publica como `parent` do código. Um
 servidor alternativo em `LOINC_LOOKUP_URL`, como o `tx.fhir.org`, não os publica:
 um código gravado por ele entra sem `groups`, e o check não acusa a ausência

@@ -2,6 +2,7 @@ import { exitWithError } from '../cli-utils.js';
 import { dividirArgv } from './argv.js';
 import { categories } from './commands/categories.js';
 import { convert } from './commands/convert.js';
+import { decision } from './commands/decision.js';
 import { importBundle } from './commands/import.js';
 import { list } from './commands/list.js';
 import { loincMap } from './commands/loinc-map.js';
@@ -29,6 +30,7 @@ Comandos:
   validate <arquivo>      Validar recurso FHIR (Bundle, Observation ou DiagnosticReport)
   import <arquivo>        Importar FHIR Bundle e extrair observações
   loinc-map               Tabela de mapeamento LOINC ↔ código
+  decision <código>       Ficha de decisão do mapeamento LOINC (código interno ou LOINC)
 
 Flags globais:
   --json                  Saída em formato JSON
@@ -41,6 +43,7 @@ type CommandFn = (args: string[], json: boolean) => Promise<void>;
 const COMMANDS: Record<string, CommandFn> = {
   categories,
   convert,
+  decision,
   import: importBundle,
   list,
   'loinc-map': loincMap,

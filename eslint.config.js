@@ -30,6 +30,8 @@ export default [
     files: [
       'packages/core/src/biomarkers.ts',
       'packages/core/src/dexa-zone-data.ts',
+      'packages/core/src/loinc-snapshot.generated.ts',
+      'packages/core/src/mapping-decisions.ts',
       'packages/core/src/reference-ranges.ts',
       'packages/core/src/units.ts',
     ],

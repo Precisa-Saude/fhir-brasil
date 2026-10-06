@@ -64,10 +64,12 @@
     }
   ],
   "categoryGroups": 10,
+  "decisions": { "nameOnly": 172, "reviewed": 0, "withEvidence": 16 },
   "loincCoveragePct": 83.2,
   "referenceRanges": 203,
   "subcategories": 20,
   "version": "0.35.1",
   "withLoinc": 188,
-  "withoutLoinc": 38
+  "withoutLoinc": 38,
+  "withoutLoincByReason": { "ambiguous": 1, "no-concept": 30, "pending-review": 7 }
 }

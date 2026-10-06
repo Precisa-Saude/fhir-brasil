@@ -5,6 +5,8 @@
  * Used by the FHIR converter to transform internal data to FHIR R4 resources.
  */
 
+import type { RangeKind } from './reference-ranges';
+
 export type OverallStatus = 'NORMAL' | 'ANORMAL';
 export type Flag = 'H' | 'L' | '';
 export type Gender = 'male' | 'female' | 'other' | 'unknown';
@@ -47,6 +49,12 @@ export interface LabObservationData {
   collectionDate?: string;
   flag: Flag;
   isQualitative?: boolean;
+  /**
+   * Tipo da faixa simples (`referenceMin`/`referenceMax`), quando quem chama
+   * sabe. Sai como `referenceRange.type`. Faixa impressa pelo laboratório
+   * costuma ficar sem: o laudo não diz de onde tirou o intervalo.
+   */
+  referenceKind?: RangeKind;
   referenceMax?: number;
   referenceMin?: number;
   /**

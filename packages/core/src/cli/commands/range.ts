@@ -52,12 +52,21 @@ export async function range(args: string[], json: boolean): Promise<void> {
     ctx.biologicalSex === 'M' ? 'Homem' : ctx.biologicalSex === 'F' ? 'Mulher' : 'Geral';
   const ageLabel = ctx.age !== undefined ? `, ${ctx.age} anos` : '';
   const fmt = (v?: number) => (v !== undefined ? String(v) : '—');
+  // O limite que só existe para o desenho não vira flag; quem lê a saída
+  // precisa saber disso ao lado do número, e não numa tabela à parte.
+  const desenho = (kind?: string) => (kind === 'display' ? '  (desenho, não é corte)' : '');
+  const tipos: Record<string, string> = {
+    'decision-threshold': 'limiar de decisão',
+    population: 'distribuição populacional',
+    'reference-interval': 'intervalo de referência',
+  };
 
   outputText(
     [
       `Faixa de Referência: ${code} (${sexLabel}${ageLabel})`,
-      `  Mínimo:       ${fmt(ref.min)} ${ref.unit}`,
-      `  Máximo:       ${fmt(ref.max)} ${ref.unit}`,
+      `  Tipo:         ${ref.kind ? tipos[ref.kind] : '—'}`,
+      `  Mínimo:       ${fmt(ref.min)} ${ref.unit}${desenho(ref.minKind)}`,
+      `  Máximo:       ${fmt(ref.max)} ${ref.unit}${desenho(ref.maxKind)}`,
       `  Ótimo (mín):  ${fmt(ref.optimalMin)} ${ref.unit}`,
       `  Ótimo (máx):  ${fmt(ref.optimalMax)} ${ref.unit}`,
       `  Alerta (máx): ${fmt(ref.warningMax)} ${ref.unit}`,

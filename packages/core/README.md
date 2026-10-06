@@ -107,6 +107,8 @@ const range = getReferenceRange('TSH', {
 // → { max: 2.5, min: 0.1, ... } (alvo ATA 2017 para 1º trimestre)
 ```
 
+Cada faixa diz que tipo de afirmação ela é (`kind`: intervalo de referência do ensaio, limiar de decisão de diretriz ou distribuição populacional) e, por limite, se ele é corte clínico ou só desenho (`minKind`/`maxKind`). Para sinalizar um valor contra a faixa do catálogo, use `flagAgainstCatalogRange`, que ignora os limites de desenho; o `direction` diz para que lado o marcador melhora e não decide flag. Detalhes em [docs/biomarcadores.md](../../docs/biomarcadores.md#tipo-da-faixa).
+
 O metadado opcional `fastingRequired` em `BiomarkerReferenceRange` indica se a amostra exige jejum estrito (ex.: `Glucose`, `Insulin`, `HOMA_IR`) ou se o jejum é preferido mas não obrigatório (ex.: `Triglycerides`, que aceita dosagem não-jejum por SBC 2017/2025).
 
 ## Aviso médico

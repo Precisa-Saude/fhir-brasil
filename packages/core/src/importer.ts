@@ -24,6 +24,8 @@ export interface ImportedObservation {
   isQualitative: boolean;
   /** Ausente nos biomarcadores sem LOINC publicado, como composição corporal. */
   loincCode?: string;
+  /** Lido do `referenceRange.type`, quando o Bundle o traz. */
+  referenceKind?: 'decision-threshold' | 'reference-interval';
   referenceMax?: number;
   referenceMin?: number;
   unit: string;
@@ -223,9 +225,15 @@ export function mapFHIRObservationToInternal(
   // Extract reference ranges
   let referenceMin: number | undefined;
   let referenceMax: number | undefined;
+  let referenceKind: ImportedObservation['referenceKind'];
   if (observation.referenceRange?.[0]) {
     referenceMin = observation.referenceRange[0].low?.value;
     referenceMax = observation.referenceRange[0].high?.value;
+    const meaning = observation.referenceRange[0].type?.coding?.find(
+      (c) => c.system === 'http://terminology.hl7.org/CodeSystem/referencerange-meaning',
+    )?.code;
+    if (meaning === 'normal') referenceKind = 'reference-interval';
+    else if (meaning === 'recommended') referenceKind = 'decision-threshold';
   }
 
   const imported: ImportedObservation = {
@@ -236,6 +244,7 @@ export function mapFHIRObservationToInternal(
     flag: extractFlag(observation),
     isQualitative,
     loincCode,
+    ...(referenceKind && { referenceKind }),
     referenceMax,
     referenceMin,
     unit: unit || definition?.unit || '',

@@ -16,6 +16,7 @@ import type {
   FHIRQuantity,
   FHIRReferenceRange,
 } from './fhir-types';
+import { referenceRangeMeaning } from './reference-ranges';
 import type { Flag, LabObservationData, LabReportData, UserProfileData } from './types';
 import { getDefaultUnit, resolveUcum } from './units';
 
@@ -118,7 +119,10 @@ const buildReferenceRanges = (
     return observation.referenceRanges.flatMap((r) => toRanges(r.low, r.high, r.appliesTo));
   }
 
-  return toRanges(observation.referenceMin, observation.referenceMax);
+  const meaning = observation.referenceKind && referenceRangeMeaning(observation.referenceKind);
+  return toRanges(observation.referenceMin, observation.referenceMax).map((range) =>
+    meaning ? { ...range, type: { coding: [meaning] } } : range,
+  );
 };
 
 /**

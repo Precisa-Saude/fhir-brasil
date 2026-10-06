@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { BIOMARKER_DEFINITIONS, codeToLoinc } from '../biomarkers';
+import { BIOMARKER_DEFINITIONS, codeToLoinc, isValidLoinc } from '../biomarkers';
 import { biomarkerRangeDefinitions } from '../reference-ranges';
 import { BIOMARKER_UNITS, isUcumCode, resolveUcum } from '../units';
 
@@ -256,6 +256,8 @@ describe('a convenção da faixa e a do código', () => {
   it('toda faixa que declara o código vale para o código do catálogo', () => {
     // Sem declaração nenhuma, o teste passaria no vazio.
     expect(declaradas.length).toBeGreaterThan(0);
+    const malformados = declaradas.filter(([, def]) => !isValidLoinc(def.loinc));
+    expect(malformados.map(([code, def]) => `${code}: ${def.loinc}`)).toEqual([]);
     const fora = declaradas
       .filter(([code, def]) => codeToLoinc(code) !== def.loinc)
       .map(([code, def]) => `${code}: faixa de ${def.loinc}, catálogo em ${codeToLoinc(code)}`);

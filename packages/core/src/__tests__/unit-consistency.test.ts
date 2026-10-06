@@ -179,3 +179,19 @@ describe('troponin T reported in ng/mL', () => {
     expect(applyFallbackReferenceRanges(converted)).toBe(1);
   });
 });
+
+describe('BUN e ureia em mmol/L', () => {
+  // As duas saem em mmol/L de ureia, mas o BUN conta só o nitrogênio: a massa
+  // da conversão é a de N2 (28,01), e não a da ureia (60,06).
+  it('converte BUN de mg/dL para mmol/L pela massa do nitrogênio', () => {
+    const result = convertUnit(14, 'mg/dL', getSIUnit('BUN') ?? '', 'BUN');
+    expect(result?.unit).toBe('mmol/L');
+    expect(result?.value).toBeCloseTo(4.998, 3);
+  });
+
+  it('o mesmo paciente dá o mesmo mmol/L pela ureia e pelo BUN', () => {
+    const bun = convertUnit(14, 'mg/dL', 'mmol/L', 'BUN')?.value ?? NaN;
+    const urea = convertUnit(14 * (60.06 / 28.0134), 'mg/dL', 'mmol/L', 'Urea')?.value ?? NaN;
+    expect(bun).toBeCloseTo(urea, 10);
+  });
+});

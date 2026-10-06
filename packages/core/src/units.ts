@@ -536,6 +536,17 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'pg/mL',
     siUnit: 'pg/mL',
   },
+  // O BUN em mmol/L é expresso como ureia: cada molécula de ureia tem dois
+  // nitrogênios, então a massa que entra na conversão é a de N2 (2 × 14,007),
+  // e não a da ureia (60,06) usada em `Urea`. 14 mg/dL de BUN ≈ 5 mmol/L.
+  BUN: {
+    aliases: { 'mg/dl': 'mg/dL', 'mmol/l': 'mmol/L' },
+    canonicalUcum: 'mg/dL',
+    canonicalUnit: 'mg/dL',
+    molecularWeight: 28.0134,
+    siUcum: 'mmol/L',
+    siUnit: 'mmol/L',
+  },
   CA125: {
     aliases: { 'u/ml': 'U/mL' },
     canonicalUcum: 'U/mL',

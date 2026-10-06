@@ -337,6 +337,19 @@ describe('getDefinitionByCode', () => {
     expect(def?.names.en).not.toContain('BUN');
   });
 
+  it('BUN (3094-0) é entrada própria, e cada grafia resolve a um exame só', () => {
+    // O BUN do laudo americano é outro componente que a ureia (ureia ≈ BUN ×
+    // 2,14). Os nomes de BUN não podem cair em `Urea`, nem os de ureia no BUN.
+    expect(getDefinitionByCode('BUN')?.loinc).toBe('3094-0');
+    for (const name of ['Urea Nitrogen (BUN)', 'Urea Nitrogen', 'BUN', 'Nitrogênio Ureico']) {
+      expect(findCodeByName(name)).toBe('BUN');
+    }
+    expect(findCodeByName('Urea')).toBe('Urea');
+    expect(findCodeByName('Ureia')).toBe('Urea');
+    expect(findCodeByName('BUN/Creatinine Ratio')).toBe('BUN_Creatinine_Ratio');
+    expect(findCodeByName('Razão Nitrogênio Ureico / Creatinina')).toBe('BUN_Creatinine_Ratio');
+  });
+
   it('razão ureia/creatinina e razão BUN/creatinina são biomarcadores distintos', () => {
     // O laudo brasileiro dosa ureia, e a razão ureia/creatinina sai cerca de
     // 2,14 vezes a razão BUN/creatinina. Até out/2026 o nome em pt-BR caía em

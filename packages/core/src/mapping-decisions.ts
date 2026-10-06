@@ -117,6 +117,19 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
   BNP: nameOnly('30934-4'),
   BodyFatPct: nameOnly('41982-0'),
   BodyWaterPct: nameOnly('101684-9'),
+  BUN: {
+    loinc: '3094-0',
+    evidence: ['name', 'unit'],
+    settledBy: 'name',
+    note: 'criado em out/2026 para o BUN dos laudos americanos (Quest imprime "UREA NITROGEN (BUN)" em mg/dL); a ureia dos laudos brasileiros segue em Urea',
+    siblingsRejected: [
+      {
+        loinc: '3091-6',
+        reason:
+          'ureia: outro componente (a molécula inteira, não só o nitrogênio), valor cerca de 2,14 vezes maior que o BUN',
+      },
+    ],
+  },
   BUN_Creatinine_Ratio: nameOnly('3097-3'),
   C3: nameOnly('4485-9'),
   C4: nameOnly('4498-2'),

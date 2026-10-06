@@ -1723,6 +1723,26 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
+    // 3094-0 é "Urea nitrogen [Mass/volume] in Serum or Plasma", o BUN que o
+    // laudo americano imprime ("UREA NITROGEN (BUN)" na Quest). É outro
+    // componente que `Urea` (3091-6): o BUN conta só o nitrogênio da molécula,
+    // e ureia ≈ BUN × 2,14. Por isso os nomes de BUN saíram de `Urea` na
+    // issue #41, e voltam aqui, numa entrada própria. Sem a entrada, o "urea"
+    // de dentro de "UREA NITROGEN" ancorava a ureia, e o valor de BUN era lido
+    // contra a faixa de 15-50 mg/dL da ureia.
+    //
+    // Sem faixa de referência: nenhuma fonte de `sources.ts` foi conferida
+    // para o intervalo do BUN, e faixa sem citação conferida não entra.
+    category: 'rins',
+    code: 'BUN',
+    loinc: '3094-0',
+    names: {
+      en: ['Urea Nitrogen (BUN)', 'Urea Nitrogen', 'BUN'],
+      pt: ['Nitrogênio Ureico'],
+    },
+    unit: 'mg/dL',
+  },
+  {
     category: 'rins',
     code: 'BUN_Creatinine_Ratio',
     // 3097-3 é "Urea nitrogen/Creatinine [Mass Ratio]", a razão BUN/creatinina,

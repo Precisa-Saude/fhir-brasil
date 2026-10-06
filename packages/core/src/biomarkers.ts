@@ -456,6 +456,22 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     category: 'tireoide',
+    code: 'T3Total',
+    // 3053-6 é "Triiodothyronine (T3) [Mass/volume] in Serum or Plasma", o T3
+    // total, conferido no fhir.loinc.org em out/2026. O catálogo só tinha o
+    // livre (3051-0), e o SUS fatura o T3 num código só (SIGTAP 0202060390,
+    // "Dosagem de triiodotironina"), que é o total (fhir-brasil#132). Os nomes
+    // seguem os do `T4Total`. Sem faixa por enquanto: nenhuma fonte conferida
+    // publica o intervalo do T3 total para adultos aqui.
+    loinc: '3053-6',
+    names: {
+      en: ['Triiodothyronine', 'T3 Total', 'Total T3', 'Triiodothyronine (T3)'],
+      pt: ['Triiodotironina', 'T3 Total', 'Triiodotironina Total', 'Triiodotironina (T3)'],
+    },
+    unit: 'ng/dL',
+  },
+  {
+    category: 'tireoide',
     code: 'T4Total',
     codeAliases: ['Tiroxina_T4', 'Thyroxine_T4_serum'],
     loinc: '3026-2',
@@ -1731,8 +1747,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     // de dentro de "UREA NITROGEN" ancorava a ureia, e o valor de BUN era lido
     // contra a faixa de 15-50 mg/dL da ureia.
     //
-    // Sem faixa de referência: nenhuma fonte de `sources.ts` foi conferida
-    // para o intervalo do BUN, e faixa sem citação conferida não entra.
+    // Faixa (out/2026): 5 a 20 mg/dL, de Hosten, "BUN and Creatinine",
+    // Clinical Methods, 3. ed., cap. 193: "The normal range of urea nitrogen in
+    // blood or serum is 5 to 20 mg/dl, or 1.8 to 7.1 mmol urea per liter." O
+    // capítulo não publica intervalo ótimo, e a faixa fica sem um.
     category: 'rins',
     code: 'BUN',
     loinc: '3094-0',

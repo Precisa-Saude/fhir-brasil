@@ -142,6 +142,14 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
   // ---------------------------------------------------------------------------
   // Referência laboratorial geral
   // ---------------------------------------------------------------------------
+  // Capítulo de livro no NCBI Bookshelf (PMID 21250147). A URL é a do texto
+  // completo, onde está o intervalo citado na faixa do BUN.
+  'hosten-clinical-methods-1990': {
+    abnt: 'HOSTEN, A. O. BUN and creatinine. In: WALKER, H. K.; HALL, W. D.; HURST, J. W. (ed.). Clinical Methods: the history, physical, and laboratory examinations. 3. ed. Boston: Butterworths, 1990. cap. 193.',
+    key: 'hosten-clinical-methods-1990',
+    url: 'https://www.ncbi.nlm.nih.gov/books/NBK305/',
+  },
+
   'kalaria-ck-ri-2026': {
     abnt: 'KALARIA, T. et al. Age, sex and ethnicity changes in creatine kinase and sex- and ethnicity-specific reference intervals of creatine kinase. Clinical Medicine, v. 26, n. 4, p. 100596, 2026.',
     doi: '10.1016/j.clinme.2026.100596',

@@ -987,6 +987,14 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'pmol/L',
     siUnit: 'pmol/L',
   },
+  T3Total: {
+    aliases: { 'ng/dl': 'ng/dL', 'nmol/l': 'nmol/L' },
+    canonicalUcum: 'ng/dL',
+    canonicalUnit: 'ng/dL',
+    molecularWeight: 650.98,
+    siUcum: 'nmol/L',
+    siUnit: 'nmol/L',
+  },
   T4Free: {
     aliases: { 'ng/dl': 'ng/dL', 'pmol/l': 'pmol/L' },
     canonicalUcum: 'ng/dL',

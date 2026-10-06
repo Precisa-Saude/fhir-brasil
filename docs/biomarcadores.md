@@ -10,7 +10,8 @@ Cada biomarcador é definido pela interface `BiomarkerDefinition`:
 interface BiomarkerDefinition {
   code: string; // Código interno canônico (ex: "HDL", "HbA1c")
   loinc?: string; // Código LOINC principal (ex: "2085-9")
-  loincAliases?: string[]; // Códigos LOINC alternativos
+  loincAliases?: string[]; // Códigos LOINC antigos para a mesma coisa
+  methodVariants?: MethodVariant[]; // Códigos irmãos que diferem só no método
   codeAliases?: string[]; // Aliases do código interno (ex: "HDL_Cholesterol")
   names: {
     pt: string[]; // Nomes em português (primeiro = nome principal)
@@ -24,6 +25,25 @@ interface BiomarkerDefinition {
 ```
 
 O campo `code` é a chave canônica usada em todo o sistema. Os campos `codeAliases` e `loincAliases` permitem mapear variações encontradas em diferentes laboratórios.
+
+### Código LOINC por método
+
+Alguns analitos têm códigos LOINC irmãos que diferem só no eixo Method. O LDL é o caso do catálogo: `2089-1` não declara método, `13457-7` é calculado, `96259-7` é calculado por Martin-Hopkins e `18262-6` é dosagem direta. O `loinc` da entrada continua sendo o código sem método, e é o que sai quando o laudo não afirma o método.
+
+```typescript
+interface MethodVariant {
+  loinc: string; // O código por método
+  method: string; // A parte Method do LOINC, como o snapshot a registra
+  cues: { pt: string[]; en: string[] }; // Trechos que afirmam o método
+  note?: string; // Por que este código, e de onde veio a pista
+}
+```
+
+A varredura do `@precisa-saude/fhir-ocr-utils` procura as pistas por token inteiro na linha do exame, na de cima e nas seguintes até o próximo exame, e preenche `methodLoinc` no casamento. O modelo não escolhe método. Pistas de duas variantes no mesmo trecho deixam o exame sem método.
+
+Só entra pista que aparece em laudo real. Medido em out/2026 sobre três dezenas de laudos reais, a única foi o rodapé de um laboratório norte-americano que declara o cálculo de Martin-Hopkins; nenhum laudo brasileiro do corpus imprimiu o método perto do LDL. As variantes `13457-7` e `18262-6` estão declaradas sem pista, e o conversor as aceita quando quem chama informa o método por `methodLoinc`.
+
+`loincToCode` resolve o código por método para o biomarcador, `codeToLoinc` continua devolvendo o código sem método, e `methodVariantOf(code, loinc)` diz se um código é variante declarada daquele biomarcador. Toda variante está no `loinc-snapshot.json`, conferida pelo `verify-loinc.ts`, e no `BRLabTestVS`.
 
 ## Categorias
 

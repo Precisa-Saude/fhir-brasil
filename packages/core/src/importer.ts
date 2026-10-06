@@ -10,6 +10,7 @@ import {
   getDefinitionByCode,
   isValidCode,
   loincToCode,
+  methodVariantOf,
   normalizeCode,
 } from './biomarkers';
 import { BIOMARKER_CODE_SYSTEM, LOINC_SYSTEM } from './code-systems';
@@ -24,6 +25,8 @@ export interface ImportedObservation {
   isQualitative: boolean;
   /** Ausente nos biomarcadores sem LOINC publicado, como composição corporal. */
   loincCode?: string;
+  /** O `loincCode` quando ele é uma das variantes por método do biomarcador. */
+  methodLoinc?: string;
   /** Lido do `referenceRange.type`, quando o Bundle o traz. */
   referenceKind?: 'decision-threshold' | 'reference-interval';
   referenceMax?: number;
@@ -244,6 +247,7 @@ export function mapFHIRObservationToInternal(
     flag: extractFlag(observation),
     isQualitative,
     loincCode,
+    ...(loincCode && methodVariantOf(internalCode, loincCode) && { methodLoinc: loincCode }),
     ...(referenceKind && { referenceKind }),
     referenceMax,
     referenceMin,

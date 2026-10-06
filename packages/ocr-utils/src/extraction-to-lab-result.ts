@@ -1,4 +1,4 @@
-import { loincToCode } from '@precisa-saude/fhir';
+import { loincToCode, methodVariantOf } from '@precisa-saude/fhir';
 
 import type { ExtractedBiomarker } from './extraction-schema.js';
 
@@ -15,6 +15,8 @@ export interface LabResultEnvelope {
     biomarkerCode: string;
     biomarkerName: string;
     flag: 'H' | 'L' | '';
+    /** Ver `LabObservationData.methodLoinc`. */
+    methodLoinc?: string;
     referenceMax?: number;
     referenceMin?: number;
     reportId: string;
@@ -66,6 +68,9 @@ export function extractionToLabResult(
         biomarkerCode: code,
         biomarkerName: b.name,
         flag: flagFor(b),
+        // O código por método já passou pela varredura no validador; aqui só
+        // atravessa, e só quando é variante declarada do biomarcador.
+        ...(b.loinc && methodVariantOf(code, b.loinc) ? { methodLoinc: b.loinc } : {}),
         ...(typeof b.referenceMax === 'number' ? { referenceMax: b.referenceMax } : {}),
         ...(typeof b.referenceMin === 'number' ? { referenceMin: b.referenceMin } : {}),
         reportId,

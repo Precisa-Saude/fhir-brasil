@@ -23,13 +23,23 @@ import {
   QUALITATIVE_VALUE_TERMS,
   UNAMBIGUOUS_SHORT_NAMES,
 } from './anchor-lexicon';
-import { followedByPercent, qualifiedByBodyRegion } from './body-region';
+import {
+  followedByPercent,
+  hasGirthContext,
+  qualifiedByBodyRegion,
+  SKINFOLD_SITE_CODES,
+} from './body-region';
+import { attachMethodVariants, recordAnchorLine } from './method-variant';
 
 export interface AnchorMatch {
   code: string;
   confidence: number;
   loinc?: string;
   matchedName: string;
+  /** A pista que escolheu o `methodLoinc`. Ver `method-variant.ts`. */
+  methodCue?: string;
+  /** O LOINC por método que o texto afirma; vem da varredura, nunca do modelo. */
+  methodLoinc?: string;
   position: number;
 }
 
@@ -200,58 +210,6 @@ const GENETIC_CONTEXT_PATTERNS: RegExp[] = [
   /\bhomozigot/,
   /\bsequence change\b/,
 ];
-
-/**
- * Sítios de dobra cutânea cujo nome nu também nomeia uma circunferência:
- * "Coxa" aparece tanto em "Dobra Cutânea Coxa" quanto em "Circunferência da
- * Coxa". O termo nu precisa existir como alias, porque há laudo que imprime
- * só o sítio na coluna, então a desambiguação tem que vir do contexto da
- * linha, como já se faz com laudo genético.
- */
-const SKINFOLD_SITE_CODES = new Set([
-  'SkinfoldAbdominal',
-  'SkinfoldChest',
-  'SkinfoldMidaxillary',
-  'SkinfoldSubscapular',
-  'SkinfoldSuprailiac',
-  'SkinfoldThigh',
-  'SkinfoldTriceps',
-]);
-
-/** Uma linha de circunferência ou perímetro não mede dobra. */
-const GIRTH_CONTEXT_PATTERNS: RegExp[] = [
-  /\bcircumference\b/,
-  /\bcircunferencias?\b/,
-  /\bperimetros?\b/,
-  /\bgirth\b/,
-];
-
-/**
- * Só bloqueia quando a linha fala de circunferência e não fala de dobra:
- * "Dobra Cutânea Coxa" e "Thigh Skinfold" continuam ancorando normalmente,
- * e uma linha que traga as duas palavras é ambígua demais para descartar.
- */
-const SKINFOLD_CONTEXT_PATTERNS: RegExp[] = [/\bdobras?\b/, /\bskin ?folds?\b/, /\bpregas?\b/];
-
-/**
- * Medida em centímetros numa linha de sítio corporal.
- *
- * Dobra cutânea é em milímetros, sempre: um valor em cm no mesmo sítio é
- * circunferência. É o desambiguador mais forte que existe aqui, porque não
- * depende de a folha escrever a palavra "circunferência", e num laudo de
- * antropometria a coluna costuma trazer só o sítio e o número.
- *
- * Rejeita cm em vez de exigir mm: há folha que imprime a unidade no cabeçalho
- * da coluna e não em cada linha, e exigir mm perderia essas.
- */
-const CENTIMETRE_VALUE = /\d\s*(?:,\d+\s*)?cm\b/;
-
-function hasGirthContext(line: string): boolean {
-  if (SKINFOLD_CONTEXT_PATTERNS.some((re) => re.test(line))) {
-    return false;
-  }
-  return GIRTH_CONTEXT_PATTERNS.some((re) => re.test(line)) || CENTIMETRE_VALUE.test(line);
-}
 
 const DIGIT_PATTERN = /\d/;
 
@@ -549,6 +507,7 @@ export function findBiomarkersInText(ocrText: string): AnchorResult {
   const normalizedText = normalize(ocrText);
   const bestByCode = new Map<string, AnchorMatch>();
   const contexts = new Map<string, LineContext>();
+  const anchoredLineStarts = new Map<number, Set<string>>(); // ver `attachMethodVariants`
   const candidates = [
     ...collectCandidates(normalizedText),
     ...collectWrappedCandidates(normalizedText),
@@ -573,6 +532,8 @@ export function findBiomarkersInText(ocrText: string): AnchorResult {
     if (genetic) {
       continue;
     }
+
+    recordAnchorLine(anchoredLineStarts, lineStart, candidate.entries);
 
     const before = normalizedText.slice(lineStart, candidate.start);
     const after = normalizedText.slice(candidate.end, lineEnd);
@@ -612,6 +573,10 @@ export function findBiomarkersInText(ocrText: string): AnchorResult {
       }
     }
   }
+
+  attachMethodVariants(bestByCode.values(), normalizedText, anchoredLineStarts, (text, cue) =>
+    buildNamePattern(normalize(cue).trim()).test(text),
+  );
 
   const matches = Array.from(bestByCode.values()).sort((a, b) => a.position - b.position);
   const scanTimeMs = Date.now() - startTime;

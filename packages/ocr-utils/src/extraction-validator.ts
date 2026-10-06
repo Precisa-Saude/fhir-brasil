@@ -1,4 +1,4 @@
-import { loincToCode } from '@precisa-saude/fhir';
+import { codeToLoinc, getDefinitionByCode, loincToCode } from '@precisa-saude/fhir';
 
 import type { AnchorResult } from './anchor.js';
 import type { ExtractedBiomarker, ExtractionPayload } from './extraction-schema.js';
@@ -114,6 +114,25 @@ function allowedKeys(anchors: AnchorResult): Set<string> {
 }
 
 /**
+ * O código por método é da varredura, e não do modelo.
+ *
+ * Quando o biomarcador tem `methodVariants`, o LOINC aceito é o que a
+ * varredura achou no texto (`methodLoinc`) ou, sem pista, o código sem método.
+ * Um código por método que o modelo devolva por conta própria vira o código sem
+ * método: o modelo não tem como provar o método, e o texto não o afirmou.
+ */
+function withScannedMethod(
+  biomarker: ExtractedBiomarker,
+  anchors: AnchorResult,
+): ExtractedBiomarker {
+  const code = biomarker.loinc ? loincToCode(biomarker.loinc) : undefined;
+  if (!code || !getDefinitionByCode(code)?.methodVariants?.length) return biomarker;
+  const scanned = anchors.matches.find((m) => m.code === code)?.methodLoinc;
+  const loinc = scanned ?? codeToLoinc(code);
+  return loinc && loinc !== biomarker.loinc ? { ...biomarker, loinc } : biomarker;
+}
+
+/**
  * Confere a saída de um modelo contra o contrato e, quando a ancoragem é
  * fornecida, contra a lista de códigos que a varredura liberou.
  */
@@ -186,7 +205,7 @@ export function validateExtraction(
     // O lado de um limite solto é decidido aqui, e não pelo modelo: a linha
     // impressa diz o sinal, e os modelos abertos erram o lado sem que a
     // descrição do contrato os corrija. Ver `reference-bound.ts`.
-    accepted.push(placeSingleBound(biomarker));
+    accepted.push(placeSingleBound(anchors ? withScannedMethod(biomarker, anchors) : biomarker));
   }
 
   return {

@@ -1,5 +1,5 @@
 {
-  "_axesNote": "method, property, scale e system foram preenchidos em 2026-10-06 a partir de https://tx.fhir.org/r4 (LOINC 2.82), assim como display e status dos códigos que entraram no catálogo depois de 2026-09-05: 13945-1, 1558-6, 5763-8, 5769-5, 62292-8, 6873-4, 90911-9, 90912-7, 90913-5, 90914-3, 90916-8, 90917-6, 99621-5. O restante de display e status segue da conferência de 2026-09-05 no fhir.loinc.org (LOINC 2.83). A próxima gravação pelo workflow LOINC em modo update escreve tudo da mesma consulta e remove esta nota.",
+  "_axesNote": "method, property, scale e system foram preenchidos em 2026-10-06 a partir de https://tx.fhir.org/r4 (LOINC 2.82), assim como display e status dos códigos que entraram no catálogo depois de 2026-09-05: 13945-1, 1558-6, 5763-8, 5769-5, 62292-8, 6873-4, 90911-9, 90912-7, 90913-5, 90914-3, 90916-8, 90917-6, 99621-5. O restante de display e status segue da conferência de 2026-09-05 no fhir.loinc.org (LOINC 2.83). A próxima gravação pelo workflow LOINC em modo update escreve tudo da mesma consulta e remove esta nota. Os códigos por método 13457-7, 18262-6 e 96259-7 entraram em out/2026 inteiros (nome e eixos) pelo tx.fhir.org, pelo mesmo motivo.",
   "_checkedAt": "2026-09-05",
   "_loincVersion": "2.83",
   "_notice": "This material contains content from LOINC (http://loinc.org). LOINC is copyright © Regenstrief Institute, Inc. and the Logical Observation Identifiers Names and Codes (LOINC) Committee and is available at no cost under the license at http://loinc.org/license. LOINC® is a registered United States trademark of Regenstrief Institute, Inc.",
@@ -88,6 +88,14 @@
       "display": "Prostate Specific Ag Free/Prostate specific Ag.total in Serum or Plasma",
       "method": null,
       "property": "MFr",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
+    },
+    "13457-7": {
+      "display": "Cholesterol in LDL [Mass/volume] in Serum or Plasma by calculation",
+      "method": "Calculated",
+      "property": "MCnc",
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Ser/Plas"
@@ -208,6 +216,14 @@
       "display": "Amylase [Enzymatic activity/volume] in Serum or Plasma",
       "method": null,
       "property": "CCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
+    },
+    "18262-6": {
+      "display": "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Direct assay",
+      "method": "Direct assay",
+      "property": "MCnc",
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Ser/Plas"
@@ -1467,6 +1483,14 @@
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Urine"
+    },
+    "96259-7": {
+      "display": "Cholesterol in LDL [Mass/volume] in Serum or Plasma by Calculated by Martin-Hopkins",
+      "method": "Calculated.Martin-Hopkins",
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "96735-6": {
       "display": "Lipoprotein.beta.subparticle.medium [Moles/volume] in Serum",

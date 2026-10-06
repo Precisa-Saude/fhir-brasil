@@ -71,6 +71,8 @@ describe('variantes por método no catálogo', () => {
       ...(b.loincAliases ?? []),
     ]);
     const codigos = variantes.map((v) => v.loinc);
+    // Sem variantes os testes deste bloco passariam no vazio.
+    expect(codigos.length).toBeGreaterThan(0);
     expect(new Set(codigos).size).toBe(codigos.length);
     expect(codigos.filter((c) => outros.includes(c))).toEqual([]);
   });

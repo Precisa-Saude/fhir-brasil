@@ -1,0 +1,68 @@
+{
+  "report": {
+    "collectionDate": "2026-03-15",
+    "createdAt": "2026-03-16T10:30:00Z",
+    "laboratoryName": "Laboratório de demonstração",
+    "overallStatus": "ANORMAL",
+    "processingStatus": "complete",
+    "reportId": "laudo-demo-001",
+    "userId": "paciente-demo"
+  },
+  "profile": {
+    "birthDate": "1983-08-12",
+    "gender": "female",
+    "name": "Paciente de Demonstração"
+  },
+  "observations": [
+    {
+      "biomarkerCode": "Hgb",
+      "biomarkerName": "Hemoglobina",
+      "flag": "",
+      "reportId": "laudo-demo-001",
+      "unit": "g/dL",
+      "value": 14.5
+    },
+    {
+      "biomarkerCode": "Glucose_Fasting",
+      "biomarkerName": "Glicemia de Jejum",
+      "flag": "",
+      "reportId": "laudo-demo-001",
+      "unit": "mg/dL",
+      "value": 99
+    },
+    {
+      "biomarkerCode": "HDL",
+      "biomarkerName": "Colesterol HDL",
+      "flag": "",
+      "reportId": "laudo-demo-001",
+      "unit": "mg/dL",
+      "value": 42
+    },
+    {
+      "biomarkerCode": "TSH",
+      "biomarkerName": "TSH",
+      "flag": "",
+      "reportId": "laudo-demo-001",
+      "unit": "uIU/mL",
+      "value": 2.5
+    },
+    {
+      "biomarkerCode": "Ferritin",
+      "biomarkerName": "Ferritina",
+      "flag": "H",
+      "referenceMax": 150,
+      "referenceMin": 12,
+      "reportId": "laudo-demo-001",
+      "unit": "ng/mL",
+      "value": 210
+    },
+    {
+      "biomarkerCode": "VitaminD",
+      "biomarkerName": "Vitamina D",
+      "flag": "",
+      "reportId": "laudo-demo-001",
+      "unit": "ng/mL",
+      "value": 28
+    }
+  ]
+}

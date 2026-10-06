@@ -1451,7 +1451,12 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     code: 'TotalProtein',
     loinc: '2885-2',
     names: {
-      en: ['Total Protein', 'Serum Protein'],
+      // "Protein, Total" é a grafia da Quest, no formato "EXAME, QUALIFICADOR".
+      // A troca de vírgula do pré-scan não basta aqui: dobrada, a linha vira
+      // "protein total", que não é nome do catálogo, e sobrava o "Protein"
+      // solto, sinônimo de `Protein_Urine`. A proteína do soro ancorava como
+      // proteína da urina. Com a grafia literal, o nome longo engole o curto.
+      en: ['Total Protein', 'Serum Protein', 'Protein, Total'],
       pt: ['Proteína Total', 'Proteínas Totais'],
     },
     unit: 'g/dL',

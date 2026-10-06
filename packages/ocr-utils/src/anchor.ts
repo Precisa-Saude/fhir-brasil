@@ -30,6 +30,7 @@ import {
   SKINFOLD_SITE_CODES,
 } from './body-region';
 import { attachMethodVariants, recordAnchorLine } from './method-variant';
+import { applyUrinalysisSection, type SectionDeps, sectionDepsFrom } from './urinalysis-section';
 
 export interface AnchorMatch {
   code: string;
@@ -488,26 +489,15 @@ function resolveOverlaps(candidates: Candidate[]): Candidate[] {
   return accepted;
 }
 
-/**
- * Palavras que, logo depois de um nome, fazem dele parte do nome de outro
- * exame que o catálogo não tem.
- *
- * O caso é o BUN. A Quest imprime "UREA NITROGEN (BUN)", e o "urea" de dentro
- * ancorava `Urea` (3091-6), a ureia em mg/dL dos laudos brasileiros. Só que
- * o nitrogênio ureico é outra grandeza (ureia ≈ BUN × 2,14), e o catálogo tirou
- * de propósito os nomes de BUN de `Urea` para que um valor de BUN não fosse
- * lido contra a faixa da ureia. Sem nome longo para engolir o curto, o
- * `resolveOverlaps` não tem o que fazer, então a guarda é explícita.
- *
- * Só olha o que vem imediatamente depois do nome, na mesma linha.
- */
-const CONTINUED_AS_OTHER_EXAM: ReadonlyMap<string, RegExp> = new Map([
-  ['Urea', /^ nitrogen(?![\p{L}\p{N}])/u],
-]);
-
-function continuedAsOtherExam(code: string, after: string): boolean {
-  return CONTINUED_AS_OTHER_EXAM.get(code)?.test(after) ?? false;
-}
+/** As peças do `anchor.ts` que a regra de seção usa. Ver `urinalysis-section.ts`. */
+let cachedSectionDeps: SectionDeps | null = null;
+const getSectionDeps = (): SectionDeps =>
+  (cachedSectionDeps ??= sectionDepsFrom(
+    getPatterns(),
+    buildNamePattern,
+    hasValueEvidence,
+    resolveOverlaps,
+  ));
 
 interface LineContext {
   genetic: boolean;
@@ -534,7 +524,7 @@ export function findBiomarkersInText(ocrText: string): AnchorResult {
     ...collectWrappedCandidates(normalizedText),
   ];
 
-  for (const candidate of resolveOverlaps(candidates)) {
+  for (const candidate of applyUrinalysisSection(normalizedText, candidates, getSectionDeps())) {
     // O contexto é a linha do nome, ou as duas linhas de um nome quebrado.
     const lineStart = getLineBounds(normalizedText, candidate.start).start;
     const lineEnd = getLineBounds(normalizedText, candidate.end - 1).end;
@@ -563,11 +553,7 @@ export function findBiomarkersInText(ocrText: string): AnchorResult {
         continue;
       }
 
-      if (
-        qualifiedByBodyRegion(entry.code, before) ||
-        followedByPercent(entry.code, after) ||
-        continuedAsOtherExam(entry.code, after)
-      ) {
+      if (qualifiedByBodyRegion(entry.code, before) || followedByPercent(entry.code, after)) {
         continue;
       }
 

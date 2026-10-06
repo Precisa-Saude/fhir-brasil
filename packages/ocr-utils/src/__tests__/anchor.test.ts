@@ -719,11 +719,15 @@ describe('findBiomarkersInText: grafias de laudo americano (layout da Quest)', (
     expect(codesOf('PROTEIN, TOTAL 7.1 6.1-8.1 g/dL')).not.toContain('Protein_Urine');
   });
 
-  it('não ancora a ureia em "UREA NITROGEN (BUN)"', () => {
-    // O catálogo não tem BUN (3094-0), e `Urea` é a ureia em mg/dL: deixar o
-    // "urea" de dentro ancorar penduraria o valor de BUN na faixa da ureia.
-    expect(codesOf('UREA NITROGEN (BUN)            15       7-25 mg/dL')).toEqual([]);
+  it('ancora o BUN, e não a ureia, em "UREA NITROGEN (BUN)"', () => {
+    // `Urea` é a ureia em mg/dL (3091-6), e ureia ≈ BUN × 2,14: o "urea" de
+    // dentro do nome ancorar penduraria o valor de BUN na faixa da ureia. O
+    // nome longo de `BUN` (3094-0) engole o curto.
+    expect(codesOf('UREA NITROGEN (BUN)            15       7-25 mg/dL')).toEqual(['BUN']);
+    expect(codesOf('UREA NITROGEN 15 mg/dL')).toEqual(['BUN']);
     expect(codesOf('Urea 32 mg/dL')).toEqual(['Urea']);
+    expect(codesOf('Ureia 32 mg/dL')).toEqual(['Urea']);
+    expect(codesOf('Nitrogênio Ureico 15 mg/dL')).toEqual(['BUN']);
   });
 
   describe('diferencial do hemograma com o sinal de percentual', () => {
@@ -748,11 +752,10 @@ describe('findBiomarkersInText: grafias de laudo americano (layout da Quest)', (
   });
 
   // Palavras genéricas do exame de urina que também nomeiam exames de sangue.
-  // O pacote não tem regra de seção ("URINALYSIS"), então elas não resolvem
-  // para o código da urina, e isso é deliberado: ancorar "GLUCOSE" na glicose
-  // da urina em qualquer contexto quebraria a glicose do soro. Os testes
-  // registram o limite atual até existir uma regra de contexto de seção.
-  describe('urinálise sem contexto de seção', () => {
+  // Fora de uma seção de urinálise elas mantêm o sentido de sempre: ancorar
+  // "GLUCOSE" na glicose da urina em qualquer contexto quebraria a glicose do
+  // soro. Dentro da seção, ver o bloco seguinte.
+  describe('urinálise fora da seção', () => {
     it('não ancora "PH" sozinho, que é curto demais e ambíguo com gasometria', () => {
       expect(codesOf('PH                             6.0      5.0-8.0')).toEqual([]);
     });
@@ -761,7 +764,7 @@ describe('findBiomarkersInText: grafias de laudo americano (layout da Quest)', (
       ['GLUCOSE                        NEGATIVE NEGATIVE', 'Glucose_Urine'],
       ['WBC                            NONE SEEN <OR= 5 /HPF', 'Leukocytes_Urine'],
       ['RBC                            NONE SEEN <OR= 2 /HPF', 'RBC_Urine'],
-    ])('"%s" não resolve para %s sem saber que está na urinálise', (line, urineCode) => {
+    ])('"%s" não resolve para %s fora da seção de urinálise', (line, urineCode) => {
       expect(codesOf(line)).not.toContain(urineCode);
     });
 
@@ -778,5 +781,157 @@ describe('findBiomarkersInText: grafias de laudo americano (layout da Quest)', (
       const nameOnly = line.split(/\s{2,}/)[0]!;
       expect(codesOf(nameOnly)).toEqual([]);
     });
+  });
+});
+
+describe('findBiomarkersInText: seção de urinálise', () => {
+  const anchorsOf = (text: string) =>
+    findBiomarkersInText(text).matches.map((m) => [m.code, m.confidence] as const);
+  const codesOf = (text: string) => findBiomarkersInText(text).matches.map((m) => m.code);
+
+  // Bloco sintético no layout da Quest: o cabeçalho do painel e as linhas do
+  // exame físico, químico e do sedimento.
+  const QUEST_URINALYSIS = `URINALYSIS, COMPLETE W/REFLEX TO CULTURE
+   COLOR                         YELLOW                    YELLOW
+   APPEARANCE                    CLEAR                     CLEAR
+   SPECIFIC GRAVITY              1.015                     1.001-1.035
+   PH                            6.0                       5.0-8.0
+   GLUCOSE                       NEGATIVE                  NEGATIVE
+   BILIRUBIN                     NEGATIVE                  NEGATIVE
+   KETONES                       NEGATIVE                  NEGATIVE
+   OCCULT BLOOD                  NEGATIVE                  NEGATIVE
+   PROTEIN                       NEGATIVE                  NEGATIVE
+   NITRITE                       NEGATIVE                  NEGATIVE
+   LEUKOCYTE ESTERASE            NEGATIVE                  NEGATIVE
+   WBC                           NONE SEEN                 < OR = 5 /HPF
+   RBC                           NONE SEEN                 < OR = 2 /HPF
+   SQUAMOUS EPITHELIAL CELLS     NONE SEEN                 < OR = 5 /HPF
+   BACTERIA                      NONE SEEN                 NONE SEEN /HPF
+   HYALINE CAST                  NONE SEEN                 NONE SEEN /LPF`;
+
+  it('resolve os nomes nus para os códigos da urina, com valor na linha', () => {
+    const anchors = new Map(anchorsOf(QUEST_URINALYSIS));
+    for (const code of [
+      'Color_Urine',
+      'pH_Urine',
+      'Glucose_Urine',
+      'Bilirubin_Urine',
+      'Ketones_Urine',
+      'Protein_Urine',
+      'Nitrite_Urine',
+      'Leukocytes_Urine',
+      'RBC_Urine',
+      'Bacteria_Urine',
+    ]) {
+      expect(anchors.get(code), code).toBe(CONFIDENCE_VALUE_ADJACENT);
+    }
+    for (const code of [
+      'Appearance_Urine',
+      'SpecificGravity_Urine',
+      'Blood_Urine',
+      'LeukocyteEsterase_Urine',
+      'SquamousEpithelial_Urine',
+      'HyalineCasts_Urine',
+    ]) {
+      expect(anchors.has(code), code).toBe(true);
+    }
+  });
+
+  it('não ancora o código do sangue pela mesma linha', () => {
+    const codes = codesOf(QUEST_URINALYSIS);
+    expect(codes).not.toContain('Glucose');
+    expect(codes).not.toContain('WBC');
+    expect(codes).not.toContain('RBC');
+  });
+
+  it('ancora sem valor na linha, no texto em colunas', () => {
+    const namesOnly = QUEST_URINALYSIS.split('\n')
+      .map((line) => line.trim().split(/\s{2,}/)[0])
+      .join('\n');
+    const anchors = new Map(anchorsOf(namesOnly));
+    // "pH" também é unidade na tabela UCUM, então a linha "PH" conta como
+    // linha com valor e sai com confiança cheia.
+    expect(anchors.get('pH_Urine')).toBe(CONFIDENCE_VALUE_ADJACENT);
+    for (const code of [
+      'Color_Urine',
+      'Glucose_Urine',
+      'Bilirubin_Urine',
+      'Ketones_Urine',
+      'Protein_Urine',
+      'Nitrite_Urine',
+      'Leukocytes_Urine',
+      'RBC_Urine',
+      'Bacteria_Urine',
+    ]) {
+      expect(anchors.get(code), code).toBe(CONFIDENCE_NAME_ONLY);
+    }
+    expect(anchors.has('Glucose')).toBe(false);
+  });
+
+  it('a seção acaba no cabeçalho do painel seguinte', () => {
+    const text = `URINALYSIS, COMPLETE
+   GLUCOSE                       NEGATIVE                  NEGATIVE
+   WBC                           NONE SEEN                 < OR = 5 /HPF
+COMPREHENSIVE METABOLIC PANEL
+   GLUCOSE                       87                        65-99 mg/dL
+   UREA NITROGEN (BUN)           15                        7-25 mg/dL`;
+    expect(codesOf(text)).toEqual(
+      expect.arrayContaining(['Glucose_Urine', 'Leukocytes_Urine', 'Glucose', 'BUN']),
+    );
+    // A glicose do soro vem da linha do painel: sem ela, só sobra a da urina.
+    const urineOnly = text.split('\n').slice(0, 3).join('\n');
+    expect(codesOf(urineOnly)).toEqual(['Glucose_Urine', 'Leukocytes_Urine']);
+  });
+
+  it('a seção acaba no primeiro exame de outro painel', () => {
+    const text = `URINALYSIS
+   PH                            6.0                       5.0-8.0
+   CREATININE                    0.95                      0.60-1.29 mg/dL
+   GLUCOSE                       87                        65-99 mg/dL
+   WBC                           5.5                       3.8-10.8 Thousand/uL`;
+    const codes = codesOf(text);
+    expect(codes).toContain('pH_Urine');
+    expect(codes).toContain('Glucose');
+    expect(codes).toContain('WBC');
+    expect(codes).not.toContain('Glucose_Urine');
+    expect(codes).not.toContain('Leukocytes_Urine');
+  });
+
+  it('linha em branco e linha que fala de urina não encerram a seção', () => {
+    const text =
+      'URINA TIPO I\nMaterial: Urina\n\nGlicose: Negativo\nLeucócitos: 2 p/campo\nHemácias: 1 p/campo\npH: 6,0';
+    const codes = codesOf(text);
+    expect(codes).toEqual(
+      expect.arrayContaining(['Glucose_Urine', 'Leukocytes_Urine', 'RBC_Urine', 'pH_Urine']),
+    );
+    expect(codes).not.toContain('Glucose');
+    expect(codes).not.toContain('WBC');
+    expect(codes).not.toContain('RBC');
+  });
+
+  it.each(['Rotina de urina', 'EAS', 'Urinálise'])(
+    'abre a seção com o cabeçalho brasileiro "%s"',
+    (header) => {
+      expect(codesOf(`${header}\nGlicose: Negativo`)).toEqual(['Glucose_Urine']);
+    },
+  );
+
+  it('a seção acaba num cabeçalho em caixa mista, sem valor e sem nome conhecido', () => {
+    const codes = codesOf('URINA TIPO I\nGlicose: Negativo\nBioquímica\nGlicose: 90 mg/dL');
+    expect(codes).toEqual(['Glucose_Urine', 'Glucose']);
+  });
+
+  it('cabeçalho com número não é cabeçalho', () => {
+    expect(codesOf('EAS 2\nGlicose: Negativo')).toEqual(['Glucose']);
+  });
+
+  it('fora da seção nada muda', () => {
+    expect(codesOf('GLUCOSE 87 65-99 mg/dL')).toEqual(['Glucose']);
+    expect(codesOf('WBC 5.5 3.8-10.8 Thousand/uL\nRBC 5.01 4.20-5.80 Million/uL')).toEqual([
+      'WBC',
+      'RBC',
+    ]);
+    expect(codesOf('PH 7.40')).toEqual([]);
+    expect(codesOf('COLOR\nKETONES')).toEqual([]);
   });
 });

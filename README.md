@@ -149,27 +149,27 @@ echo "Hemoglobina 14.5 g/dL Glicose 99 mg/dL" | fhir-ocr codes --json
 
 Medido no `@precisa-saude/fhir@0.37.0`, gerado por `pnpm catalog:counts`.
 
-- **226 biomarcadores** definidos, dos quais **188 têm código LOINC** (83,2%) e 38 não têm.
-- **198 códigos LOINC aceitos** na busca por código: os 188 canônicos, as variantes por método e os aliases de códigos que o LOINC aposentou.
+- **227 biomarcadores** definidos, dos quais **189 têm código LOINC** (83,3%) e 38 não têm.
+- **199 códigos LOINC aceitos** na busca por código: os 189 canônicos, as variantes por método e os aliases de códigos que o LOINC aposentou.
 - **203 faixas de referência**, com variantes por sexo e idade.
 - **10 categorias clínicas** de primeiro nível sobre 20 subcategorias.
-- **Registro de decisão** dos 188 mapeamentos: 16 com evidência além do nome (unidade, material, método ou bula), 172 escolhidos só pelo nome, 0 com revisão independente. A ficha de cada um sai em `fhir-bio decision <código>`.
+- **Registro de decisão** dos 189 mapeamentos: 16 com evidência além do nome (unidade, material, método ou bula), 173 escolhidos só pelo nome, 0 com revisão independente. A ficha de cada um sai em `fhir-bio decision <código>`.
 
-| Categoria                            | Biomarcadores | Com LOINC | Exemplos                                                            |
-| ------------------------------------ | ------------: | --------: | ------------------------------------------------------------------- |
-| Cardiovascular                       |            29 |        22 | ApoB, HDL, HDL_Large, CRP, LDL                                      |
-| Composição Corporal e Envelhecimento |            44 |        14 | Cortisol, BMI, BodyFatPct, FatMass, LeanMass                        |
-| Hematológico                         |            17 |        17 | Hct, Hgb, MCH, MCHC, MCV                                            |
-| Hepático e Biliar                    |            12 |        12 | ALT, Albumin, Albumin_Globulin_Ratio, AlkalinePhosphatase, AST      |
-| Imunológico                          |            25 |        25 | ANA_Screen, RheumatoidFactor, Basophils, Basophils_Abs, Eosinophils |
-| Metabólico e Endócrino               |            22 |        22 | AntiThyroglobulin, AntiTPO, TSH, T4Free, Thyroglobulin              |
-| Nutricional e Exposição Ambiental    |            28 |        28 | Lead, Mercury, AA_EPA_Ratio, Calcium, Ferritin                      |
-| Oncológico                           |             6 |         6 | AFP, CA125, CEA, CA199, CA153                                       |
-| Renal e Eletrolítico                 |            29 |        29 | Microalbumin_Urine, Urea, BUN_Creatinine_Ratio, Creatinine, eGFR    |
-| Saúde Reprodutiva                    |            15 |        14 | AMH, DHEAS, Estradiol, Estrone, FSH                                 |
-| **Total**                            |       **226** |   **188** |                                                                     |
+| Categoria                            | Biomarcadores | Com LOINC | Exemplos                                                                          |
+| ------------------------------------ | ------------: | --------: | --------------------------------------------------------------------------------- |
+| Cardiovascular                       |            29 |        22 | ApoB, HDL, HDL_Large, CRP, LDL                                                    |
+| Composição Corporal e Envelhecimento |            44 |        14 | Cortisol, BMI, BodyFatPct, FatMass, LeanMass                                      |
+| Hematológico                         |            17 |        17 | Hct, Hgb, MCH, MCHC, MCV                                                          |
+| Hepático e Biliar                    |            12 |        12 | ALT, Albumin, Albumin_Globulin_Ratio, AlkalinePhosphatase, AST                    |
+| Imunológico                          |            25 |        25 | ANA_Screen, RheumatoidFactor, Basophils, Basophils_Abs, Eosinophils               |
+| Metabólico e Endócrino               |            22 |        22 | AntiThyroglobulin, AntiTPO, TSH, T4Free, Thyroglobulin                            |
+| Nutricional e Exposição Ambiental    |            28 |        28 | Lead, Mercury, AA_EPA_Ratio, Calcium, Ferritin                                    |
+| Oncológico                           |             6 |         6 | AFP, CA125, CEA, CA199, CA153                                                     |
+| Renal e Eletrolítico                 |            30 |        30 | Microalbumin_Urine, Urea, BUN_Creatinine_Ratio, Urea_Creatinine_Ratio, Creatinine |
+| Saúde Reprodutiva                    |            15 |        14 | AMH, DHEAS, Estradiol, Estrone, FSH                                               |
+| **Total**                            |       **227** |   **189** |                                                                                   |
 
-As linhas somam 227 porque 1 biomarcador aparece em duas categorias. O Beta-hCG é marcador tumoral e exame de saúde feminina ao mesmo tempo. O total não conta ninguém duas vezes.
+As linhas somam 228 porque 1 biomarcador aparece em duas categorias. O Beta-hCG é marcador tumoral e exame de saúde feminina ao mesmo tempo. O total não conta ninguém duas vezes.
 
 ### Os 38 sem LOINC, e por quê
 

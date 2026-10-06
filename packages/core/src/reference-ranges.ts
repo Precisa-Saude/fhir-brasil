@@ -475,12 +475,10 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'sbc-ic-2018',
   },
 
-  // Razão BUN/Creatinina — faixa 10-20 aplica-se ao Nitrogênio Ureico (BUN).
-  // Laboratórios brasileiros que reportam Ureia (e não BUN) usam razão
-  // Ureia/Creatinina, cuja faixa normal é aproximadamente 21-43
-  // (Ureia ≈ BUN × 2,14). O biomarcador atualmente assume a convenção BUN;
-  // consumidores que dosem Ureia devem converter ou reportar como razão
-  // distinta. Ver issue #41 para alinhamento de nomenclatura/LOINC.
+  // Razão BUN/Creatinina: a faixa 10-20 é da convenção do nitrogênio ureico
+  // (BUN). A razão ureia/creatinina do laudo brasileiro (ureia ≈ BUN × 2,14)
+  // é outro biomarcador desde out/2026, `Urea_Creatinine_Ratio` (56997-0), e
+  // fica sem faixa até haver fonte publicada para ela.
   BUN_Creatinine_Ratio: {
     default: { max: 20, min: 10, optimalMax: 18, optimalMin: 12, unit: '' },
     kind: 'reference-interval',

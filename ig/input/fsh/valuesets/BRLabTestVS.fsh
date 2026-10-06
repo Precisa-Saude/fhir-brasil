@@ -152,7 +152,7 @@ Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-bras
 * $LOINC#3091-6 "Ureia"
 // sangue
 * $LOINC#883-9 "Grupo ABO"
-* $LOINC#48066-5 "Dímero-D"
+* $LOINC#48065-7 "Dímero-D"
 * $LOINC#30341-2 "Velocidade de Hemossedimentação"
 * $LOINC#3255-7 "Fibrinogênio"
 * $LOINC#4544-3 "Hematócrito"

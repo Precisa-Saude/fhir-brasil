@@ -72,6 +72,7 @@ Achados durante a classificação acima, conferindo pelos resumos. A classifica�
 - `geloneze-brams-2009`: o teto de 1,5 do `HOMA_IR` não é nenhum dos cortes do artigo (resistência insulínica: HOMA1-IR > 2,7 e HOMA2-IR > 1,8; síndrome metabólica: HOMA1-IR > 2,3 e HOMA2-IR > 1,4).
 - `meuwese-mpo-2007`: o teto de 470 pmol/L da `Myeloperoxidase` não aparece no resumo, que usa 728 pmol/L como MPO elevada.
 - `harris-omega3-2004`: o resumo define só o Omega-3 Index (≤ 4% e ≥ 8%); as faixas próprias de `Omega3_DHA`, `Omega3_EPA`, `Omega3_DPA` e `Omega3_Total` não aparecem nele.
+- `wells-ddimer-2003`: o artigo compara estratégias diagnósticas com D-dímero e não publica o corte de 500 ng/mL FEU nem o ajuste por idade, que vêm de outras diretrizes (o comentário da faixa cita ESC 2019 e ACEP).
 - `who-osteoporosis-1994`: a OMS classifica pelo T-score, e a faixa absoluta de `BMD_Total` em g/cm² não vem dela.
 
 ---

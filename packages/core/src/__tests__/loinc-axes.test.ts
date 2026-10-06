@@ -3,7 +3,8 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { BIOMARKER_DEFINITIONS } from '../biomarkers';
+import { BIOMARKER_DEFINITIONS, codeToLoinc, isValidLoinc } from '../biomarkers';
+import { biomarkerRangeDefinitions } from '../reference-ranges';
 import { BIOMARKER_UNITS, isUcumCode, resolveUcum } from '../units';
 
 /**
@@ -241,5 +242,31 @@ describe('toda unidade declarada resolve em UCUM', () => {
       ])
       .filter(([, u]) => !isUcumCode(u as string));
     expect(ruins).toEqual([]);
+  });
+});
+
+// O código e a unidade do D-dímero concordavam entre si, e nenhum teste de eixo
+// pegava o erro: ele estava entre o código (DDU) e a fonte da faixa (FEU), que
+// diferem por um fator de 2. Faixa numa convenção pede código na mesma.
+describe('a convenção da faixa e a do código', () => {
+  const declaradas = Object.entries(biomarkerRangeDefinitions).filter(
+    (entry): entry is [string, (typeof entry)[1] & { loinc: string }] => !!entry[1].loinc,
+  );
+
+  it('toda faixa que declara o código vale para o código do catálogo', () => {
+    // Sem declaração nenhuma, o teste passaria no vazio.
+    expect(declaradas.length).toBeGreaterThan(0);
+    const malformados = declaradas.filter(([, def]) => !isValidLoinc(def.loinc));
+    expect(malformados.map(([code, def]) => `${code}: ${def.loinc}`)).toEqual([]);
+    const fora = declaradas
+      .filter(([code, def]) => codeToLoinc(code) !== def.loinc)
+      .map(([code, def]) => `${code}: faixa de ${def.loinc}, catálogo em ${codeToLoinc(code)}`);
+    expect(fora).toEqual([]);
+  });
+
+  it('D-dímero: a faixa é FEU, e o código também', () => {
+    const ddimer = coded.find((b) => b.code === 'DDimer');
+    expect(ddimer).toBeDefined();
+    expect(entryOf(ddimer!.loinc).method).toBe('FEU');
   });
 });

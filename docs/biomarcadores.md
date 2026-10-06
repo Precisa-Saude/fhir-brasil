@@ -168,6 +168,7 @@ interface BiomarkerRangeDefinition {
   variants?: RangeVariant[]; // Variantes por sexo/idade
   direction?: 'range' | 'higher-better' | 'lower-better';
   kind?: 'reference-interval' | 'decision-threshold' | 'population';
+  loinc?: string; // Código para o qual a faixa vale, quando ela depende do ensaio
   source?: string; // Referência bibliográfica
 }
 ```
@@ -191,6 +192,10 @@ O `kind` diz que tipo de afirmação a faixa faz. Toda definição do catálogo 
 Uma banda de "faixa normal" que misture os três diz coisas diferentes conforme o marcador. A classificação de cada fonte, com o motivo, está em [fontes-referencia.md](fontes-referencia.md#tipo-de-cada-faixa).
 
 Em FHIR, `referenceRangeMeaning(kind)` devolve o código do `referenceRange.type` (`normal` ou `recommended`). A distribuição populacional não tem código no `referencerange-meaning`, e a função devolve `undefined`. O conversor emite o `type` quando o `LabObservationData` traz `referenceKind`.
+
+### Faixa que depende do ensaio
+
+Algumas faixas só valem para um código: o D-dímero em FEU (e não em DDU, que mede cerca de metade), a troponina I do ensaio sensível, a Lp(a) molar. Nelas a definição declara o `loinc` para o qual a faixa vale, e um teste exige que seja o código do biomarcador no catálogo. É o descasamento que nenhum teste de eixo pega: código e unidade concordam entre si, e o erro está entre o código e a fonte da faixa. A maioria das fontes não é de um ensaio, e não declara.
 
 ### Limite clínico e limite de desenho
 

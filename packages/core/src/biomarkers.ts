@@ -3168,7 +3168,15 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'sangue',
     code: 'DDimer',
-    loinc: '48066-5',
+    // 48065-7 é "Fibrin D-dimer FEU [Mass/volume] in Platelet poor plasma".
+    // Até out/2026 apontava para 48066-5, o mesmo analito em DDU (unidades de
+    // D-dímero), que vale cerca de metade do FEU. A faixa do catálogo (500
+    // ng/mL, com o corte por idade de idade × 10) é da convenção FEU, e um
+    // resultado em DDU avaliado contra ela deixaria passar metade dos
+    // anormais. Sem alias: DDU é outra grandeza. Quando o laudo imprime só
+    // "ng/mL", não há como saber a convenção pelo texto; o FEU é o que a
+    // faixa pressupõe.
+    loinc: '48065-7',
     names: {
       en: ['D-Dimer', 'D Dimer', 'Fibrin D-Dimer'],
       pt: ['Dímero-D', 'Dímero D', 'D-Dímero'],

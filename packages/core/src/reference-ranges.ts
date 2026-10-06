@@ -162,6 +162,18 @@ export interface BiomarkerRangeDefinition {
    */
   kind?: RangeKind;
   /**
+   * O código LOINC para o qual a faixa vale, quando ela depende do ensaio ou
+   * da convenção de medida: o D-dímero em FEU, a troponina de um ensaio
+   * específico, a Lp(a) molar. Um teste exige que seja o mesmo código do
+   * biomarcador em `biomarkers.ts`.
+   *
+   * Só nessas faixas, e não em todas: a maioria das fontes (Tietz, a PNS) não
+   * é de um código ou ensaio, e declarar ali só copiaria o código do catálogo
+   * sem conferir nada. Foi esse descasamento, entre o código DDU e a faixa FEU
+   * do D-dímero, que nenhum teste de eixo pegou.
+   */
+  loinc?: string;
+  /**
    * Chave de fonte bibliográfica, opcionalmente com localizador.
    *
    * Formato: `'chave'` ou `'chave:localizador'`
@@ -705,10 +717,15 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   // representada por zonas verde/amarela. Em pacientes > 50 anos,
   // diretrizes (ESC 2019, ACEP) recomendam corte ajustado pela idade:
   // idade × 10 ng/mL (até 750 ng/mL aos 75+).
+  //
+  // Todos os valores são em FEU (unidades equivalentes de fibrinogênio), e o
+  // código do catálogo é o do FEU (48065-7). Em DDU os cortes caem pela
+  // metade; não existe faixa DDU aqui.
   DDimer: {
     default: { max: 500, min: 0, unit: 'ng/mL' },
     direction: 'lower-better',
     kind: 'decision-threshold',
+    loinc: '48065-7',
     source: 'wells-ddimer-2003',
     variants: [
       // Corte ajustado por idade — ESC 2019 (Konstantinides et al.) e
@@ -1397,6 +1414,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     default: { max: 125, min: 0, optimalMax: 75, optimalMin: 0, unit: 'nmol/L' },
     direction: 'lower-better',
     kind: 'decision-threshold',
+    loinc: '43583-4',
     source: 'sbc-lipids-2025',
   },
 
@@ -1916,6 +1934,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   TroponinI: {
     default: { max: 0.04, min: 0, optimalMax: 0.02, optimalMin: 0, unit: 'ng/mL' },
     kind: 'reference-interval',
+    loinc: '49563-0',
     source: 'keller-tni-2013',
   },
 

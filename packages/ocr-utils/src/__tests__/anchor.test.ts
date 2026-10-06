@@ -689,3 +689,94 @@ describe('findBiomarkersInText: "Total Fat" e "Total Lean" da densitometria', ()
     expect(codesOf('Fat Mass 47.9 lbs')).toEqual(['FatMass']);
   });
 });
+
+describe('findBiomarkersInText: grafias de laudo americano (layout da Quest)', () => {
+  const codesOf = (text: string) => findBiomarkersInText(text).matches.map((m) => m.code);
+
+  // Linhas sintéticas no layout da Quest: nome, resultado, faixa e unidade em
+  // colunas separadas por espaço. As grafias são as impressas, em caixa alta.
+  it.each([
+    ['PROTEIN, TOTAL                 7.1      6.1-8.1 g/dL', 'TotalProtein'],
+    ['GLOBULIN                       2.4      1.9-3.7 g/dL (calc)', 'Globulin'],
+    ['ALBUMIN/GLOBULIN RATIO         2.0      1.0-2.5 (calc)', 'Albumin_Globulin_Ratio'],
+    ['BUN/CREATININE RATIO           NOT APPLICABLE  6-22 (calc)', 'BUN_Creatinine_Ratio'],
+    ['GGT                            22       3-70 U/L', 'GGT'],
+    ['THYROID PEROXIDASE ANTIBODIES  1        <9 IU/mL', 'AntiTPO'],
+    ['SEX HORMONE BINDING GLOBULIN   45       10-50 nmol/L', 'SHBG'],
+    ['LDL PARTICLE NUMBER            1200     <1138 nmol/L', 'LDL_ParticleNumber'],
+    ['LDL PATTERN                    A        Pattern A', 'LDL_Pattern'],
+    ['ALBUMIN, URINE                 0.5      Not Estab. mg/dL', 'Microalbumin_Urine'],
+    ['OCCULT BLOOD                   NEGATIVE NEGATIVE', 'Blood_Urine'],
+    ['LEUKOCYTE ESTERASE             NEGATIVE NEGATIVE', 'LeukocyteEsterase_Urine'],
+    ['SQUAMOUS EPITHELIAL CELLS      NONE SEEN <OR= 5 /HPF', 'SquamousEpithelial_Urine'],
+    ['HYALINE CAST                   NONE SEEN NONE SEEN /LPF', 'HyalineCasts_Urine'],
+  ])('ancora "%s" em %s, e só nele', (line, code) => {
+    expect(codesOf(line)).toEqual([code]);
+  });
+
+  it('não ancora a proteína da urina dentro de "PROTEIN, TOTAL"', () => {
+    // Antes da grafia com vírgula no catálogo, sobrava o "Protein" solto.
+    expect(codesOf('PROTEIN, TOTAL 7.1 6.1-8.1 g/dL')).not.toContain('Protein_Urine');
+  });
+
+  it('não ancora a ureia em "UREA NITROGEN (BUN)"', () => {
+    // O catálogo não tem BUN (3094-0), e `Urea` é a ureia em mg/dL: deixar o
+    // "urea" de dentro ancorar penduraria o valor de BUN na faixa da ureia.
+    expect(codesOf('UREA NITROGEN (BUN)            15       7-25 mg/dL')).toEqual([]);
+    expect(codesOf('Urea 32 mg/dL')).toEqual(['Urea']);
+  });
+
+  describe('diferencial do hemograma com o sinal de percentual', () => {
+    it.each([
+      ['NEUTROPHILS %                  55.1', 'Neutrophils', '770-8'],
+      ['LYMPHOCYTES %                  33.2', 'Lymphocytes', '736-9'],
+      ['MONOCYTES %                    8.0', 'Monocytes', '5905-5'],
+      ['EOSINOPHILS %                  3.1', 'Eosinophils', '713-8'],
+    ])('ancora "%s" no percentual %s (%s)', (line, code, loinc) => {
+      const { matches } = findBiomarkersInText(line);
+      expect(matches.map((m) => [m.code, m.loinc])).toEqual([[code, loinc]]);
+    });
+
+    it.each([
+      ['ABSOLUTE NEUTROPHILS           3014     1500-7800 cells/uL', 'Neutrophils_Abs'],
+      ['ABSOLUTE LYMPHOCYTES           1821     850-3900 cells/uL', 'Lymphocytes_Abs'],
+      ['ABSOLUTE MONOCYTES             440      200-950 cells/uL', 'Monocytes_Abs'],
+      ['ABSOLUTE EOSINOPHILS           171      15-500 cells/uL', 'Eosinophils_Abs'],
+    ])('ancora a contagem absoluta "%s" em %s, e não no percentual', (line, code) => {
+      expect(codesOf(line)).toEqual([code]);
+    });
+  });
+
+  // Palavras genéricas do exame de urina que também nomeiam exames de sangue.
+  // O pacote não tem regra de seção ("URINALYSIS"), então elas não resolvem
+  // para o código da urina, e isso é deliberado: ancorar "GLUCOSE" na glicose
+  // da urina em qualquer contexto quebraria a glicose do soro. Os testes
+  // registram o limite atual até existir uma regra de contexto de seção.
+  describe('urinálise sem contexto de seção', () => {
+    it('não ancora "PH" sozinho, que é curto demais e ambíguo com gasometria', () => {
+      expect(codesOf('PH                             6.0      5.0-8.0')).toEqual([]);
+    });
+
+    it.each([
+      ['GLUCOSE                        NEGATIVE NEGATIVE', 'Glucose_Urine'],
+      ['WBC                            NONE SEEN <OR= 5 /HPF', 'Leukocytes_Urine'],
+      ['RBC                            NONE SEEN <OR= 2 /HPF', 'RBC_Urine'],
+    ])('"%s" não resolve para %s sem saber que está na urinálise', (line, urineCode) => {
+      expect(codesOf(line)).not.toContain(urineCode);
+    });
+
+    it.each([
+      ['COLOR                          YELLOW   YELLOW', 'Color_Urine'],
+      ['BILIRUBIN                      NEGATIVE NEGATIVE', 'Bilirubin_Urine'],
+      ['KETONES                        NEGATIVE NEGATIVE', 'Ketones_Urine'],
+      ['PROTEIN                        NEGATIVE NEGATIVE', 'Protein_Urine'],
+      ['NITRITE                        NEGATIVE NEGATIVE', 'Nitrite_Urine'],
+      ['BACTERIA                       NONE SEEN NONE SEEN /HPF', 'Bacteria_Urine'],
+    ])('"%s" só ancora %s como nome ambíguo, com valor na linha', (line, code) => {
+      const { matches } = findBiomarkersInText(line);
+      expect(matches.map((m) => [m.code, m.confidence])).toEqual([[code, CONFIDENCE_AMBIGUOUS]]);
+      const nameOnly = line.split(/\s{2,}/)[0]!;
+      expect(codesOf(nameOnly)).toEqual([]);
+    });
+  });
+});

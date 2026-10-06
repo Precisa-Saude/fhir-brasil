@@ -8,6 +8,7 @@ import {
   findBiomarkersInText,
   getMatchedCodes,
 } from '../anchor';
+import { URINALYSIS_SECTION_NAMES } from '../urinalysis-section';
 
 /** Trecho do laudo de painel genético reportado na issue #59. */
 const GENETIC_PANEL_TEXT = `Specimen type: Blood
@@ -919,6 +920,16 @@ COMPREHENSIVE METABOLIC PANEL
   it('a seção acaba num cabeçalho em caixa mista, sem valor e sem nome conhecido', () => {
     const codes = codesOf('URINA TIPO I\nGlicose: Negativo\nBioquímica\nGlicose: 90 mg/dL');
     expect(codes).toEqual(['Glucose_Urine', 'Glucose']);
+  });
+
+  it('todo nome da seção aponta para um código de urina do catálogo, com LOINC', () => {
+    const byCode = new Map(getAllSearchPatterns().map((p) => [p.code, p]));
+    const wrong = [...URINALYSIS_SECTION_NAMES].filter(([, code]) => {
+      const pattern = byCode.get(code);
+      const categories = [pattern?.category ?? []].flat();
+      return !pattern?.loinc || !categories.includes('urina');
+    });
+    expect(wrong).toEqual([]);
   });
 
   it('cabeçalho com número não é cabeçalho', () => {

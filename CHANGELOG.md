@@ -1,3 +1,9 @@
+## [0.37.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.37.1...v0.37.2) (2026-10-06)
+
+### Bug Fixes
+
+* **core:** coding LOINC com o display oficial, e o nome do laudo no text ([#140](https://github.com/Precisa-Saude/fhir-brasil/issues/140)) ([2fece1a](https://github.com/Precisa-Saude/fhir-brasil/commit/2fece1a5bb247c7b3cbff0008c2e0888c092a955))
+
 ## [0.37.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.37.0...v0.37.1) (2026-10-06)
 
 ### Bug Fixes

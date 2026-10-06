@@ -67,8 +67,14 @@ export async function source(args: string[], json: boolean): Promise<void> {
 
   // Aceita tanto a chave limpa quanto o valor cru do campo `source`, que pode
   // trazer localizador de página (`sbc-lipids-2017:p15`).
-  const ref = SOURCE_REGISTRY[extractSourceKey(chave)];
-  if (!ref) exitWithError(`Fonte não encontrada: ${chave}`);
+  const limpa = extractSourceKey(chave);
+  const ref = SOURCE_REGISTRY[limpa];
+  if (!ref) {
+    // Quando o localizador foi descartado, a mensagem mostra os dois: dizer só
+    // o que a pessoa digitou esconde que a busca usou outra coisa.
+    const alvo = limpa === chave ? chave : `${chave} (procurado como ${limpa})`;
+    exitWithError(`Fonte não encontrada: ${alvo}\nVeja a lista com: fhir-bio source`);
+  }
 
   if (json) outputJson(ref);
   else outputText(render(ref));

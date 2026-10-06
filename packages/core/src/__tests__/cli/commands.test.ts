@@ -381,7 +381,17 @@ describe('cli: source', () => {
   it('erra alto quando a chave não existe', async () => {
     const { source } = await import('../../cli/commands/source');
     await expect(source(['nao-existe'], false)).rejects.toThrow('process.exit called');
-    expect(stderrOutput).toContain('Fonte não encontrada');
+    expect(stderrOutput).toContain('Fonte não encontrada: nao-existe');
+    expect(stderrOutput).toContain('fhir-bio source');
+  });
+
+  // Com localizador, o que falha na busca não é o que a pessoa digitou, e a
+  // mensagem precisa dizer os dois para o erro não parecer arbitrário.
+  it('mostra a chave limpa quando o localizador foi descartado', async () => {
+    const { source } = await import('../../cli/commands/source');
+    await expect(source(['nao-existe:p15'], false)).rejects.toThrow('process.exit called');
+    expect(stderrOutput).toContain('nao-existe:p15');
+    expect(stderrOutput).toContain('procurado como nao-existe');
   });
 
   it('erra quando o exame não tem faixa com fonte', async () => {

@@ -150,3 +150,58 @@ describe('validateFHIRImportBundle', () => {
     expect(errors.some((e) => e.field === 'entry')).toBe(true);
   });
 });
+
+describe('validateFHIRObservation: código UCUM', () => {
+  const base: FHIRObservation = {
+    code: { coding: [{ code: '3016-3', system: 'http://loinc.org' }] },
+    resourceType: 'Observation',
+    status: 'final',
+    subject: { reference: 'Patient/1' },
+  };
+  const ucum = 'http://unitsofmeasure.org';
+
+  it('aceita código UCUM sob o system do UCUM', () => {
+    const obs = {
+      ...base,
+      valueQuantity: { code: 'u[IU]/mL', system: ucum, unit: 'uIU/mL', value: 2 },
+    };
+    expect(validateFHIRObservation(obs)).toEqual([]);
+  });
+
+  it('aceita unidade só em texto, sem system', () => {
+    const obs = { ...base, valueQuantity: { unit: 'x10^3/mm3', value: 7 } };
+    expect(validateFHIRObservation(obs)).toEqual([]);
+  });
+
+  it('recusa grafia do laudo publicada como UCUM', () => {
+    // Era o que o conversor emitia até out/2026 para TSH.
+    const obs = {
+      ...base,
+      valueQuantity: { code: 'uIU/mL', system: ucum, unit: 'uIU/mL', value: 2 },
+    };
+    expect(validateFHIRObservation(obs)).toEqual(['valueQuantity: "uIU/mL" is not a UCUM code']);
+  });
+
+  it('recusa system do UCUM sem código', () => {
+    const obs = { ...base, valueQuantity: { system: ucum, unit: 'mg/dL', value: 2 } };
+    expect(validateFHIRObservation(obs)).toEqual([
+      'valueQuantity: UCUM system declared without a code',
+    ]);
+  });
+
+  it('confere também os limites da faixa de referência', () => {
+    const obs = {
+      ...base,
+      referenceRange: [
+        {
+          high: { code: 'razão', system: ucum, unit: 'razão', value: 20 },
+          low: { code: '{ratio}', system: ucum, unit: 'razão', value: 10 },
+        },
+      ],
+      valueQuantity: { code: '{ratio}', system: ucum, unit: 'razão', value: 15 },
+    };
+    expect(validateFHIRObservation(obs)).toEqual([
+      'referenceRange[0].high: "razão" is not a UCUM code',
+    ]);
+  });
+});

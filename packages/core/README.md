@@ -82,15 +82,15 @@ import { validateFHIRObservation } from '@precisa-saude/fhir/validators';
 
 ## Módulos
 
-| Sub-path            | Descrição                                                              |
-| ------------------- | ---------------------------------------------------------------------- |
-| `/biomarkers`       | Definições com códigos LOINC, nomes pt/en, sub-categorias              |
-| `/category-groups`  | Agrupamento de 10 categorias clínicas top-level sobre 20 subcategorias |
-| `/reference-ranges` | Faixas de referência por sexo/idade/gestação (SBPC/ML, SBC, SBD, OMS)  |
-| `/converter`        | Converte dados laboratoriais para FHIR R4 Bundle                       |
-| `/importer`         | Importa FHIR Bundle de volta para estruturas internas                  |
-| `/units`            | Mapeamento de unidades, conversão para UCUM                            |
-| `/validators`       | Validação de recursos FHIR (DiagnosticReport, Observation, Bundle)     |
+| Sub-path            | Descrição                                                                 |
+| ------------------- | ------------------------------------------------------------------------- |
+| `/biomarkers`       | Definições com códigos LOINC, nomes pt/en, sub-categorias                 |
+| `/category-groups`  | Agrupamento de 10 categorias clínicas top-level sobre 20 subcategorias    |
+| `/reference-ranges` | Faixas de referência por sexo/idade/gestação (SBPC/ML, SBC, SBD, OMS)     |
+| `/converter`        | Converte dados laboratoriais para FHIR R4 Bundle                          |
+| `/importer`         | Importa FHIR Bundle de volta para estruturas internas                     |
+| `/units`            | Mapeamento de unidades, conversão para UCUM (`resolveUcum`, `isUcumCode`) |
+| `/validators`       | Validação de recursos FHIR (DiagnosticReport, Observation, Bundle)        |
 
 ## Escopo das faixas de referência
 

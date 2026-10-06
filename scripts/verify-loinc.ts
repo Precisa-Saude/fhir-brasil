@@ -9,19 +9,30 @@
  * Precisa de LOINC_USER e LOINC_PASSWORD (conta gratuita em
  * https://loinc.org/get-started/). No CI vêm dos secrets do repo.
  *
+ * Sem credencial, LOINC_LOOKUP_URL aponta para outro servidor de terminologia
+ * que sirva o LOINC sem login, como o `https://tx.fhir.org/r4/CodeSystem/$lookup`
+ * da HL7. Serve para quem adiciona um código e precisa gravar os eixos dele
+ * no snapshot antes de abrir o PR, já que `loinc-axes.test.ts` recusa código
+ * sem entrada. O servidor oficial continua sendo a referência: o workflow
+ * mensal regrava tudo a partir dele.
+ *
  * ## O que este check garante, e o que não garante
  *
  * Garante duas coisas:
  *
  *   1. **Existência** — o código resolve no servidor oficial. Pega erro de
  *      digitação e código aposentado.
- *   2. **Deriva** — o nome oficial ou o status mudaram no LOINC desde que
- *      mapeamos. Transforma uma edição silenciosa de terceiro em check
- *      vermelho.
+ *   2. **Deriva** — o nome oficial, o status ou um dos eixos (propriedade,
+ *      sistema, escala, método) mudaram no LOINC desde que mapeamos.
+ *      Transforma uma edição silenciosa de terceiro em check vermelho.
  *
  * **Não** garante adequação semântica: se `43583-4` é o código *certo* para
  * Lipoproteína (a) é revisão humana, e nenhum check verde diz que os
- * mapeamentos estão corretos.
+ * mapeamentos estão corretos. O que chega perto disso é
+ * `packages/core/src/__tests__/loinc-axes.test.ts`, que lê os eixos gravados
+ * aqui e confere, sem rede, se a propriedade do código combina com a unidade
+ * declarada e se o sistema cabe na categoria: um código de líquido amniótico
+ * num catálogo de soro falha ali, e passou por aqui durante seis meses.
  *
  * ## Por que o snapshot guarda o nome oficial
  *
@@ -49,7 +60,9 @@ const SNAPSHOT_PATH = resolve(__dirname, 'loinc-snapshot.json');
 
 const LOINC_USER = process.env.LOINC_USER;
 const LOINC_PASSWORD = process.env.LOINC_PASSWORD;
-const LOOKUP_URL = 'https://fhir.loinc.org/CodeSystem/$lookup';
+const LOOKUP_URL = process.env.LOINC_LOOKUP_URL ?? 'https://fhir.loinc.org/CodeSystem/$lookup';
+/** O servidor oficial exige login; um alternativo em LOINC_LOOKUP_URL, não. */
+const EXIGE_CREDENCIAL = !process.env.LOINC_LOOKUP_URL;
 
 const UPDATE = process.argv.includes('--update');
 
@@ -70,7 +83,20 @@ const EXIT_UNVERIFIABLE = 2;
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-interface LookupResult {
+/**
+ * Os eixos do LOINC que o teste de adequação lê. Guardados como o LOINC os
+ * exibe (`SCnc`, `Ser/Plas`, `Qn`), e não como código de parte (`LP6860-3`),
+ * porque é assim que uma pessoa confere um achado e assim que o LOINC os
+ * imprime na página do código.
+ */
+interface Axes {
+  method: string | null;
+  property: string | null;
+  scale: string | null;
+  system: string | null;
+}
+
+interface LookupResult extends Partial<Axes> {
   /** Código respondeu que não existe. Diferente de não ter dado para perguntar. */
   ausente?: boolean;
   display?: string;
@@ -79,6 +105,22 @@ interface LookupResult {
   status?: string;
   version?: string;
 }
+
+/** Nome das propriedades no `$lookup`, na ordem em que o snapshot as grava. */
+const EIXOS: ReadonlyArray<[keyof Axes, string]> = [
+  ['property', 'PROPERTY'],
+  ['system', 'SYSTEM'],
+  ['scale', 'SCALE_TYP'],
+  ['method', 'METHOD_TYP'],
+];
+
+/**
+ * O servidor pode devolver um eixo como `valueCoding` com display, como
+ * `valueString`, ou como `valueCode` com o código da parte (`LP6860-3`). No
+ * último caso o display vem de um `$lookup` da própria parte, com cache,
+ * porque as partes se repetem muito: 101 códigos do catálogo são Ser/Plas.
+ */
+const displayDePartes = new Map<string, string>();
 
 /**
  * `Retry-After` tem duas formas na RFC 9110: segundos, ou HTTP-date. Só tratar
@@ -113,17 +155,61 @@ function lerPropriedade(parameters: unknown[], nome: string): string | undefined
     const code = param.part.find((x) => x.name === 'code');
     if ((code?.valueCode ?? code?.valueString) !== nome) continue;
     const value = param.part.find((x) => x.name === 'value');
-    const v = value?.valueString ?? value?.valueCode ?? value?.valueBoolean;
+    const coding = value?.valueCoding as { code?: string; display?: string } | undefined;
+    const v =
+      coding?.display ??
+      coding?.code ??
+      value?.valueString ??
+      value?.valueCode ??
+      value?.valueBoolean;
     if (v != null) return String(v);
   }
   return undefined;
 }
 
+const PARTE_LOINC = /^LP\d+-\d$/;
+
+/** Display de uma parte do LOINC (`LP6860-3` → `SCnc`), com cache. */
+async function displayDaParte(parte: string): Promise<string | LookupResult> {
+  const emCache = displayDePartes.get(parte);
+  if (emCache) return emCache;
+  const r = await lookup(parte);
+  if (r.indisponivel) return r;
+  // Parte que não resolve ou vem sem nome: fica o código, que ainda é
+  // comparável entre execuções, e o teste de eixos não o reconhece em nenhuma
+  // classe, o que é a leitura certa para "não sei o que é".
+  const display = r.display ?? parte;
+  displayDePartes.set(parte, display);
+  return display;
+}
+
+/** Os quatro eixos de um código, já com as partes resolvidas em display. */
+async function lerEixos(parameters: unknown[]): Promise<Axes | LookupResult> {
+  const eixos: Axes = { method: null, property: null, scale: null, system: null };
+  for (const [campo, nome] of EIXOS) {
+    const bruto = lerPropriedade(parameters, nome);
+    if (bruto === undefined) continue;
+    if (!PARTE_LOINC.test(bruto)) {
+      eixos[campo] = bruto;
+      continue;
+    }
+    const display = await displayDaParte(bruto);
+    if (typeof display !== 'string') return display;
+    eixos[campo] = display;
+  }
+  return eixos;
+}
+
 async function lookup(code: string): Promise<LookupResult> {
-  if (!LOINC_USER || !LOINC_PASSWORD) {
+  if (EXIGE_CREDENCIAL && (!LOINC_USER || !LOINC_PASSWORD)) {
     return { indisponivel: 'LOINC_USER/LOINC_PASSWORD ausentes no ambiente' };
   }
-  const auth = Buffer.from(`${LOINC_USER}:${LOINC_PASSWORD}`).toString('base64');
+  const auth =
+    LOINC_USER && LOINC_PASSWORD
+      ? {
+          Authorization: `Basic ${Buffer.from(`${LOINC_USER}:${LOINC_PASSWORD}`).toString('base64')}`,
+        }
+      : {};
   const url = `${LOOKUP_URL}?system=http://loinc.org&code=${encodeURIComponent(code)}`;
 
   const ATTEMPTS = 4;
@@ -131,7 +217,7 @@ async function lookup(code: string): Promise<LookupResult> {
   for (let attempt = 1; attempt <= ATTEMPTS; attempt++) {
     try {
       const res = await fetch(url, {
-        headers: { Accept: 'application/fhir+json', Authorization: `Basic ${auth}` },
+        headers: { Accept: 'application/fhir+json', ...auth },
         signal: AbortSignal.timeout(30_000),
       });
 
@@ -180,7 +266,13 @@ async function lookup(code: string): Promise<LookupResult> {
         (p) => (p as { name?: string }).name === 'version',
       ) as { valueString?: string } | undefined;
 
+      // Parte do LOINC (`LP…`) não tem eixos, e perguntá-los recursivamente
+      // só gastaria chamadas.
+      const eixos = PARTE_LOINC.test(code) ? {} : await lerEixos(data.parameter);
+      if ('indisponivel' in eixos) return eixos;
+
       return {
+        ...eixos,
         display: displayParam?.valueString,
         status: lerPropriedade(data.parameter, 'STATUS'),
         version: versionParam?.valueString,
@@ -194,10 +286,17 @@ async function lookup(code: string): Promise<LookupResult> {
 }
 
 interface Snapshot {
+  /**
+   * Presente só enquanto os eixos vieram de outra fonte que o display: em
+   * out/2026 eles foram preenchidos a partir do tx.fhir.org (LOINC 2.82),
+   * porque o fhir.loinc.org exige credencial e a conta fica no CI. Some na
+   * próxima gravação pelo workflow, que escreve tudo da mesma consulta.
+   */
+  _axesNote?: string;
   _checkedAt: string;
   _loincVersion: string | null;
   _notice: string;
-  codes: Record<string, { display: string; status: string | null }>;
+  codes: Record<string, { display: string; status: string | null } & Axes>;
 }
 
 function lerSnapshot(): Snapshot | null {
@@ -264,7 +363,14 @@ async function main() {
         semDisplay.push(code);
         continue;
       }
-      codes[code] = { display: r.display, status: r.status ?? null };
+      codes[code] = {
+        display: r.display,
+        method: r.method ?? null,
+        property: r.property ?? null,
+        scale: r.scale ?? null,
+        status: r.status ?? null,
+        system: r.system ?? null,
+      };
     }
     const semNome = [...naoResolvem, ...semDisplay];
     if (semNome.length) {
@@ -350,6 +456,14 @@ async function main() {
         de: String(antigo.status),
         para: String(statusVivo),
       });
+    }
+    // Eixo que muda é deriva do mesmo peso que nome: um código que troca de
+    // propriedade deixou de medir o que o catálogo declara.
+    for (const [campo] of EIXOS) {
+      const vivo = r[campo] ?? null;
+      if (vivo !== antigo[campo]) {
+        derivas.push({ campo, code, de: String(antigo[campo]), para: String(vivo) });
+      }
     }
   }
 

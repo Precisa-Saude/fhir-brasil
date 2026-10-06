@@ -90,6 +90,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'coracao',
     code: 'LDL_Medium',
+    // 96735-6 é "in Serum" só, enquanto as vizinhas LDL_Small (43727-7),
+    // LDL_ParticleNumber (54434-6) e HDL_Large (43729-3) são Ser/Plas. É o
+    // único código para a subfração média, e o perfil por RMN roda em soro.
+    // Material registrado de propósito.
     loinc: '96735-6',
     names: {
       en: ['LDL Medium', 'Medium LDL Particles'],
@@ -1067,14 +1071,16 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     // LOINC 99620-7 = "Omega 3 fatty acids (w3) [Moles/volume] in RBC.lysate".
-    // Alinha à matriz das entradas irmãs Omega3_EPA (75097-6) e Omega3_DHA
-    // (75095-0), ambas em hemácias. Anteriormente 35178-3 (mesmo analito em
-    // Ser/Plas), incompatível com o uso clínico do Índice Ômega-3 (Harris &
-    // von Schacky 2004), que é definido em membranas de hemácias.
-    // Ressalva: LOINC declara moles/volume; o biomarcador armazena %.
-    // Não há LOINC vigente para "Omega 3 total em % em RBC" — o `Omega3_Index`
-    // (88998-0) cobre apenas EPA+DHA. Mantemos `unit: '%'` por consistência
-    // com EPA/DHA (75095-0/75097-6 são [Entitic substance], também não-%).
+    // Anteriormente 35178-3 (mesmo analito em Ser/Plas), incompatível com o
+    // uso clínico do Índice Ômega-3 (Harris & von Schacky 2004), que é
+    // definido em membranas de hemácias.
+    //
+    // Compromisso declarado, e não erro: o LOINC 2.82 não tem código de fração
+    // ("ômega-3 total / ácidos graxos totais") para o total, só para os ácidos
+    // individuais e para EPA+DPA+DHA (90911-9). O componente confere; a
+    // propriedade é moles/volume enquanto o laudo imprime %. O teste de eixos
+    // (`loinc-axes.test.ts`) lista esta entrada como exceção com este motivo.
+    // Mesmo compromisso em `Omega6_Total` (99621-5).
     category: 'nutrientes',
     code: 'Omega3_Total',
     loinc: '99620-7',
@@ -1088,7 +1094,18 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     category: 'nutrientes',
     code: 'Omega3_DHA',
     codeAliases: ['DHA'],
-    loinc: '75095-0',
+    // Ácidos graxos individuais: fração do total (% dos ácidos graxos C14-C22),
+    // que é o que o perfil de ácidos graxos e o Índice Ômega-3 imprimem. Os
+    // códigos vêm do painel 90918-4 ("Fatty acid omega-3 and omega-6 panel -
+    // Blood"), o mesmo de onde já saem as razões AA/EPA (90909-3) e ω6/ω3
+    // (90910-1). Até out/2026 apontavam para os códigos [Entitic substance]
+    // em hemácias (75095-0, 75097-6, 75110-7, 75117-2), que são quantidade por
+    // célula, e para 48371-9, que é moles/volume em soro: componente certo,
+    // propriedade errada nos cinco, desde mar/2026. Ficam como alias porque o
+    // analito é o mesmo. Material: o painel em soro/plasma (88884-2, C14-C24)
+    // existe, e é a troca a fazer se um laboratório imprimir o perfil em soro.
+    loinc: '90914-3',
+    loincAliases: ['75095-0'],
     names: {
       en: ['Omega-3 DHA', 'DHA', 'Docosahexaenoic Acid'],
       pt: ['Ômega-3: DHA', 'DHA', 'Ácido Docosahexaenoico'],
@@ -1099,7 +1116,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     category: 'nutrientes',
     code: 'Omega3_DPA',
     codeAliases: ['DPA'],
-    loinc: '48371-9',
+    // Fração em sangue, painel 90918-4. Ver `Omega3_DHA`.
+    loinc: '90913-5',
+    loincAliases: ['48371-9'],
     names: {
       en: ['Omega-3 DPA', 'DPA', 'Docosapentaenoic Acid'],
       pt: ['Ômega-3: DPA', 'DPA', 'Ácido Docosapentaenoico'],
@@ -1110,7 +1129,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     category: 'nutrientes',
     code: 'Omega3_EPA',
     codeAliases: ['EPA'],
-    loinc: '75097-6',
+    // Fração em sangue, painel 90918-4. Ver `Omega3_DHA`.
+    loinc: '90912-7',
+    loincAliases: ['75097-6'],
     names: {
       en: ['Omega-3 EPA', 'EPA', 'Eicosapentaenoic Acid'],
       pt: ['Ômega-3: EPA', 'EPA', 'Ácido Eicosapentaenoico'],
@@ -1120,7 +1141,12 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'nutrientes',
     code: 'EPADPADHA',
-    loinc: '90908-5',
+    // 90911-9 é a fração EPA+DPA+DHA / ácidos graxos C14-C22 em sangue, o
+    // valor em %. Até out/2026 apontava para 90908-5, que é a *interpretação*
+    // desse mesmo valor (ordinal: risco alto, moderado, baixo), e não o
+    // número. Sem alias: código ordinal carregando valor numérico é o erro
+    // que se quer parar de aceitar.
+    loinc: '90911-9',
     names: {
       en: ['Omega-3 EPA+DPA+DHA', 'EPA+DPA+DHA'],
       pt: ['Ômega-3: EPA+DPA+DHA'],
@@ -1141,7 +1167,12 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'nutrientes',
     code: 'Omega6_Total',
-    loinc: '35177-5',
+    // 99621-5 é "Omega 6 fatty acids (w6) [Moles/volume] in RBC.lysate", o
+    // par exato do 99620-7 de `Omega3_Total`, com o mesmo compromisso de
+    // propriedade documentado lá. Até out/2026 apontava para 35177-5, que é
+    // ácidos graxos poli-insaturados totais em soro: ômega-3 e ômega-6
+    // somados, outro componente. Sem alias.
+    loinc: '99621-5',
     names: {
       en: ['Omega-6 Total', 'Total Omega-6'],
       pt: ['Ômega-6 Total'],
@@ -1152,7 +1183,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     category: 'nutrientes',
     code: 'Omega6_AA',
     codeAliases: ['Arachidonic_Acid'],
-    loinc: '75110-7',
+    // Fração em sangue, painel 90918-4. Ver `Omega3_DHA`.
+    loinc: '90916-8',
+    loincAliases: ['75110-7'],
     names: {
       en: ['Omega-6 Arachidonic Acid', 'Arachidonic Acid', 'AA'],
       pt: ['Ômega-6: Ácido Araquidônico', 'Ácido Araquidônico', 'AA'],
@@ -1163,7 +1196,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     category: 'nutrientes',
     code: 'Omega6_LA',
     codeAliases: ['Linoleic_Acid'],
-    loinc: '75117-2',
+    // Fração em sangue, painel 90918-4. Ver `Omega3_DHA`.
+    loinc: '90917-6',
+    loincAliases: ['75117-2'],
     names: {
       en: ['Omega-6 Linoleic Acid', 'Linoleic Acid', 'LA'],
       pt: ['Ômega-6: Ácido Linoleico', 'Ácido Linoleico', 'LA'],
@@ -1244,7 +1279,11 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'nutrientes',
     code: 'Zinc',
-    loinc: '8245-3',
+    // 5763-8 é "Zinc [Mass/volume] in Serum or Plasma", o zinco sérico da
+    // rotina brasileira (o nome em inglês já dizia "Serum Zinc"). Até out/2026
+    // apontava para 8245-3, o mesmo analito em sangue total, que tem faixa de
+    // referência própria. Sem alias: sangue total é outro material.
+    loinc: '5763-8',
     names: {
       en: ['Zinc', 'Serum Zinc'],
       pt: ['Zinco'],
@@ -1347,6 +1386,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'figado',
     code: 'Globulin',
+    // 2336-6 é "Globulin [Mass/volume] in Serum", soro só: o LOINC 2.82 não
+    // tem a versão Ser/Plas da globulina total (as frações alfa, beta e gama
+    // têm). Material registrado de propósito.
     loinc: '2336-6',
     names: {
       en: ['Globulin', 'Serum Globulin'],
@@ -1628,6 +1670,13 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'rins',
     code: 'BUN_Creatinine_Ratio',
+    // 3097-3 é "Urea nitrogen/Creatinine [Mass Ratio]", a razão BUN/creatinina,
+    // e a faixa de referência (10-20, Tietz) é a dessa convenção. O laudo
+    // brasileiro imprime "Relação Ureia/Creatinina", cuja faixa é outra (cerca
+    // de 21-43) e cujo código é 56997-0 ("Urea/Creatinine [Mass Ratio] in
+    // Serum or Plasma"). Trocar só o código deixaria a faixa errada do outro
+    // lado; a separação em duas grandezas, como em `Glucose_Fasting`, é
+    // decisão à parte, registrada em `reference-ranges.ts`.
     loinc: '3097-3',
     names: {
       en: ['BUN/Creatinine Ratio', 'Urea/Creatinine Ratio'],
@@ -1798,7 +1847,12 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     category: 'urina',
     code: 'Bacteria_Urine',
     codeAliases: ['UrineBacteria'],
-    loinc: '630-4',
+    // 5769-5 é "Bacteria [#/area] in Urine sediment by Microscopy high power
+    // field", a contagem do sedimento que a unidade /HPF declara. Até out/2026
+    // apontava para 630-4, "Bacteria identified in Urine by Culture": outro
+    // exame, nominal, que identifica a espécie em cultura. Sem alias:
+    // urocultura não é sedimento.
+    loinc: '5769-5',
     names: {
       en: ['Urine Bacteria', 'Bacteria Urine', 'Bacteria, Urine', 'Bacteria'],
       pt: ['Bactérias na Urina', 'Bactérias'],
@@ -1917,7 +1971,14 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'urina',
     code: 'RBC_Urine',
-    loinc: '5808-1',
+    // 13945-1 é "Erythrocytes [#/area] in Urine sediment by Microscopy high
+    // power field", o /HPF que o laudo imprime e que `Leukocytes_Urine` já usa
+    // em 5821-4. Até out/2026 apontava para 5808-1, o mesmo exame em #/volume
+    // (por mL): analito e material certos, propriedade errada. Fica como alias
+    // porque o analito é o mesmo, e laudo de analisador automático que conte
+    // por mL continua resolvendo em RBC_Urine.
+    loinc: '13945-1',
+    loincAliases: ['5808-1'],
     names: {
       en: ['Urine RBC', 'Red Blood Cells in Urine', 'RBC Urine', 'RBC, Urine'],
       pt: ['Hemácias na Urina'],
@@ -2015,6 +2076,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'autoimunidade',
     code: 'Gliadin_Deamidated_IgA',
+    // 63453-5 e 63459-2 (IgG) afirmam método, "by Immunoassay", e material,
+    // "Serum". É o que os kits de DGP usam. A propriedade é unidades
+    // arbitrárias por volume, e o laudo imprime U/mL; até out/2026 a unidade
+    // declarada era "U", sem o volume.
     loinc: '63453-5',
     names: {
       en: [
@@ -2028,7 +2093,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       ],
       pt: ['Anticorpos Anti-Gliadina Deamidada IgA', 'DGP IgA'],
     },
-    unit: 'U',
+    unit: 'U/mL',
   },
   {
     category: 'autoimunidade',
@@ -2046,7 +2111,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       ],
       pt: ['Anticorpos Anti-Gliadina Deamidada IgG', 'DGP IgG'],
     },
-    unit: 'U',
+    unit: 'U/mL',
   },
   {
     category: 'autoimunidade',
@@ -2442,6 +2507,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'composicao-corporal',
     code: 'TotalBodyWater',
+    // 101683-1 é "Body water mass", em kg; o aparelho de bioimpedância imprime
+    // litros. É o único código de água corporal total no LOINC 2.82 (o outro,
+    // 101684-9, é o percentual), e para água 1 L pesa 1 kg, então o número não
+    // muda. O teste de eixos lista a entrada como exceção com este motivo.
     loinc: '101683-1',
     names: {
       en: ['Total Body Water', 'Body Water', 'TBW', 'Total Water'],
@@ -2507,6 +2576,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'composicao-corporal',
     code: 'PhaseAngle',
+    // 107160-4 é "Phase angle Xc/R [Ratio] Bioelectrical impedance analysis",
+    // único código de ângulo de fase. O aparelho imprime graus (arctan Xc/R)
+    // e o LOINC declara razão com unidade-exemplo %. Fica em graus, que é o
+    // que o laudo traz, e o teste de eixos lista a entrada como exceção.
     loinc: '107160-4',
     names: {
       en: ['Phase Angle', 'Whole Body Phase Angle', 'PhA', 'AnglePhase'],
@@ -2598,9 +2671,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'composicao-corporal',
     code: 'WaistCircumference',
-    // 8280-0 é a medida em si. 56086-2, que parecia o óbvio pela busca, é
-    // "Adult Waist Circumference Protocol", um protocolo PhenX e não um
-    // resultado.
+    // 8280-0 é a medida em si, e afirma sítio e método: "at umbilicus by Tape
+    // measure". 56086-2, que parecia o óbvio pela busca, é "Adult Waist
+    // Circumference Protocol", um protocolo PhenX e não um resultado.
     loinc: '8280-0',
     names: {
       en: ['Waist Circumference', 'Abdominal Circumference', 'Waist'],
@@ -3014,6 +3087,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'coracao',
     code: 'TroponinI',
+    // 49563-0 afirma método: limite de detecção ≤ 0,01 ng/mL, o ensaio de alta
+    // sensibilidade. Um resultado de troponina I convencional pede o código
+    // sem método, 10839-9. Assimétrico com `TroponinT`, que fica no 6598-7 sem
+    // método de propósito: a hs-cTnT em ng/L é a convenção dos laudos.
     loinc: '49563-0',
     names: {
       en: ['Troponin I', 'cTnI', 'Cardiac Troponin I', 'hs-TnI', 'High-Sensitivity Troponin I'],
@@ -3024,6 +3101,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'coracao',
     code: 'TroponinT',
+    // 6598-7 não afirma método. A unidade ng/L é a convenção do ensaio de alta
+    // sensibilidade (hs-cTnT), e o ensaio convencional em ng/mL converte por
+    // fator exato (ver `units.ts`). Ver `TroponinI` para a assimetria.
     loinc: '6598-7',
     names: {
       en: ['Troponin T', 'cTnT', 'Cardiac Troponin T', 'hs-TnT', 'High-Sensitivity Troponin T'],
@@ -3062,6 +3142,11 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'figado',
     code: 'LDH',
+    // 14804-9 afirma método: reação lactato → piruvato (L→P). O código sem
+    // método, 2532-0, está DISCOURAGED, então um método tem que ser escolhido,
+    // e L→P é o do procedimento de referência IFCC que os laboratórios
+    // brasileiros usam, ainda que o laudo raramente imprima a direção. Se um
+    // laudo declarar P→L, o código é outro (14805-6).
     loinc: '14804-9',
     // 2532-0 é o código genérico anterior, que o LOINC marca como DISCOURAGED.
     // Fica como alias para que laudo antigo e dado já armazenado continuem
@@ -3198,7 +3283,13 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'pancreas',
     code: 'BetaHydroxybutyrate',
-    loinc: '53060-0',
+    // 6873-4 é "Beta hydroxybutyrate [Moles/volume] in Serum or Plasma", o
+    // que o laudo dosa em mmol/L. Até out/2026 apontava para 53060-0, que é
+    // butirilcarnitina (C4) em líquido amniótico: analito e material errados
+    // desde abr/2026, e nenhum check pegou porque o código existe e está
+    // ACTIVE. Sem alias para o código antigo: ele nunca significou BHB, e
+    // aceitá-lo na importação faria um laudo de carnitina virar cetona.
+    loinc: '6873-4',
     names: {
       en: ['Beta-Hydroxybutyrate', 'β-Hydroxybutyrate', 'BHB', 'Ketone Bodies'],
       pt: ['Beta-Hidroxibutirato', 'β-Hidroxibutirato', 'BHB', 'Corpos Cetônicos'],

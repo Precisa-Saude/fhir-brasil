@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { BIOMARKER_DEFINITIONS } from '../biomarkers';
 import {
   labObservationToFHIR,
   labReportToFHIR,
@@ -821,5 +822,86 @@ describe('biomarcadores sem LOINC na exportação', () => {
     const systems = fhir.code.coding.map((c) => c.system);
 
     expect(systems).toEqual(['http://loinc.org', 'http://fhir-brasil.dev/biomarker-codes']);
+  });
+});
+
+describe('labObservationToFHIR: código UCUM do Quantity', () => {
+  const base = {
+    biomarkerCode: 'TSH',
+    biomarkerName: 'TSH',
+    collectionDate: '2026-10-06',
+    flag: '' as const,
+    referenceMax: 4,
+    referenceMin: 0.4,
+    reportId: 'r1',
+    unit: 'uIU/mL',
+    value: 2.1,
+  };
+
+  it('usa o canonicalUcum do biomarcador, e não a grafia do laudo', () => {
+    const obs = labObservationToFHIR(base, 'p1');
+    expect(obs.valueQuantity).toEqual({
+      code: 'u[iU]/mL',
+      system: 'http://unitsofmeasure.org',
+      unit: 'uIU/mL',
+      value: 2.1,
+    });
+    expect(obs.referenceRange?.[0]?.high?.code).toBe('u[iU]/mL');
+    expect(obs.referenceRange?.[0]?.low?.system).toBe('http://unitsofmeasure.org');
+  });
+
+  it('traduz K/uL de leucócito para 10*3/uL', () => {
+    const obs = labObservationToFHIR(
+      { ...base, biomarkerCode: 'WBC', biomarkerName: 'Leucócitos', unit: 'K/uL', value: 6.2 },
+      'p1',
+    );
+    expect(obs.valueQuantity?.code).toBe('10*3/uL');
+  });
+
+  it('cai na tabela para biomarcador sem configuração de unidade', () => {
+    const obs = labObservationToFHIR(
+      { ...base, biomarkerCode: 'AA_EPA_Ratio', biomarkerName: 'AA/EPA', unit: 'razão', value: 5 },
+      'p1',
+    );
+    expect(obs.valueQuantity?.code).toBe('{ratio}');
+  });
+
+  it('não afirma UCUM sobre unidade que não sabe traduzir', () => {
+    const obs = labObservationToFHIR(
+      { ...base, biomarkerCode: 'WBC', biomarkerName: 'Leucócitos', unit: 'x10^3/mm3', value: 6.2 },
+      'p1',
+    );
+    expect(obs.valueQuantity).toEqual({ unit: 'x10^3/mm3', value: 6.2 });
+    expect(validateFHIRObservation(obs)).toEqual([]);
+  });
+
+  it('sem unidade no laudo e sem padrão, o Quantity sai só com o valor', () => {
+    const obs = labObservationToFHIR(
+      {
+        ...base,
+        biomarkerCode: 'ABO_Group',
+        biomarkerName: 'ABO',
+        referenceMax: undefined,
+        referenceMin: undefined,
+        unit: '',
+        value: 1,
+      },
+      'p1',
+    );
+    expect(obs.valueQuantity).toEqual({ value: 1 });
+  });
+
+  it('o que o conversor emite passa no validador', () => {
+    for (const b of BIOMARKER_DEFINITIONS) {
+      if (!b.unit) continue;
+      const obs = labObservationToFHIR(
+        { ...base, biomarkerCode: b.code, biomarkerName: b.code, unit: b.unit, value: 1 },
+        'p1',
+      );
+      expect(validateFHIRObservation(obs), `${b.code} em ${b.unit}`).toEqual([]);
+      expect(obs.valueQuantity?.system, `${b.code} em ${b.unit} sem UCUM`).toBe(
+        'http://unitsofmeasure.org',
+      );
+    }
   });
 });

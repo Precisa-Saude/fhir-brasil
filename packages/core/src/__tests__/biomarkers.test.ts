@@ -346,6 +346,34 @@ describe('getDefinitionByCode', () => {
   // O 2532-0 saiu de código canônico por estar DISCOURAGED no LOINC, mas
   // continua chegando em laudo antigo e em dado já armazenado. Trocar o
   // canônico sem manter o alias quebraria a leitura desse histórico.
+  it('ácidos graxos e hemácias na urina aceitam os códigos antigos como alias', () => {
+    // Mesmo analito, propriedade diferente: o dado já gravado sob o código
+    // antigo continua resolvendo no mesmo biomarcador.
+    expect(loincToCode('75097-6')).toBe('Omega3_EPA');
+    expect(loincToCode('75095-0')).toBe('Omega3_DHA');
+    expect(loincToCode('48371-9')).toBe('Omega3_DPA');
+    expect(loincToCode('75110-7')).toBe('Omega6_AA');
+    expect(loincToCode('75117-2')).toBe('Omega6_LA');
+    expect(loincToCode('5808-1')).toBe('RBC_Urine');
+  });
+
+  it('código errado de analito não vira alias', () => {
+    // 53060-0 nunca foi beta-hidroxibutirato; 630-4 é urocultura; 35177-5 é
+    // PUFA total; 90908-5 é interpretação ordinal; 8245-3 é sangue total.
+    for (const code of ['53060-0', '630-4', '35177-5', '90908-5', '8245-3']) {
+      expect(loincToCode(code), code).toBeUndefined();
+    }
+  });
+
+  it('os códigos novos resolvem no biomarcador certo', () => {
+    expect(loincToCode('6873-4')).toBe('BetaHydroxybutyrate');
+    expect(loincToCode('13945-1')).toBe('RBC_Urine');
+    expect(loincToCode('5769-5')).toBe('Bacteria_Urine');
+    expect(loincToCode('5763-8')).toBe('Zinc');
+    expect(loincToCode('90911-9')).toBe('EPADPADHA');
+    expect(loincToCode('99621-5')).toBe('Omega6_Total');
+  });
+
   it('LDH aceita o código antigo 2532-0 como alias', () => {
     const def = getDefinitionByCode('LDH');
     expect(def?.loinc).toBe('14804-9');

@@ -1,755 +1,1512 @@
 {
+  "_axesNote": "method, property, scale e system foram preenchidos em 2026-10-06 a partir de https://tx.fhir.org/r4 (LOINC 2.82), assim como display e status dos códigos que entraram no catálogo depois de 2026-09-05: 13945-1, 1558-6, 5763-8, 5769-5, 62292-8, 6873-4, 90911-9, 90912-7, 90913-5, 90914-3, 90916-8, 90917-6, 99621-5. O restante de display e status segue da conferência de 2026-09-05 no fhir.loinc.org (LOINC 2.83). A próxima gravação pelo workflow LOINC em modo update escreve tudo da mesma consulta e remove esta nota.",
   "_checkedAt": "2026-09-05",
   "_loincVersion": "2.83",
   "_notice": "This material contains content from LOINC (http://loinc.org). LOINC is copyright © Regenstrief Institute, Inc. and the Logical Observation Identifiers Names and Codes (LOINC) Committee and is available at no cost under the license at http://loinc.org/license. LOINC® is a registered United States trademark of Regenstrief Institute, Inc.",
   "codes": {
     "101683-1": {
       "display": "Body water mass",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "Mass",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "^Patient"
     },
     "101684-9": {
       "display": "Percentage of body water",
-      "status": "ACTIVE"
+      "method": "Measured",
+      "property": "MFr",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "^Patient"
     },
     "10331-7": {
       "display": "Rh [Type] in Blood",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "Type",
+      "scale": "Nom",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "10334-1": {
       "display": "Cancer Ag 125 [Units/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "ACnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "10501-5": {
       "display": "Lutropin [Units/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "ACnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "107112-5": {
       "display": "Calf circumference",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "Find",
+      "scale": "Ord",
+      "status": "ACTIVE",
+      "system": "^Patient"
     },
     "107160-4": {
       "display": "Phase angle Xc/R [Ratio] Bioelectrical impedance analysis",
-      "status": "ACTIVE"
+      "method": "BIA",
+      "property": "Ratio",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "^Patient"
     },
     "10886-0": {
       "display": "Prostate Specific Ag Free [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "11277-1": {
       "display": "Epithelial cells.squamous [#/area] in Urine sediment by Microscopy high power field",
-      "status": "ACTIVE"
+      "method": "Microscopy.light.HPF",
+      "property": "Naric",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Urine sed"
     },
     "11572-5": {
       "display": "Rheumatoid factor [Units/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "ACnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "12841-3": {
       "display": "Prostate Specific Ag Free/Prostate specific Ag.total in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MFr",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "13458-5": {
       "display": "Cholesterol in VLDL [Mass/volume] in Serum or Plasma by calculation",
-      "status": "ACTIVE"
+      "method": "Calculated",
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
+    },
+    "13945-1": {
+      "display": "Erythrocytes [#/area] in Urine sediment by Microscopy high power field",
+      "method": "Microscopy.light.HPF",
+      "property": "Naric",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Urine sed"
     },
     "13964-2": {
       "display": "Methylmalonate [Moles/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "SCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "13965-9": {
       "display": "Homocysteine [Moles/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "SCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "13967-5": {
       "display": "Sex hormone binding globulin [Moles/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "SCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "14804-9": {
       "display": "Lactate dehydrogenase [Enzymatic activity/volume] in Serum or Plasma by Lactate to pyruvate reaction",
-      "status": "ACTIVE"
+      "method": "Reaction: lactate to pyruvate",
+      "property": "CCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "14957-5": {
       "display": "Microalbumin [Mass/volume] in Urine",
-      "status": "ACTIVE"
+      "method": "Detection limit <= 20 mg/L",
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Urine"
     },
     "15067-2": {
       "display": "Follitropin [Units/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "ACnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
+    },
+    "1558-6": {
+      "display": "Fasting glucose [Mass/volume] in Serum or Plasma",
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "1742-6": {
       "display": "Alanine aminotransferase [Enzymatic activity/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "CCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "1751-7": {
       "display": "Albumin [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "1759-0": {
       "display": "Albumin/Globulin [Mass Ratio] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MRto",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "17782-4": {
       "display": "Lipoprotein.beta.subparticle [Entitic length] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "EntLen",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "17861-6": {
       "display": "Calcium [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "1798-8": {
       "display": "Amylase [Enzymatic activity/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "CCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "1834-1": {
       "display": "Alpha-1-Fetoprotein [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "1848-1": {
       "display": "Androstanolone [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "1869-7": {
       "display": "Apolipoprotein A-I [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "1884-6": {
       "display": "Apolipoprotein B [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "1903-4": {
       "display": "Ascorbate [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "19080-1": {
       "display": "Choriogonadotropin [Units/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "ACnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "19113-0": {
       "display": "IgE [Units/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "ACnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "19123-9": {
       "display": "Magnesium [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "1920-8": {
       "display": "Aspartate aminotransferase [Enzymatic activity/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "CCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "1968-7": {
       "display": "Bilirubin.direct [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "1971-1": {
       "display": "Bilirubin.indirect [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "1975-2": {
       "display": "Bilirubin.total [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "1988-5": {
       "display": "C reactive protein [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
-    },
-    "1989-3": {
-      "display": "25-hydroxyvitamin D3 [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2028-9": {
       "display": "Carbon dioxide, total [Moles/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "SCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2039-6": {
       "display": "Carcinoembryonic Ag [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "20405-7": {
       "display": "Urobilinogen [Mass/volume] in Urine by Test strip",
-      "status": "ACTIVE"
+      "method": "Test strip",
+      "property": "MCnc",
+      "scale": "SemiQn",
+      "status": "ACTIVE",
+      "system": "Urine"
     },
     "20448-7": {
       "display": "Insulin [Units/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "ACnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2075-0": {
       "display": "Chloride [Moles/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "SCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2085-9": {
       "display": "Cholesterol in HDL [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2089-1": {
       "display": "Cholesterol in LDL [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2093-3": {
       "display": "Cholesterol [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2132-9": {
       "display": "Cobalamin (Vitamin B12) [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "21365-2": {
       "display": "Leptin [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2143-6": {
       "display": "Cortisol [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2157-6": {
       "display": "Creatine kinase [Enzymatic activity/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "CCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2160-0": {
       "display": "Creatinine [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2161-8": {
       "display": "Creatinine [Mass/volume] in Urine",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Urine"
     },
     "21619-2": {
       "display": "APOE gene mutations found [Identifier] in Blood or Tissue by Targeted gene mutation analysis Nominal",
-      "status": "ACTIVE"
+      "method": "Molgen",
+      "property": "Prid",
+      "scale": "Nom",
+      "status": "ACTIVE",
+      "system": "Bld/Tiss"
     },
     "2191-5": {
       "display": "Dehydroepiandrosterone sulfate (DHEA-S) [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2243-4": {
       "display": "Estradiol (E2) [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2276-4": {
       "display": "Ferritin [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2284-8": {
       "display": "Folate [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2324-2": {
       "display": "Gamma glutamyl transferase [Enzymatic activity/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "CCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2336-6": {
       "display": "Globulin [Mass/volume] in Serum",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser"
     },
     "2345-7": {
       "display": "Glucose [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "24108-3": {
       "display": "Cancer Ag 19-9 [Units/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "ACnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2458-8": {
       "display": "IgA [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2465-3": {
       "display": "IgG [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2472-9": {
       "display": "IgM [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2498-4": {
       "display": "Iron [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2500-7": {
       "display": "Iron binding capacity [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2502-3": {
       "display": "Iron saturation [Mass Fraction] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MFr",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2571-8": {
       "display": "Triglyceride [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "26746-8": {
       "display": "Magnesium [Mass/volume] in Red Blood Cells",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "RBC"
     },
     "2731-8": {
       "display": "Parathyrin.intact [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "27353-2": {
       "display": "Glucose mean value [Mass/volume] in Blood Estimated from glycated hemoglobin",
-      "status": "ACTIVE"
+      "method": "Estimated from glycated hemoglobin",
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "2823-3": {
       "display": "Potassium [Moles/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "SCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2839-9": {
       "display": "Progesterone [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2842-3": {
       "display": "Prolactin [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2857-1": {
       "display": "Prostate specific Ag [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2885-2": {
       "display": "Protein [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2923-1": {
       "display": "Retinol [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "29463-7": {
       "display": "Body weight",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "Mass",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "^Patient"
     },
     "2951-2": {
       "display": "Sodium [Moles/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "SCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2986-8": {
       "display": "Testosterone [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "2991-8": {
       "display": "Testosterone Free [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "3013-0": {
       "display": "Thyroglobulin [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "3016-3": {
       "display": "Thyrotropin [Units/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "ACnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "30189-5": {
       "display": "Grass Allergen Mix 1 (Orchard grass+Meadow Fescue+Perennial rye grass+Timothy+Kentucky blue grass) IgE Ab [Units/volume] in Serum by Multidisk",
-      "status": "ACTIVE"
+      "method": "Multidisk",
+      "property": "ACnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser"
     },
     "3024-7": {
       "display": "Thyroxine (T4) free [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "3026-2": {
       "display": "Thyroxine (T4) [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "30341-2": {
       "display": "Erythrocyte [Sedimentation Rate] in Blood",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "Sedimentation Rate",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "3040-3": {
       "display": "Lipase [Enzymatic activity/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "CCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "3051-0": {
       "display": "Triiodothyronine (T3) Free [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "3084-1": {
       "display": "Urate [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "3091-6": {
       "display": "Urea [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "30934-4": {
       "display": "Natriuretic peptide B [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "3097-3": {
       "display": "Urea nitrogen/Creatinine [Mass Ratio] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MRto",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "31017-7": {
       "display": "Tissue transglutaminase IgA Ab [Units/volume] in Serum",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "ACnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser"
     },
     "3255-7": {
       "display": "Fibrinogen [Mass/volume] in Platelet poor plasma by Coagulation assay",
-      "status": "ACTIVE"
+      "method": "Coag",
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "PPP"
     },
     "32623-1": {
       "display": "Platelet [Entitic mean volume] in Blood by Automated count",
-      "status": "ACTIVE"
+      "method": "Automated count",
+      "property": "EntMeanVol",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "32998-7": {
       "display": "Tissue transglutaminase IgG Ab [Units/volume] in Serum",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "ACnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser"
     },
     "33762-6": {
       "display": "Natriuretic peptide.B prohormone N-Terminal [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "33863-2": {
       "display": "Cystatin C [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
-    },
-    "35177-5": {
-      "display": "Polyunsaturated fatty acids [Moles/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "35505-7": {
       "display": "Lipoprotein.beta.subparticle [Type] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "Type",
+      "scale": "Nom",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "38476-8": {
       "display": "Mullerian inhibiting substance [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "39156-5": {
       "display": "Body mass index (BMI) [Ratio]",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "Ratio",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "^Patient"
     },
     "41982-0": {
       "display": "Percentage of body fat Measured",
-      "status": "ACTIVE"
+      "method": "Measured",
+      "property": "MFr",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "^Patient"
     },
     "43396-1": {
       "display": "Cholesterol non HDL [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "43583-4": {
       "display": "Lipoprotein a [Moles/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "SCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "43727-7": {
       "display": "Lipoprotein.beta.subparticle.small [Moles/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "SCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "43729-3": {
       "display": "Lipoprotein.alpha.subparticle.large [Moles/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "SCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "4485-9": {
       "display": "Complement C3 [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "4498-2": {
       "display": "Complement C4 [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "4544-3": {
       "display": "Hematocrit [Volume Fraction] of Blood by Automated count",
-      "status": "ACTIVE"
+      "method": "Automated count",
+      "property": "VFr",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "4548-4": {
       "display": "Hemoglobin A1c/Hemoglobin.total in Blood",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MFr",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "4679-7": {
       "display": "Reticulocytes/Erythrocytes in Blood",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "NFr",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "47214-2": {
       "display": "Homeostasis model assessment",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "ACnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "47828-9": {
       "display": "Adiponectin [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "48066-5": {
       "display": "Fibrin D-dimer DDU [Mass/volume] in Platelet poor plasma",
-      "status": "ACTIVE"
-    },
-    "48371-9": {
-      "display": "Docosapentaenoate (C22:5 n-3) [Moles/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": "DDU",
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "PPP"
     },
     "49563-0": {
       "display": "Troponin I.cardiac [Mass/volume] in Serum or Plasma by Detection limit <= 0.01 ng/mL",
-      "status": "ACTIVE"
-    },
-    "53060-0": {
-      "display": "Butyrylcarnitine (C4) [Moles/volume] in Amniotic fluid",
-      "status": "ACTIVE"
+      "method": "Detection limit <= 0.01 ng/mL",
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "54434-6": {
       "display": "Lipoprotein.beta.subparticle [Moles/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "SCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "5685-3": {
       "display": "Mercury [Mass/volume] in Blood",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "5724-0": {
       "display": "Selenium [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
+    },
+    "5763-8": {
+      "display": "Zinc [Mass/volume] in Serum or Plasma",
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "5767-9": {
       "display": "Appearance of Urine",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "Aper",
+      "scale": "Nom",
+      "status": "ACTIVE",
+      "system": "Urine"
+    },
+    "5769-5": {
+      "display": "Bacteria [#/area] in Urine sediment by Microscopy high power field",
+      "method": "Microscopy.light.HPF",
+      "property": "Naric",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Urine sed"
     },
     "5770-3": {
       "display": "Bilirubin.total [Presence] in Urine by Test strip",
-      "status": "ACTIVE"
+      "method": "Test strip",
+      "property": "PrThr",
+      "scale": "Ord",
+      "status": "ACTIVE",
+      "system": "Urine"
     },
     "5778-6": {
       "display": "Color of Urine",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "Color",
+      "scale": "Nom",
+      "status": "ACTIVE",
+      "system": "Urine"
     },
     "5792-7": {
       "display": "Glucose [Mass/volume] in Urine by Test strip",
-      "status": "ACTIVE"
+      "method": "Test strip",
+      "property": "MCnc",
+      "scale": "SemiQn",
+      "status": "ACTIVE",
+      "system": "Urine"
     },
     "5794-3": {
       "display": "Hemoglobin [Presence] in Urine by Test strip",
-      "status": "ACTIVE"
+      "method": "Test strip",
+      "property": "PrThr",
+      "scale": "Ord",
+      "status": "ACTIVE",
+      "system": "Urine"
     },
     "5796-8": {
       "display": "Hyaline casts [#/area] in Urine sediment by Microscopy low power field",
-      "status": "ACTIVE"
+      "method": "Microscopy.light.LPF",
+      "property": "Naric",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Urine sed"
     },
     "5797-6": {
       "display": "Ketones [Mass/volume] in Urine by Test strip",
-      "status": "ACTIVE"
+      "method": "Test strip",
+      "property": "MCnc",
+      "scale": "SemiQn",
+      "status": "ACTIVE",
+      "system": "Urine"
     },
     "5799-2": {
       "display": "Leukocyte esterase [Presence] in Urine by Test strip",
-      "status": "ACTIVE"
+      "method": "Test strip",
+      "property": "PrThr",
+      "scale": "Ord",
+      "status": "ACTIVE",
+      "system": "Urine"
     },
     "5802-4": {
       "display": "Nitrite [Presence] in Urine by Test strip",
-      "status": "ACTIVE"
+      "method": "Test strip",
+      "property": "PrThr",
+      "scale": "Ord",
+      "status": "ACTIVE",
+      "system": "Urine"
     },
     "5803-2": {
       "display": "pH of Urine by Test strip",
-      "status": "ACTIVE"
+      "method": "Test strip",
+      "property": "LsCnc",
+      "scale": "SemiQn",
+      "status": "ACTIVE",
+      "system": "Urine"
     },
     "5804-0": {
       "display": "Protein [Mass/volume] in Urine by Test strip",
-      "status": "ACTIVE"
-    },
-    "5808-1": {
-      "display": "Erythrocytes [#/volume] in Urine sediment by Microscopy high power field",
-      "status": "ACTIVE"
+      "method": "Test strip",
+      "property": "MCnc",
+      "scale": "SemiQn",
+      "status": "ACTIVE",
+      "system": "Urine"
     },
     "5811-5": {
       "display": "Specific gravity of Urine by Test strip",
-      "status": "ACTIVE"
+      "method": "Test strip",
+      "property": "SpGrav",
+      "scale": "SemiQn",
+      "status": "ACTIVE",
+      "system": "Urine"
     },
     "5821-4": {
       "display": "Leukocytes [#/area] in Urine sediment by Microscopy high power field",
-      "status": "ACTIVE"
+      "method": "Microscopy.light.HPF",
+      "property": "Naric",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Urine sed"
     },
     "5902-2": {
       "display": "Prothrombin time (PT)",
-      "status": "ACTIVE"
+      "method": "Coag.tissue factor induced",
+      "property": "Time",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "PPP"
     },
     "5905-5": {
       "display": "Monocytes/Leukocytes in Blood by Automated count",
-      "status": "ACTIVE"
+      "method": "Automated count",
+      "property": "NFr",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
-    "630-4": {
-      "display": "Bacteria identified in Urine by Culture",
-      "status": "ACTIVE"
+    "62292-8": {
+      "display": "25-Hydroxyvitamin D3+25-Hydroxyvitamin D2 [Mass/volume] in Serum or Plasma",
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "6301-6": {
       "display": "INR in Platelet poor plasma by Coagulation assay",
-      "status": "ACTIVE"
+      "method": "Coag.tissue factor induced.INR",
+      "property": "RelTime",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "PPP"
     },
     "63453-5": {
       "display": "Gliadin peptide IgA Ab [Units/volume] in Serum by Immunoassay",
-      "status": "ACTIVE"
+      "method": "IA",
+      "property": "ACnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser"
     },
     "63459-2": {
       "display": "Gliadin peptide IgG Ab [Units/volume] in Serum by Immunoassay",
-      "status": "ACTIVE"
+      "method": "IA",
+      "property": "ACnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser"
     },
     "6598-7": {
       "display": "Troponin T.cardiac [Mass/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "6690-2": {
       "display": "Leukocytes [#/volume] in Blood by Automated count",
-      "status": "ACTIVE"
+      "method": "Automated count",
+      "property": "NCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "6768-6": {
       "display": "Alkaline phosphatase [Enzymatic activity/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "CCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "6833-8": {
       "display": "Cat dander IgE Ab [Units/volume] in Serum",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "ACnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser"
+    },
+    "6873-4": {
+      "display": "Beta hydroxybutyrate [Moles/volume] in Serum or Plasma",
+      "method": null,
+      "property": "SCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "6875-9": {
       "display": "Cancer Ag 15-3 [Units/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "ACnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "704-7": {
       "display": "Basophils [#/volume] in Blood by Automated count",
-      "status": "ACTIVE"
+      "method": "Automated count",
+      "property": "NCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "706-2": {
       "display": "Basophils/Leukocytes in Blood by Automated count",
-      "status": "ACTIVE"
+      "method": "Automated count",
+      "property": "NFr",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "711-2": {
       "display": "Eosinophils [#/volume] in Blood by Automated count",
-      "status": "ACTIVE"
+      "method": "Automated count",
+      "property": "NCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "713-8": {
       "display": "Eosinophils/Leukocytes in Blood by Automated count",
-      "status": "ACTIVE"
+      "method": "Automated count",
+      "property": "NFr",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "718-7": {
       "display": "Hemoglobin [Mass/volume] in Blood",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "731-0": {
       "display": "Lymphocytes [#/volume] in Blood by Automated count",
-      "status": "ACTIVE"
+      "method": "Automated count",
+      "property": "NCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "736-9": {
       "display": "Lymphocytes/Leukocytes in Blood by Automated count",
-      "status": "ACTIVE"
+      "method": "Automated count",
+      "property": "NFr",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "73708-0": {
       "display": "Body fat [Mass] Calculated",
-      "status": "ACTIVE"
+      "method": "Calculated",
+      "property": "Mass",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "^Patient"
     },
     "73964-9": {
       "display": "Body muscle mass Calculated",
-      "status": "ACTIVE"
+      "method": "Calculated",
+      "property": "Mass",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "^Patient"
     },
     "742-7": {
       "display": "Monocytes [#/volume] in Blood by Automated count",
-      "status": "ACTIVE"
-    },
-    "75095-0": {
-      "display": "Docosahexaenoate (C22:6w3) [Entitic substance] in Red Blood Cells",
-      "status": "ACTIVE"
-    },
-    "75097-6": {
-      "display": "Eicosapentaenoate (C20:5w3) [Entitic substance] in Red Blood Cells",
-      "status": "ACTIVE"
+      "method": "Automated count",
+      "property": "NCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "751-8": {
       "display": "Neutrophils [#/volume] in Blood by Automated count",
-      "status": "ACTIVE"
-    },
-    "75110-7": {
-      "display": "Arachidonate (C20:4w6) [Entitic substance] in Red Blood Cells",
-      "status": "ACTIVE"
-    },
-    "75117-2": {
-      "display": "Linoleate (C18:2w6) [Entitic substance] in Red Blood Cells",
-      "status": "ACTIVE"
+      "method": "Automated count",
+      "property": "NCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "770-8": {
       "display": "Neutrophils/Leukocytes in Blood by Automated count",
-      "status": "ACTIVE"
+      "method": "Automated count",
+      "property": "NFr",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "77307-7": {
       "display": "Lead [Mass/volume] in Venous blood",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "BldV"
     },
     "777-3": {
       "display": "Platelets [#/volume] in Blood by Automated count",
-      "status": "ACTIVE"
+      "method": "Automated count",
+      "property": "NCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "785-6": {
       "display": "MCH [Entitic mass] by Automated count",
-      "status": "ACTIVE"
+      "method": "Automated count",
+      "property": "EntMass",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "RBC"
     },
     "786-4": {
       "display": "MCHC [Entitic Mass/volume] in Red Blood Cells by Automated count",
-      "status": "ACTIVE"
+      "method": "Automated count",
+      "property": "EntMCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "RBC"
     },
     "787-2": {
       "display": "MCV [Entitic mean volume] in Red Blood Cells by Automated count",
-      "status": "ACTIVE"
+      "method": "Automated count",
+      "property": "EntMeanVol",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "RBC"
     },
     "788-0": {
       "display": "Erythrocyte [DistWidth] in Blood by Automated count",
-      "status": "ACTIVE"
+      "method": "Automated count",
+      "property": "DistWidth",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "789-8": {
       "display": "Erythrocytes [#/volume] in Blood by Automated count",
-      "status": "ACTIVE"
+      "method": "Automated count",
+      "property": "NCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "8061-4": {
       "display": "Nuclear Ab [Presence] in Serum",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "PrThr",
+      "scale": "Ord",
+      "status": "ACTIVE",
+      "system": "Ser"
     },
     "8098-6": {
       "display": "Thyroglobulin Ab [Units/volume] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "ACnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "8099-4": {
       "display": "Thyroperoxidase Ab [Units/volume] in Serum or Plasma",
-      "status": "ACTIVE"
-    },
-    "8245-3": {
-      "display": "Zinc [Mass/volume] in Blood",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "ACnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "8280-0": {
       "display": "Waist Circumference at umbilicus by Tape measure",
-      "status": "ACTIVE"
+      "method": "Tape measure",
+      "property": "Len",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Abdomen.mid"
     },
     "8353-5": {
       "display": "Skin fold thickness Thigh",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "Len",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Thigh"
     },
     "8354-3": {
       "display": "Skin fold thickness Triceps",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "Len",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Triceps"
     },
     "8355-0": {
       "display": "Skin fold thickness Waist",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "Len",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Waist"
     },
     "883-9": {
       "display": "ABO group [Type] in Blood",
-      "status": "ACTIVE"
-    },
-    "90908-5": {
-      "display": "Eicosapentaenoate (C20:5w3)+Docosapentaenate (C22:5w3)+Docosahexaenoate (C22:6w3)/Fatty acids.C14-C22 risk [Interpretation] in Blood Qualitative",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "Type",
+      "scale": "Nom",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "90909-3": {
       "display": "Arachidonate (C20:4w6)/Eicosapentaenoate (C20:5w3) [Mass Ratio] in Blood",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MRto",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "90910-1": {
       "display": "Omega 6 fatty acids (w6)/Omega 3 fatty acids (w3) [Mass Ratio] in Blood",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MRto",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
+    },
+    "90911-9": {
+      "display": "Eicosapentaenoate (C20:5w3)+Docosapentaenate (C22:5w3)+Docosahexaenoate (C22:6w3)/Fatty acids.C14-C22 in Blood",
+      "method": null,
+      "property": "MFr",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
+    },
+    "90912-7": {
+      "display": "Eicosapentaenoate (C20:5w3)/Fatty acids.C14-C22 in Blood",
+      "method": null,
+      "property": "MFr",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
+    },
+    "90913-5": {
+      "display": "Docosapentaenate (C22:5w3)/Fatty acids.C14-C22 in Blood",
+      "method": null,
+      "property": "MFr",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
+    },
+    "90914-3": {
+      "display": "Docosahexaenoate (C22:6w3)/Fatty acids.C14-C22 in Blood",
+      "method": null,
+      "property": "MFr",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
+    },
+    "90916-8": {
+      "display": "Arachidonate (C20:4w6)/Fatty acids.C14-C22 in Blood",
+      "method": null,
+      "property": "MFr",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
+    },
+    "90917-6": {
+      "display": "Linoleate (C18:2w6)/Fatty acids.C14-C22 in Blood",
+      "method": null,
+      "property": "MFr",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld"
     },
     "9318-7": {
       "display": "Albumin/Creatinine [Mass Ratio] in Urine",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MRto",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Urine"
     },
     "96735-6": {
       "display": "Lipoprotein.beta.subparticle.medium [Moles/volume] in Serum",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "SCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser"
     },
     "9830-1": {
       "display": "Cholesterol.total/Cholesterol in HDL [Mass Ratio] in Serum or Plasma",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "MRto",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas"
     },
     "98979-8": {
       "display": "Glomerular filtration rate [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI 2021)/1.73 sq M",
-      "status": "ACTIVE"
+      "method": "Creatinine-based formula (CKD-EPI 2021)/1.73 sq M",
+      "property": "ArVRat",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas/Bld"
     },
     "99620-7": {
       "display": "Omega 3 fatty acids (w3) [Moles/volume] in RBC.lysate",
-      "status": "ACTIVE"
+      "method": null,
+      "property": "SCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "RBC.lysate"
+    },
+    "99621-5": {
+      "display": "Omega 6 fatty acids (w6) [Moles/volume] in RBC.lysate",
+      "method": null,
+      "property": "SCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "RBC.lysate"
     }
   }
 }

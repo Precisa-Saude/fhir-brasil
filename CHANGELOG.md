@@ -1,3 +1,9 @@
+## [0.38.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.37.2...v0.38.0) (2026-10-06)
+
+### Features
+
+* **ocr-utils:** grafias da Quest, BUN (3094-0) e seção da urinálise ([#141](https://github.com/Precisa-Saude/fhir-brasil/issues/141)) ([9e085ee](https://github.com/Precisa-Saude/fhir-brasil/commit/9e085ee28003911714c1fec2155b63e50c5fceb1))
+
 ## [0.37.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.37.1...v0.37.2) (2026-10-06)
 
 ### Bug Fixes

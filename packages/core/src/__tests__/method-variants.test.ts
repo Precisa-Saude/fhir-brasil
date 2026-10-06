@@ -62,6 +62,27 @@ describe('variantes por método no catálogo', () => {
     }
   });
 
+  // Variante repetida, ou igual a um código que já resolve para outro
+  // biomarcador, faria o `loincToCode` responder pelo último que escreveu no
+  // mapa, em silêncio.
+  it('código de variante é único e não colide com nenhum outro código do catálogo', () => {
+    const outros = BIOMARKER_DEFINITIONS.flatMap((b) => [
+      ...(b.loinc ? [b.loinc] : []),
+      ...(b.loincAliases ?? []),
+    ]);
+    const codigos = variantes.map((v) => v.loinc);
+    expect(new Set(codigos).size).toBe(codigos.length);
+    expect(codigos.filter((c) => outros.includes(c))).toEqual([]);
+  });
+
+  it('toda pista é texto não vazio, e variante sem pista diz por quê', () => {
+    for (const v of variantes) {
+      for (const cue of [...v.cues.pt, ...v.cues.en])
+        expect(cue.trim().length, v.loinc).toBeGreaterThan(0);
+      if (v.cues.pt.length + v.cues.en.length === 0) expect(v.note, v.loinc).toBeTruthy();
+    }
+  });
+
   it('toda variante está no BRLabTestVS', () => {
     for (const v of variantes) expect(valueSet, v.loinc).toContain(`$LOINC#${v.loinc} `);
   });

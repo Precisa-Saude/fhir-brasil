@@ -1,3 +1,4 @@
+import { getDefinitionByCode } from '@precisa-saude/fhir';
 import { describe, expect, it } from 'vitest';
 
 import { findBiomarkersInText } from '../anchor.js';
@@ -49,6 +50,30 @@ describe('varredura do método do LDL', () => {
   it('"direta" de outro exame não vira método do LDL', () => {
     const text = 'COLESTEROL LDL 120 mg/dL\nBILIRRUBINA DIRETA 0,2 mg/dL';
     expect(ldlDe(text)?.methodLoinc).toBeUndefined();
+  });
+
+  // Hoje só uma variante tem pista, então o caso não aparece no catálogo. O
+  // teste dá uma pista à variante calculada por um instante para conferir a
+  // regra: duas variantes afirmadas no mesmo trecho deixam o exame sem método.
+  it('pistas de duas variantes no mesmo trecho deixam o exame sem método', () => {
+    const calculada = getDefinitionByCode('LDL')?.methodVariants?.find(
+      (v) => v.loinc === '13457-7',
+    );
+    expect(calculada).toBeDefined();
+    const antes = calculada!.cues.en;
+    calculada!.cues.en = ['calculated by Friedewald'];
+    const linhas = [
+      'LDL-CHOLESTEROL 87 mg/dL',
+      'LDL-C is now calculated using the Martin-Hopkins calculation.',
+      'Earlier results were calculated by Friedewald.',
+    ];
+    try {
+      expect(ldlDe(linhas.join('\n'))?.methodLoinc).toBeUndefined();
+      // Controle: sem a segunda pista, o mesmo texto escolhe Martin-Hopkins.
+      expect(ldlDe(linhas.slice(0, 2).join('\n'))?.methodLoinc).toBe('96259-7');
+    } finally {
+      calculada!.cues.en = antes;
+    }
   });
 
   it('exame sem variantes não ganha método', () => {

@@ -305,9 +305,15 @@ function lerSnapshot(): Snapshot | null {
 }
 
 async function main() {
-  const comLoinc = BIOMARKER_DEFINITIONS.filter((b) => b.loinc).sort((a, b) =>
-    String(a.loinc).localeCompare(String(b.loinc)),
-  );
+  // As variantes por método entram como entradas próprias, com o código do
+  // biomarcador ao lado: são códigos que o catálogo emite, e precisam do mesmo
+  // check de existência e deriva que o código sem método.
+  const comLoinc = [
+    ...BIOMARKER_DEFINITIONS.filter((b) => b.loinc),
+    ...BIOMARKER_DEFINITIONS.flatMap((b) =>
+      (b.methodVariants ?? []).map((v) => ({ code: b.code, loinc: v.loinc })),
+    ),
+  ].sort((a, b) => String(a.loinc).localeCompare(String(b.loinc)));
 
   const unicosDoCatalogo = new Set(comLoinc.map((b) => String(b.loinc)));
 

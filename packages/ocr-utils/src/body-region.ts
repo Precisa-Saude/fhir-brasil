@@ -1,5 +1,6 @@
 /**
- * Qualificador de região do corpo antes de um nome de composição corporal.
+ * Desambiguação por região do corpo: o qualificador de região antes de um nome
+ * de composição corporal, e a dobra cutânea que na verdade é circunferência.
  * Separado do `anchor.ts` pelo mesmo motivo do `anchor-lexicon.ts`: manter o
  * arquivo do algoritmo legível.
  */
@@ -98,4 +99,56 @@ const STARTS_WITH_PERCENT = /^ ?(?:\( ?% ?\)|%|[-+]?\d+(?:[.,]\d+)? ?%)/;
  */
 export function followedByPercent(code: string, after: string): boolean {
   return WHOLE_BODY_MASS_CODES.has(code) && STARTS_WITH_PERCENT.test(after);
+}
+
+/**
+ * Sítios de dobra cutânea cujo nome nu também nomeia uma circunferência:
+ * "Coxa" aparece tanto em "Dobra Cutânea Coxa" quanto em "Circunferência da
+ * Coxa". O termo nu precisa existir como alias, porque há laudo que imprime
+ * só o sítio na coluna, então a desambiguação tem que vir do contexto da
+ * linha, como já se faz com laudo genético.
+ */
+export const SKINFOLD_SITE_CODES = new Set([
+  'SkinfoldAbdominal',
+  'SkinfoldChest',
+  'SkinfoldMidaxillary',
+  'SkinfoldSubscapular',
+  'SkinfoldSuprailiac',
+  'SkinfoldThigh',
+  'SkinfoldTriceps',
+]);
+
+/** Uma linha de circunferência ou perímetro não mede dobra. */
+const GIRTH_CONTEXT_PATTERNS: RegExp[] = [
+  /\bcircumference\b/,
+  /\bcircunferencias?\b/,
+  /\bperimetros?\b/,
+  /\bgirth\b/,
+];
+
+/**
+ * Só bloqueia quando a linha fala de circunferência e não fala de dobra:
+ * "Dobra Cutânea Coxa" e "Thigh Skinfold" continuam ancorando normalmente,
+ * e uma linha que traga as duas palavras é ambígua demais para descartar.
+ */
+const SKINFOLD_CONTEXT_PATTERNS: RegExp[] = [/\bdobras?\b/, /\bskin ?folds?\b/, /\bpregas?\b/];
+
+/**
+ * Medida em centímetros numa linha de sítio corporal.
+ *
+ * Dobra cutânea é em milímetros, sempre: um valor em cm no mesmo sítio é
+ * circunferência. É o desambiguador mais forte que existe aqui, porque não
+ * depende de a folha escrever a palavra "circunferência", e num laudo de
+ * antropometria a coluna costuma trazer só o sítio e o número.
+ *
+ * Rejeita cm em vez de exigir mm: há folha que imprime a unidade no cabeçalho
+ * da coluna e não em cada linha, e exigir mm perderia essas.
+ */
+const CENTIMETRE_VALUE = /\d\s*(?:,\d+\s*)?cm\b/;
+
+export function hasGirthContext(line: string): boolean {
+  if (SKINFOLD_CONTEXT_PATTERNS.some((re) => re.test(line))) {
+    return false;
+  }
+  return GIRTH_CONTEXT_PATTERNS.some((re) => re.test(line)) || CENTIMETRE_VALUE.test(line);
 }

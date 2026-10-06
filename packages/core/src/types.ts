@@ -50,6 +50,12 @@ export interface LabObservationData {
   flag: Flag;
   isQualitative?: boolean;
   /**
+   * O LOINC por método, quando o laudo afirmou o método por escrito. Só vale
+   * se for uma das `methodVariants` declaradas para o biomarcador; qualquer
+   * outro valor é ignorado e sai o código sem método.
+   */
+  methodLoinc?: string;
+  /**
    * Tipo da faixa simples (`referenceMin`/`referenceMax`), quando quem chama
    * sabe. Sai como `referenceRange.type`. Faixa impressa pelo laboratório
    * costuma ficar sem: o laudo não diz de onde tirou o intervalo.

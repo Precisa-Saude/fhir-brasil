@@ -5,7 +5,7 @@
  * See: https://hl7.org/fhir/diagnosticreport.html
  */
 
-import { codeToLoinc } from './biomarkers';
+import { codeToLoinc, methodVariantOf } from './biomarkers';
 import { type Addressable, entryFullUrl } from './bundle-urls';
 import { BIOMARKER_CODE_SYSTEM, LOINC_SYSTEM } from './code-systems';
 import type {
@@ -133,7 +133,14 @@ export function labObservationToFHIR(
   patientId: string,
   laboratoryName?: string,
 ): Addressable<FHIRObservation> {
-  const loincCode = codeToLoinc(observation.biomarkerCode);
+  // O código por método só sai quando é variante declarada do biomarcador. Um
+  // `methodLoinc` qualquer viraria afirmação sob `http://loinc.org` que o
+  // catálogo não conferiu.
+  const methodLoinc =
+    observation.methodLoinc && methodVariantOf(observation.biomarkerCode, observation.methodLoinc)
+      ? observation.methodLoinc
+      : undefined;
+  const loincCode = methodLoinc ?? codeToLoinc(observation.biomarkerCode);
   // Use default unit if source unit is empty
   const sourceUnit =
     observation.unit || getDefaultUnit(observation.biomarkerCode) || observation.unit;

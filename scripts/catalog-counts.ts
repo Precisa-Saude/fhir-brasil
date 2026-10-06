@@ -73,8 +73,9 @@ const loincPct = ((withLoinc / total) * 100).toFixed(1).replace('.', ',');
 const ranges = Object.keys(defaultReferenceRanges).length;
 const groups = Object.entries(CATEGORY_GROUPS);
 const subcategories = new Set(groups.flatMap(([, g]) => g.subcategories)).size;
-// Inclui os aliases: o LDH carrega o 2532-0 antigo, que o LOINC marca como
-// DISCOURAGED, além do código canônico. Por isso a contagem de códigos
+// Inclui os aliases e as variantes por método: o LDH carrega o 2532-0 antigo,
+// que o LOINC marca como DISCOURAGED, e o LDL os três códigos por método (ver
+// `methodVariants`), além do código canônico. Por isso a contagem de códigos
 // aceitos é maior que a de biomarcadores com código.
 const acceptedLoincCodes = getAllLoincCodes().length;
 
@@ -102,7 +103,7 @@ const block = [
   `Medido no \`@precisa-saude/fhir@${version}\`, gerado por \`pnpm catalog:counts\`.`,
   '',
   `- **${total} biomarcadores** definidos, dos quais **${withLoinc} têm código LOINC** (${loincPct}%) e ${withoutLoinc} não têm.`,
-  `- **${acceptedLoincCodes} códigos LOINC aceitos** na busca por código: os ${withLoinc} canônicos mais os aliases de códigos que o LOINC aposentou.`,
+  `- **${acceptedLoincCodes} códigos LOINC aceitos** na busca por código: os ${withLoinc} canônicos, as variantes por método e os aliases de códigos que o LOINC aposentou.`,
   `- **${ranges} faixas de referência**, com variantes por sexo e idade.`,
   `- **${groups.length} categorias clínicas** de primeiro nível sobre ${subcategories} subcategorias.`,
   '',

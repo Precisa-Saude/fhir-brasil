@@ -47,6 +47,10 @@ for (const b of biomarkersWithLoinc) {
   }
   const displayName = b.names.pt[0] ?? b.names.en[0] ?? b.code;
   lines.push(`* $LOINC#${b.loinc} "${displayName}"`);
+  // As variantes por método também são códigos que o conversor emite.
+  for (const v of b.methodVariants ?? []) {
+    lines.push(`* $LOINC#${v.loinc} "${displayName} (${v.method})"`);
+  }
 }
 lines.push('');
 

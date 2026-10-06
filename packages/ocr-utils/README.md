@@ -103,6 +103,12 @@ por código, o de maior confiança.
 `position` é o índice no texto normalizado (sem acentos, minúsculas, espaços
 horizontais colapsados), não no texto OCR original.
 
+Quando o biomarcador tem códigos LOINC por método e o texto afirma o método
+perto do exame, o casamento traz `methodLoinc` e `methodCue`. A decisão é da
+varredura; o `validateExtraction` troca o código por método que o modelo
+devolver pelo que a varredura achou, ou pelo código sem método. Ver
+[código LOINC por método](../../docs/biomarcadores.md#código-loinc-por-método).
+
 #### Confiança
 
 `match.confidence` reflete a qualidade do casamento — nome completo ao lado de

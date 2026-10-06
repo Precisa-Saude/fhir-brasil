@@ -12,6 +12,28 @@
  * LOINC codes directly, eliminating the need for name-matching logic.
  */
 
+/**
+ * Um código LOINC irmão do da entrada, que difere só no eixo Method.
+ *
+ * O `loinc` da entrada é o código sem método, e continua sendo o padrão: a
+ * variante só vale quando o laudo afirma o método por escrito. Separado de
+ * `loincAliases`, que quer dizer "código antigo para a mesma coisa".
+ */
+export interface MethodVariant {
+  /**
+   * Trechos que afirmam o método, comparados por token inteiro como as grafias
+   * de `names`, na linha do exame e nas seguintes até o próximo exame. Só entra
+   * pista que aparece em laudo real; variante sem pista com evidência fica com
+   * as listas vazias e não é escolhida pela varredura.
+   */
+  cues: { en: string[]; pt: string[] };
+  loinc: string;
+  /** O texto da parte Method do LOINC, como o snapshot a registra. */
+  method: string;
+  /** Por que este código, e de onde veio a pista. */
+  note?: string;
+}
+
 export interface BiomarkerDefinition {
   category: string | string[];
   code: string;
@@ -19,6 +41,8 @@ export interface BiomarkerDefinition {
   hidden?: boolean; // If true, biomarker is extracted but not shown in UI
   loinc?: string; // Optional - some DEXA regional metrics don't have official LOINC codes
   loincAliases?: string[];
+  /** Ver `MethodVariant`. */
+  methodVariants?: MethodVariant[];
   names: {
     en: string[];
     pt: string[];
@@ -81,6 +105,32 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     category: 'coracao',
     code: 'LDL',
     loinc: '2089-1',
+    // Os três irmãos de 2089-1 no eixo Method, conferidos ativos em out/2026.
+    // Medido em três dezenas de laudos reais, a única pista escrita foi a
+    // nota de rodapé de um laboratório norte-americano que declara o cálculo de
+    // Martin-Hopkins. Nenhum laudo brasileiro do corpus imprimiu "calculado",
+    // "direto" ou "Método:" perto do LDL, e por isso as outras duas variantes
+    // ficam sem pista até aparecer laudo que as afirme.
+    methodVariants: [
+      {
+        cues: { en: ['calculated using the Martin-Hopkins'], pt: [] },
+        loinc: '96259-7',
+        method: 'Calculated.Martin-Hopkins',
+        note: 'Rodapé "LDL-C is now calculated using the Martin-Hopkins calculation", que menciona Friedewald só para comparar. Por isso a pista é a frase afirmativa, e não o nome do método.',
+      },
+      {
+        cues: { en: [], pt: [] },
+        loinc: '13457-7',
+        method: 'Calculated',
+        note: 'Friedewald. Sem pista: nenhum laudo do corpus afirmou o cálculo por escrito.',
+      },
+      {
+        cues: { en: [], pt: [] },
+        loinc: '18262-6',
+        method: 'Direct assay',
+        note: 'Dosagem direta. Sem pista: nenhum laudo do corpus afirmou o método por escrito.',
+      },
+    ],
     names: {
       en: ['LDL Cholesterol', 'LDL', 'Low-Density Lipoprotein'],
       pt: ['Colesterol LDL', 'LDL', 'LDL-Colesterol'],
@@ -3340,6 +3390,13 @@ for (const def of BIOMARKER_DEFINITIONS) {
     }
   }
 
+  // O código por método resolve para o mesmo biomarcador. O inverso não: o
+  // `codeToLoinc` continua devolvendo o código sem método.
+  for (const variant of def.methodVariants ?? []) {
+    loincToCodeMap.set(variant.loinc, def.code);
+    validLoincSet.add(variant.loinc);
+  }
+
   // Handle code aliases
   if (def.codeAliases) {
     for (const alias of def.codeAliases) {
@@ -3360,6 +3417,16 @@ for (const def of BIOMARKER_DEFINITIONS) {
  */
 export function loincToCode(loinc: string): string | undefined {
   return loincToCodeMap.get(loinc);
+}
+
+/**
+ * A variante por método de um biomarcador, quando `loinc` é uma delas.
+ *
+ * Devolve `undefined` para o código sem método e para código que não é
+ * variante declarada daquele biomarcador.
+ */
+export function methodVariantOf(code: string, loinc: string): MethodVariant | undefined {
+  return codeToDefinitionMap.get(code)?.methodVariants?.find((v) => v.loinc === loinc);
 }
 
 /**

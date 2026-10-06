@@ -1,3 +1,9 @@
+## [0.36.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.35.1...v0.36.0) (2026-10-06)
+
+### Features
+
+* **core:** snapshot LOINC com os seis eixos e os grupos, conferido no servidor oficial ([#136](https://github.com/Precisa-Saude/fhir-brasil/issues/136)) ([947923e](https://github.com/Precisa-Saude/fhir-brasil/commit/947923eed8d67bd48e01437dd6dae7f579317a7a))
+
 ## [0.35.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.35.0...v0.35.1) (2026-10-06)
 
 ### Bug Fixes

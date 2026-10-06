@@ -25,6 +25,7 @@ Cada definição declara em `kind` que tipo de afirmação a faixa faz (ver [bio
 | `contois-apoa1-1996`, `schwedhelm-sdma-2011`, `nemeth-adma-2017`, `klee-bhb-2020`, `kalaria-ck-ri-2026`                                                                                                                                                      | intervalo de referência   | O título de cada um declara intervalo ou limite de referência; não conferido no texto                                                          |
 | `sbem-thyroid-2013`                                                                                                                                                                                                                                          | intervalo de referência   | O consenso adota o intervalo de referência do TSH; o limiar de tratamento dele é outro (10 mU/L)                                               |
 | `sbpc-ml-2021`                                                                                                                                                                                                                                               | intervalo de referência   | Recomendação de boas práticas de laboratório                                                                                                   |
+| `hosten-clinical-methods-1990`                                                                                                                                                                                                                               | intervalo de referência   | O capítulo publica o intervalo normal do BUN em sangue ou soro (texto completo)                                                                |
 | `sturgeon-nacb-2008`                                                                                                                                                                                                                                         | intervalo de referência   | Limites superiores convencionais dos ensaios de marcador tumoral. Exceção: `PSA_FreeRatio`                                                     |
 | `kelly-dxa-2009`                                                                                                                                                                                                                                             | distribuição populacional | Valores de referência da amostra de base populacional do NHANES, sem filtro de saúde (resumo)                                                  |
 | `ofenheimer-vat-2020`                                                                                                                                                                                                                                        | distribuição populacional | Curvas de referência da coorte de base populacional LEAD (resumo)                                                                              |
@@ -205,6 +206,14 @@ Disponível em: <https://www.who.int/publications/i/item/9789240000124>.
 BURTIS, C. A.; BRUNS, D. E. **Tietz Fundamentals of Clinical Chemistry and Molecular Diagnostics**. 7. ed. St. Louis: Elsevier Saunders, 2015. ISBN 978-1-4557-4165-6.
 
 **Valores utilizados:** Eletrolitos, funcao hepatica, coagulacao, inflamacao, e demais analitos sem diretriz brasileira especifica.
+
+### hosten-clinical-methods-1990
+
+HOSTEN, A. O. BUN and creatinine. In: WALKER, H. K.; HALL, W. D.; HURST, J. W. (ed.). **Clinical Methods: the history, physical, and laboratory examinations**. 3. ed. Boston: Butterworths, 1990. cap. 193. PMID: 21250147.
+
+Disponível em: <https://www.ncbi.nlm.nih.gov/books/NBK305/>.
+
+**Valores utilizados:** BUN, 5 a 20 mg/dL ("The normal range of urea nitrogen in blood or serum is 5 to 20 mg/dl"). Sem intervalo ótimo publicado.
 
 ### kdigo-ckd-2024
 

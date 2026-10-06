@@ -16,6 +16,7 @@ import type {
   FHIRQuantity,
   FHIRReferenceRange,
 } from './fhir-types';
+import { getLoincEntry } from './loinc-axes';
 import { referenceRangeMeaning } from './reference-ranges';
 import type { Flag, LabObservationData, LabReportData, UserProfileData } from './types';
 import { getDefaultUnit, resolveUcum } from './units';
@@ -181,7 +182,13 @@ export function labObservationToFHIR(
           ? [
               {
                 code: loincCode,
-                display: observation.biomarkerName,
+                // O display de um coding é o do sistema de código, e a licença
+                // do LOINC (seção 10.3) pede o nome oficial junto do código. O
+                // nome do laudo em português fica em `code.text` e no coding do
+                // catálogo. Fora do snapshot (código que só o chamador conhece),
+                // não há nome oficial para dar, e o display sai vazio em vez de
+                // pôr um nome nosso sob `http://loinc.org`.
+                display: getLoincEntry(loincCode)?.display,
                 system: LOINC_SYSTEM,
               },
             ]

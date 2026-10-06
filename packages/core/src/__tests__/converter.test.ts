@@ -80,6 +80,39 @@ describe('labObservationToFHIR', () => {
     expect(fhirObs.valueQuantity?.unit).toBe('mg/dL');
   });
 
+  // O display do coding LOINC é o nome oficial, e não o do laudo: quem lê
+  // `http://loinc.org` espera o display do sistema, e a licença pede o nome
+  // oficial junto do código. O nome em português segue em `code.text`.
+  it('o coding LOINC leva o display oficial, e o nome do laudo fica no text', () => {
+    const fhirObs = labObservationToFHIR(
+      { ...sampleLabObservation, biomarkerName: 'Glicose' },
+      'patient-1',
+    );
+    const loinc = fhirObs.code.coding?.find((c) => c.system === 'http://loinc.org');
+    expect(loinc?.code).toBe('2345-7');
+    expect(loinc?.display).toBe('Glucose [Mass/volume] in Serum or Plasma');
+    expect(fhirObs.code.text).toBe('Glicose');
+    const interno = fhirObs.code.coding?.find(
+      (c) => c.system === 'http://fhir-brasil.dev/biomarker-codes',
+    );
+    expect(interno?.display).toBe('Glicose');
+  });
+
+  it('código por método leva o display oficial da variante', () => {
+    const fhirObs = labObservationToFHIR(
+      {
+        ...sampleLabObservation,
+        biomarkerCode: 'LDL',
+        biomarkerName: 'LDL',
+        methodLoinc: '96259-7',
+      },
+      'patient-1',
+    );
+    const loinc = fhirObs.code.coding?.find((c) => c.system === 'http://loinc.org');
+    expect(loinc?.code).toBe('96259-7');
+    expect(loinc?.display).toMatch(/Martin-Hopkins/);
+  });
+
   it('should include internal code system', () => {
     const fhirObs = labObservationToFHIR(sampleLabObservation, 'patient-1');
     const internalCoding = fhirObs.code.coding?.find(

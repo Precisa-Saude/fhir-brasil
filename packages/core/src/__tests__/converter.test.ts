@@ -113,6 +113,21 @@ describe('labObservationToFHIR', () => {
     expect(loinc?.display).toMatch(/Martin-Hopkins/);
   });
 
+  it('methodLoinc que não é variante volta ao código base, com o display dele', () => {
+    const fhirObs = labObservationToFHIR(
+      {
+        ...sampleLabObservation,
+        biomarkerCode: 'LDL',
+        biomarkerName: 'LDL',
+        methodLoinc: '0000-0',
+      },
+      'patient-1',
+    );
+    const loinc = fhirObs.code.coding?.find((c) => c.system === 'http://loinc.org');
+    expect(loinc?.code).toBe('2089-1');
+    expect(loinc?.display).toBe('Cholesterol in LDL [Mass/volume] in Serum or Plasma');
+  });
+
   it('should include internal code system', () => {
     const fhirObs = labObservationToFHIR(sampleLabObservation, 'patient-1');
     const internalCoding = fhirObs.code.coding?.find(

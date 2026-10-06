@@ -395,6 +395,19 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
   tTG_IgA: nameOnly('31017-7'),
   tTG_IgG: nameOnly('32998-7'),
   Urea: nameOnly('3091-6'),
+  Urea_Creatinine_Ratio: {
+    loinc: '56997-0',
+    evidence: ['name'],
+    settledBy: 'name',
+    note: 'separado de BUN_Creatinine_Ratio em out/2026: o laudo brasileiro dosa ureia (3091-6), e a razão impressa é ureia/creatinina',
+    siblingsRejected: [
+      {
+        loinc: '3097-3',
+        reason:
+          'nitrogênio ureico (BUN)/creatinina: outro componente, valor cerca de 2,14 vezes menor e faixa da convenção BUN',
+      },
+    ],
+  },
   UricAcid: nameOnly('3084-1'),
   Urobilinogen_Urine: nameOnly('20405-7'),
   VitaminA: nameOnly('2923-1'),

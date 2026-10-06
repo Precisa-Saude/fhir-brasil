@@ -337,6 +337,17 @@ describe('getDefinitionByCode', () => {
     expect(def?.names.en).not.toContain('BUN');
   });
 
+  it('razão ureia/creatinina e razão BUN/creatinina são biomarcadores distintos', () => {
+    // O laudo brasileiro dosa ureia, e a razão ureia/creatinina sai cerca de
+    // 2,14 vezes a razão BUN/creatinina. Até out/2026 o nome em pt-BR caía em
+    // 3097-3 e o valor era comparado com a faixa 10-20 da convenção BUN.
+    expect(findCodeByName('Razão Ureia / Creatinina')).toBe('Urea_Creatinine_Ratio');
+    expect(findCodeByName('Relação Ureia/Creatinina')).toBe('Urea_Creatinine_Ratio');
+    expect(findCodeByName('Razão BUN / Creatinina')).toBe('BUN_Creatinine_Ratio');
+    expect(getDefinitionByCode('Urea_Creatinine_Ratio')?.loinc).toBe('56997-0');
+    expect(getDefinitionByCode('BUN_Creatinine_Ratio')?.loinc).toBe('3097-3');
+  });
+
   it('Lipoprotein_a usa LOINC 43583-4 (nmol/L, não 10835-7 mg/dL)', () => {
     const def = getDefinitionByCode('Lipoprotein_a');
     expect(def?.loinc).toBe('43583-4');

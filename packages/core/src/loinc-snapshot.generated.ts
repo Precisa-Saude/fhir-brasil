@@ -1613,6 +1613,16 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       system: 'Bld',
       time: 'Pt',
     },
+    '56997-0': {
+      component: 'Urea/Creatinine',
+      display: 'Urea/Creatinine [Mass Ratio] in Serum or Plasma',
+      method: null,
+      property: 'MRto',
+      scale: 'Qn',
+      status: 'ACTIVE',
+      system: 'Ser/Plas',
+      time: 'Pt',
+    },
     '5724-0': {
       component: 'Selenium',
       display: 'Selenium [Mass/volume] in Serum or Plasma',

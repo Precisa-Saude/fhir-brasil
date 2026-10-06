@@ -1721,16 +1721,37 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     category: 'rins',
     code: 'BUN_Creatinine_Ratio',
     // 3097-3 é "Urea nitrogen/Creatinine [Mass Ratio]", a razão BUN/creatinina,
-    // e a faixa de referência (10-20, Tietz) é a dessa convenção. O laudo
-    // brasileiro imprime "Relação Ureia/Creatinina", cuja faixa é outra (cerca
-    // de 21-43) e cujo código é 56997-0 ("Urea/Creatinine [Mass Ratio] in
-    // Serum or Plasma"). Trocar só o código deixaria a faixa errada do outro
-    // lado; a separação em duas grandezas, como em `Glucose_Fasting`, é
-    // decisão à parte, registrada em `reference-ranges.ts`.
+    // e a faixa de referência (10-20, Tietz) é a dessa convenção. Até out/2026
+    // esta entrada também levava os nomes "Razão Ureia / Creatinina" e
+    // "Urea/Creatinine Ratio", e o laudo brasileiro, que dosa ureia e não
+    // BUN, caía aqui: como ureia ≈ BUN × 2,14, a razão ureia/creatinina sai
+    // cerca de 2,14 vezes maior, e um valor normal era sinalizado como alto
+    // contra 10-20. Os nomes de ureia foram para `Urea_Creatinine_Ratio`
+    // (56997-0), e aqui ficam só as grafias de BUN, pela mesma regra que
+    // tirou "BUN" dos nomes de `Urea`: um nome exato resolve a um exame só.
     loinc: '3097-3',
     names: {
-      en: ['BUN/Creatinine Ratio', 'Urea/Creatinine Ratio'],
-      pt: ['Razão Ureia / Creatinina'],
+      en: ['BUN/Creatinine Ratio'],
+      pt: ['Razão BUN / Creatinina', 'Razão Nitrogênio Ureico / Creatinina'],
+    },
+    unit: 'razão',
+  },
+  {
+    category: 'rins',
+    code: 'Urea_Creatinine_Ratio',
+    // 56997-0 é "Urea/Creatinine [Mass Ratio] in Serum or Plasma": a mesma
+    // propriedade (MRto) e o mesmo material de 3097-3, com componente ureia
+    // em vez de nitrogênio ureico. É a razão que o laudo brasileiro imprime,
+    // porque o exame de rotina aqui é a ureia (3091-6), e não o BUN. Sem
+    // faixa de referência: o intervalo que circula (cerca de 21-43) é a
+    // conversão 10-20 × 2,14, sem fonte publicada em `sources.ts` que o
+    // sustente, e uma faixa derivada sem citação é justamente o que o teste
+    // de fontes existe para barrar. Sem faixa, o valor sai sem flag, que é
+    // melhor que o flag errado de antes.
+    loinc: '56997-0',
+    names: {
+      en: ['Urea/Creatinine Ratio'],
+      pt: ['Razão Ureia / Creatinina', 'Relação Ureia / Creatinina'],
     },
     unit: 'razão',
   },

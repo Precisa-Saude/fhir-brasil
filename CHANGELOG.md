@@ -1,3 +1,9 @@
+## [0.38.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.38.0...v0.38.1) (2026-10-06)
+
+### Bug Fixes
+
+* **core:** fim da seção de urinálise, "PH" sozinho, faixa do BUN e T3 total ([#142](https://github.com/Precisa-Saude/fhir-brasil/issues/142)) ([0883163](https://github.com/Precisa-Saude/fhir-brasil/commit/08831639ce565d6bf60a0f12c0a143d3cb700573)), closes [#141](https://github.com/Precisa-Saude/fhir-brasil/issues/141)
+
 ## [0.38.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.37.2...v0.38.0) (2026-10-06)
 
 ### Features

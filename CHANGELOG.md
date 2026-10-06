@@ -1,3 +1,9 @@
+## [0.35.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.35.0...v0.35.1) (2026-10-06)
+
+### Bug Fixes
+
+* **core:** D-dímero com o código FEU da faixa, e faixa de ensaio declara o código ([#135](https://github.com/Precisa-Saude/fhir-brasil/issues/135)) ([72f3170](https://github.com/Precisa-Saude/fhir-brasil/commit/72f3170f1a81c87f3a7072ed82dc928d3e5d6517))
+
 ## [0.35.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.34.0...v0.35.0) (2026-10-06)
 
 ### Features

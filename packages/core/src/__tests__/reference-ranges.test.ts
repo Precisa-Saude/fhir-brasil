@@ -5,19 +5,25 @@ import {
   biomarkerRangeDefinitions,
   type BiomarkerReferenceRange,
   defaultReferenceRanges,
+  flagAgainstCatalogRange,
   getFallbackReferenceRange,
   getReferenceRange,
   type ReferenceRangeContext,
+  referenceRangeMeaning,
 } from '../reference-ranges';
 import { SOURCE_REGISTRY } from '../sources';
 
 /**
- * Expected default range with the definition's source key propagated —
- * mirrors what `getReferenceRange` returns.
+ * Expected default range with the definition's source key and kind propagated,
+ * mirroring what `getReferenceRange` returns.
  */
 function expectedDefault(code: keyof typeof biomarkerRangeDefinitions): BiomarkerReferenceRange {
   const def = biomarkerRangeDefinitions[code];
-  return def.source ? { ...def.default, source: def.source } : def.default;
+  return {
+    ...def.default,
+    ...(def.kind && { kind: def.kind }),
+    ...(def.source && { source: def.source }),
+  };
 }
 
 describe('biomarkerRangeDefinitions', () => {
@@ -99,6 +105,83 @@ describe('defaultReferenceRanges', () => {
   it('should match default values from definitions', () => {
     expect(defaultReferenceRanges.HDL).toEqual(expectedDefault('HDL'));
     expect(defaultReferenceRanges.Cholesterol).toEqual(expectedDefault('Cholesterol'));
+  });
+});
+
+// PRE-463: a faixa diz que tipo de afirmação ela é. Sem isto, uma banda de
+// "faixa normal" mistura intervalo de ensaio, meta de diretriz e distribuição
+// populacional, e diz coisas diferentes conforme o marcador.
+describe('tipo da faixa', () => {
+  it('toda definição declara o tipo, como declara a fonte', () => {
+    const semTipo = Object.entries(biomarkerRangeDefinitions)
+      .filter(([, def]) => !def.kind)
+      .map(([code]) => code);
+
+    expect(semTipo).toEqual([]);
+  });
+
+  it('o tipo acompanha a faixa na consulta, inclusive pela variante', () => {
+    expect(getReferenceRange('LDL')?.kind).toBe('decision-threshold');
+    expect(getReferenceRange('Sodium')?.kind).toBe('reference-interval');
+    expect(getReferenceRange('FatMass', { age: 40, biologicalSex: 'M' })?.kind).toBe('population');
+    expect(defaultReferenceRanges.LDL?.kind).toBe('decision-threshold');
+  });
+
+  it('vira o referenceRange.type do FHIR, e a distribuição populacional fica sem código', () => {
+    expect(referenceRangeMeaning('reference-interval')?.code).toBe('normal');
+    expect(referenceRangeMeaning('decision-threshold')?.code).toBe('recommended');
+    expect(referenceRangeMeaning('population')).toBeUndefined();
+  });
+});
+
+// PRE-464: se um limite é corte clínico deixou de ser deduzido do `direction`.
+describe('limite clínico e limite de desenho', () => {
+  const ranges = (def: (typeof biomarkerRangeDefinitions)[string]) => [
+    def.default,
+    ...(def.variants ?? []).map((v) => v.range),
+  ];
+
+  // O limite que o `direction` neutralizava precisa dizer o que é. Marcador
+  // novo `lower-better` com piso, ou `higher-better` com teto, reprova aqui até
+  // alguém decidir com a fonte aberta, em vez de herdar a supressão calado.
+  it('o limite do lado que melhora declara se é corte clínico', () => {
+    const semDecisao: string[] = [];
+    for (const [code, def] of Object.entries(biomarkerRangeDefinitions)) {
+      for (const range of ranges(def)) {
+        if (def.direction === 'lower-better' && (range.min ?? 0) > 0 && !range.minKind) {
+          semDecisao.push(`${code}.min`);
+        }
+        if (def.direction === 'higher-better' && range.max !== undefined && !range.maxKind) {
+          semDecisao.push(`${code}.max`);
+        }
+      }
+    }
+
+    expect(semDecisao).toEqual([]);
+  });
+
+  it('HDL acima do teto de desenho não tem flag; abaixo do piso, tem', () => {
+    expect(flagAgainstCatalogRange('HDL', 105)).toBe('');
+    expect(flagAgainstCatalogRange('HDL', 35)).toBe('L');
+  });
+
+  it('gordura corporal abaixo do piso clínico é L, embora o marcador seja lower-better', () => {
+    expect(flagAgainstCatalogRange('BodyFatPct', 8)).toBe('L');
+    expect(flagAgainstCatalogRange('BodyFatPct', 35)).toBe('H');
+    // Com contexto vale a variante: o piso de um homem de 30 anos é 5%.
+    expect(flagAgainstCatalogRange('BodyFatPct', 8, { age: 30, biologicalSex: 'M' })).toBe('');
+  });
+
+  it('o piso de preenchimento da HbA1c e o teto do eGFR não viram flag', () => {
+    expect(flagAgainstCatalogRange('HbA1c', 1.5)).toBe('');
+    expect(flagAgainstCatalogRange('HbA1c', 6)).toBe('H');
+    expect(flagAgainstCatalogRange('eGFR', 125)).toBe('');
+    expect(flagAgainstCatalogRange('eGFR', 50)).toBe('L');
+  });
+
+  it('código sem faixa e valor dentro da faixa saem sem flag', () => {
+    expect(flagAgainstCatalogRange('NaoExiste', 1)).toBe('');
+    expect(flagAgainstCatalogRange('Sodium', 140)).toBe('');
   });
 });
 

@@ -133,7 +133,10 @@ As faixas de referência são definidas pela interface `BiomarkerRangeDefinition
 ```typescript
 interface BiomarkerReferenceRange {
   min?: number; // Limite inferior da faixa normal
+  minKind?: 'clinical' | 'display'; // Ausente vale 'clinical'
   max?: number; // Limite superior da faixa normal
+  maxKind?: 'clinical' | 'display'; // Ausente vale 'clinical'
+  kind?: RangeKind; // Preenchido pela consulta, a partir da definição
   optimalMin?: number; // Limite inferior da faixa ótima
   optimalMax?: number; // Limite superior da faixa ótima
   warningMax?: number; // Limite superior de alerta
@@ -144,15 +147,44 @@ interface BiomarkerRangeDefinition {
   default: BiomarkerReferenceRange; // Faixa padrão (fallback)
   variants?: RangeVariant[]; // Variantes por sexo/idade
   direction?: 'range' | 'higher-better' | 'lower-better';
+  kind?: 'reference-interval' | 'decision-threshold' | 'population';
   source?: string; // Referência bibliográfica
 }
 ```
 
-O campo `direction` indica a interpretação clínica:
+O campo `direction` diz para que lado o marcador melhora, e serve à cor e ao gauge:
 
-- `range` (padrão): acima do máximo **e** abaixo do mínimo são anormais
-- `higher-better`: acima do máximo é normal (ex: HDL, BMC)
-- `lower-better`: abaixo do mínimo é normal (ex: LDL, CRP)
+- `range` (padrão): os dois lados se afastam do saudável
+- `higher-better`: subir é bom (ex: HDL, BMC)
+- `lower-better`: descer é bom (ex: LDL, CRP)
+
+Ele **não** decide flag. Até a 0.33 ele fazia esse segundo trabalho, e os dois se separam na composição corporal: o `BodyFatPct` é `lower-better`, mas o piso dele vem da faixa saudável da fonte e é corte clínico.
+
+### Tipo da faixa
+
+O `kind` diz que tipo de afirmação a faixa faz. Toda definição do catálogo declara o seu:
+
+- `reference-interval`: intervalo de referência do ensaio, tirado de uma população de referência saudável
+- `decision-threshold`: limiar de decisão de diretriz ou de estudo de risco (meta de LDL, corte de pré-diabetes, estágio de DRC)
+- `population`: distribuição numa população sem filtro de saúde (NHANES, coortes de base populacional)
+
+Uma banda de "faixa normal" que misture os três diz coisas diferentes conforme o marcador. A classificação de cada fonte, com o motivo, está em [fontes-referencia.md](fontes-referencia.md#tipo-de-cada-faixa).
+
+Em FHIR, `referenceRangeMeaning(kind)` devolve o código do `referenceRange.type` (`normal` ou `recommended`). A distribuição populacional não tem código no `referencerange-meaning`, e a função devolve `undefined`. O conversor emite o `type` quando o `LabObservationData` traz `referenceKind`.
+
+### Limite clínico e limite de desenho
+
+`minKind` e `maxKind` dizem se cada limite é corte clínico. `display` é o limite que existe para a faixa ter dois lados no desenho: o teto de 100 mg/dL do HDL, o piso 2 da HbA1c. A flag contra a faixa do catálogo sai de `flagAgainstCatalogRange`, que ignora o limite `display`:
+
+```typescript
+import { flagAgainstCatalogRange } from '@precisa-saude/fhir';
+
+flagAgainstCatalogRange('HDL', 105); // ''  (o teto de 100 é desenho)
+flagAgainstCatalogRange('BodyFatPct', 8); // 'L' (o piso é clínico)
+flagAgainstCatalogRange('BodyFatPct', 8, { biologicalSex: 'M', age: 30 }); // '' (piso da variante: 5)
+```
+
+Ela serve só à faixa do catálogo. Faixa que o laboratório imprimiu é afirmação dele sobre aquela amostra, e a comparação contra ela é crua.
 
 ### Consultar faixas de referência
 

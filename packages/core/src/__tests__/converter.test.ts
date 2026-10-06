@@ -194,6 +194,32 @@ describe('labObservationToFHIR', () => {
     expect(fhirObs.referenceRange?.[0]?.appliesTo).toBeUndefined();
   });
 
+  // PRE-463: quem emite uma faixa do catálogo diz que tipo de faixa ela é. O
+  // `referenceRange` sem `type` se lê como a faixa do laboratório.
+  describe('tipo da faixa no referenceRange.type', () => {
+    const typeOf = (referenceKind?: LabObservationData['referenceKind']) =>
+      labObservationToFHIR(
+        { ...sampleLabObservation, referenceKind, referenceMax: 100, referenceMin: 0 },
+        'patient-1',
+      ).referenceRange?.[0]?.type;
+
+    it('intervalo de referência sai como normal', () => {
+      expect(typeOf('reference-interval')?.coding?.[0]).toMatchObject({
+        code: 'normal',
+        system: 'http://terminology.hl7.org/CodeSystem/referencerange-meaning',
+      });
+    });
+
+    it('limiar de decisão sai como recommended', () => {
+      expect(typeOf('decision-threshold')?.coding?.[0]?.code).toBe('recommended');
+    });
+
+    it('distribuição populacional e faixa sem tipo saem sem type', () => {
+      expect(typeOf('population')).toBeUndefined();
+      expect(typeOf(undefined)).toBeUndefined();
+    });
+  });
+
   // Laudo com uma coluna de referência por sexo. Sem `appliesTo` só há duas
   // saídas, e as duas perdem: escolher uma coluna sem saber de quem é o exame,
   // ou descartar as duas. Ver PRE-424 e PRE-425.

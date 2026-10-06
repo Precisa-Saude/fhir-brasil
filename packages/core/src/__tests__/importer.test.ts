@@ -155,6 +155,33 @@ describe('mapFHIRObservationToInternal', () => {
     }
   });
 
+  // PRE-463: o tipo da faixa volta do `referenceRange.type`, e o importador não
+  // inventa tipo para faixa que veio sem.
+  it('lê o tipo da faixa quando o Bundle traz', () => {
+    const typed = (code: string): FHIRObservation => ({
+      ...validObservation,
+      referenceRange: [
+        {
+          ...validObservation.referenceRange![0],
+          type: {
+            coding: [
+              { code, system: 'http://terminology.hl7.org/CodeSystem/referencerange-meaning' },
+            ],
+          },
+        },
+      ],
+    });
+    const kindOf = (obs: FHIRObservation) => {
+      const result = mapFHIRObservationToInternal(obs, 0);
+      return 'observation' in result ? result.observation.referenceKind : 'erro';
+    };
+
+    expect(kindOf(typed('normal'))).toBe('reference-interval');
+    expect(kindOf(typed('recommended'))).toBe('decision-threshold');
+    expect(kindOf(typed('treatment'))).toBeUndefined();
+    expect(kindOf(validObservation)).toBeUndefined();
+  });
+
   it('should extract high flag', () => {
     const highObs: FHIRObservation = {
       ...validObservation,

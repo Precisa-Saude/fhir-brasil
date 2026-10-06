@@ -41,6 +41,11 @@ export interface FHIRReferenceRange {
   high?: FHIRQuantity;
   low?: FHIRQuantity;
   text?: string;
+  /**
+   * Que tipo de faixa é esta, no `referencerange-meaning` do HL7. Ver
+   * `RangeKind` e `referenceRangeMeaning`.
+   */
+  type?: FHIRCodeableConcept;
 }
 
 export interface FHIRPeriod {

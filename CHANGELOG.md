@@ -1,3 +1,9 @@
+## [0.34.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.33.0...v0.34.0) (2026-10-06)
+
+### Features
+
+* **core:** faixa diz que tipo de afirmação é, e qual limite é corte clínico ([#133](https://github.com/Precisa-Saude/fhir-brasil/issues/133)) ([6598ed9](https://github.com/Precisa-Saude/fhir-brasil/commit/6598ed95e3386e589a0c6fbb15d5f0c719eb0f5e))
+
 ## [0.33.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.32.0...v0.33.0) (2026-10-06)
 
 ### Features

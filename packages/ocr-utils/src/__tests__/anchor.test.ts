@@ -850,11 +850,9 @@ describe('findBiomarkersInText: seção de urinálise', () => {
       .map((line) => line.trim().split(/\s{2,}/)[0])
       .join('\n');
     const anchors = new Map(anchorsOf(namesOnly));
-    // "pH" também é unidade na tabela UCUM, então a linha "PH" conta como
-    // linha com valor e sai com confiança cheia.
-    expect(anchors.get('pH_Urine')).toBe(CONFIDENCE_VALUE_ADJACENT);
     for (const code of [
       'Color_Urine',
+      'pH_Urine',
       'Glucose_Urine',
       'Bilirubin_Urine',
       'Ketones_Urine',
@@ -930,6 +928,44 @@ COMPREHENSIVE METABOLIC PANEL
       return !pattern?.loinc || !categories.includes('urina');
     });
     expect(wrong).toEqual([]);
+  });
+
+  it('"PH" sozinho não conta como valor, mesmo sendo unidade no UCUM', () => {
+    // O `[pH]` do UCUM fazia o próprio nome passar por unidade.
+    expect(anchorsOf('URINALYSIS\nPH')).toEqual([['pH_Urine', CONFIDENCE_NAME_ONLY]]);
+    expect(anchorsOf('URINALYSIS\nPH 6.0')).toEqual([['pH_Urine', CONFIDENCE_VALUE_ADJACENT]]);
+  });
+
+  it('linha do sedimento que o catálogo não tem não encerra a seção', () => {
+    // "MUCUS" sem valor tem a forma de um cabeçalho; a linha seguinte, com a
+    // unidade de campo do sedimento, mostra que a seção continua.
+    const withValues = `URINALYSIS
+   BACTERIA                      NONE SEEN                 NONE SEEN /HPF
+   MUCUS
+   WBC                           NONE SEEN                 < OR = 5 /HPF`;
+    expect(codesOf(withValues)).toEqual(['Bacteria_Urine', 'Leukocytes_Urine']);
+    // No texto em colunas, o que decide é o próximo nome que só pode ser da urina.
+    const namesOnly = 'URINALYSIS\nCOLOR\nMUCUS\nHYALINE CAST\nGLUCOSE';
+    expect(codesOf(namesOnly)).toEqual(['Color_Urine', 'HyalineCasts_Urine', 'Glucose_Urine']);
+  });
+
+  it('o cabeçalho de outro painel depois do sedimento ainda encerra a seção', () => {
+    const text = `URINALYSIS
+   MUCUS
+   WBC                           NONE SEEN                 < OR = 5 /HPF
+CBC (INCLUDES DIFF/PLT)
+   RBC
+   WHITE BLOOD CELL COUNT        5.5                       3.8-10.8 Thousand/uL`;
+    const codes = codesOf(text);
+    expect(codes).toEqual(expect.arrayContaining(['Leukocytes_Urine', 'RBC', 'WBC']));
+    expect(codes).not.toContain('RBC_Urine');
+  });
+
+  it('sem nada decisivo depois da linha desconhecida, a seção acaba nela', () => {
+    expect(codesOf('URINALYSIS\nCOLOR YELLOW\nCHEMISTRY\nGLUCOSE 87 mg/dL')).toEqual([
+      'Color_Urine',
+      'Glucose',
+    ]);
   });
 
   it('cabeçalho com número não é cabeçalho', () => {

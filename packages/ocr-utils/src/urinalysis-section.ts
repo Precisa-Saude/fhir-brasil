@@ -85,45 +85,80 @@ export interface SectionLine {
   /** A linha casa algum nome do catálogo ou algum nome nu da seção. */
   known: boolean;
   text: string;
+  /**
+   * A linha só pode ser da urina: casa um código da categoria urina ("OCCULT
+   * BLOOD", "COLOR"), fala de urina, ou traz a unidade de campo do sedimento
+   * (/HPF, /LPF).
+   */
+  urine: boolean;
 }
 
 const MENTIONS_URINE = /(?<![\p{L}\p{N}])urin[ae](?![\p{L}\p{N}])/u;
+const SEDIMENT_FIELD_UNIT = /\/(?:hpf|lpf)(?![\p{L}\p{N}])/u;
+
+/** Indício de urina que não depende de casar nome: a palavra, ou a unidade de campo. */
+export function hasUrineCue(line: string): boolean {
+  return MENTIONS_URINE.test(line) || SEDIMENT_FIELD_UNIT.test(line);
+}
+
+type LineKind = 'blank' | 'foreign' | 'header' | 'neutral' | 'unknown' | 'urine';
+
+function kindOf(line: SectionLine): LineKind {
+  const text = line.text.trim();
+  if (!text) return 'blank';
+  if (URINALYSIS_HEADER.test(text) && !/\d/.test(text)) return 'header';
+  if (line.foreign) return 'foreign';
+  if (line.urine) return 'urine';
+  return line.known || line.hasValue ? 'neutral' : 'unknown';
+}
 
 /**
  * Índices das linhas que estão dentro de uma seção de urinálise. A linha do
  * cabeçalho não entra.
  *
- * A seção começa no cabeçalho e termina na primeira linha que pareça o começo
- * de outra coisa. Laudo não marca o fim de seção, então o fim é inferido, e o
- * erro é empurrado para o lado barato: na dúvida a seção acaba, e o nome nu
- * volta ao sentido do sangue, que é o comportamento de antes desta regra.
- * Acaba em:
+ * A seção começa no cabeçalho. Laudo não marca o fim de seção, então o fim é
+ * inferido, e o erro é empurrado para o lado barato: na dúvida a seção acaba,
+ * e o nome nu volta ao sentido do sangue, que é o comportamento de antes desta
+ * regra. Acaba em:
  *
  * - uma linha com exame de outro painel (`foreign`);
- * - uma linha sem valor e sem nome conhecido, que é o jeito de um cabeçalho
- *   ("COMPREHENSIVE METABOLIC PANEL", "Bioquímica"). Sem esta, a "GLUCOSE" do
- *   painel seguinte viraria glicose da urina. Linha que fala de urina ("Material:
- *   Urina") não encerra;
+ * - o cabeçalho de outro painel;
  * - o fim do texto.
  *
- * Linha em branco não encerra nem conta. O limite conhecido: uma linha de
- * sedimento que o catálogo não tem e que chega sem valor ("MUCUS" sozinho, no
- * texto em colunas) também encerra, e o que vem depois dela volta ao sentido
- * de fora da seção.
+ * O difícil é o segundo item. Pela forma, o cabeçalho de outro painel
+ * ("COMPREHENSIVE METABOLIC PANEL", "Bioquímica") e uma linha do sedimento
+ * que o catálogo não tem ("MUCUS", sozinho no texto em colunas) são a mesma
+ * coisa: uma linha sem valor e sem nome conhecido. Quem separa os dois é o que
+ * vem depois. Se a próxima linha decisiva é da urina, a linha era do
+ * sedimento e a seção segue; se é exame de outro painel, era cabeçalho, e a
+ * seção acaba nela, antes da "GLUCOSE" do painel seguinte. Linha decisiva é a
+ * que casa exame de outro painel, a que só pode ser da urina (`urine`) ou um
+ * novo cabeçalho de urinálise. Nomes nus da seção ("GLUCOSE", "WBC"), linhas
+ * só com valor e outras linhas desconhecidas não decidem, e se o texto acaba
+ * sem nada decisivo a seção acaba na linha desconhecida.
+ *
+ * Linha em branco não encerra nem conta.
  */
 export function urinalysisLineIndexes(lines: readonly SectionLine[]): Set<number> {
+  const kinds = lines.map(kindOf);
+  const continuesAsUrine = (from: number): boolean => {
+    const next = kinds.findIndex(
+      (kind, index) =>
+        index > from && (kind === 'urine' || kind === 'foreign' || kind === 'header'),
+    );
+    return next !== -1 && kinds[next] === 'urine';
+  };
   const inside = new Set<number>();
   let open = false;
-  lines.forEach((line, index) => {
-    const text = line.text.trim();
-    if (URINALYSIS_HEADER.test(text) && !/\d/.test(text)) {
+  kinds.forEach((kind, index) => {
+    if (kind === 'header') {
       open = true;
       return;
     }
-    if (!open || !text) {
+    if (!open || kind === 'blank') {
       return;
     }
-    if (line.foreign || (!line.known && !line.hasValue && !MENTIONS_URINE.test(text))) {
+    if (kind === 'foreign' || (kind === 'unknown' && !continuesAsUrine(index))) {
       open = false;
       return;
     }
@@ -223,7 +258,7 @@ export function applyUrinalysisSection(
     const known = deps.patterns.some(
       ({ name, regex }) => !matchesIn(text, name, regex).next().done,
     );
-    return { foreign: false, hasValue: deps.hasValue(text), known, text };
+    return { foreign: false, hasValue: deps.hasValue(text), known, text, urine: hasUrineCue(text) };
   });
   for (const candidate of resolved) {
     let index = lineStarts.length - 1;
@@ -231,7 +266,9 @@ export function applyUrinalysisSection(
     const line = lines[index]!;
     line.known = true;
     const matched = normalizedText.slice(candidate.start, candidate.end);
-    if (!isSectionName(matched) && !candidate.entries.some((e) => deps.urineCodes.has(e.code))) {
+    if (candidate.entries.some((e) => deps.urineCodes.has(e.code))) {
+      line.urine = true;
+    } else if (!isSectionName(matched)) {
       line.foreign = true;
     }
   }

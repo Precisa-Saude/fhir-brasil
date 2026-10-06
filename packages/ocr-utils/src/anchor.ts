@@ -20,6 +20,7 @@ import {
 
 import {
   CONTEXT_REQUIRED_NAMES,
+  GENETIC_CONTEXT_PATTERNS,
   QUALITATIVE_VALUE_TERMS,
   UNAMBIGUOUS_SHORT_NAMES,
 } from './anchor-lexicon';
@@ -30,7 +31,12 @@ import {
   SKINFOLD_SITE_CODES,
 } from './body-region';
 import { attachMethodVariants, recordAnchorLine } from './method-variant';
-import { applyUrinalysisSection, type SectionDeps, sectionDepsFrom } from './urinalysis-section';
+import {
+  applyUrinalysisSection,
+  type SectionDeps,
+  sectionDepsFrom,
+  URINALYSIS_SECTION_NAMES,
+} from './urinalysis-section';
 
 export interface AnchorMatch {
   code: string;
@@ -181,48 +187,25 @@ function foldCommas(text: string): string {
   );
 }
 
-/**
- * Signals that a line comes from a genetic/molecular report rather than from a
- * panel of measured values. Gene symbols collide with biomarker names (`APOB`
- * the gene vs. `ApoB` the lipoprotein), so the context — not a static HGNC
- * blocklist — is what tells them apart. Blocking the token itself would break
- * real lipid panels.
- */
-const GENETIC_CONTEXT_PATTERNS: RegExp[] = [
-  /\b[nx][mrpc]_\d{6,}/, // RefSeq: NM_000384.2, NP_, NR_, XM_
-  /\bens[gtp]\d{6,}/, // Ensembl: ENSG00000084674
-  /\bp\.[a-z]{3}\d/, // HGVS proteína: p.Trp448*
-  /\bc\.\d+[acgt]?[>_+-]/, // HGVS codificante: c.1234A>G, c.76_78del
-  /\brs\d{4,}\b/, // dbSNP
-  /\bgenes?\b/,
-  /\bvariante?s?\b/,
-  /\bexons?\b/,
-  /\bzygosity\b/,
-  /\bzigosidade\b/,
-  /\balleles?\b/,
-  /\balelos?\b/,
-  /\bmutations?\b/,
-  /\bmutac(ao|oes)\b/,
-  /\bpathogenic/,
-  /\bpatogenic/,
-  /\bheterozyg/,
-  /\bhomozyg/,
-  /\bheterozigot/,
-  /\bhomozigot/,
-  /\bsequence change\b/,
-];
-
 const DIGIT_PATTERN = /\d/;
 
-/** Unit tokens reused from the core catalog instead of a parallel list. */
+/**
+ * Unit tokens reused from the core catalog instead of a parallel list.
+ *
+ * Fica de fora a unidade que também é nome de exame. Hoje é só o "pH" (o
+ * `[pH]` do UCUM): sem o corte, a linha "PH" sozinha contava como linha com
+ * valor, porque o próprio nome era lido como unidade, e ancorava com a
+ * confiança de nome ao lado de valor. "PH 6.0" continua com valor pelo número.
+ */
 let cachedUnitTokens: Set<string> | null = null;
 
 function getUnitTokens(): Set<string> {
   if (!cachedUnitTokens) {
+    const isExamName = (t: string) => URINALYSIS_SECTION_NAMES.has(t) || getNamePatterns().has(t);
     cachedUnitTokens = new Set(
       Object.keys(UNIT_TO_UCUM)
         .map((unit) => normalize(unit).trim())
-        .filter(Boolean),
+        .filter((unit) => unit && !isExamName(unit)),
     );
   }
   return cachedUnitTokens;

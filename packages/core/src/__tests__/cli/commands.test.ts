@@ -334,3 +334,109 @@ describe('cli-utils', () => {
     expect(stderrOutput).toContain('something broke');
   });
 });
+
+// ─── source ────────────────────────────────────────────────────────────────────
+
+describe('cli: source', () => {
+  it('resolve a chave que o `range` imprime', async () => {
+    const { source } = await import('../../cli/commands/source');
+    await source(['sbem-thyroid-2013'], false);
+    expect(stdoutOutput).toContain('Fonte: sbem-thyroid-2013');
+    expect(stdoutOutput).toContain('SGARBI');
+    expect(stdoutOutput).toContain('10.1590/S0004-27302013000300003');
+  });
+
+  it('devolve a referência inteira em JSON', async () => {
+    const { source } = await import('../../cli/commands/source');
+    await source(['sbem-thyroid-2013'], true);
+    const data = JSON.parse(stdoutOutput);
+    expect(data.key).toBe('sbem-thyroid-2013');
+    expect(data.abnt).toContain('Arquivos Brasileiros de Endocrinologia');
+    expect(data.url).toContain('pubmed');
+  });
+
+  // O campo `source` aceita localizador de página, e quem copia o valor cru do
+  // `range --json` não deve precisar limpá-lo à mão.
+  it('aceita o valor cru, com localizador de página', async () => {
+    const { source } = await import('../../cli/commands/source');
+    await source(['sbem-thyroid-2013:p170'], true);
+    expect(JSON.parse(stdoutOutput).key).toBe('sbem-thyroid-2013');
+  });
+
+  it('chega na fonte a partir do código do exame', async () => {
+    const { source } = await import('../../cli/commands/source');
+    await source(['--biomarker', 'TSH'], true);
+    expect(JSON.parse(stdoutOutput).key).toBe('sbem-thyroid-2013');
+  });
+
+  it('sem argumento, lista o registro inteiro', async () => {
+    const { source } = await import('../../cli/commands/source');
+    await source([], true);
+    const data = JSON.parse(stdoutOutput);
+    expect(Array.isArray(data)).toBe(true);
+    expect(data.length).toBeGreaterThan(40);
+    expect(data.every((r: { abnt: string; key: string }) => r.key && r.abnt)).toBe(true);
+  });
+
+  it('erra alto quando a chave não existe', async () => {
+    const { source } = await import('../../cli/commands/source');
+    await expect(source(['nao-existe'], false)).rejects.toThrow('process.exit called');
+    expect(stderrOutput).toContain('Fonte não encontrada: nao-existe');
+    expect(stderrOutput).toContain('fhir-bio source');
+  });
+
+  // Com localizador, o que falha na busca não é o que a pessoa digitou, e a
+  // mensagem precisa dizer os dois para o erro não parecer arbitrário.
+  it('mostra a chave limpa quando o localizador foi descartado', async () => {
+    const { source } = await import('../../cli/commands/source');
+    await expect(source(['nao-existe:p15'], false)).rejects.toThrow('process.exit called');
+    expect(stderrOutput).toContain('nao-existe:p15');
+    expect(stderrOutput).toContain('procurado como nao-existe');
+  });
+
+  it('erra quando o exame não tem faixa com fonte', async () => {
+    const { source } = await import('../../cli/commands/source');
+    await expect(source(['--biomarker', 'NAO_EXISTE'], false)).rejects.toThrow(
+      'process.exit called',
+    );
+    expect(stderrOutput).toContain('Biomarcador não encontrado');
+  });
+});
+
+// ─── argv ──────────────────────────────────────────────────────────────────────
+
+/**
+ * Estes testes existem porque os de comando acima não alcançavam o defeito: eles
+ * chamam o handler com o array já pronto, e o que estava quebrado era a camada
+ * que monta esse array. O `--sex` do `range` tinha teste passando e não
+ * funcionava pela CLI.
+ */
+describe('cli: dividirArgv', () => {
+  it('entrega a flag do comando intacta ao handler', async () => {
+    const { dividirArgv } = await import('../../cli/argv');
+    const r = dividirArgv(['range', 'Ferritin', '--sex', 'M', '--age', '40']);
+    expect(r.command).toBe('range');
+    expect(r.resto).toEqual(['Ferritin', '--sex', 'M', '--age', '40']);
+  });
+
+  it('reconhece a global antes e depois do comando', async () => {
+    const { dividirArgv } = await import('../../cli/argv');
+    expect(dividirArgv(['--json', 'range', 'TSH']).json).toBe(true);
+    expect(dividirArgv(['range', 'TSH', '--json']).json).toBe(true);
+    expect(dividirArgv(['range', 'TSH', '--json']).resto).toEqual(['TSH']);
+  });
+
+  it('o primeiro token sem traço é o comando, e só ele', async () => {
+    const { dividirArgv } = await import('../../cli/argv');
+    const r = dividirArgv(['lookup', 'HDL', 'LDL']);
+    expect(r.command).toBe('lookup');
+    expect(r.resto).toEqual(['HDL', 'LDL']);
+  });
+
+  it('sem comando, pede ajuda', async () => {
+    const { dividirArgv } = await import('../../cli/argv');
+    expect(dividirArgv([]).command).toBeUndefined();
+    expect(dividirArgv(['--help']).help).toBe(true);
+    expect(dividirArgv(['-v']).version).toBe(true);
+  });
+});

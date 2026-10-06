@@ -62,3 +62,6 @@ export * from './extension-urls';
 
 // Export specimen type coding (RNDS BRTipoAmostra)
 export * from './specimen-types';
+
+// Export the bibliographic registry behind every reference range `source` key
+export * from './sources';

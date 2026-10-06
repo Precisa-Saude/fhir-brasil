@@ -52,6 +52,16 @@
         "default": "./dist/reference-ranges.cjs"
       }
     },
+    "./sources": {
+      "import": {
+        "types": "./dist/sources.d.ts",
+        "default": "./dist/sources.js"
+      },
+      "require": {
+        "types": "./dist/sources.d.cts",
+        "default": "./dist/sources.cjs"
+      }
+    },
     "./converter": {
       "import": {
         "types": "./dist/converter.d.ts",

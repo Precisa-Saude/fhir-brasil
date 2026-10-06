@@ -25,6 +25,8 @@ O sistema de saúde brasileiro opera como redes paralelas com troca mínima de d
 
 > Todo pacote publicado tem piso de 80% de cobertura em statements, branches, functions e lines, e o CI reprova abaixo disso. As faixas de referência são revisadas continuamente contra as diretrizes citadas.
 
+Cada faixa carrega uma chave em `source`, e a citação por trás dela é resolvível sem sair do pacote: `SOURCE_REGISTRY` traz a referência ABNT, o DOI e a URL de cada uma, por `@precisa-saude/fhir/sources` ou pelo comando `fhir-bio source`.
+
 ---
 
 ## Pacotes
@@ -120,6 +122,8 @@ Os pacotes core, ocr-utils e pdf incluem ferramentas de linha de comando. Todas 
 fhir-bio lookup ApoB --json          # Buscar biomarcador por código
 fhir-bio range Glucose --sex F --json # Faixa de referência
 fhir-bio units Creatinine --json      # Informações de unidade
+fhir-bio source --biomarker TSH       # A citação por trás da faixa
+fhir-bio source sbem-thyroid-2013     # Ou direto pela chave que o range imprime
 fhir-bio lookup-loinc 718-7           # Buscar por código LOINC
 fhir-bio list                         # Listar todos os biomarcadores
 fhir-bio categories                   # Listar por categoria

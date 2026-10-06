@@ -65,3 +65,8 @@ export * from './specimen-types';
 
 // Export the bibliographic registry behind every reference range `source` key
 export * from './sources';
+
+// Eixos e grupos LOINC de cada código, o registro de decisão de cada mapeamento e a ficha
+export * from './loinc-axes';
+export * from './mapping-decisions';
+export * from './mapping-sheet';

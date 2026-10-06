@@ -440,3 +440,28 @@ describe('cli: dividirArgv', () => {
     expect(dividirArgv(['-v']).version).toBe(true);
   });
 });
+
+// ─── decision ─────────────────────────────────────────────────────────────────
+
+describe('cli: decision', () => {
+  it('imprime a ficha do mapeamento pelo LOINC', async () => {
+    const { decision } = await import('../../cli/commands/decision');
+    await decision(['2089-1'], false);
+    expect(stdoutOutput).toContain('Biomarcador:  LDL');
+    expect(stdoutOutput).toContain('escolhido  2089-1');
+    expect(stdoutOutput).toContain('variante   13457-7');
+    expect(stdoutOutput).toContain('Regenstrief');
+  });
+
+  it('entrada sem LOINC imprime o motivo', async () => {
+    const { decision } = await import('../../cli/commands/decision');
+    await decision(['Estrone'], false);
+    expect(stdoutOutput).toContain('Sem LOINC:    no-concept');
+  });
+
+  it('código desconhecido sai com erro', async () => {
+    const { decision } = await import('../../cli/commands/decision');
+    await expect(decision(['NaoExiste'], false)).rejects.toThrow('process.exit called');
+    expect(stderrOutput).toContain('fhir-bio list');
+  });
+});

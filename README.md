@@ -131,6 +131,7 @@ fhir-bio convert resultado.json       # Converter JSON para FHIR Bundle
 fhir-bio validate bundle.json         # Validar recurso FHIR
 fhir-bio import bundle.json           # Importar Bundle e extrair observações
 fhir-bio loinc-map                    # Tabela de mapeamento LOINC ↔ código
+fhir-bio decision 2089-1              # Ficha de decisão do mapeamento (eixos, rejeitados, revisor)
 ```
 
 ### `fhir-ocr` — extração de biomarcadores de texto OCR
@@ -152,6 +153,7 @@ Medido no `@precisa-saude/fhir@0.36.0`, gerado por `pnpm catalog:counts`.
 - **198 códigos LOINC aceitos** na busca por código: os 188 canônicos, as variantes por método e os aliases de códigos que o LOINC aposentou.
 - **203 faixas de referência**, com variantes por sexo e idade.
 - **10 categorias clínicas** de primeiro nível sobre 20 subcategorias.
+- **Registro de decisão** dos 188 mapeamentos: 16 com evidência além do nome (unidade, material, método ou bula), 172 escolhidos só pelo nome, 0 com revisão independente. A ficha de cada um sai em `fhir-bio decision <código>`.
 
 | Categoria                            | Biomarcadores | Com LOINC | Exemplos                                                            |
 | ------------------------------------ | ------------: | --------: | ------------------------------------------------------------------- |
@@ -168,6 +170,61 @@ Medido no `@precisa-saude/fhir@0.36.0`, gerado por `pnpm catalog:counts`.
 | **Total**                            |       **226** |   **188** |                                                                     |
 
 As linhas somam 227 porque 1 biomarcador aparece em duas categorias. O Beta-hCG é marcador tumoral e exame de saúde feminina ao mesmo tempo. O total não conta ninguém duas vezes.
+
+### Os 38 sem LOINC, e por quê
+
+**ambiguous** (1): há candidatos, e nenhum é a mesma grandeza.
+
+| Biomarcador          | Motivo                                                                                                 |
+| -------------------- | ------------------------------------------------------------------------------------------------------ |
+| `BasalMetabolicRate` | Candidatos são índice (50042-1) ou RMR medido ou previsto (82278-3, 82286-6), e o aparelho estima TMB. |
+
+**no-concept** (30): procurado, e o LOINC não tem o conceito.
+
+| Biomarcador           | Motivo                                                                                     |
+| --------------------- | ------------------------------------------------------------------------------------------ |
+| `Estrone`             | Em soro só há a fração não conjugada (2261-6); não há estrona total.                       |
+| `LeanMass`            | Massa magra não é massa muscular (73964-9); não há LOINC para massa magra.                 |
+| `BMC`                 | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
+| `FatFreeMass`         | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
+| `VATVolume`           | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
+| `VATMass`             | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
+| `AndroidGynoidRatio`  | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
+| `AndroidFatPct`       | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
+| `GynoidFatPct`        | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
+| `MuscleMassIndex`     | Índice derivado de massa muscular total; os cortes publicados são sobre massa apendicular. |
+| `VisceralFatLevel`    | Índice de 1 a 20; 73707-2 é área, outra grandeza.                                          |
+| `ExtracellularWater`  | "extracellular water" não devolve código.                                                  |
+| `IntracellularWater`  | "intracellular water" não devolve código.                                                  |
+| `ECWToTBWRatio`       | Razão derivada, sem conceito próprio.                                                      |
+| `ResidualMass`        | Conceito de fracionamento antropométrico, sem código.                                      |
+| `WaistToHeightRatio`  | "waist to height" não devolve código.                                                      |
+| `ConicityIndex`       | Índice derivado, sem conceito próprio.                                                     |
+| `SkinfoldSubscapular` | O LOINC só tem dobra de tríceps, coxa e cintura.                                           |
+| `SkinfoldSuprailiac`  | O LOINC só tem dobra de tríceps, coxa e cintura.                                           |
+| `SkinfoldChest`       | O LOINC só tem dobra de tríceps, coxa e cintura.                                           |
+| `SkinfoldMidaxillary` | O LOINC só tem dobra de tríceps, coxa e cintura.                                           |
+| `ArmsLeanMass`        | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
+| `ArmsFatMass`         | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
+| `LegsLeanMass`        | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
+| `LegsFatMass`         | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
+| `TrunkLeanMass`       | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
+| `TrunkFatMass`        | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
+| `BMD_Total`           | O LOINC só tem densitometria por sítio, não corpo inteiro.                                 |
+| `TScore_Total`        | O LOINC só tem densitometria por sítio, não corpo inteiro.                                 |
+| `ZScore_Total`        | O LOINC só tem densitometria por sítio, não corpo inteiro.                                 |
+
+**pending-review** (7): ninguém registrou a busca.
+
+| Biomarcador          | Motivo                                                     |
+| -------------------- | ---------------------------------------------------------- |
+| `CAC`                | Escore de cálcio por tomografia; nenhuma busca registrada. |
+| `CAC_LMA`            | Escore de cálcio por tomografia; nenhuma busca registrada. |
+| `CAC_LAD`            | Escore de cálcio por tomografia; nenhuma busca registrada. |
+| `CAC_LCX`            | Escore de cálcio por tomografia; nenhuma busca registrada. |
+| `CAC_RCA`            | Escore de cálcio por tomografia; nenhuma busca registrada. |
+| `CAC_Percentile`     | Escore de cálcio por tomografia; nenhuma busca registrada. |
+| `AorticValveCalcium` | Escore de cálcio por tomografia; nenhuma busca registrada. |
 
 <!-- catalog:counts:end -->
 

@@ -79,6 +79,19 @@
       "system": "^Patient",
       "time": "Pt"
     },
+    "10835-7": {
+      "component": "Lipoprotein (little a)",
+      "display": "Lipoprotein a [Mass/volume] in Serum or Plasma",
+      "groups": {
+        "LG45404-7": "Lipoprotein (little a)|Pt|Ser/Plas"
+      },
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas",
+      "time": "Pt"
+    },
     "10886-0": {
       "component": "Prostate specific Ag.free",
       "display": "Prostate Specific Ag Free [Mass/volume] in Serum or Plasma",
@@ -521,6 +534,20 @@
         "LG48228-7": "C reactive protein|Pt|Ser/Plas",
         "LG52057-3": "C reactive protein|Pt|ANYBldSerPl|",
         "LG6212-7": "C reactive protein|MCnc|Pt|ANYBldSerPl"
+      },
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas",
+      "time": "Pt"
+    },
+    "1989-3": {
+      "component": "Calcidiol",
+      "display": "25-hydroxyvitamin D3 [Mass/volume] in Serum or Plasma",
+      "groups": {
+        "LG43465-0": "Calcidiol|Pt|Ser/Plas|400.647 g/mole",
+        "LG51030-1": "Calcidiol|MCnc|Pt|ANYBldSerPl"
       },
       "method": null,
       "property": "MCnc",
@@ -1329,6 +1356,16 @@
       "system": "Ser/Plas",
       "time": "Pt"
     },
+    "35177-5": {
+      "component": "Fatty acids.polyunsaturated",
+      "display": "Polyunsaturated fatty acids [Moles/volume] in Serum or Plasma",
+      "method": null,
+      "property": "SCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas",
+      "time": "Pt"
+    },
     "35505-7": {
       "component": "Lipoprotein.beta.subparticle",
       "display": "Lipoprotein.beta.subparticle [Type] in Serum or Plasma",
@@ -1508,6 +1545,19 @@
       "system": "PPP",
       "time": "Pt"
     },
+    "48066-5": {
+      "component": "Fibrin D-dimer",
+      "display": "Fibrin D-dimer DDU [Mass/volume] in Platelet poor plasma",
+      "groups": {
+        "LG52053-2": "Fibrin D-dimer|Pt|ANYBldPPP"
+      },
+      "method": "DDU",
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "PPP",
+      "time": "Pt"
+    },
     "49563-0": {
       "component": "Troponin I.cardiac",
       "display": "Troponin I.cardiac [Mass/volume] in Serum or Plasma by Detection limit <= 0.01 ng/mL",
@@ -1516,6 +1566,16 @@
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Ser/Plas",
+      "time": "Pt"
+    },
+    "53060-0": {
+      "component": "Butyrylcarnitine (C4)",
+      "display": "Butyrylcarnitine (C4) [Moles/volume] in Amniotic fluid",
+      "method": null,
+      "property": "SCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Amnio fld",
       "time": "Pt"
     },
     "54434-6": {
@@ -1733,6 +1793,19 @@
       "system": "Urine",
       "time": "Pt"
     },
+    "5808-1": {
+      "component": "Erythrocytes",
+      "display": "Erythrocytes [#/volume] in Urine sediment by Microscopy high power field",
+      "groups": {
+        "LG40868-8": "Erythrocytes|Urine/Urine sed"
+      },
+      "method": "Microscopy.light.HPF",
+      "property": "NCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Urine sed",
+      "time": "Pt"
+    },
     "5811-5": {
       "component": "Observation",
       "display": "Specific gravity of Urine by Test strip",
@@ -1792,6 +1865,20 @@
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Ser/Plas",
+      "time": "Pt"
+    },
+    "630-4": {
+      "component": "Bacteria",
+      "display": "Bacteria identified in Urine by Culture",
+      "groups": {
+        "LG34664-9": "Bacteria|Prid|Urine",
+        "LG51652-2": "Bacteria|Prid|Sys:ANYGU"
+      },
+      "method": "Culture",
+      "property": "Prid",
+      "scale": "Nom",
+      "status": "ACTIVE",
+      "system": "Urine",
       "time": "Pt"
     },
     "6301-6": {
@@ -2162,6 +2249,19 @@
       "system": "Ser/Plas",
       "time": "Pt"
     },
+    "8245-3": {
+      "component": "Zinc",
+      "display": "Zinc [Mass/volume] in Blood",
+      "groups": {
+        "LG23959-6": "Zinc|MCnc|Pt|ANYBldSerPl"
+      },
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld",
+      "time": "Pt"
+    },
     "8280-0": {
       "component": "Circumference.at umbilicus",
       "display": "Waist Circumference at umbilicus by Tape measure",
@@ -2208,6 +2308,16 @@
       "method": null,
       "property": "Type",
       "scale": "Nom",
+      "status": "ACTIVE",
+      "system": "Bld",
+      "time": "Pt"
+    },
+    "90908-5": {
+      "component": "Eicosapentaenoate+Docosapentaenate w3+Docosahexaenoate/Fatty acids.C14-C22 risk",
+      "display": "Eicosapentaenoate (C20:5w3)+Docosapentaenate (C22:5w3)+Docosahexaenoate (C22:6w3)/Fatty acids.C14-C22 risk [Interpretation] in Blood Qualitative",
+      "method": null,
+      "property": "Imp",
+      "scale": "Ord",
       "status": "ACTIVE",
       "system": "Bld",
       "time": "Pt"

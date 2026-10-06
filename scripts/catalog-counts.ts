@@ -48,6 +48,8 @@ const { BIOMARKER_DEFINITIONS, getAllLoincCodes } =
   await import('../packages/core/src/biomarkers.ts');
 const { CATEGORY_GROUPS } = await import('../packages/core/src/category-groups.ts');
 const { defaultReferenceRanges } = await import('../packages/core/src/reference-ranges.ts');
+const { MAPPING_DECISIONS, NO_LOINC_DECISIONS } =
+  await import('../packages/core/src/mapping-decisions.ts');
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const README = resolve(__dirname, '../README.md');
@@ -79,6 +81,31 @@ const subcategories = new Set(groups.flatMap(([, g]) => g.subcategories)).size;
 // aceitos é maior que a de biomarcadores com código.
 const acceptedLoincCodes = getAllLoincCodes().length;
 
+// O registro de decisão diz quanto do catálogo tem justificativa além do nome.
+// "Só nome" é a maioria, e é o número honesto: o código foi escolhido pelo nome
+// do exame, sem unidade, material, método ou bula registrados.
+const decisions = Object.values(MAPPING_DECISIONS);
+const nameOnly = decisions.filter(
+  (d) => d.evidence.length === 1 && d.evidence[0] === 'name',
+).length;
+const withEvidence = decisions.length - nameOnly;
+const reviewed = decisions.filter((d) => d.reviewer).length;
+
+const NO_LOINC_LABEL: Record<string, string> = {
+  ambiguous: 'há candidatos, e nenhum é a mesma grandeza',
+  'no-concept': 'procurado, e o LOINC não tem o conceito',
+  'not-lab': 'fora do escopo de exame laboratorial',
+  'pending-review': 'ninguém registrou a busca',
+};
+const gaps = BIOMARKER_DEFINITIONS.filter((d) => !d.loinc).map((d) => ({
+  code: d.code,
+  note: NO_LOINC_DECISIONS[d.code]?.note ?? '',
+  reason: NO_LOINC_DECISIONS[d.code]?.reason ?? 'pending-review',
+}));
+const gapsByReason = Object.keys(NO_LOINC_LABEL)
+  .map((reason) => ({ reason, rows: gaps.filter((g) => g.reason === reason) }))
+  .filter((g) => g.rows.length);
+
 const rows = groups.map(([, g]) => {
   const matched = BIOMARKER_DEFINITIONS.filter((d) =>
     categoriesOf(d).some((c) => g.subcategories.includes(c)),
@@ -106,6 +133,7 @@ const block = [
   `- **${acceptedLoincCodes} códigos LOINC aceitos** na busca por código: os ${withLoinc} canônicos, as variantes por método e os aliases de códigos que o LOINC aposentou.`,
   `- **${ranges} faixas de referência**, com variantes por sexo e idade.`,
   `- **${groups.length} categorias clínicas** de primeiro nível sobre ${subcategories} subcategorias.`,
+  `- **Registro de decisão** dos ${withLoinc} mapeamentos: ${withEvidence} com evidência além do nome (unidade, material, método ou bula), ${nameOnly} escolhidos só pelo nome, ${reviewed} com revisão independente. A ficha de cada um sai em \`fhir-bio decision <código>\`.`,
   '',
   '| Categoria | Biomarcadores | Com LOINC | Exemplos |',
   '| --------- | ------------: | --------: | -------- |',
@@ -116,6 +144,16 @@ const block = [
     ? `As linhas somam ${rowSum} porque ${overlap} biomarcador aparece em duas categorias. O Beta-hCG é marcador tumoral e exame de saúde feminina ao mesmo tempo. O total não conta ninguém duas vezes.`
     : 'Cada biomarcador pertence a uma única categoria, então as linhas somam o total.',
   '',
+  `### Os ${withoutLoinc} sem LOINC, e por quê`,
+  '',
+  ...gapsByReason.flatMap((g) => [
+    `**${g.reason}** (${g.rows.length}): ${NO_LOINC_LABEL[g.reason]}.`,
+    '',
+    '| Biomarcador | Motivo |',
+    '| ----------- | ------ |',
+    ...g.rows.map((row) => `| \`${row.code}\` | ${row.note} |`),
+    '',
+  ]),
   END,
 ].join('\n');
 
@@ -124,12 +162,14 @@ const counts = {
   biomarkers: total,
   byCategory: rows,
   categoryGroups: groups.length,
+  decisions: { nameOnly, reviewed, withEvidence },
   loincCoveragePct: Number(((withLoinc / total) * 100).toFixed(1)),
   referenceRanges: ranges,
   subcategories,
   version,
   withLoinc,
   withoutLoinc,
+  withoutLoincByReason: Object.fromEntries(gapsByReason.map((g) => [g.reason, g.rows.length])),
 };
 
 if (process.argv.includes('--json')) {

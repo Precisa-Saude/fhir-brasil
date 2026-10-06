@@ -68,7 +68,7 @@
   "loincCoveragePct": 83.2,
   "referenceRanges": 203,
   "subcategories": 20,
-  "version": "0.36.0",
+  "version": "0.37.0",
   "withLoinc": 188,
   "withoutLoinc": 38,
   "withoutLoincByReason": { "ambiguous": 1, "no-concept": 30, "pending-review": 7 }

@@ -1,3 +1,10 @@
+## [0.37.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.36.0...v0.37.0) (2026-10-06)
+
+### Features
+
+* **core:** material impresso contra o eixo System do código ([#138](https://github.com/Precisa-Saude/fhir-brasil/issues/138)) ([6296676](https://github.com/Precisa-Saude/fhir-brasil/commit/6296676f691bafe57b07ad9c1fde5f37e37951b4))
+* **core:** registro de decisão por mapeamento LOINC e ficha no fhir-bio decision ([#137](https://github.com/Precisa-Saude/fhir-brasil/issues/137)) ([4f3f982](https://github.com/Precisa-Saude/fhir-brasil/commit/4f3f98222e2030558e70bd74ef4b69b792fc2914))
+
 ## [0.36.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.35.1...v0.36.0) (2026-10-06)
 
 ### Features

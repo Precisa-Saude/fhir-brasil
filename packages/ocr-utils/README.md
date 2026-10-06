@@ -90,9 +90,13 @@ Por isso a correspondência é conservadora:
   `RBC_Urine`, "PH" ancora `pH_Urine`, e "COLOR", "KETONES", "PROTEIN" e
   companhia ancoram mesmo sem valor na linha (texto em colunas). O código do
   sangue não ancora pela mesma linha. A seção acaba na primeira linha com
-  exame de outro painel ou na primeira linha sem valor e sem nome conhecido
-  (o jeito de um cabeçalho); na dúvida ela acaba, e o nome volta ao sentido de
-  fora da seção. Fora dela nada muda.
+  exame de outro painel, no cabeçalho de outro painel ou no fim do texto. Uma
+  linha sem valor e sem nome conhecido pode ser as duas coisas ("COMPREHENSIVE
+  METABOLIC PANEL" ou "MUCUS"), e quem decide é a próxima linha decisiva: se só
+  pode ser da urina (código da urina, a palavra urina, ou /HPF e /LPF), a seção
+  segue; se é exame de outro painel, ou se o texto acaba sem nada decisivo, a
+  seção acaba ali, e o nome volta ao sentido de fora da seção. Fora dela nada
+  muda.
 - **Contexto genético é descartado** — símbolos de gene colidem com nomes de
   biomarcador (o gene `APOB` vs. a lipoproteína `ApoB`). Linhas com acesso
   RefSeq (`NM_000384.2`), notação HGVS (`p.Trp448*`, `c.1234A>G`), `rs` do dbSNP

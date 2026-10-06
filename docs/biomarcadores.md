@@ -63,6 +63,19 @@ const ficha = getMappingSheet('2089-1');
 // ficha.candidates: o escolhido e as três variantes por método
 ```
 
+### Material impresso contra o código
+
+O laudo imprime o material de cada exame, e o código LOINC carrega o dele no eixo System. `specimenMismatch(material, loinc)` devolve o conflito quando os dois discordam: "Sódio" numa seção de urina casa pelo nome com o sódio sérico, e o código de soro afirmaria uma grandeza que o laboratório não mediu.
+
+A comparação é por classe, sangue ou urina, pela primeira palavra do material ("Urina de 24 horas" é urina) e pelo System do snapshot. Material sem palavra conhecida, ou código fora das duas classes, não barra nada. O conflito é lacuna: quem chama descarta ou sinaliza o resultado, e não troca o código por um palpite.
+
+```typescript
+import { codeToLoinc, specimenMismatch } from '@precisa-saude/fhir';
+
+specimenMismatch('Urina de 24 horas', codeToLoinc('Sodium')!);
+// { reason: 'specimen-mismatch', material: 'urine', code: 'blood', system: 'Ser/Plas', ... }
+```
+
 ## Categorias
 
 Os biomarcadores são organizados nas seguintes categorias clínicas:

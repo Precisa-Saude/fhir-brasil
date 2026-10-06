@@ -70,3 +70,6 @@ export * from './sources';
 export * from './loinc-axes';
 export * from './mapping-decisions';
 export * from './mapping-sheet';
+
+// Material impresso contra o eixo System do código: barra soro em seção de urina e o inverso
+export * from './specimen-gate';

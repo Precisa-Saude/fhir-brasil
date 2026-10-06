@@ -1,3 +1,9 @@
+## [0.35.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.34.0...v0.35.0) (2026-10-06)
+
+### Features
+
+* **core:** o método impresso no laudo escolhe o código LOINC do LDL ([#134](https://github.com/Precisa-Saude/fhir-brasil/issues/134)) ([e18d0fb](https://github.com/Precisa-Saude/fhir-brasil/commit/e18d0fb3169732c3a67dfa183c43f482a6afa0ee))
+
 ## [0.34.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.33.0...v0.34.0) (2026-10-06)
 
 ### Features

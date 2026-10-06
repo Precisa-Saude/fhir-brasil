@@ -89,6 +89,16 @@ describe('irmãos rejeitados', () => {
     expect(fora).toEqual([]);
   });
 
+  it('não se repetem no mesmo registro', () => {
+    const repetidos = Object.entries(MAPPING_DECISIONS)
+      .filter(
+        ([, d]) =>
+          new Set(d.siblingsRejected.map((s) => s.loinc)).size !== d.siblingsRejected.length,
+      )
+      .map(([c]) => c);
+    expect(repetidos).toEqual([]);
+  });
+
   it('não são o código escolhido nem uma variante dele, e trazem motivo', () => {
     const ruins = rejeicoes
       .filter(

@@ -462,5 +462,6 @@ describe('cli: decision', () => {
   it('código desconhecido sai com erro', async () => {
     const { decision } = await import('../../cli/commands/decision');
     await expect(decision(['NaoExiste'], false)).rejects.toThrow('process.exit called');
+    expect(stderrOutput).toContain('fhir-bio list');
   });
 });

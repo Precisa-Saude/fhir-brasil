@@ -24,7 +24,11 @@ export async function decision(args: string[], json: boolean): Promise<void> {
   if (!alvo) exitWithError('Uso: fhir-bio decision <código ou LOINC>');
 
   const ficha = getMappingSheet(alvo);
-  if (!ficha) exitWithError(`Biomarcador não encontrado: ${alvo}`);
+  if (!ficha) {
+    exitWithError(
+      `Biomarcador não encontrado: ${alvo}\nAceita o código interno (LDL) ou um LOINC do catálogo (2089-1). Veja os códigos em \`fhir-bio list\` ou \`fhir-bio loinc-map\`.`,
+    );
+  }
 
   if (json) {
     outputJson(ficha);

@@ -1,3 +1,13 @@
+## [0.32.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.31.6...v0.32.0) (2026-10-06)
+
+### Features
+
+* **core:** a chave de fonte passa a resolver pelo próprio pacote ([#130](https://github.com/Precisa-Saude/fhir-brasil/issues/130)) ([eeb3aaa](https://github.com/Precisa-Saude/fhir-brasil/commit/eeb3aaad36179f43f1ec03699ab2aca5949654d6)), closes [#129](https://github.com/Precisa-Saude/fhir-brasil/issues/129)
+
+### Documentation
+
+* template e caminho para grafia não reconhecida ([#129](https://github.com/Precisa-Saude/fhir-brasil/issues/129)) ([4a93423](https://github.com/Precisa-Saude/fhir-brasil/commit/4a93423dbaae739ecd25deef2a0b02885f31e5c2)), closes [#103](https://github.com/Precisa-Saude/fhir-brasil/issues/103)
+
 ## [0.31.6](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.31.5...v0.31.6) (2026-10-02)
 
 ### Bug Fixes

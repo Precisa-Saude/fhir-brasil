@@ -17,7 +17,7 @@ import type {
   FHIRReferenceRange,
 } from './fhir-types';
 import type { Flag, LabObservationData, LabReportData, UserProfileData } from './types';
-import { getDefaultUnit, unitToUCUM } from './units';
+import { getDefaultUnit, resolveUcum } from './units';
 
 // Re-export all types and functions
 export * from './fhir-types';
@@ -89,16 +89,8 @@ const SEX_CODING = {
  */
 const buildReferenceRanges = (
   observation: LabObservationData,
-  sourceUnit: string,
-  ucumUnit: string,
+  quantity: (value: number) => FHIRQuantity,
 ): FHIRReferenceRange[] => {
-  const quantity = (value: number): FHIRQuantity => ({
-    code: ucumUnit,
-    system: 'http://unitsofmeasure.org',
-    unit: sourceUnit,
-    value,
-  });
-
   // Devolve lista, e não uma faixa: o caso sem limite nenhum vira lista vazia
   // em vez de `undefined`, e aí os dois caminhos abaixo se compõem com
   // `flatMap` sem ninguém precisar filtrar nada depois.
@@ -141,7 +133,17 @@ export function labObservationToFHIR(
   // Use default unit if source unit is empty
   const sourceUnit =
     observation.unit || getDefaultUnit(observation.biomarkerCode) || observation.unit;
-  const ucumUnit = unitToUCUM(sourceUnit);
+  // `system` + `code` só saem quando a unidade resolve em UCUM. Unidade que o
+  // pacote não sabe traduzir fica só em `unit`, como texto: afirmar
+  // `http://unitsofmeasure.org` sobre `x10^3/mm3` era publicar um código
+  // falso, e quem consome o Bundle confiando no system trataria aquilo como
+  // UCUM de verdade.
+  const ucumUnit = resolveUcum(sourceUnit, observation.biomarkerCode);
+  const quantity = (value: number): FHIRQuantity => ({
+    ...(ucumUnit ? { code: ucumUnit, system: 'http://unitsofmeasure.org' } : {}),
+    ...(sourceUnit ? { unit: sourceUnit } : {}),
+    value,
+  });
   const isQualitative = observation.isQualitative || typeof observation.value === 'string';
 
   // Base observation structure
@@ -206,15 +208,10 @@ export function labObservationToFHIR(
   if (isQualitative) {
     fhirObs.valueString = String(observation.value);
   } else {
-    fhirObs.valueQuantity = {
-      code: ucumUnit,
-      system: 'http://unitsofmeasure.org',
-      unit: sourceUnit,
-      value: observation.value as number,
-    };
+    fhirObs.valueQuantity = quantity(observation.value as number);
 
     // Reference range only applies to quantitative values
-    const referenceRange = buildReferenceRanges(observation, sourceUnit, ucumUnit);
+    const referenceRange = buildReferenceRanges(observation, quantity);
     if (referenceRange.length > 0) fhirObs.referenceRange = referenceRange;
   }
 

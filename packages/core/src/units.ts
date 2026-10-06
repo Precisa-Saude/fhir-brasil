@@ -5,43 +5,88 @@
  * and defines canonical/SI unit configurations with aliases.
  */
 
+import { BIOMARKER_DEFINITIONS } from './biomarkers';
+
 // ─── UCUM Mappings ───────────────────────────────────────────────────────────
 
 /**
- * Map units to UCUM (Unified Code for Units of Measure)
- * See: https://ucum.org/
+ * Grafia impressa → código UCUM (Unified Code for Units of Measure).
+ *
+ * É a segunda fonte de `resolveUcum`, atrás de `BIOMARKER_UNITS`, e a única
+ * para unidade que nenhum biomarcador configura. Cobre toda unidade declarada
+ * em `biomarkers.ts`: o teste `loinc-axes.test.ts` confere isso, porque uma
+ * unidade sem entrada aqui saía no FHIR como `code` sob o system do UCUM sem
+ * ser UCUM (`uIU/mL`, `K/uL`, `razão`).
+ *
+ * `[IU]` e `[iU]` são o mesmo átomo no UCUM, nas grafias sensível e
+ * insensível a caixa; esta tabela usa `[IU]` e `BIOMARKER_UNITS` usa `[iU]`.
+ *
+ * @see https://ucum.org/
  */
 export const UNIT_TO_UCUM: Record<string, string> = {
   // Dimensionless / special measurements
   '[pH]': '[pH]',
+  '{index}': '{index}',
   '{ratio}': '{ratio}',
+  '{score}': '{score}',
   '{specific gravity}': '{specific gravity}',
 
+  '/HPF': '/[HPF]',
+  '/LPF': '/[LPF]',
   '/µL': '/uL',
   // Percentage
   '%': '%',
   // Count units
   '10³/µL': '10*3/uL',
   '10⁶/µL': '10*6/uL',
+  Angstrom: 'Ao',
+  AU: '{score}',
+  cm: 'cm',
+  'cm³': 'cm3',
+  deg: 'deg',
   // Volume
   fL: 'fL',
   g: 'g',
+  'g/cm²': 'g/cm2',
 
   // Mass concentration
   'g/dL': 'g/dL',
+  'g/L': 'g/L',
+  'IU/L': '[IU]/L',
+  'IU/mL': '[IU]/mL',
+  'K/uL': '10*3/uL',
+  'kcal/d': 'kcal/d',
+  kg: 'kg',
+  'kg/m2': 'kg/m2',
+  'kg/m²': 'kg/m2',
+  'kU/L': 'k[IU]/L',
   L: 'L',
+  'M/uL': '10*6/uL',
+  'mcg/dL': 'ug/dL',
+  'mcg/L': 'ug/L',
+  'mcg/mL': 'ug/mL',
   // Molar concentration
   'mEq/L': 'meq/L',
 
   mg: 'mg',
   'mg/dL': 'mg/dL',
+  'mg/g': 'mg/g',
+  'mg/L': 'mg/L',
+  'mIU/L': 'm[IU]/L',
+  'mIU/mL': 'm[IU]/mL',
   mL: 'mL',
+  'mL/min/1.73m²': 'mL/min/{1.73_m2}',
+  mm: 'mm',
+  'mm/h': 'mm/h',
+  'mm/hr': 'mm/h',
   'mmol/L': 'mmol/L',
+  'mUI/L': 'm[IU]/L',
   'mUI/mL': 'm[IU]/mL',
 
   ng: 'ng',
 
   'ng/dL': 'ng/dL',
+  'ng/L': 'ng/L',
   'ng/mL': 'ng/mL',
   'nmol/L': 'nmol/L',
   // Mass
@@ -49,89 +94,64 @@ export const UNIT_TO_UCUM: Record<string, string> = {
 
   'pg/mL': 'pg/mL',
   pH: '[pH]',
+  'pmol/L': 'pmol/L',
+  razão: '{ratio}',
+  score: '{score}',
+  segundos: 's',
   // Enzyme activity
+  U: 'U',
   'U/L': 'U/L',
   // Special units
   'U/mL': 'U/mL',
+  'ug/dL': 'ug/dL',
+  'ug/L': 'ug/L',
   'UI/L': '[IU]/L',
 
   'UI/mL': '[IU]/mL',
+  'uIU/mL': 'u[IU]/mL',
+  'umol/L': 'umol/L',
 
   µg: 'ug',
   'µg/dL': 'ug/dL',
+  'µg/L': 'ug/L',
   'µmol/L': 'umol/L',
   'µUI/mL': 'u[IU]/mL',
+  índice: '{index}',
 };
 
 /**
- * Default units for biomarkers when source data doesn't provide one
- * These are the most common units used in Brazilian labs
+ * Unidades adimensionais de urina, que a definição não declara porque o laudo
+ * não as imprime: a densidade sai como `1.020` e o pH como `6.0`, sem unidade.
+ * Quando o laudo não traz unidade, o FHIR ainda precisa de uma, e estas são
+ * as do UCUM.
+ */
+const DIMENSIONLESS_DEFAULTS: Record<string, string> = {
+  pH_Urine: '[pH]',
+  SpecificGravity_Urine: '{specific gravity}',
+};
+
+/**
+ * Unidade padrão de cada biomarcador, usada quando o laudo não imprime uma.
+ *
+ * Derivada de `unit` em `biomarkers.ts`, que é a fonte única. Até out/2026
+ * era uma segunda tabela escrita à mão, e as duas divergiam: TSH era
+ * `µUI/mL` aqui e `uIU/mL` lá, ferro era `µg/dL` aqui e `mcg/dL` lá. Duas
+ * fontes para a mesma unidade é o que faz o `fhir-bio units` e o `fhir-bio
+ * range` responderem coisas diferentes para o mesmo código.
  */
 export const BIOMARKER_DEFAULT_UNIT: Record<string, string> = {
-  // Proteins
-  Albumin: 'g/dL',
-  AlkalinePhosphatase: 'U/L',
-  // Liver
-  ALT: 'U/L',
-  AST: 'U/L',
-
-  Calcium: 'mg/dL',
-  Chloride: 'mEq/L',
-  // Lipids
-  Cholesterol: 'mg/dL',
-  // Kidney
-  Creatinine: 'mg/dL',
-  eAG: 'mg/dL',
-  Ferritin: 'ng/mL',
-
-  FolicAcid: 'ng/mL',
-  GGT: 'U/L',
-  // Glucose/Diabetes
-  Glucose: 'mg/dL',
-
-  HbA1c: '%',
-  Hct: '%',
-
-  HDL: 'mg/dL',
-  // Hematology
-  Hgb: 'g/dL',
-  Insulin: 'µUI/mL',
-
-  // Iron studies
-  Iron: 'µg/dL',
-  LDL: 'mg/dL',
-  Magnesium: 'mg/dL',
-  NonHDL_Cholesterol: 'mg/dL',
-
-  // Urinalysis - dimensionless
-  pH_Urine: '[pH]',
-  Potassium: 'mEq/L',
-  RDW: '%',
-  // Electrolytes
-  Sodium: 'mEq/L',
-  SpecificGravity_Urine: '{specific gravity}',
-
-  T3Free: 'pg/mL',
-  T4Free: 'ng/dL',
-  TIBC: 'µg/dL',
-  TotalProtein: 'g/dL',
-
-  TransferrinSaturation: '%',
-  Triglycerides: 'mg/dL',
-  // Thyroid
-  TSH: 'µUI/mL',
-
-  Urea: 'mg/dL',
-  UricAcid: 'mg/dL',
-
-  // Vitamins
-  VitaminB12: 'pg/mL',
-  VitaminD: 'ng/mL',
-  VLDL: 'mg/dL',
+  ...Object.fromEntries(
+    BIOMARKER_DEFINITIONS.filter((b) => b.unit).map((b) => [b.code, b.unit as string]),
+  ),
+  ...DIMENSIONLESS_DEFAULTS,
 };
 
 /**
  * Convert unit to UCUM format
+ *
+ * Devolve a entrada intacta quando não conhece a unidade. Para montar um
+ * `Quantity` FHIR use `resolveUcum`, que diz "não sei" em vez de devolver
+ * uma grafia qualquer como se fosse UCUM.
  */
 export function unitToUCUM(unit: string): string {
   return UNIT_TO_UCUM[unit] || unit;
@@ -144,6 +164,179 @@ export function unitToUCUM(unit: string): string {
  */
 export function getDefaultUnit(biomarkerCode: string): string {
   return BIOMARKER_DEFAULT_UNIT[biomarkerCode] || '';
+}
+
+// ─── UCUM syntax ─────────────────────────────────────────────────────────────
+
+/**
+ * Átomos do UCUM que aparecem em laudo clínico, mais as bases do SI.
+ *
+ * Não é a tabela inteira do UCUM, que tem centenas de átomos. É a lista que
+ * basta para dizer que `uIU/mL` não é UCUM (`IU` não é átomo; `[IU]` é) e que
+ * `10*3/uL` é. Átomo fora desta lista cai em "não é UCUM", e o jeito certo de
+ * aceitá-lo é acrescentá-lo aqui, com o laudo que o imprimiu.
+ */
+const UCUM_ATOMS = new Set([
+  'm',
+  'g',
+  's',
+  'L',
+  'l',
+  'mol',
+  'eq',
+  'U',
+  'cal',
+  'h',
+  'd',
+  'min',
+  'wk',
+  'mo',
+  'a',
+  'Ao',
+  'deg',
+  'K',
+  'A',
+  'N',
+  'Pa',
+  'J',
+  'W',
+  'Hz',
+  'V',
+  'C',
+  'osm',
+  't',
+  'u',
+  'bar',
+  'atm',
+  'rad',
+  'sr',
+  'cd',
+  'Bq',
+  'Gy',
+  'Sv',
+  'lm',
+  'lx',
+  'Cel',
+  'B',
+  'Np',
+]);
+
+/** Prefixos do UCUM, do yotta ao yocto. `da` (deca) é o único com duas letras. */
+const UCUM_PREFIXES = new Set([
+  'Y',
+  'Z',
+  'E',
+  'P',
+  'T',
+  'G',
+  'M',
+  'k',
+  'h',
+  'da',
+  'd',
+  'c',
+  'm',
+  'u',
+  'n',
+  'p',
+  'f',
+  'a',
+  'z',
+  'y',
+]);
+
+/**
+ * Um átomo com prefixo opcional: `g`, `mg`, `[IU]`, `u[IU]`, `10*3`, `%`.
+ *
+ * O prefixo só vale na frente de átomo métrico, e o UCUM marca essa
+ * propriedade átomo a átomo. Aqui a regra é mais frouxa, prefixo na frente de
+ * qualquer átomo, porque o que se quer pegar é grafia que não é UCUM de jeito
+ * nenhum, e não o caso de borda `kdeg`.
+ */
+function isUcumAtom(token: string): boolean {
+  if (token === '%' || /^10\*-?\d+$/.test(token) || /^\d+$/.test(token)) return true;
+  // Átomo entre colchetes: `[IU]`, `[HPF]`, `[lb_av]`, `[pH]`. Com prefixo:
+  // `u[IU]`, `m[IU]`, `k[IU]`.
+  const bracket = /^([A-Za-z]{0,2})\[[^[\]{}\s]+\]$/.exec(token);
+  if (bracket) return bracket[1] === '' || UCUM_PREFIXES.has(bracket[1] as string);
+  if (UCUM_ATOMS.has(token)) return true;
+  for (const prefix of UCUM_PREFIXES) {
+    if (token.startsWith(prefix) && UCUM_ATOMS.has(token.slice(prefix.length))) return true;
+  }
+  return false;
+}
+
+/**
+ * Um componente: átomo com expoente opcional e anotação opcional, ou anotação
+ * sozinha. `m2`, `cm3`, `[in_i]3`, `mL{total}`, `{ratio}`.
+ *
+ * A anotação aceita qualquer caractere que não seja chave, que é o que a
+ * especificação diz dela: texto sem interpretação. `{specific gravity}` passa
+ * por isso, mesmo com espaço.
+ */
+function isUcumComponent(token: string): boolean {
+  const m = /^(.*?)(\{[^{}]*\})?$/.exec(token);
+  if (!m) return false;
+  const [, body, annotation] = m;
+  if (!body) return annotation !== undefined;
+  const exp = /^(.+?)([+-]?\d+)?$/.exec(body as string);
+  if (!exp) return false;
+  const [, atom, exponent] = exp;
+  // `10*3` termina em dígito e não tem expoente; o regex ganancioso já
+  // separou errado, então tenta o token inteiro como átomo primeiro.
+  if (isUcumAtom(body as string)) return true;
+  if (exponent === undefined) return false;
+  return isUcumAtom(atom as string);
+}
+
+/**
+ * Diz se a string é sintaticamente UCUM: componentes ligados por `.` e `/`,
+ * com `/` inicial permitido (`/[HPF]`).
+ *
+ * É sintaxe, não semântica: `K/uL` passa porque `K` é kelvin, e nada aqui sabe
+ * que o laudo quis dizer milhares. É o que `resolveUcum` e `BIOMARKER_UNITS`
+ * resolvem antes de a string chegar aqui. O que este check pega é o resto:
+ * grafia em português, `µ` fora do ASCII, `IU` sem colchetes, `hr`.
+ *
+ * O `.` e o `/` só separam fora de chaves e colchetes: `mL/min/{1.73_m2}` tem
+ * um ponto dentro da anotação, e `[in_i]` poderia ter um operador dentro do
+ * átomo.
+ */
+export function isUcumCode(code: string): boolean {
+  if (!code || /[^\x21-\x7E ]/.test(code)) return false;
+  const terms: string[] = [];
+  let current = '';
+  let braces = 0;
+  let inBracket = false;
+  for (const ch of code) {
+    if (ch === '{') braces++;
+    else if (ch === '}') {
+      if (braces === 0) return false;
+      braces--;
+    } else if (ch === '[') inBracket = true;
+    else if (ch === ']') inBracket = false;
+    if ((ch === '.' || ch === '/') && braces === 0 && !inBracket) {
+      terms.push(current, ch);
+      current = '';
+      continue;
+    }
+    current += ch;
+  }
+  if (braces !== 0 || inBracket) return false;
+  terms.push(current);
+  // `/[HPF]` é `1/[HPF]` com o numerador implícito.
+  if (terms[0] === '' && terms[1] === '/') terms[0] = '1';
+
+  let expectOperand = true;
+  for (const t of terms) {
+    if (expectOperand) {
+      if (!isUcumComponent(t)) return false;
+    } else if (t !== '.' && t !== '/') {
+      return false;
+    }
+    expectOperand = !expectOperand;
+  }
+  return !expectOperand;
 }
 
 // ─── Biomarker Unit Configurations ───────────────────────────────────────────
@@ -476,7 +669,7 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
       'miu/ml': 'mIU/mL',
       'ui/l': 'mIU/mL',
     },
-    canonicalUcum: 'mIU/mL',
+    canonicalUcum: 'm[iU]/mL',
     canonicalUnit: 'mIU/mL',
     siUcum: '[iU]/L',
     siUnit: 'IU/L',
@@ -611,7 +804,7 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
       'miu/ml': 'mIU/mL',
       'ui/l': 'mIU/mL',
     },
-    canonicalUcum: 'mIU/mL',
+    canonicalUcum: 'm[iU]/mL',
     canonicalUnit: 'mIU/mL',
     siUcum: '[iU]/L',
     siUnit: 'IU/L',
@@ -878,7 +1071,7 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     },
     canonicalUcum: 'u[iU]/mL',
     canonicalUnit: 'uIU/mL',
-    siUcum: 'mIU/L',
+    siUcum: 'm[iU]/L',
     siUnit: 'mIU/L',
   },
   Urea: {
@@ -1066,4 +1259,31 @@ export function convertUnit(
   }
 
   return null;
+}
+
+/**
+ * Código UCUM para a unidade que o laudo imprimiu, ou `undefined`.
+ *
+ * Ordem: a configuração do biomarcador em `BIOMARKER_UNITS` (que já sabe que
+ * `K/uL` de leucócito é `10*3/uL`), depois a tabela `UNIT_TO_UCUM`, e por
+ * último a própria string, se for UCUM sintaticamente válido. Fora disso é
+ * `undefined`, e o conversor deixa o `Quantity` só com `unit`: unidade que
+ * não se sabe traduzir não sai sob `http://unitsofmeasure.org`.
+ *
+ * Até out/2026 o conversor só consultava a tabela e devolvia a entrada
+ * intacta quando não achava, então `uIU/mL`, `K/uL` e `razão` saíam como
+ * código UCUM, e os 85 `canonicalUcum` de `BIOMARKER_UNITS` não eram lidos
+ * por ninguém fora de `units.ts`.
+ */
+export function resolveUcum(unit: string, biomarkerCode?: string): string | undefined {
+  if (!unit) return undefined;
+  const config = biomarkerCode ? BIOMARKER_UNITS[biomarkerCode] : undefined;
+  if (config) {
+    const normalized = normalizeUnit(unit, config);
+    if (normalized === config.canonicalUnit) return config.canonicalUcum;
+    if (normalized === config.siUnit) return config.siUcum;
+  }
+  const mapped = UNIT_TO_UCUM[unit];
+  if (mapped) return mapped;
+  return isUcumCode(unit) ? unit : undefined;
 }

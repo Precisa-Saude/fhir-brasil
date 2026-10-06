@@ -4,8 +4,30 @@
  * Validation functions for FHIR R4 resources.
  */
 
-import type { FHIRDiagnosticReport, FHIRObservation } from './fhir-types';
+import type { FHIRDiagnosticReport, FHIRObservation, FHIRQuantity } from './fhir-types';
 import type { ImportError } from './importer';
+import { isUcumCode } from './units';
+
+const UCUM_SYSTEM = 'http://unitsofmeasure.org';
+
+/**
+ * Um `Quantity` que afirma o system do UCUM precisa de um `code` que seja
+ * UCUM. Sem `code` a afirmação está vazia; com `code` que não é UCUM ela está
+ * errada, e foi o caso durante meses: `uIU/mL`, `K/uL` e `razão` saíam sob
+ * `http://unitsofmeasure.org` porque o conversor devolvia a grafia do laudo
+ * intacta quando não a conhecia.
+ *
+ * `Quantity` sem `system` passa: unidade só em texto é legítima, e é o que o
+ * conversor emite quando não sabe traduzir.
+ */
+function ucumErrors(quantity: FHIRQuantity | undefined, where: string): string[] {
+  if (!quantity || quantity.system !== UCUM_SYSTEM) return [];
+  if (!quantity.code) return [`${where}: UCUM system declared without a code`];
+  if (!isUcumCode(quantity.code)) {
+    return [`${where}: "${quantity.code}" is not a UCUM code`];
+  }
+  return [];
+}
 
 /**
  * Validate FHIR DiagnosticReport
@@ -56,6 +78,12 @@ export function validateFHIRObservation(observation: FHIRObservation): string[] 
 
   if (!observation.valueQuantity && !observation.valueString) {
     errors.push('Missing value (valueQuantity or valueString)');
+  }
+
+  errors.push(...ucumErrors(observation.valueQuantity, 'valueQuantity'));
+  for (const [i, range] of (observation.referenceRange ?? []).entries()) {
+    errors.push(...ucumErrors(range.low, `referenceRange[${i}].low`));
+    errors.push(...ucumErrors(range.high, `referenceRange[${i}].high`));
   }
 
   return errors;

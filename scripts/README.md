@@ -16,12 +16,25 @@ Precisa de `LOINC_USER` e `LOINC_PASSWORD` (conta gratuita em
 [loinc.org/get-started](https://loinc.org/get-started/)). No CI vêm dos secrets
 do repositório.
 
+Sem credencial, `LOINC_LOOKUP_URL` aponta para um servidor que sirva o LOINC
+sem login, como o da HL7:
+
+```bash
+LOINC_LOOKUP_URL='https://tx.fhir.org/r4/CodeSystem/$lookup' pnpm loinc:update
+```
+
+É o caminho de quem adiciona um código: `loinc-axes.test.ts` recusa código sem
+entrada no snapshot, então os eixos dele precisam estar gravados antes do PR. O
+servidor oficial continua sendo a referência, e o workflow mensal regrava tudo
+a partir dele.
+
 ### O que o check garante
 
 1. **Existência** — o código resolve no servidor oficial. Pega erro de digitação
    e código que o LOINC aposentou.
-2. **Deriva** — o nome oficial ou o status mudaram no LOINC desde que mapeamos.
-   É o que realmente paga: transforma uma edição silenciosa de terceiro em check
+2. **Deriva** — o nome oficial, o status ou um dos eixos (propriedade,
+   sistema, escala, método) mudaram no LOINC desde que mapeamos. É o que
+   realmente paga: transforma uma edição silenciosa de terceiro em check
    vermelho, em vez de descobrir meses depois.
 
 Status `DEPRECATED` ou `DISCOURAGED` falha alto.
@@ -34,6 +47,21 @@ humana, e nenhum check verde diz que os mapeamentos estão corretos.
 
 Não confunda uma coisa com a outra. O check passar significa que os códigos
 existem e não mudaram, não que estão certos.
+
+O que chega perto da adequação, sem rede, é
+`packages/core/src/__tests__/loinc-axes.test.ts`. Ele lê os eixos gravados no
+snapshot e confere por regra o que dá para conferir por regra: a propriedade do
+código tem que combinar com a unidade declarada (% é fração, mg/dL é
+massa/volume, /HPF é número/área), o sistema tem que caber no catálogo (urina
+para `_Urine`, sangue e derivados para o resto, líquido amniótico para ninguém),
+e quem tem unidade é quantitativo. Existe porque em outubro de 2026 uma revisão
+externa encontrou onze códigos errados num desses eixos, todos existentes, todos
+`ACTIVE`, todos verdes neste check: beta-hidroxibutirato apontava para
+butirilcarnitina em líquido amniótico, bactérias na urina para urocultura, e os
+ácidos graxos para quantidade por hemácia enquanto o laudo imprime %. Nove dos
+onze estavam errados desde o commit inicial do catálogo. O compromisso que a
+regra não aceita e que foi mantido de propósito fica listado no próprio teste,
+com o motivo.
 
 ### Códigos de saída
 
@@ -57,8 +85,13 @@ antes de entrar.
 
 ### Sobre o snapshot
 
-`loinc-snapshot.json` guarda, por código, o nome oficial e o status, mais a
-versão do LOINC e a data da conferência.
+`loinc-snapshot.json` guarda, por código, o nome oficial, o status e os quatro
+eixos (propriedade, sistema, escala, método) na grafia em que o LOINC os exibe,
+mais a versão do LOINC e a data da conferência. Os eixos entraram em outubro de
+2026, preenchidos a partir do `tx.fhir.org` (LOINC 2.82) porque o
+`fhir.loinc.org` exige credencial e a conta fica no CI; o campo `_axesNote`
+registra isso e some na próxima gravação pelo workflow, que escreve tudo da
+mesma consulta.
 
 Guardar o nome não é só diagnóstico. A **seção 10.3 da licença do LOINC** exige
 que informação extraída venha sempre acompanhada do identificador **e do display

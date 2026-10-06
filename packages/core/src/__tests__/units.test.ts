@@ -7,6 +7,8 @@ import {
   getCanonicalUnit,
   getDefaultUnit,
   getSIUnit,
+  isUcumCode,
+  resolveUcum,
   UNIT_TO_UCUM,
   unitToUCUM,
 } from '../units';
@@ -44,6 +46,152 @@ describe('UNIT_TO_UCUM', () => {
   it('should map count units', () => {
     expect(UNIT_TO_UCUM['10³/µL']).toBe('10*3/uL');
     expect(UNIT_TO_UCUM['10⁶/µL']).toBe('10*6/uL');
+    expect(UNIT_TO_UCUM['K/uL']).toBe('10*3/uL');
+    expect(UNIT_TO_UCUM['M/uL']).toBe('10*6/uL');
+  });
+
+  it('cobre as grafias que antes saíam intactas como UCUM', () => {
+    expect(UNIT_TO_UCUM['uIU/mL']).toBe('u[IU]/mL');
+    expect(UNIT_TO_UCUM['mIU/mL']).toBe('m[IU]/mL');
+    expect(UNIT_TO_UCUM['mcg/dL']).toBe('ug/dL');
+    expect(UNIT_TO_UCUM['µg/L']).toBe('ug/L');
+    expect(UNIT_TO_UCUM.razão).toBe('{ratio}');
+    expect(UNIT_TO_UCUM.índice).toBe('{index}');
+    expect(UNIT_TO_UCUM.segundos).toBe('s');
+    expect(UNIT_TO_UCUM['mm/hr']).toBe('mm/h');
+    expect(UNIT_TO_UCUM.Angstrom).toBe('Ao');
+    expect(UNIT_TO_UCUM['mL/min/1.73m²']).toBe('mL/min/{1.73_m2}');
+  });
+});
+
+describe('UNIT_TO_UCUM só aponta para UCUM', () => {
+  it('todo valor da tabela passa no isUcumCode', () => {
+    // Uma entrada errada aqui sairia no FHIR sob o system do UCUM sem ser
+    // UCUM, que é exatamente o que a tabela existe para impedir.
+    const ruins = Object.entries(UNIT_TO_UCUM).filter(([, ucum]) => !isUcumCode(ucum));
+    expect(ruins).toEqual([]);
+  });
+});
+
+describe('BIOMARKER_DEFAULT_UNIT deriva de biomarkers.ts', () => {
+  it('tem a mesma unidade da definição, e não uma segunda grafia', () => {
+    // Até out/2026 TSH era `µUI/mL` aqui e `uIU/mL` na definição.
+    expect(BIOMARKER_DEFAULT_UNIT.TSH).toBe('uIU/mL');
+    expect(BIOMARKER_DEFAULT_UNIT.Iron).toBe('mcg/dL');
+    expect(BIOMARKER_DEFAULT_UNIT.Omega3_EPA).toBe('%');
+  });
+
+  it('mantém as unidades adimensionais de urina que a definição não declara', () => {
+    expect(BIOMARKER_DEFAULT_UNIT.pH_Urine).toBe('[pH]');
+    expect(BIOMARKER_DEFAULT_UNIT.SpecificGravity_Urine).toBe('{specific gravity}');
+  });
+
+  it('não inventa unidade para quem não tem', () => {
+    expect(BIOMARKER_DEFAULT_UNIT.ABO_Group).toBeUndefined();
+  });
+});
+
+describe('isUcumCode', () => {
+  it.each([
+    'mg/dL',
+    'g/dL',
+    'mmol/L',
+    'meq/L',
+    'u[IU]/mL',
+    'u[iU]/mL',
+    'm[IU]/L',
+    '[IU]/mL',
+    '10*3/uL',
+    '10*6/uL',
+    '/[HPF]',
+    '/[LPF]',
+    '%',
+    '{ratio}',
+    '{index}',
+    '{score}',
+    '{specific gravity}',
+    '[pH]',
+    'mL/min/{1.73_m2}',
+    'kg/m2',
+    'cm3',
+    '[in_i]3',
+    '[lb_av]',
+    'Ao',
+    'deg',
+    's',
+    'mm/h',
+    'kcal/d',
+    'ng/mL',
+    'pmol/L',
+    'U/L',
+    'kU/L',
+    'fL',
+    'pg',
+    'ug/dL',
+    'umol/L',
+    'g/cm2',
+    'mg/g',
+  ])('aceita %s', (code) => {
+    expect(isUcumCode(code)).toBe(true);
+  });
+
+  it.each([
+    'uIU/mL',
+    'IU/mL',
+    'mIU/mL',
+    'µg/dL',
+    'µUI/mL',
+    'mcg/dL',
+    'razão',
+    'índice',
+    'segundos',
+    'mm/hr',
+    'Angstrom',
+    'score',
+    'mL/min/1.73m²',
+    'cm³',
+    'x10^3/mm3',
+    'M/uL',
+    'AU',
+    '',
+    'mg/',
+    '/',
+    'mg//dL',
+    '{ratio',
+  ])('recusa %s', (code) => {
+    expect(isUcumCode(code)).toBe(false);
+  });
+
+  it('é sintaxe, não semântica: K/uL passa como kelvin por microlitro', () => {
+    expect(isUcumCode('K/uL')).toBe(true);
+  });
+});
+
+describe('resolveUcum', () => {
+  it('prefere a configuração do biomarcador, que sabe o que K/uL quer dizer', () => {
+    expect(resolveUcum('K/uL', 'WBC')).toBe('10*3/uL');
+    expect(resolveUcum('10*3/ul', 'WBC')).toBe('10*3/uL');
+    expect(resolveUcum('uIU/mL', 'TSH')).toBe('u[iU]/mL');
+    // mIU/L é numericamente igual a uIU/mL, e a configuração do TSH o trata
+    // como grafia da canônica.
+    expect(resolveUcum('mIU/L', 'TSH')).toBe('u[iU]/mL');
+  });
+
+  it('cai na tabela para biomarcador sem configuração', () => {
+    expect(resolveUcum('razão', 'AA_EPA_Ratio')).toBe('{ratio}');
+    expect(resolveUcum('mcg/dL', 'VitaminA')).toBe('ug/dL');
+    expect(resolveUcum('mg/dL')).toBe('mg/dL');
+  });
+
+  it('deixa passar o que já é UCUM', () => {
+    expect(resolveUcum('mg/24.h')).toBe('mg/24.h');
+    expect(resolveUcum('ng/mL/h')).toBe('ng/mL/h');
+  });
+
+  it('devolve undefined para o que não sabe traduzir', () => {
+    expect(resolveUcum('x10^3/mm3', 'WBC')).toBeUndefined();
+    expect(resolveUcum('unknown')).toBeUndefined();
+    expect(resolveUcum('')).toBeUndefined();
   });
 });
 
@@ -51,7 +199,7 @@ describe('BIOMARKER_DEFAULT_UNIT', () => {
   it('should contain default units for common biomarkers', () => {
     expect(BIOMARKER_DEFAULT_UNIT.Glucose).toBe('mg/dL');
     expect(BIOMARKER_DEFAULT_UNIT.HbA1c).toBe('%');
-    expect(BIOMARKER_DEFAULT_UNIT.TSH).toBe('µUI/mL');
+    expect(BIOMARKER_DEFAULT_UNIT.TSH).toBe('uIU/mL');
   });
 
   it('should have units for lipid panel', () => {
@@ -110,7 +258,7 @@ describe('getDefaultUnit', () => {
   it('should return default unit for known biomarkers', () => {
     expect(getDefaultUnit('Glucose')).toBe('mg/dL');
     expect(getDefaultUnit('HbA1c')).toBe('%');
-    expect(getDefaultUnit('TSH')).toBe('µUI/mL');
+    expect(getDefaultUnit('TSH')).toBe('uIU/mL');
   });
 
   it('should return empty string for unknown biomarkers', () => {
@@ -119,9 +267,9 @@ describe('getDefaultUnit', () => {
   });
 
   it('should return correct units for iron studies', () => {
-    expect(getDefaultUnit('Iron')).toBe('µg/dL');
+    expect(getDefaultUnit('Iron')).toBe('mcg/dL');
     expect(getDefaultUnit('Ferritin')).toBe('ng/mL');
-    expect(getDefaultUnit('TIBC')).toBe('µg/dL');
+    expect(getDefaultUnit('TIBC')).toBe('mcg/dL');
     expect(getDefaultUnit('TransferrinSaturation')).toBe('%');
   });
 });

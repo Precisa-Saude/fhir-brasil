@@ -1,3 +1,9 @@
+## [0.37.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.37.0...v0.37.1) (2026-10-06)
+
+### Bug Fixes
+
+* **core:** separar razão ureia/creatinina (56997-0) da razão BUN/creatinina ([#139](https://github.com/Precisa-Saude/fhir-brasil/issues/139)) ([a5b139f](https://github.com/Precisa-Saude/fhir-brasil/commit/a5b139f3ed2220f552a5c9a17c8ff9552fda574b))
+
 ## [0.37.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.36.0...v0.37.0) (2026-10-06)
 
 ### Features

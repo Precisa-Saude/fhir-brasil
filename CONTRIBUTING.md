@@ -31,6 +31,34 @@ Obrigado pelo interesse em contribuir com o fhir-brasil!
    ```
 6. Abra o PR com descrição clara
 
+### Uma grafia que o catálogo não reconhece
+
+O caso mais comum, e o mais fácil de aceitar. Cada laboratório escreve o mesmo
+exame de um jeito, e o catálogo só resolve o que alguém já escreveu nele. Quando
+`findCodeByName` devolve vazio para um exame que existe sob outro nome, falta uma
+grafia e não falta código.
+
+Dá para abrir a issue **Grafia não reconhecida** e parar aí. Se quiser mandar o
+pull request, ele é pequeno:
+
+1. Ache a definição em `packages/core/src/biomarkers.ts`
+2. Acrescente a grafia na lista `pt`, como o laboratório imprime, com acento e
+   pontuação
+3. Abra o PR com a linha do laudo que motivou a adição, **em texto**
+
+Não precisa de teste novo, não mexe no código LOINC e não regenera o ValueSet do
+IG. Exemplo de PR só com grafias: [#103](https://github.com/Precisa-Saude/fhir-brasil/pull/103).
+
+Duas coisas que valem saber antes:
+
+- **Não anexe o laudo.** A linha basta, e o documento carrega dado de paciente.
+- **Grafia que serve a dois exames fica sem dono.** A busca prefere devolver
+  vazio a chutar entre os dois, então esse caso vira conversa na issue antes do
+  PR.
+
+Exame que o catálogo não tem de jeito nenhum é outra coisa: aí é definição nova,
+com código LOINC e referência, e vale a seção abaixo.
+
 ### Dados Médicos
 
 Contribuições envolvendo dados clínicos (faixas de referência, definições de biomarcadores, calculadoras) **devem incluir referências bibliográficas** de fontes confiáveis:

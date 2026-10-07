@@ -1,3 +1,13 @@
+## [0.38.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.38.1...v0.38.2) (2026-10-07)
+
+### Bug Fixes
+
+* **core:** grafias de laudos de produção que não ancoravam ([#144](https://github.com/Precisa-Saude/fhir-brasil/issues/144)) ([67b46de](https://github.com/Precisa-Saude/fhir-brasil/commit/67b46de70047a246782b1451d40b08469c134b2b))
+
+### Documentation
+
+* laudo de demonstração para rodar os comandos de linha de comando ([#143](https://github.com/Precisa-Saude/fhir-brasil/issues/143)) ([2511c4d](https://github.com/Precisa-Saude/fhir-brasil/commit/2511c4d40dd464313daedcdac93b357fc4fb643e))
+
 ## [0.38.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.38.0...v0.38.1) (2026-10-06)
 
 ### Bug Fixes

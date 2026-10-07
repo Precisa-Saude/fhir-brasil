@@ -1015,6 +1015,8 @@ describe('findBiomarkersInText: grafias de produção (PRE-486)', () => {
   it('"CK" não ancora a creatina quinase total dentro de "CK-MB"', () => {
     expect(codesOf('CK-MB 2 ng/mL')).not.toContain('CK');
     expect(codesOf('CK MB massa 2 ng/mL')).not.toContain('CK');
+    expect(codesOf('CK  -  MB 2 ng/mL')).not.toContain('CK');
+    expect(codesOf('CK\t-MB 2 ng/mL')).not.toContain('CK');
     expect(codesOf('CK Total 120 U/L')).toEqual(['CK']);
   });
 

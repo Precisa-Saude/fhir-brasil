@@ -1017,4 +1017,10 @@ describe('findBiomarkersInText: grafias de produção (PRE-486)', () => {
     expect(codesOf('CK MB massa 2 ng/mL')).not.toContain('CK');
     expect(codesOf('CK Total 120 U/L')).toEqual(['CK']);
   });
+
+  it('com "CK" e "CK-MB" no mesmo laudo, a âncora de CK sai da linha do CK', () => {
+    const { matches } = findBiomarkersInText('CK-MB 2 ng/mL\nCK 120 U/L\nCK - MB 3 ng/mL');
+    expect(matches.map((m) => m.code)).toEqual(['CK']);
+    expect(matches[0]?.position).toBe('CK-MB 2 ng/mL\n'.length);
+  });
 });

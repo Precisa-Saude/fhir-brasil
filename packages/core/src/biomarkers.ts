@@ -200,8 +200,8 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     code: 'Lipoprotein_a',
     loinc: '43583-4',
     names: {
-      en: ['Lipoprotein (a)', 'Lp(a)'],
-      pt: ['Lipoproteína (a)', 'Lp(a)'],
+      en: ['Lipoprotein (a)', 'Lipoprotein(a)', 'Lp(a)'],
+      pt: ['Lipoproteína (a)', 'Lipoproteína(a)', 'Lp(a)'],
     },
     unit: 'nmol/L',
   },
@@ -408,7 +408,12 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     loinc: '8099-4',
     names: {
       en: ['Thyroid Peroxidase Antibodies', 'TPO Antibodies', 'Anti-TPO'],
-      pt: ['Anticorpos Anti-Peroxidase Tireoidiana', 'Anti-TPO', 'TPO'],
+      pt: [
+        'Anticorpos Anti-Peroxidase Tireoidiana',
+        'Anticorpos Anti-Peroxidase Tiroidiana',
+        'Anti-TPO',
+        'TPO',
+      ],
     },
     unit: 'IU/mL',
   },
@@ -418,7 +423,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     loinc: '3016-3',
     names: {
       en: ['Thyroid-Stimulating Hormone', 'TSH', 'Thyrotropin'],
-      pt: ['Hormônio Tireoestimulante', 'TSH', 'Tireotrofina'],
+      pt: ['Hormônio Tireoestimulante', 'Hormônio Tiroestimulante', 'TSH', 'Tireotrofina'],
     },
     unit: 'uIU/mL',
   },
@@ -427,7 +432,15 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     code: 'T4Free',
     loinc: '3024-7',
     names: {
-      en: ['Thyroxine Free', 'Free T4', 'T4 Free', 'T4, Free', 'T4 FREE'],
+      en: [
+        'Thyroxine Free',
+        'Free Thyroxine',
+        'Free Thyroxine (T4)',
+        'Free T4',
+        'T4 Free',
+        'T4, Free',
+        'T4 FREE',
+      ],
       pt: ['Tiroxina Livre', 'T4 Livre'],
     },
     unit: 'ng/dL',
@@ -1286,7 +1299,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     code: 'VitaminB12',
     loinc: '2132-9',
     names: {
-      en: ['Vitamin B12', 'Cobalamin', 'B12', 'Cyanocobalamin'],
+      en: ['Vitamin B12', 'Vitamin B-12', 'Cobalamin', 'B12', 'Cyanocobalamin'],
       pt: [
         'Vitamina B12',
         'Vitamina B-12',
@@ -1335,6 +1348,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       pt: [
         'Vitamina D',
         '25-Hidroxivitamina D',
+        '25 - Hidroxivitamina D',
         '25-OH Vitamina D',
         'Vitamina D, 25-Hidroxi',
         '25-Hidroxi Vitamina D',
@@ -1379,9 +1393,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     code: 'ALT',
     loinc: '1742-6',
     names: {
-      en: ['Alanine Transaminase', 'ALT', 'SGPT'],
+      en: ['Alanine Transaminase', 'Alanine Aminotransferase', 'ALT', 'SGPT'],
       pt: [
         'Alanina Aminotransferase',
+        'Alanina Amino Transferase',
         'ALT',
         'TGP',
         'Transaminase Glutâmico-Pirúvica',
@@ -1430,6 +1445,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Aspartate Aminotransferase', 'AST', 'SGOT'],
       pt: [
         'Aspartato Aminotransferase',
+        'Aspartato Amino Transferase',
         'AST',
         'TGO',
         'Transaminase Glutâmico-Oxalacética',
@@ -1968,8 +1984,8 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     // urocultura não é sedimento.
     loinc: '5769-5',
     names: {
-      en: ['Urine Bacteria', 'Bacteria Urine', 'Bacteria, Urine', 'Bacteria'],
-      pt: ['Bactérias na Urina', 'Bactérias'],
+      en: ['Urine Bacteria', 'Bacteria Urine', 'Bacteria, Urine', 'Bacteria', 'Bacteriuria'],
+      pt: ['Bactérias na Urina', 'Bactérias', 'Bacteriúria'],
     },
     unit: '/HPF',
   },
@@ -2137,7 +2153,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     loinc: '20405-7',
     names: {
       en: ['Urobilinogen Urine', 'Urine Urobilinogen', 'Urobilinogen'],
-      pt: ['Urobilinogênio Urinário', 'Urobilinogênio na Urina'],
+      pt: ['Urobilinogênio Urinário', 'Urobilinogênio na Urina', 'Urobilinogênio'],
     },
     unit: 'mg/dL',
   },
@@ -2325,6 +2341,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Body Fat',
         'Fat Percentage',
         'Percent Body Fat',
+        'Fat Mass Percentage',
         '% Body Fat',
         'Total Body % Fat',
         // A Live Lean imprime "Total Fat %" na tabela regional da página 1 (a

@@ -22,6 +22,7 @@ import {
   CONTEXT_REQUIRED_NAMES,
   GENETIC_CONTEXT_PATTERNS,
   QUALITATIVE_VALUE_TERMS,
+  SUBTYPE_AFTER,
   UNAMBIGUOUS_SHORT_NAMES,
 } from './anchor-lexicon';
 import {
@@ -537,6 +538,10 @@ export function findBiomarkersInText(ocrText: string): AnchorResult {
       }
 
       if (qualifiedByBodyRegion(entry.code, before) || followedByPercent(entry.code, after)) {
+        continue;
+      }
+
+      if (SUBTYPE_AFTER[entry.code]?.test(after)) {
         continue;
       }
 

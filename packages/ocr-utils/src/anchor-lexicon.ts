@@ -16,6 +16,9 @@ export const UNAMBIGUOUS_SHORT_NAMES = new Set([
   'alt',
   'ast',
   'bun',
+  // Creatina quinase: Fleury e a Quest imprimem só "CK", e sem a sigla o
+  // modelo ficava sem âncora e encaixava o valor em outro exame (PRE-486).
+  'ck',
   'wbc',
   'rbc',
   'mcv',
@@ -154,3 +157,12 @@ export const GENETIC_CONTEXT_PATTERNS: RegExp[] = [
   /\bhomozigot/,
   /\bsequence change\b/,
 ];
+
+/**
+ * Subtipo que vem logo depois do nome e muda o exame. "CK" sozinho é a
+ * creatina quinase total, e "CK-MB" é a fração MB, que o catálogo não tem: sem
+ * esta trava, a sigla curta ancorava `CK` dentro de "CK-MB" (PRE-486).
+ */
+export const SUBTYPE_AFTER: Record<string, RegExp> = {
+  CK: /^[\s-]*mb\b/i,
+};

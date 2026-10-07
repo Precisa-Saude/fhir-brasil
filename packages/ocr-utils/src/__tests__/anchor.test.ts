@@ -982,3 +982,47 @@ CBC (INCLUDES DIFF/PLT)
     expect(codesOf('COLOR\nKETONES')).toEqual([]);
   });
 });
+
+/**
+ * Grafias de laudos de produção que não ancoravam (PRE-486). Sem âncora, o
+ * modelo encaixava o valor no exame mais próximo da lista: o TSH da Weinmann e
+ * do Fleury, impresso como "Hormônio Tiroestimulante", foi gravado como T4
+ * livre, e o anti-TPO como fator reumatoide.
+ */
+describe('findBiomarkersInText: grafias de produção (PRE-486)', () => {
+  const codesOf = (text: string) => findBiomarkersInText(text).matches.map((m) => m.code);
+
+  it.each([
+    ['Hormônio Tiroestimulante 2,1 mUI/L', 'TSH'],
+    ['Free Thyroxine (T4) 1,2 ng/dL', 'T4Free'],
+    ['Alanine Aminotransferase 20 U/L', 'ALT'],
+    ['ALANINA AMINO TRANSFERASE 20 U/L', 'ALT'],
+    ['ASPARTATO AMINO TRANSFERASE 20 U/L', 'AST'],
+    ['ANTICORPOS ANTI-PEROXIDASE TIROIDIANA 10 UI/mL', 'AntiTPO'],
+    ['Lipoprotein(a) 30 nmol/L', 'Lipoprotein_a'],
+    ['Vitamin B-12 400 pg/mL', 'VitaminB12'],
+    ['25 - Hidroxivitamina D 30 ng/mL', 'VitaminD'],
+    ['Fat Mass Percentage 22 %', 'BodyFatPct'],
+    ['CK 120 U/L', 'CK'],
+  ])('%s → %s', (line, code) => {
+    expect(codesOf(line)).toEqual([code]);
+  });
+
+  it('"Free Thyroxine (T4)" não ancora o T4 total pelo "Thyroxine (T4)" de dentro', () => {
+    expect(codesOf('Free Thyroxine (T4) 1,2 ng/dL')).not.toContain('T4Total');
+  });
+
+  it('"CK" não ancora a creatina quinase total dentro de "CK-MB"', () => {
+    expect(codesOf('CK-MB 2 ng/mL')).not.toContain('CK');
+    expect(codesOf('CK MB massa 2 ng/mL')).not.toContain('CK');
+    expect(codesOf('CK  -  MB 2 ng/mL')).not.toContain('CK');
+    expect(codesOf('CK\t-MB 2 ng/mL')).not.toContain('CK');
+    expect(codesOf('CK Total 120 U/L')).toEqual(['CK']);
+  });
+
+  it('com "CK" e "CK-MB" no mesmo laudo, a âncora de CK sai da linha do CK', () => {
+    const { matches } = findBiomarkersInText('CK-MB 2 ng/mL\nCK 120 U/L\nCK - MB 3 ng/mL');
+    expect(matches.map((m) => m.code)).toEqual(['CK']);
+    expect(matches[0]?.position).toBe('CK-MB 2 ng/mL\n'.length);
+  });
+});

@@ -125,7 +125,9 @@ async function buscarOuVazio(
   try {
     return await buscar(query, language, rows);
   } catch (e) {
-    passos.push(`falhou "${query}": ${String(e).slice(0, 60)}`);
+    const motivo = String(e).slice(0, 60);
+    passos.push(`falhou "${query}": ${motivo}`);
+    console.error(`consulta falhou depois das repetições: "${query}" (${motivo})`);
     return [];
   }
 }

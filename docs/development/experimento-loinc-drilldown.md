@@ -116,6 +116,60 @@ ordenação deixa fora dos 15.
 
 Custo da rodada final: US$ 0,006 em 191 decisões, cerca de 0,85 segundo cada.
 
+## Rodada 9: política de método de PRE-473, rank informativo (08/10/2026)
+
+Com a política de PRE-473 confirmada, a ordenação passou a seguir o padrão da
+classe quando o laudo não imprime método (hemograma: contagem automatizada;
+urina tipo I: tira, sedimento: microscopia; coagulação: ensaio de coagulação;
+demais classes: conceito base). O `COMMON_TEST_RANK` foi testado primeiro como
+desempate entre irmãs do mesmo componente, sistema e propriedade, e contradisse
+o catálogo em onze entradas e o próprio LDL da especificação (2089-1 contra
+13457-7), sem ganho de acerto. Ficou informativo: a irmã mais usada ganha uma
+marca no prompt do escolhedor e no registro de decisão, e entra numa fila de
+revisão em vez de reordenar a lista. Rodada feita com
+`scripts/loinc-drilldown.ts` sobre o catálogo 0.38.4, que já tem os aliases de
+[fhir-brasil#146](https://github.com/Precisa-Saude/fhir-brasil/pull/146).
+
+|                                 | Rodada 8         | Rodada 9                     |
+| ------------------------------- | ---------------- | ---------------------------- |
+| Código entre os 15 candidatos   | 95,3%            | 97,4%                        |
+| recall@1 / @5                   | 74% / 92%        | 75% / 94%                    |
+| Regra acerta, código presente   | 71%              | 77%                          |
+| Jev acerta, código presente     | 90,7%            | 90,3% (94,6% contando irmãs) |
+| Acerto fim a fim                | 86,4%            | 88,0% (168 de 191)           |
+| Propostas com confiança >= 0,95 | 74, todas certas | 79, todas certas             |
+| Propostas entre 0,85 e 0,95     | 47, 42 certas    | 36, 33 certas                |
+
+A fila de revisão que o rank produz, mesmo sem decidir, tem doze entradas em
+que o LOINC diz que a irmã é a mais usada e o catálogo guarda outra, às vezes
+de propósito. Está em [PRE-473](https://linear.app/precisa-saude/issue/PRE-473):
+
+| Biomarcador                         | Catálogo                             | Irmã mais usada                                          |
+| ----------------------------------- | ------------------------------------ | -------------------------------------------------------- |
+| Reticulócitos                       | 4679-7, sem método (rank 745)        | 17849-1, contagem automatizada (425)                     |
+| VHS                                 | 30341-2, sem método (280)            | 4537-7, Westergren (164)                                 |
+| Gliadina desamidada IgA             | 63453-5, imunoensaio (3.600)         | 58709-7, sem método (2.734)                              |
+| Proteína na urina                   | 5804-0, tira (171)                   | 50561-0, tira automatizada (138)                         |
+| Troponina I                         | 49563-0, limite de detecção (2.157)  | 10839-9, sem método (107)                                |
+| Troponina T                         | 6598-7, sem método (604)             | 67151-1, alta sensibilidade (371)                        |
+| D-dímero                            | 48065-7, FEU (583)                   | 48058-2, DDU (267)                                       |
+| LDH                                 | 14804-9, lactato para piruvato (526) | 14805-6, piruvato para lactato (427)                     |
+| eGFR                                | 98979-8, CKD-EPI 2021 (sem rank)     | 48643-1, MDRD (48)                                       |
+| Microalbumina na urina              | 14957-5, limite de detecção (307)    | 1754-1, sem método (272)                                 |
+| Densidade e urobilinogênio na urina | 5811-5 e 20405-7, tira (144, 374)    | 2965-2 sem método (94) e 50563-6 tira automatizada (143) |
+
+Por que o rank não decide: o conjunto de referência é o próprio catálogo, e
+uma regra que sobrepõe decisões do catálogo não tem contra o que ser validada.
+Quando uma entrada da fila for revisada e o catálogo mudar, o ouro muda com
+ela.
+
+O teste do rank como desempate também pôs LDL e globulina na fila (13457-7
+calculado, rank 76, contra 2089-1, rank 263; 10834-0 calculada, rank 160,
+contra 2336-6, rank 214). No desenho informativo as duas variantes calculadas
+ficam fora dos 15 pela penalidade de método, então não aparecem acima, mas o
+conflito do LDL com a própria especificação de PRE-473 (2089-1 quando o laudo
+não diz) continua a ser uma decisão pendente.
+
 ## Consequências para o pipeline
 
 - **Nada muda na extração por laudo.** OCR, ancoragem determinística na tabela

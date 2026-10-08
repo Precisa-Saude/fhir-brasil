@@ -1,3 +1,9 @@
+## [0.38.4](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.38.3...v0.38.4) (2026-10-08)
+
+### Bug Fixes
+
+* **core:** aliases com a grafia do LOINC para HOMA-IR e totais de ômega-3 e ômega-6 ([#146](https://github.com/Precisa-Saude/fhir-brasil/issues/146)) ([6bad7ed](https://github.com/Precisa-Saude/fhir-brasil/commit/6bad7ed675dfc663e206db01703d80c435cc5ada))
+
 ## [0.38.3](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.38.2...v0.38.3) (2026-10-08)
 
 ### Bug Fixes

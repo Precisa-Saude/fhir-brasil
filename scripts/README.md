@@ -127,6 +127,24 @@ exposto a PR de fork em repositório público.
 
 A cadência acompanha a do LOINC, que está migrando para release mensal.
 
+## loinc-drilldown.ts
+
+Experimento de [PRE-488](https://linear.app/precisa-saude/issue/PRE-488): propõe
+o código LOINC de cada biomarcador do catálogo a partir do nome e da unidade,
+pela LOINC Search API com filtros de eixo, e mede quantas vezes o código do
+catálogo volta. Opcionalmente o Jev 1.13 (modelo de decisão, via OpenRouter)
+escolhe entre os candidatos. Leitura dos resultados em
+`docs/development/experimento-loinc-drilldown.md`.
+
+```bash
+pnpm loinc:drilldown                                   # busca + regra + Jev
+pnpm loinc:drilldown -- --sem-jev --limite 20          # só busca e regra
+pnpm loinc:drilldown -- --saida /tmp/drilldown.json
+```
+
+Precisa de `LOINC_USER` e `LOINC_PASSWORD`; `OPENROUTER_API_KEY` só para o Jev.
+Envia ao LOINC e ao OpenRouter apenas nomes e unidades do catálogo.
+
 ## generate-valueset.ts
 
 Gera `ig/input/fsh/valuesets/BRLabTestVS.fsh` a partir dos biomarcadores com

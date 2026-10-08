@@ -1,4 +1,4 @@
-/* eslint-disable no-console -- script de CLI: a saída é o produto */
+/* eslint-disable no-console, max-lines -- script de CLI: a saída é o produto; a tabela de unidades e o pipeline inteiro ficam num arquivo só, como os outros scripts */
 /**
  * Experimento PRE-488: propor o código LOINC de um exame a partir do nome e da
  * unidade, do jeito que um codificador humano faz no SearchLOINC.
@@ -11,9 +11,12 @@
  *      status:ACTIVE`), nome em inglês solto, nome em português
  *      (`language=11`), e, quando sobra pouco, busca por Part de componente.
  *   2. Filtro e ordenação determinísticos: status ACTIVE, sistema que a
- *      categoria implica, propriedade que a unidade implica, método padrão da
- *      classe quando o laudo não imprime método (hemograma: Automated count;
- *      urina: Test strip; coagulação: Coag), `COMMON_TEST_RANK` como desempate.
+ *      categoria implica, propriedade que a unidade implica, e a política de
+ *      método de PRE-473 quando o laudo não imprime método: padrão da classe
+ *      (hemograma: Automated count; urina: Test strip, sedimento:
+ *      microscopia; coagulação: Coag; demais classes: conceito base). O
+ *      `COMMON_TEST_RANK` só informa: a irmã mais usada ganha uma marca que
+ *      vai ao prompt e ao registro, sem reordenar a lista.
  *   3. Escolha entre os 15 primeiros: uma regra (conceito base) e, se houver
  *      `OPENROUTER_API_KEY`, o modelo de decisão Jev 1.13 (System One), que
  *      devolve a alternativa e o vetor de probabilidades sem gerar texto.
@@ -25,6 +28,7 @@
  * Uso:
  *   node --env-file-if-exists=.env --experimental-strip-types scripts/loinc-drilldown.ts
  *   node ... scripts/loinc-drilldown.ts --sem-jev --limite 20 --saida /tmp/drilldown.json
+ *   node ... scripts/loinc-drilldown.ts --apenas Platelets,Reticulocytes
  *
  * Precisa de `LOINC_USER` e `LOINC_PASSWORD` (conta gratuita do LOINC). Sem
  * `OPENROUTER_API_KEY`, roda só a busca e a regra. Envia ao LOINC e ao
@@ -50,6 +54,9 @@ if (!LOINC_USER || !LOINC_PASSWORD) {
   process.exit(1);
 }
 const LIMITE = Number(opt('--limite') ?? Infinity);
+const APENAS = opt('--apenas')
+  ?.split(',')
+  .map((c) => c.trim());
 const SAIDA = opt('--saida') ?? 'loinc-drilldown.resultados.json';
 
 const SEARCH = 'https://loinc.regenstrief.org/searchapi/loincs';
@@ -63,6 +70,8 @@ interface Candidato {
   code: string;
   display: string;
   lang: 'en' | 'pt';
+  /** Irmã mais usada do grupo pelo COMMON_TEST_RANK; informativo (PRE-473). */
+  maisComum?: string;
   method: string;
   property: string;
   propertyDesconhecida?: boolean;
@@ -114,6 +123,7 @@ async function buscar(query: string, language?: number, rows = 100): Promise<Can
   return (j.Results ?? []).map((x) => ({
     cls: x.CLASS,
     code: x.LOINC_NUM,
+    component: x.COMPONENT,
     display: x.LONG_COMMON_NAME,
     lang: language ? 'pt' : 'en',
     method: x.METHOD_TYP,
@@ -188,12 +198,37 @@ function sistemas(alvo: Alvo): string[] | null {
   return ['Ser/Plas', 'Ser', 'Plas', 'Ser/Plas/Bld', 'Bld', 'RBC.lysate'];
 }
 
-// Método padrão da classe quando o laudo não imprime método (rascunho PRE-473).
+// Método padrão da classe quando o laudo não imprime método (PRE-473).
 function metodoPadrao(c: Candidato): string | null {
   if (/^HEM\/BC/.test(c.cls)) return 'Automated count';
   if (/^UA/.test(c.cls)) return /sed/i.test(c.system) ? 'Microscopy.light.HPF' : 'Test strip';
   if (/^COAG/.test(c.cls)) return 'Coag';
   return null;
+}
+
+// Política de PRE-473 (08/10/2026): quando o laudo não imprime método, a
+// ordenação segue o padrão da classe. O `COMMON_TEST_RANK` é informativo:
+// entre irmãs do mesmo componente, sistema e propriedade, a mais usada ganha
+// a marca `maisComum`, que vai ao prompt e ao registro de decisão, mas não
+// reordena a lista. A regra que reordena não pode contradizer o catálogo, que
+// é o único padrão-ouro que temos; o rank vira fila de revisão, não decisão.
+function marcarMaisComum(cands: Candidato[]): void {
+  const grupos = new Map<string, Candidato[]>();
+  for (const c of cands) {
+    const chave = `${c.component}|${c.system}|${c.property}`;
+    grupos.set(chave, [...(grupos.get(chave) ?? []), c]);
+  }
+  for (const grupo of grupos.values()) {
+    if (grupo.length < 2) continue;
+    const comRank = grupo.filter((c) => c.rank > 0).sort((a, b) => a.rank - b.rank);
+    if (comRank[0])
+      comRank[0].maisComum = `variante mais comum nos laudos (rank ${comRank[0].rank})`;
+  }
+}
+
+function ehPadraoDaClasse(c: Candidato): boolean {
+  const d = metodoPadrao(c);
+  return d !== null && Boolean(c.method?.startsWith(d));
 }
 
 function pontuacao(c: Candidato): number {
@@ -202,7 +237,7 @@ function pontuacao(c: Candidato): number {
   if (/--/.test(d)) s += 100;
   if (/\^/.test(d)) s += 50;
   const padrao = metodoPadrao(c);
-  if (padrao) s += c.method?.startsWith(padrao) ? -25 : c.method ? 20 : 0;
+  if (padrao) s += ehPadraoDaClasse(c) ? -25 : c.method ? 20 : 0;
   else if (c.method) s += 20;
   if (/panel|study|maximum|minimum|mean|goal|father|mother|fetal|cord/i.test(d)) s += 30;
   s += c.rank > 0 ? Math.min(c.rank, 5000) / 1000 : 10;
@@ -323,12 +358,11 @@ interface Decisao {
 async function escolherComJev(alvo: Alvo, cands: Candidato[]): Promise<Decisao> {
   const criteria: Record<string, string> = {};
   cands.forEach((c, i) => {
-    const padrao = metodoPadrao(c);
-    const tag =
-      padrao && c.method?.startsWith(padrao)
-        ? ' [variante padrão da classe quando o laudo não imprime método]'
-        : '';
-    criteria[LETRAS[i]!] = `${c.code} ${c.display}${tag}`;
+    const tags = [
+      ehPadraoDaClasse(c) ? 'padrão da classe quando o laudo não imprime método' : '',
+      c.maisComum ?? '',
+    ].filter(Boolean);
+    criteria[LETRAS[i]!] = `${c.code} ${c.display}${tags.length ? ` [${tags.join('; ')}]` : ''}`;
   });
   criteria.NONE = 'Nenhum dos candidatos descreve exatamente este exame';
   const body = {
@@ -337,7 +371,7 @@ async function escolherComJev(alvo: Alvo, cands: Candidato[]): Promise<Decisao> 
       resposta: {
         criteria,
         instructions:
-          'Escolha o código LOINC cujo componente, propriedade, sistema (espécime), escala e método descrevem exatamente este exame como ele aparece em laudos brasileiros de rotina. Quando o laudo não indica método: para hemograma (classe HEM/BC) a variante padrão é "by Automated count", para urina tipo I (UA) é "by Test strip" (sedimento: microscopia), para coagulação é "by Coagulation assay"; nas demais classes prefira o conceito base sem método. Evite qualificadores de tempo ou desafio que o laudo não indica. Escolha NONE se nenhum candidato servir.',
+          'Escolha o código LOINC cujo componente, propriedade, sistema (espécime), escala e método descrevem exatamente este exame como ele aparece em laudos brasileiros de rotina. Quando o laudo não indica método: para hemograma (classe HEM/BC) a variante padrão é "by Automated count", para urina tipo I (UA) é "by Test strip" (sedimento: microscopia), para coagulação é "by Coagulation assay"; nas demais classes prefira o conceito base sem método. A marca "mais comum nos laudos" é só informativa e não muda a regra. Evite qualificadores de tempo ou desafio que o laudo não indica. Escolha NONE se nenhum candidato servir.',
         type: 'choice',
       },
     },
@@ -373,7 +407,9 @@ async function escolherComJev(alvo: Alvo, cands: Candidato[]): Promise<Decisao> 
   };
 }
 
-const alvos: Alvo[] = BIOMARKER_DEFINITIONS.filter((d) => d.loinc)
+const alvos: Alvo[] = BIOMARKER_DEFINITIONS.filter(
+  (d) => d.loinc && (!APENAS || APENAS.includes(d.code)),
+)
   .slice(0, LIMITE)
   .map((d) => ({
     category: String(d.category),
@@ -391,6 +427,7 @@ async function trabalhador(): Promise<void> {
     const alvo = alvos[proximo++]!;
     try {
       const r = await recuperar(alvo);
+      marcarMaisComum(r.candidatos);
       const cands = [...r.candidatos].sort((a, b) => pontuacao(a) - pontuacao(b)).slice(0, 15);
       const posicao = cands.findIndex((c) => c.code === alvo.loinc) + 1;
       const regra = cands[0]?.code ?? null;
@@ -399,8 +436,11 @@ async function trabalhador(): Promise<void> {
         biomarcador: alvo.code,
         candidatos: cands.map((c) => ({
           code: c.code,
+          component: c.component,
           display: c.display,
+          maisComum: c.maisComum ?? null,
           method: c.method,
+          padraoDaClasse: ehPadraoDaClasse(c),
           property: c.property,
           rank: c.rank,
           system: c.system,

@@ -276,6 +276,62 @@ não é sempre o que o laboratório imprimiu:
 A Search API devolveu um 429 em 1.040 alvos com três trabalhadores, repetido
 à mão; dois trabalhadores não disparam limite.
 
+## Rodada 11: os mesmos testes locais pelo caminho de produção, com Jev (08/10/2026)
+
+Mesmos 1.040 alvos, agora como a produção os veria: a ancoragem acontece antes
+de qualquer código, então cada alvo recebe, além do nome impresso, os nomes em
+inglês do biomarcador âncora do catálogo (`--com-aliases`), e o Jev 1.13
+escolhe entre os 15 candidatos. Os 257 alvos sem âncora (`UNKNOWN_*`)
+continuam só com o nome impresso. Custo do Jev: US$ 0,03 para 1.040 decisões.
+Resultado por alvo em `experimento-loinc-drilldown.testes-locais-aliases.json`.
+
+|                                 | Rodada 10 (só nome impresso) | Rodada 11 (aliases da âncora) |
+| ------------------------------- | ---------------------------- | ----------------------------- |
+| Alvos com código guardado       | 701 (1.756 testes)           | 701 (1.756 testes)            |
+| Código no pool da busca         | 68,3%                        | 98,6%                         |
+| Código entre os 15 candidatos   | 64,5% (74,7% dos testes)     | 93,9% (96,1% dos testes)      |
+| Regra acerta (@1)               | 56,3%                        | 81,2%                         |
+| Jev acerta, código presente     | —                            | 88,8% (584/658)               |
+| Jev acerta, fim a fim           | —                            | 83,3% (87,4% dos testes)      |
+| Jev abstém com código ausente   | —                            | 17 de 43                      |
+| Propostas com confiança >= 0,95 | —                            | 313, 310 exatas (99,0%)       |
+| Propostas entre 0,85 e 0,95     | —                            | 165, 155 exatas (93,9%)       |
+| Propostas abaixo de 0,85        | —                            | 189, 119 exatas (63,0%)       |
+
+- **Os aliases da âncora fecham a recuperação.** O código guardado entra no
+  pool em 98,6% dos alvos e na lista em 93,9%, contra 64,5% só pelo nome
+  impresso: o buraco da rodada 10 era a grafia, não o LOINC. A regra sobe de
+  56% para 81%, igual ao conjunto-ouro.
+- **O roteamento por confiança se sustenta em produção.** Das 313 propostas
+  com confiança >= 0,95 (844 testes), 310 batem com o código guardado, e as
+  três que não batem são a favor do Jev ou da fila de PRE-473: "T4 libre
+  (Tiroxina libre)" guardado como T4 total (3026-2) e proposto como T4 livre
+  (3024-7); "Reticulocyte Count" guardado sem método (4679-7) e proposto com
+  contagem automatizada (60474-4), a entrada da fila da rodada 9;
+  "Testosterone Free" guardado em massa (2991-8) e proposto em molar
+  (14914-6). Entre 0,85 e 0,95, 94% batem. Abaixo de 0,85 cai para 63%, que
+  é onde o roteamento manda procurar de novo.
+- **Os erros do Jev abaixo de 0,95 são quase todos decisões de catálogo, não
+  de busca.** Glicose em sangue (2339-0) contra soro/plasma (2345-7), em
+  confiança 0,46 a 0,61; VLDL base (2091-7) contra o calculado guardado
+  (13458-5); 25-hidroxivitamina D: 1989-3 guardado contra 62292-8 (D2+D3)
+  proposto em sete grafias, confiança 0,65 a 0,91, a mesma troca que a
+  revisão do datasus-sdk fez em 06/10; cetonas e glicose na urina, tira
+  contra `[Presence]`. E dois acertos do Jev contra o código guardado: "Urea"
+  guardado como ureia-nitrogênio (3094-0) e proposto como ureia (3091-6), e
+  o T4 acima. Vão para PRE-473 (política) e PRE-486 (âncoras).
+- **Para os 339 alvos sem código, a proposta ainda é rara: 66.** 218 não
+  recebem candidato algum, porque 171 são composição corporal e
+  bioimpedância (massa gorda por segmento, ângulo de fase, água corporal,
+  gasto energético) e painéis de IgE, que a busca em português não encontra
+  e para os quais não há âncora com aliases; 55 recebem NONE. Das 66
+  propostas, 16 estão acima de 0,95 (colesterol total, ureia-nitrogênio,
+  TFG por MDRD nas duas populações, magnésio, PCR, PSA, albumina/globulina,
+  reticulócitos em %, albumina na urina, FAN por imunofluorescência,
+  anti-HCV, tireoglobulina) e são propostas corretas pela leitura dos nomes.
+  O caminho de proposta serve ao exame sem âncora que tem nome de bancada;
+  para DEXA e bioimpedância, o catálogo precisa de aliases antes.
+
 ## Consequências para o pipeline
 
 - **Nada muda na extração por laudo.** OCR, ancoragem determinística na tabela

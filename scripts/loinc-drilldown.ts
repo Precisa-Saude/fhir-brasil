@@ -29,13 +29,25 @@
  *   node --env-file-if-exists=.env --experimental-strip-types scripts/loinc-drilldown.ts
  *   node ... scripts/loinc-drilldown.ts --sem-jev --limite 20 --saida /tmp/drilldown.json
  *   node ... scripts/loinc-drilldown.ts --apenas Platelets,Reticulocytes
+ *   node ... scripts/loinc-drilldown.ts --testes-locais testes-locais.json --sem-jev
+ *   node ... scripts/loinc-drilldown.ts --testes-locais testes-locais.json --com-aliases
+ *
+ * Com `--testes-locais`, a entrada é a saída agregada de
+ * `audit-testes-locais.ts --json` da platform (PRE-486): um registro por teste
+ * local por laboratório, com o nome impresso no laudo, a unidade, o espécime
+ * quando o laudo imprime um, e o código guardado. Os registros são agrupados
+ * por nome, unidade, espécime e código, e cada grupo vira um alvo cuja única
+ * pista é o que o laboratório imprimiu, em português. Com `--com-aliases`, o
+ * alvo recebe também os nomes em inglês do biomarcador âncora, como no caminho
+ * de produção, onde a ancoragem acontece antes de qualquer código.
  *
  * Precisa de `LOINC_USER` e `LOINC_PASSWORD` (conta gratuita do LOINC). Sem
  * `OPENROUTER_API_KEY`, roda só a busca e a regra. Envia ao LOINC e ao
- * OpenRouter apenas nomes e unidades do catálogo; nenhum dado de paciente.
+ * OpenRouter apenas nomes e unidades do catálogo ou do laudo; nenhum dado de
+ * paciente (a auditoria já sai agregada por laboratório, sem pacientes).
  */
 
-import { writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
 import { BIOMARKER_DEFINITIONS } from '../packages/core/src/biomarkers.ts';
 
@@ -58,6 +70,11 @@ const APENAS = opt('--apenas')
   ?.split(',')
   .map((c) => c.trim());
 const SAIDA = opt('--saida') ?? 'loinc-drilldown.resultados.json';
+const TESTES_LOCAIS = opt('--testes-locais');
+const COM_ALIASES = flag('--com-aliases');
+const CONCORRENCIA = Number(opt('--concorrencia') ?? 2);
+/** Pares de rótulo de eixo pt-BR → en aprendidos em corridas anteriores; lido e regravado. */
+const ROTULOS = opt('--rotulos');
 
 const SEARCH = 'https://loinc.regenstrief.org/searchapi/loincs';
 const PARTS = 'https://loinc.regenstrief.org/searchapi/parts';
@@ -81,13 +98,33 @@ interface Candidato {
   systemDesconhecido?: boolean;
 }
 
+interface Ocorrencia {
+  biomarcador: string;
+  laboratorio: string;
+  observacoes: number;
+}
+
 interface Alvo {
   category: string;
   code: string;
   en: string[];
   loinc: string;
+  /** Nome impresso no laudo, quando o alvo vem de `--testes-locais`. */
+  nomeImpresso?: string;
+  ocorrencias?: Ocorrencia[];
   pt: string[];
   unit: string | null;
+}
+
+/** Registro da auditoria `audit-testes-locais.ts --json` (platform, PRE-486). */
+interface TesteLocal {
+  biomarkerCode: string;
+  laboratory: string;
+  loincCode: string;
+  observations: number;
+  printedName: string;
+  specimen: string;
+  unit: string;
 }
 
 const uniq = <T>(a: (T | null | undefined)[]): T[] => [
@@ -201,16 +238,85 @@ const UNIDADE_PROPRIEDADE: Record<string, string[]> = {
   'µg/L': ['MCnc'],
 };
 
+// Grafia canônica de unidade: minúsculas, sem espaço nem acento, µ/micro/mc
+// viram "u", UI vira IU, expoentes viram dígito. "µUI/mL", "mcUI/mL" e
+// "microUI/mL" caem todas em "uiu/ml".
+function grafiaDeUnidade(u: string): string {
+  return u
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/\s+/g, '')
+    .replace(/[µμ]/g, 'u')
+    .replace(/micro(?=[gu])/g, 'u')
+    .replace(/mc(?=[gu])/g, 'u')
+    .replace(/ui/g, 'iu')
+    .replace(/³/g, '3')
+    .replace(/²/g, '2')
+    .replace(/,/g, '.');
+}
+
+// Grafias que os laudos imprimem e a tabela acima não tem, pela mesma leitura.
+const UNIDADE_LAUDO: Record<string, string[]> = {
+  '·103/ul': ['NCnc'],
+  '/hpf': ['Naric'],
+  '/lpf': ['Naric'],
+  '/ml': ['NCnc'],
+  '/mm3': ['NCnc'],
+  '/ul': ['NCnc'],
+  '103/ul': ['NCnc'],
+  'g/l': ['MCnc'],
+  'iu/l': ['CCnc', 'ACnc'],
+  'kiua/l': ['ACnc'],
+  'kua/l': ['ACnc'],
+  'mg/gcreat': ['MRto'],
+  'mil/mm3': ['NCnc'],
+  'mil/ul': ['NCnc'],
+  'milh./mm3': ['NCnc'],
+  'milhoes/mm3': ['NCnc'],
+  'milhoes/ul': ['NCnc'],
+  'million/mm3': ['NCnc'],
+  'million/ul': ['NCnc'],
+  'miu/l': ['ACnc'],
+  'ml/min/1.73m2': ['ArVRat'],
+  'mm/1hora': ['Vel', 'SedRate'],
+  'mm/h': ['Vel', 'SedRate'],
+  'mu/l': ['ACnc'],
+  seconds: ['Time'],
+  seg: ['Time'],
+  'thousand/ul': ['NCnc'],
+  'uu/ml': ['ACnc'],
+};
+const UNIDADE_CANONICA = new Map<string, string[]>([
+  ...Object.entries(UNIDADE_PROPRIEDADE).map(([k, v]) => [grafiaDeUnidade(k), v] as const),
+  ...Object.entries(UNIDADE_LAUDO),
+]);
+
+function propriedades(alvo: Alvo): string[] | undefined {
+  if (!alvo.unit) return undefined;
+  return UNIDADE_PROPRIEDADE[alvo.unit] ?? UNIDADE_CANONICA.get(grafiaDeUnidade(alvo.unit));
+}
+
 const HEMATOLOGIA =
   /^(Basophils|Eosinophils|Lymphocytes|Monocytes|Neutrophils|WBC|RBC|Hgb|Hct|MCV|MCH|MCHC|MPV|RDW|Platelets|Reticulocytes|INR|ProthrombinTime|DDimer|ESR|Fibrinogen)/i;
 
 // Sistemas (espécimes) que a categoria e o nome implicam, em texto do LOINC.
 function sistemas(alvo: Alvo): string[] | null {
   const nome = (alvo.pt[0] ?? '').toLowerCase();
-  if (alvo.category === 'urina' || /_urine$/i.test(alvo.code) || /urin/.test(nome)) {
+  if (alvo.category === 'urina' || /_urine$/i.test(alvo.code) || /urin|\beas\b/.test(nome)) {
     return ['Urine', 'Urine sed', 'Urine+Ser/Plas'];
   }
-  if (/_rbc$/i.test(alvo.code) || /rbc|eritrocit/.test(nome)) return ['RBC', 'RBC.lysate'];
+  // "Magnésio eritrocitário" é dosagem na hemácia; "Eritrócitos" é contagem no sangue.
+  if (/_rbc$/i.test(alvo.code) || /\brbc\b|eritrocit[aá]ri/.test(nome)) {
+    return ['RBC', 'RBC.lysate'];
+  }
+  // Coagulação é dosada em plasma pobre em plaquetas; o sangue total vem depois.
+  if (
+    /^(INR|ProthrombinTime|DDimer|Fibrinogen|aPTT|PTT)/i.test(alvo.code) ||
+    /protrombina|tromboplastina|d[ií]mero|fibrinog|\b(tap|ttpa?|inr|rni|kptt)\b/.test(nome)
+  ) {
+    return ['PPP', 'Bld', 'Plas', 'Bld/Plas'];
+  }
   if (alvo.category === 'sangue' || HEMATOLOGIA.test(alvo.code)) {
     return ['Bld', 'RBC', 'PPP', 'Plas', 'Bld/Plas'];
   }
@@ -252,7 +358,10 @@ function ehPadraoDaClasse(c: Candidato): boolean {
   return d !== null && Boolean(c.method?.startsWith(d));
 }
 
-function pontuacao(c: Candidato): number {
+// `ordemSistema`: posição de cada sistema na lista que a categoria implica
+// (soro: Ser/Plas antes de Bld). Sem isso, "Glucose in Blood" ganhava de
+// "Glucose in Serum or Plasma" só por ter o nome mais curto.
+function pontuacao(c: Candidato, ordemSistema?: Map<string, number>): number {
   const d = c.display;
   let s = 0;
   if (/--/.test(d)) s += 100;
@@ -263,26 +372,72 @@ function pontuacao(c: Candidato): number {
   if (/panel|study|maximum|minimum|mean|goal|father|mother|fetal|cord/i.test(d)) s += 30;
   s += c.rank > 0 ? Math.min(c.rank, 5000) / 1000 : 10;
   if (c.systemDesconhecido || c.propertyDesconhecida) s += 15;
+  if (ordemSistema?.size) s += 3 * (ordemSistema.get(c.system) ?? ordemSistema.size);
   return s + d.length / 10;
 }
 
 // Rótulos de eixo que a busca em português devolve traduzidos ("SgTotal",
 // "Urina"): aprendidos dos códigos que aparecem nas duas línguas.
-const ROTULO = { property: new Map<string, string>(), system: new Map<string, string>() };
+const ROTULO = {
+  method: new Map<string, string>(),
+  property: new Map<string, string>(),
+  system: new Map<string, string>(),
+};
+if (ROTULOS && existsSync(ROTULOS)) {
+  const m = JSON.parse(readFileSync(ROTULOS, 'utf8')) as Record<string, [string, string][]>;
+  // Sistema e método: a busca em português devolve a propriedade já em inglês.
+  for (const [pt, en] of m.SYSTEM ?? []) ROTULO.system.set(pt, en);
+  for (const [pt, en] of m.METHOD ?? []) ROTULO.method.set(pt, en);
+}
+// Rótulos em inglês que o filtro conhece: um rótulo "português" igual a um
+// deles é inglês de fato e não precisa de tradução.
+const SISTEMAS_EN = new Set([
+  'Bld',
+  'Bld/Plas',
+  'BldV',
+  'PPP',
+  'Plas',
+  'RBC',
+  'RBC.lysate',
+  'Ser',
+  'Ser/Plas',
+  'Ser/Plas/Bld',
+  'Urine',
+  'Urine sed',
+  'Urine+Ser/Plas',
+]);
+const PROPRIEDADES_EN = new Set([
+  ...Object.values(UNIDADE_PROPRIEDADE).flat(),
+  ...Object.values(UNIDADE_LAUDO).flat(),
+]);
+// Rótulo em português que a busca com `language=11` entende numa cláusula
+// `system:"..."` (a propriedade continua em inglês nessa busca).
+function rotuloPt(en: string): string | undefined {
+  for (const [pt, e] of ROTULO.system) if (e === en) return pt;
+  return undefined;
+}
+// Um rótulo que já é inglês conhecido nunca vira chave: a variante pt-BR do
+// LOINC tem linhas com eixo trocado, e um par "MCnc → PrThr" aprendido de uma
+// linha dessas retraduzia todos os MCnc corretos e os tirava do filtro.
+const CONHECIDO = { method: new Set<string>(), property: PROPRIEDADES_EN, system: SISTEMAS_EN };
 function aprender(en: Candidato, pt: Candidato): void {
-  for (const eixo of ['system', 'property'] as const) {
-    if (en[eixo] && pt[eixo] && en[eixo] !== pt[eixo]) ROTULO[eixo].set(pt[eixo], en[eixo]);
+  for (const eixo of ['system', 'property', 'method'] as const) {
+    if (!en[eixo] || !pt[eixo] || en[eixo] === pt[eixo] || CONHECIDO[eixo].has(pt[eixo])) continue;
+    ROTULO[eixo].set(pt[eixo], en[eixo]);
   }
 }
 function normalizar(c: Candidato): Candidato {
   if (c.lang === 'en') return c;
   const out = { ...c };
-  const sys = ROTULO.system.get(c.system);
+  const sys = SISTEMAS_EN.has(c.system) ? c.system : ROTULO.system.get(c.system);
   if (sys) out.system = sys;
   else out.systemDesconhecido = true;
-  const prop = ROTULO.property.get(c.property);
+  const prop = PROPRIEDADES_EN.has(c.property) ? c.property : ROTULO.property.get(c.property);
   if (prop) out.property = prop;
   else out.propertyDesconhecida = true;
+  // Método traduzido ("Contagem automática") sem par conhecido fica como está:
+  // a regra de método padrão da classe só casa com o rótulo em inglês.
+  out.method = ROTULO.method.get(c.method) ?? c.method;
   return out;
 }
 
@@ -291,7 +446,7 @@ function filtrar(
   alvo: Alvo,
   relax: { sys?: boolean; prop?: boolean },
 ): Candidato[] {
-  const props = UNIDADE_PROPRIEDADE[alvo.unit ?? ''];
+  const props = propriedades(alvo);
   const S = relax.sys === false ? null : sistemas(alvo);
   return pool.filter(
     (r) =>
@@ -318,26 +473,37 @@ async function recuperar(
       }
     }
   };
-  const props = UNIDADE_PROPRIEDADE[alvo.unit ?? ''] ?? [];
+  const props = propriedades(alvo) ?? [];
   const S = sistemas(alvo) ?? [];
-  const clausulas = [
-    S[0] ? `system:"${S[0]}"` : '',
-    props[0] ? `property:${props[0]}` : '',
-    'status:ACTIVE',
-  ]
-    .filter(Boolean)
-    .join(' ');
   const variantes = (a: string) =>
     uniq([a, a.replace(/-/g, ' '), a.replace(/[-/]/g, ' ').replace(/\s+/g, ' ').trim()]);
   const en = uniq(alvo.en.slice(0, 4).flatMap(variantes)).slice(0, 8);
   const pt = uniq(alvo.pt.slice(0, 4).flatMap(variantes)).slice(0, 6);
 
-  for (const a of en) {
-    const q = await buscarOuVazio(`${a} ${clausulas}`, passos);
+  // Sem nome em inglês (teste local só com o nome impresso), as cláusulas de
+  // eixo vão com o nome em português e `language=11`. Nessa busca a cláusula
+  // `system:` só casa com o rótulo traduzido ("SgTotal", não "Bld"); a
+  // propriedade e o status continuam em inglês. Sem rótulo traduzido
+  // conhecido, a cláusula de sistema sai e o filtro faz o trabalho depois.
+  const emPortugues = en.length === 0;
+  const sistemaDaClausula = emPortugues ? rotuloPt(S[0] ?? '') : S[0];
+  // Em português não há consulta solta em inglês para compensar uma cláusula
+  // errada: unidade ambígua ("%": MFr, NFr, VFr) fica sem cláusula de propriedade.
+  const propriedadeDaClausula = emPortugues && props.length > 1 ? undefined : props[0];
+  const clausulas = [
+    sistemaDaClausula ? `system:"${sistemaDaClausula}"` : '',
+    propriedadeDaClausula ? `property:${propriedadeDaClausula}` : '',
+    'status:ACTIVE',
+  ]
+    .filter(Boolean)
+    .join(' ');
+  const linguaDaClausula = emPortugues ? PT_BR_LANGUAGE : undefined;
+  for (const a of emPortugues ? pt : en) {
+    const q = await buscarOuVazio(`${a} ${clausulas}`, passos, linguaDaClausula);
     passos.push(`cláusulas "${a}" → ${q.length}`);
     juntar(q);
   }
-  juntar(await buscarOuVazio(alvo.en[0] ?? alvo.code, passos, undefined, 300));
+  juntar(await buscarOuVazio(alvo.en[0] ?? alvo.pt[0] ?? alvo.code, passos, linguaDaClausula, 300));
   for (const a of en.slice(1)) juntar(await buscarOuVazio(a, passos, undefined, 100));
   for (const a of pt) {
     juntar(await buscarOuVazio(a, passos, PT_BR_LANGUAGE));
@@ -359,13 +525,38 @@ async function recuperar(
   pool = pool.map(normalizar);
   const posicaoBruta = pool.findIndex((r) => r.code === alvo.loinc) + 1;
   for (const relax of [{}, { prop: false }, { sys: false }, { prop: false, sys: false }]) {
-    const f = filtrar(pool, alvo, relax);
-    if (f.length) {
-      passos.push(`filtro ${JSON.stringify(relax)} → ${f.length}`);
-      return { candidatos: f, passos, posicaoBruta };
+    let f = filtrar(pool, alvo, relax);
+    if (!f.length) continue;
+    if (emPortugues) {
+      // Os rótulos traduzidos passaram no filtro por desconhecidos; o registro
+      // em inglês decide de verdade, e ensina os pares para os próximos alvos.
+      f = filtrar(await resolverEmIngles(f, passos), alvo, relax);
+      if (!f.length) continue;
     }
+    passos.push(`filtro ${JSON.stringify(relax)} → ${f.length}`);
+    return { candidatos: f, passos, posicaoBruta };
   }
   return { candidatos: [], passos, posicaoBruta };
+}
+
+// Troca candidatos vindos só da busca em português pelo registro em inglês,
+// em lotes de 30 códigos por chamada (`713-8 OR 26450-7 OR ...`).
+async function resolverEmIngles(cands: Candidato[], passos: string[]): Promise<Candidato[]> {
+  const pendentes = cands.filter((c) => c.lang === 'pt').slice(0, 90);
+  if (!pendentes.length) return cands;
+  const emIngles = new Map<string, Candidato>();
+  for (let i = 0; i < pendentes.length; i += 30) {
+    const lote = pendentes.slice(i, i + 30);
+    const q = await buscarOuVazio(lote.map((c) => c.code).join(' OR '), passos, undefined, 30);
+    for (const r of q) emIngles.set(r.code, r);
+  }
+  passos.push(`inglês para ${pendentes.length} candidatos → ${emIngles.size}`);
+  return cands.map((c) => {
+    const en = c.lang === 'pt' ? emIngles.get(c.code) : undefined;
+    if (!en) return c;
+    aprender(en, c);
+    return en;
+  });
 }
 
 const LETRAS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -428,18 +619,83 @@ async function escolherComJev(alvo: Alvo, cands: Candidato[]): Promise<Decisao> 
   };
 }
 
-const alvos: Alvo[] = BIOMARKER_DEFINITIONS.filter(
-  (d) => d.loinc && (!APENAS || APENAS.includes(d.code)),
-)
-  .slice(0, LIMITE)
-  .map((d) => ({
-    category: String(d.category),
-    code: d.code,
-    en: d.names.en,
-    loinc: d.loinc!,
-    pt: d.names.pt,
-    unit: d.unit ?? null,
-  }));
+const HEMATOLOGIA_PT =
+  /hem[aá]cias|eritr[oó]cit|leuc[oó]cit|plaquet|hemat[oó]crit|hemoglobin|\b(vcm|hcm|chcm|rdw|vpm|mpv|vhs|tap|ttpa?|inr|rni|kptt)\b|neutr[oó]f|linf[oó]c|mon[oó]c|eosin[oó]f|bas[oó]f|segmentad|bastonet|reticul[oó]c|d[ií]mero|fibrinog|protrombina|tromboplastina|hemograma|miel[oó]cit|metamiel|blastos|promiel/i;
+const COMPOSICAO_CORPORAL_PT =
+  /\b(dexa|imc|massa|gordura|magra|corporal|peso|altura|densidade|[oó]ssea|t-?score|z-?score|tronco|visceral|android|gin[oó]ide|braço|perna|cabeça|pelve|costelas)\b/i;
+const UNIDADE_CORPORAL = /^(cm|m|kg|lbs|g\/cm2|kg\/m2|%bywt|cm2|cm3|in3|kcal.*|bpm|°|angstrom)$/;
+
+// Categoria que o laudo implica, só pelo que ele imprime: espécime, nome e unidade.
+function categoriaDoLaudo(nome: string, unidade: string | null, especime: string): string {
+  const n = nome.toLowerCase();
+  const e = especime.toLowerCase();
+  if (/urin/.test(e) || /urin|\beas\b|sediment|urocult|\/24\s?h/.test(n)) return 'urina';
+  if (UNIDADE_CORPORAL.test(grafiaDeUnidade(unidade ?? '')) || COMPOSICAO_CORPORAL_PT.test(n)) {
+    return 'composicao-corporal';
+  }
+  if (/sangue/.test(e) || HEMATOLOGIA_PT.test(n)) return 'sangue';
+  return 'soro';
+}
+
+// "Tiroxina livre (T4 livre)" vira três pistas: inteira, sem parênteses, só o parêntese.
+function variantesDoNome(nome: string): string[] {
+  const parenteses = [...nome.matchAll(/\(([^)]+)\)/g)].map((m) => m[1]!.trim());
+  const semParenteses = nome.replace(/\s*\([^)]*\)/g, '').trim();
+  return uniq([nome, semParenteses, ...parenteses, ...semParenteses.split(/\s+[-–]\s+/)])
+    .filter((v) => v.length >= 2)
+    .slice(0, 4);
+}
+
+function alvosDosTestesLocais(arquivo: string): Alvo[] {
+  const registros = JSON.parse(readFileSync(arquivo, 'utf8')) as TesteLocal[];
+  const grupos = new Map<string, Alvo>();
+  for (const t of registros) {
+    if (APENAS && !APENAS.includes(t.biomarkerCode)) continue;
+    const nome = t.printedName.trim();
+    const unidade = t.unit.trim() || null;
+    const especime = t.specimen.trim();
+    const chave = [nome, unidade ?? '', especime, t.loincCode].join('|').toLowerCase();
+    let alvo = grupos.get(chave);
+    if (!alvo) {
+      const def = COM_ALIASES
+        ? BIOMARKER_DEFINITIONS.find((d) => d.code === t.biomarkerCode)
+        : undefined;
+      alvo = {
+        category: def ? String(def.category) : categoriaDoLaudo(nome, unidade, especime),
+        code: def?.code ?? nome,
+        en: def?.names.en ?? [],
+        loinc: t.loincCode,
+        nomeImpresso: nome,
+        ocorrencias: [],
+        pt: variantesDoNome(nome),
+        unit: unidade,
+      };
+      grupos.set(chave, alvo);
+    }
+    alvo.ocorrencias!.push({
+      biomarcador: t.biomarkerCode,
+      laboratorio: t.laboratory,
+      observacoes: t.observations,
+    });
+  }
+  return [...grupos.values()];
+}
+
+const alvos: Alvo[] = (
+  TESTES_LOCAIS
+    ? alvosDosTestesLocais(TESTES_LOCAIS)
+    : BIOMARKER_DEFINITIONS.filter((d) => d.loinc && (!APENAS || APENAS.includes(d.code))).map(
+        (d) => ({
+          category: String(d.category),
+          code: d.code,
+          en: d.names.en,
+          loinc: d.loinc!,
+          pt: d.names.pt,
+          unit: d.unit ?? null,
+        }),
+      )
+).slice(0, LIMITE);
+console.error(`${alvos.length} alvos${TESTES_LOCAIS ? ` de ${TESTES_LOCAIS}` : ' do catálogo'}`);
 
 const saida: Record<string, unknown>[] = [];
 let proximo = 0;
@@ -449,12 +705,17 @@ async function trabalhador(): Promise<void> {
     try {
       const r = await recuperar(alvo);
       marcarMaisComum(r.candidatos);
-      const cands = [...r.candidatos].sort((a, b) => pontuacao(a) - pontuacao(b)).slice(0, 15);
+      const ordem = new Map((sistemas(alvo) ?? []).map((s, i) => [s, i] as const));
+      const cands = [...r.candidatos]
+        .sort((a, b) => pontuacao(a, ordem) - pontuacao(b, ordem))
+        .slice(0, 15);
       const posicao = cands.findIndex((c) => c.code === alvo.loinc) + 1;
       const regra = cands[0]?.code ?? null;
       const jev = OPENROUTER_API_KEY && cands.length ? await escolherComJev(alvo, cands) : null;
       saida.push({
-        biomarcador: alvo.code,
+        biomarcador: alvo.ocorrencias
+          ? uniq(alvo.ocorrencias.map((o) => o.biomarcador)).join(',')
+          : alvo.code,
         candidatos: cands.map((c) => ({
           code: c.code,
           component: c.component,
@@ -473,7 +734,12 @@ async function trabalhador(): Promise<void> {
         jevConfianca: jev?.confianca ?? null,
         jevCustoUsd: jev?.custoUsd ?? null,
         jevProbabilidades: jev?.probabilidades ?? null,
+        laboratorios: alvo.ocorrencias
+          ? uniq(alvo.ocorrencias.map((o) => o.laboratorio)).length
+          : null,
         loinc: alvo.loinc,
+        nomeImpresso: alvo.nomeImpresso ?? null,
+        ocorrencias: alvo.ocorrencias ?? null,
         passos: r.passos,
         posicao,
         posicaoNoPool: r.posicaoBruta,
@@ -488,12 +754,19 @@ async function trabalhador(): Promise<void> {
   }
 }
 
-await Promise.all([trabalhador(), trabalhador()]);
+await Promise.all(Array.from({ length: CONCORRENCIA }, trabalhador));
 saida.sort((a, b) => String(a.biomarcador).localeCompare(String(b.biomarcador)));
 writeFileSync(
   SAIDA,
   `${JSON.stringify({ geradoEm: new Date().toISOString(), itens: saida, modelo: OPENROUTER_API_KEY ? JEV_MODEL : null }, null, 1)}\n`,
 );
+
+if (ROTULOS) {
+  writeFileSync(
+    ROTULOS,
+    `${JSON.stringify({ METHOD: [...ROTULO.method], PROPERTY: [...ROTULO.property], SYSTEM: [...ROTULO.system] }, null, 1)}\n`,
+  );
+}
 
 const ok = saida.filter((o) => !o.erro);
 const presentes = ok.filter((o) => Number(o.posicao) > 0);
@@ -508,6 +781,14 @@ console.log(
 console.log(
   `regra acerta (código presente): ${pct(presentes.filter((o) => o.regraAcertou).length, presentes.length)}`,
 );
+if (TESTES_LOCAIS) {
+  // Cada alvo pesa o número de testes locais (laboratórios) que ele agrupa.
+  const peso = (o: Record<string, unknown>) => (o.ocorrencias as Ocorrencia[] | null)?.length ?? 1;
+  const soma = (xs: Record<string, unknown>[]) => xs.reduce((a, o) => a + peso(o), 0);
+  console.log(
+    `ponderado por teste local: entre os 15: ${pct(soma(presentes), soma(ok))} | regra @1: ${pct(soma(ok.filter((o) => o.regraAcertou)), soma(ok))} | sem candidato: ${pct(soma(ok.filter((o) => !(o.candidatos as unknown[]).length)), soma(ok))}`,
+  );
+}
 if (OPENROUTER_API_KEY) {
   console.log(
     `Jev acerta (código presente): ${pct(presentes.filter((o) => o.jevAcertou).length, presentes.length)}`,

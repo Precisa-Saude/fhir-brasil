@@ -170,6 +170,109 @@ ficam fora dos 15 pela penalidade de método, então não aparecem acima, mas o
 conflito do LDL com a própria especificação de PRE-473 (2089-1 quando o laudo
 não diz) continua a ser uma decisão pendente.
 
+## Rodada 10: testes locais de produção, só pelo nome impresso (08/10/2026)
+
+As rodadas anteriores escondiam o código de uma entrada do catálogo e davam ao
+pipeline os nomes do próprio catálogo, em inglês e em português. Esta rodada
+troca a entrada pela saída da auditoria de testes locais de
+[PRE-486](https://linear.app/precisa-saude/issue/PRE-486) (`audit-testes-locais.ts
+--json`, produção, 07/10/2026): 2.126 testes locais de 42 laboratórios, cada um
+com o nome impresso no laudo, a unidade, o espécime quando impresso e o código
+que a plataforma guardou. Sem pacientes: a auditoria sai agregada por
+laboratório. Agrupados por nome, unidade, espécime e código, viram 1.040 alvos;
+cada alvo recebe só o que o laudo imprime, em português, e o acerto é medido
+contra o código guardado. Só busca e regra, sem Jev (`--testes-locais`,
+`--sem-jev`). Resultado por alvo em
+`experimento-loinc-drilldown.testes-locais.json`.
+
+Três coisas tiveram de mudar no script para a condição ser honesta, e duas
+delas vieram de defeitos que a rodada expôs:
+
+- **Cláusulas de eixo em português.** Com `language=11`, a cláusula `system:`
+  da Search API só casa com o rótulo traduzido (`"SgTotal"`, não `"Bld"`); a
+  propriedade e o status continuam em inglês. O script passa a montar a
+  cláusula com o rótulo traduzido aprendido e, para unidade ambígua (`%`: MFr,
+  NFr, VFr), sai sem cláusula de propriedade, porque em português não há
+  consulta solta em inglês para compensar. Os candidatos filtrados são
+  trocados pelo registro em inglês numa chamada por lote (`713-8 OR 26450-7
+OR ...`), que também ensina os pares de rótulo de sistema e de método
+  (`--rotulos`). Sem isso, "Contagem automática" não casava com a política de
+  método da classe.
+- **O mapa de rótulos se envenenava.** A variante pt-BR do LOINC tem linhas
+  com eixo trocado; um par "MCnc → PrThr" aprendido de uma linha dessas
+  retraduzia todos os MCnc corretos e os tirava do filtro estrito, e
+  "Cholesterol in LDL [Percentile]" passava à frente do colesterol total. Um
+  rótulo que já é inglês conhecido nunca mais vira chave de tradução.
+- **Empate entre sangue e soro/plasma decidido pelo tamanho do nome.** "Glucose
+  in Blood" ganhava de "Glucose in Serum or Plasma" por ser mais curto. A
+  ordem da lista de sistemas que a categoria implica virou desempate, e
+  coagulação ganhou lista própria com plasma pobre em plaquetas primeiro. No
+  conjunto-ouro do catálogo, a regra sobe de 143 para 155 acertos em 191
+  (74,9% → 81,2%), com recuperação idêntica (97,4%); as duas perdas restantes
+  (globulina para IgA, Lp(a) para a variante molar) são deriva de componente,
+  que a regra não enxerga e o escolhedor resolve.
+
+O que a rodada mediu, por alvo e ponderado pelos testes locais que cada alvo
+agrupa:
+
+|                                  | Alvos (1.040)   | Testes locais (2.126) |
+| -------------------------------- | --------------- | --------------------- |
+| Código guardado no pool da busca | 46,1%           | 63,7%                 |
+| Código entre os 15 candidatos    | 43,5%           | 61,7%                 |
+| Regra acerta (@1)                | 38,0%           | 54,7%                 |
+| Regra acerta, código presente    | 87,4% (395/452) | —                     |
+| Nome não encontrado em português | 53,9%           | 36,3%                 |
+| No pool, fora dos 15             | 2,6%            | 2,0%                  |
+| Entre os 15, regra errou         | 5,5%            | 7,1%                  |
+
+Dois terços das perdas são o nome que a busca em português não encontra, e a
+leitura disso depende do que o campo "nome impresso" da auditoria contém, que
+não é sempre o que o laboratório imprimiu:
+
+| Tipo de nome                    | Alvos | Testes | No pool | Entre os 15 | Regra @1 | Regra, presente |
+| ------------------------------- | ----- | ------ | ------- | ----------- | -------- | --------------- |
+| Só ASCII (inglês ou sigla)      | 681   | 1.162  | 41,1%   | 38,6%       | 32,7%    | 84,8%           |
+| Igual ao código do catálogo     | 228   | 692    | 67,1%   | 63,2%       | 57,9%    | 91,7%           |
+| Português com acento            | 131   | 272    | 35,1%   | 34,4%       | 30,5%    | 88,9%           |
+| Fora composição corporal (DEXA) | 851   | 1.902  | 54,6%   | 51,5%       | 45,8%    | 89,0%           |
+
+- **Só 131 alvos (272 testes) têm nome em português com acento**, a condição
+  que esta rodada existia para medir. Os outros 909 trazem o código do
+  catálogo como nome (228: o parser ou a importação gravou `VitaminB12`,
+  `TScore_Total`, `HOMA_IR`), ou um nome em inglês ou sigla (681: laudos
+  estrangeiros, importação FHIR e Apple Health, e siglas como `HCM`, `VCM`,
+  `RDW`). A busca em português com `language=11` não indexa o inglês, e a
+  composição corporal (189 alvos, DEXA) não tem variante pt-BR: 2,6% de
+  acerto. O campo `biomarkerName` da auditoria merece uma nota em PRE-486.
+- **No português de verdade, a variante pt-BR do LOINC não conhece a grafia
+  do laudo em 72 de 118 alvos** fora DEXA: "Triglicerídeos", "Ácido Úrico",
+  "Transaminase oxalacética" e as cinco grafias de TGO/TGP, "Hemácias",
+  "Leucócitos totais", "Filtração Glomerular Estimada", "Coeficiente de
+  Variação do Volume Eritrocitário" (RDW). O LOINC traduz o componente
+  ("Urato", "Aspartato aminotransferase"), não o jargão de bancada. É o
+  mesmo buraco que a tabela de grafias da ancoragem já cobre, e a razão de o
+  caminho de produção dar ao pipeline os aliases em inglês do biomarcador
+  âncora (`--com-aliases`, próxima rodada).
+- **Quando o nome é encontrado, a regra acerta 87% a 92%**, acima dos 82% do
+  conjunto-ouro, porque os nomes impressos são os exames comuns. Os erros que
+  sobram são políticas, não busca: hemoglobina perde para CHCM (786-4, contagem
+  automatizada, pela regra da classe HEM/BC e por `g/dL` admitir EntMCnc),
+  VLDL guardado como calculado (13458-5) cai para a posição 11 a 14 pela
+  penalidade de método, LDL e colesterol total perdem para "non HDL"
+  (43396-1), ureia perde para ureia-nitrogênio (3094-0), tira de urina perde
+  para a variante `[Presence]`. Todos entram na fila de PRE-473 ao lado das
+  doze entradas da rodada 9.
+- **A auditoria carrega âncoras erradas que a busca acusou de graça:**
+  "Mielócitos" → Basophils, "Metamielócitos" → Eosinophils e → Monocytes,
+  "Hormônio Tiroestimulante" → T4Free, "Corpos Cetônicos" →
+  BetaHydroxybutyrate, "Cálcio ionizado" → Calcium, "CAPACIDADE TOTAL DE
+  COMBINAÇÃO DO FERRO" → Iron, "Glicemia estimada média" → Glucose. São
+  casos para o grupo 3 de PRE-486 (unidade e nome contra o código), não para
+  esta rodada.
+
+A Search API devolveu um 429 em 1.040 alvos com três trabalhadores, repetido
+à mão; dois trabalhadores não disparam limite.
+
 ## Consequências para o pipeline
 
 - **Nada muda na extração por laudo.** OCR, ancoragem determinística na tabela

@@ -140,10 +140,24 @@ escolhe entre os candidatos. Leitura dos resultados em
 pnpm loinc:drilldown                                   # busca + regra + Jev
 pnpm loinc:drilldown -- --sem-jev --limite 20          # só busca e regra
 pnpm loinc:drilldown -- --saida /tmp/drilldown.json
+pnpm loinc:drilldown -- --testes-locais testes.json --rotulos rotulos.json --sem-jev
+pnpm loinc:drilldown -- --testes-locais testes.json --com-aliases
 ```
 
+Com `--testes-locais`, a entrada é a saída agregada de
+`audit-testes-locais.ts --json` da platform ([PRE-486](https://linear.app/precisa-saude/issue/PRE-486)):
+um registro por teste local por laboratório, sem pacientes. Os registros são
+agrupados por nome impresso, unidade, espécime e código guardado, e cada grupo
+vira um alvo cuja única pista é o que o laudo imprime, em português; o acerto
+é medido contra o código guardado. `--com-aliases` acrescenta os nomes em
+inglês do biomarcador âncora, como no caminho de produção. `--rotulos`
+aponta um JSON com os pares de rótulo de eixo pt-BR → en (sistema e método)
+aprendidos em corridas anteriores; o arquivo é lido no início e regravado no
+fim com o que a corrida aprendeu. `--concorrencia N` muda o número de
+trabalhadores (padrão 2).
+
 Precisa de `LOINC_USER` e `LOINC_PASSWORD`; `OPENROUTER_API_KEY` só para o Jev.
-Envia ao LOINC e ao OpenRouter apenas nomes e unidades do catálogo.
+Envia ao LOINC e ao OpenRouter apenas nomes e unidades do catálogo ou do laudo.
 
 ## generate-valueset.ts
 

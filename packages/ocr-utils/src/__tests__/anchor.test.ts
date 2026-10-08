@@ -1026,3 +1026,89 @@ describe('findBiomarkersInText: grafias de produção (PRE-486)', () => {
     expect(matches[0]?.position).toBe('CK-MB 2 ng/mL\n'.length);
   });
 });
+
+/**
+ * Urina tipo I em português e sedimento com "Leukocytes" (PRE-486). Uma linha
+ * com nome de exame de outro painel encerrava a seção: "Corpos Cetônicos"
+ * casava o beta-hidroxibutirato e "Leukocytes" o leucograma, e tudo abaixo
+ * voltava para os códigos do sangue. No reprocessamento de laudos de prod,
+ * leucócitos, hemácias, aspecto, densidade e urobilinogênio da urina sumiram
+ * por isso.
+ */
+describe('findBiomarkersInText: urinálise em português e sedimento (PRE-486)', () => {
+  const codesOf = (text: string) => findBiomarkersInText(text).matches.map((m) => m.code);
+
+  const URINE_CODES = [
+    'Color_Urine',
+    'Appearance_Urine',
+    'SpecificGravity_Urine',
+    'pH_Urine',
+    'Protein_Urine',
+    'Glucose_Urine',
+    'Ketones_Urine',
+    'Bilirubin_Urine',
+    'Urobilinogen_Urine',
+    'Nitrite_Urine',
+    'Leukocytes_Urine',
+    'RBC_Urine',
+  ];
+
+  it('urina tipo I em português: todos os itens saem com o código da urina', () => {
+    const text = [
+      'URINA TIPO I',
+      'Cor Amarelo',
+      'Aspecto Límpido',
+      'Densidade 1015',
+      'pH 6,0',
+      'Proteínas Negativo',
+      'Glicose Negativo',
+      'Corpos Cetônicos Negativo',
+      'Bilirrubina Negativo',
+      'Urobilinogênio Normal',
+      'Nitrito Negativo',
+      'Leucócitos 2',
+      'Hemácias 1',
+    ].join('\n');
+    expect(codesOf(text)).toEqual(URINE_CODES);
+  });
+
+  it('"Leukocytes" no sedimento não encerra a seção', () => {
+    const text = [
+      'URINALYSIS',
+      'Color Yellow',
+      'Appearance Clear',
+      'Specific Gravity 1.015',
+      'pH 6.0',
+      'Protein Negative',
+      'Glucose Negative',
+      'Ketones Negative',
+      'Bilirubin Negative',
+      'Urobilinogen 0.2',
+      'Nitrite Negative',
+      'Leukocytes Negative',
+      'WBC 2',
+      'RBC 1',
+    ].join('\n');
+    expect(codesOf(text)).toEqual(URINE_CODES);
+  });
+
+  it('o hemograma depois da urina continua sendo do sangue', () => {
+    const text = [
+      'URINA TIPO I',
+      'Densidade 1015',
+      'Leucócitos 2',
+      '',
+      'HEMOGRAMA',
+      'Leucócitos 6.500 /mm3',
+      'Hemácias 4,8 milhões/mm3',
+    ].join('\n');
+    expect(codesOf(text)).toEqual(['SpecificGravity_Urine', 'Leukocytes_Urine', 'WBC', 'RBC']);
+  });
+
+  it('"Aspecto" e "Densidade" fora da seção não ancoram nada', () => {
+    expect(codesOf('Aspecto geral bom\nDensidade mineral óssea 1,1 g/cm2')).not.toContain(
+      'Appearance_Urine',
+    );
+    expect(codesOf('Densidade 1015')).not.toContain('SpecificGravity_Urine');
+  });
+});

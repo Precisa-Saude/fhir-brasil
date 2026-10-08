@@ -46,18 +46,30 @@ export function mentionsUrinalysisHeader(normalizedText: string): boolean {
  * texto em colunas, em que o nome e o resultado não dividem a linha.
  */
 export const URINALYSIS_SECTION_NAMES: ReadonlyMap<string, string> = new Map([
+  // "Aspecto", "Densidade" e "Corpos Cetônicos" são as grafias dos laudos
+  // brasileiros, e "Leukocytes", "Erythrocytes" e "Eritrócitos" as do
+  // sedimento. Fora deste mapa, "Corpos Cetônicos" e "Leukocytes" casam
+  // exames de outro painel (o beta-hidroxibutirato, o leucograma), a linha
+  // conta como `foreign` e a seção acabava ali, levando junto todas as linhas
+  // de baixo, que voltavam para os códigos do sangue (PRE-486).
+  ['aspecto', 'Appearance_Urine'],
   ['bacteria', 'Bacteria_Urine'],
   ['bacterias', 'Bacteria_Urine'],
   ['bilirrubina', 'Bilirubin_Urine'],
   ['bilirubin', 'Bilirubin_Urine'],
   ['cetonas', 'Ketones_Urine'],
   ['color', 'Color_Urine'],
+  ['corpos cetonicos', 'Ketones_Urine'],
   ['cor', 'Color_Urine'],
+  ['densidade', 'SpecificGravity_Urine'],
+  ['eritrocitos', 'RBC_Urine'],
+  ['erythrocytes', 'RBC_Urine'],
   ['glicose', 'Glucose_Urine'],
   ['glucose', 'Glucose_Urine'],
   ['hemacias', 'RBC_Urine'],
   ['ketones', 'Ketones_Urine'],
   ['leucocitos', 'Leukocytes_Urine'],
+  ['leukocytes', 'Leukocytes_Urine'],
   ['nitrite', 'Nitrite_Urine'],
   ['nitrito', 'Nitrite_Urine'],
   ['ph', 'pH_Urine'],

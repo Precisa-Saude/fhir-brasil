@@ -85,15 +85,21 @@ const uniq = <T>(a: (T | null | undefined)[]): T[] => [
   ...new Set(a.filter((x): x is T => Boolean(x))),
 ];
 
+// Repete com espera exponencial (2 s, 4 s, 8 s, 16 s, 32 s) e respeita o
+// `Retry-After` quando o servidor manda um. Erro 4xx que não é limite de taxa
+// não é repetido: a falha é do pedido, não do servidor.
 async function rfetch(url: string | URL, init: RequestInit, tentativas = 6): Promise<Response> {
   for (let i = 0; ; i++) {
+    let espera = 2000 * 2 ** i;
     try {
       const r = await fetch(url, { ...init, signal: AbortSignal.timeout(60_000) });
-      if (r.status >= 500 || r.status === 429) throw new Error(`http ${r.status}`);
-      return r;
+      if (r.status < 500 && r.status !== 429) return r;
+      const retryAfter = Number(r.headers.get('retry-after'));
+      if (retryAfter > 0) espera = Math.max(espera, retryAfter * 1000);
+      throw new Error(`http ${r.status}`);
     } catch (e) {
       if (i === tentativas - 1) throw e;
-      await new Promise((res) => setTimeout(res, 3000 * (i + 1)));
+      await new Promise((res) => setTimeout(res, Math.min(espera, 60_000)));
     }
   }
 }

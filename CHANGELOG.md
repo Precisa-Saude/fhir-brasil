@@ -1,3 +1,9 @@
+## [0.38.3](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.38.2...v0.38.3) (2026-10-08)
+
+### Bug Fixes
+
+* **ocr-utils:** nomes da urina tipo I que encerravam a seção de urinálise ([#145](https://github.com/Precisa-Saude/fhir-brasil/issues/145)) ([c81ddaf](https://github.com/Precisa-Saude/fhir-brasil/commit/c81ddaf0675e4d99afda5825d41ad40fae17dac7))
+
 ## [0.38.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.38.1...v0.38.2) (2026-10-07)
 
 ### Bug Fixes

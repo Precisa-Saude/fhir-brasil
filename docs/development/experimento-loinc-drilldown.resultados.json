@@ -1842,9 +1842,50 @@
     },
     {
       "biomarcador": "Cholesterol_HDL_Ratio",
-      "erro": "Error: http 500",
+      "candidatos": [
+        {
+          "code": "9830-1",
+          "rank": 86,
+          "padraoDaClasse": false,
+          "maisComum": null
+        },
+        {
+          "code": "11054-4",
+          "rank": 549,
+          "padraoDaClasse": false,
+          "maisComum": null
+        },
+        {
+          "code": "2095-8",
+          "rank": 1234,
+          "padraoDaClasse": false,
+          "maisComum": null
+        },
+        {
+          "code": "32309-7",
+          "rank": 2162,
+          "padraoDaClasse": false,
+          "maisComum": null
+        },
+        {
+          "code": "47228-2",
+          "rank": 2968,
+          "padraoDaClasse": false,
+          "maisComum": null
+        }
+      ],
+      "categoria": "coracao",
+      "jev": "A",
+      "jevAcertou": true,
+      "jevCodigo": "9830-1",
+      "jevConfianca": 0.95,
+      "jevCustoUsd": 4.2378e-5,
       "loinc": "9830-1",
-      "candidatos": []
+      "posicao": 1,
+      "posicaoNoPool": 4,
+      "regra": "9830-1",
+      "regraAcertou": true,
+      "unidade": "razão"
     },
     {
       "biomarcador": "CK",

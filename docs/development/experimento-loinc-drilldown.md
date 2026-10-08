@@ -136,8 +136,8 @@ revisão em vez de reordenar a lista. Rodada feita com
 | recall@1 / @5                   | 74% / 92%        | 75% / 94%                    |
 | Regra acerta, código presente   | 71%              | 77%                          |
 | Jev acerta, código presente     | 90,7%            | 90,3% (94,6% contando irmãs) |
-| Acerto fim a fim                | 86,4%            | 87,9% (167 de 190)           |
-| Propostas com confiança >= 0,95 | 74, todas certas | 78, todas certas             |
+| Acerto fim a fim                | 86,4%            | 88,0% (168 de 191)           |
+| Propostas com confiança >= 0,95 | 74, todas certas | 79, todas certas             |
 | Propostas entre 0,85 e 0,95     | 47, 42 certas    | 36, 33 certas                |
 
 A fila de revisão que o rank produz, mesmo sem decidir, tem doze entradas em

@@ -113,9 +113,28 @@ async function rfetch(url: string | URL, init: RequestInit, tentativas = 6): Pro
   }
 }
 
+// Uma consulta que falha mesmo depois das repetições (a Search API devolve
+// 500 para alguns nomes com barra) não derruba o item: fica registrada em
+// `passos` e as outras consultas seguem.
+async function buscarOuVazio(
+  query: string,
+  passos: string[],
+  language?: number,
+  rows = 100,
+): Promise<Candidato[]> {
+  try {
+    return await buscar(query, language, rows);
+  } catch (e) {
+    passos.push(`falhou "${query}": ${String(e).slice(0, 60)}`);
+    return [];
+  }
+}
+
 async function buscar(query: string, language?: number, rows = 100): Promise<Candidato[]> {
   const u = new URL(SEARCH);
-  u.searchParams.set('query', query);
+  // Uma barra solta entre espaços ("Colesterol Total / HDL") faz a Search API
+  // responder 400 ou 500; a barra colada ("HDL/LDL") é aceita.
+  u.searchParams.set('query', query.replace(/\s\/\s/g, ' '));
   u.searchParams.set('rows', String(rows));
   if (language) u.searchParams.set('language', String(language));
   const r = await rfetch(u, { headers: { Accept: 'application/json', Authorization: AUTH } });
@@ -312,14 +331,14 @@ async function recuperar(
   const pt = uniq(alvo.pt.slice(0, 4).flatMap(variantes)).slice(0, 6);
 
   for (const a of en) {
-    const q = await buscar(`${a} ${clausulas}`);
+    const q = await buscarOuVazio(`${a} ${clausulas}`, passos);
     passos.push(`cláusulas "${a}" → ${q.length}`);
     juntar(q);
   }
-  juntar(await buscar(alvo.en[0] ?? alvo.code, undefined, 300));
-  for (const a of en.slice(1)) juntar(await buscar(a, undefined, 100));
+  juntar(await buscarOuVazio(alvo.en[0] ?? alvo.code, passos, undefined, 300));
+  for (const a of en.slice(1)) juntar(await buscarOuVazio(a, passos, undefined, 100));
   for (const a of pt) {
-    juntar(await buscar(a, PT_BR_LANGUAGE));
+    juntar(await buscarOuVazio(a, passos, PT_BR_LANGUAGE));
     if (pool.length >= 20) break;
   }
   if (pool.length < 10) {
@@ -329,8 +348,8 @@ async function recuperar(
       passos.push(`parts "${a}" → ${parts.slice(0, 3).join(' | ')}`);
       for (const pn of parts.slice(0, 3)) {
         const base = pn.split('^')[0] ?? pn;
-        const q = await buscar(`${base} ${clausulas}`);
-        juntar(q.length ? q : await buscar(base, undefined, 100));
+        const q = await buscarOuVazio(`${base} ${clausulas}`, passos);
+        juntar(q.length ? q : await buscarOuVazio(base, passos, undefined, 100));
       }
       if (pool.length >= 10) break;
     }

@@ -180,9 +180,12 @@ troca a entrada pela saída da auditoria de testes locais de
 com o nome impresso no laudo, a unidade, o espécime quando impresso e o código
 que a plataforma guardou. Sem pacientes: a auditoria sai agregada por
 laboratório. Agrupados por nome, unidade, espécime e código, viram 1.040 alvos;
-cada alvo recebe só o que o laudo imprime, em português, e o acerto é medido
-contra o código guardado. Só busca e regra, sem Jev (`--testes-locais`,
-`--sem-jev`). Resultado por alvo em
+cada alvo recebe só o que o laudo imprime, em português. Em 701 alvos (1.756
+testes) a plataforma guardou um código, e o acerto é medido contra ele; os
+outros 339 alvos (370 testes) não têm código nenhum, 257 deles sem âncora no
+catálogo (`UNKNOWN_*`), e são o conjunto para o qual o caminho de proposta
+existe: nesta rodada só recebem a lista de candidatos. Só busca e regra, sem
+Jev (`--testes-locais`, `--sem-jev`). Resultado por alvo em
 `experimento-loinc-drilldown.testes-locais.json`.
 
 Três coisas tiveram de mudar no script para a condição ser honesta, e duas
@@ -212,40 +215,40 @@ OR ...`), que também ensina os pares de rótulo de sistema e de método
   (globulina para IgA, Lp(a) para a variante molar) são deriva de componente,
   que a regra não enxerga e o escolhedor resolve.
 
-O que a rodada mediu, por alvo e ponderado pelos testes locais que cada alvo
-agrupa:
+O que a rodada mediu nos alvos com código guardado, por alvo e ponderado
+pelos testes locais que cada alvo agrupa:
 
-|                                  | Alvos (1.040)   | Testes locais (2.126) |
+|                                  | Alvos (701)     | Testes locais (1.756) |
 | -------------------------------- | --------------- | --------------------- |
-| Código guardado no pool da busca | 46,1%           | 63,7%                 |
-| Código entre os 15 candidatos    | 43,5%           | 61,7%                 |
-| Regra acerta (@1)                | 38,0%           | 54,7%                 |
+| Código guardado no pool da busca | 68,3%           | 77,2%                 |
+| Código entre os 15 candidatos    | 64,5%           | 74,7%                 |
+| Regra acerta (@1)                | 56,3%           | 66,2%                 |
 | Regra acerta, código presente    | 87,4% (395/452) | —                     |
-| Nome não encontrado em português | 53,9%           | 36,3%                 |
-| No pool, fora dos 15             | 2,6%            | 2,0%                  |
-| Entre os 15, regra errou         | 5,5%            | 7,1%                  |
+| Nome não encontrado em português | 31,7%           | 22,8%                 |
+| No pool, fora dos 15             | 3,9%            | 2,4%                  |
+| Entre os 15, regra errou         | 8,1%            | 8,5%                  |
 
 Dois terços das perdas são o nome que a busca em português não encontra, e a
 leitura disso depende do que o campo "nome impresso" da auditoria contém, que
 não é sempre o que o laboratório imprimiu:
 
-| Tipo de nome                    | Alvos | Testes | No pool | Entre os 15 | Regra @1 | Regra, presente |
+| Tipo de nome (alvos com código) | Alvos | Testes | No pool | Entre os 15 | Regra @1 | Regra, presente |
 | ------------------------------- | ----- | ------ | ------- | ----------- | -------- | --------------- |
-| Só ASCII (inglês ou sigla)      | 681   | 1.162  | 41,1%   | 38,6%       | 32,7%    | 84,8%           |
-| Igual ao código do catálogo     | 228   | 692    | 67,1%   | 63,2%       | 57,9%    | 91,7%           |
-| Português com acento            | 131   | 272    | 35,1%   | 34,4%       | 30,5%    | 88,9%           |
-| Fora composição corporal (DEXA) | 851   | 1.902  | 54,6%   | 51,5%       | 45,8%    | 89,0%           |
+| Só ASCII (inglês ou sigla)      | 424   | 889    | 66,0%   | 62,0%       | 52,6%    | 84,8%           |
+| Igual ao código do catálogo     | 193   | 643    | 79,3%   | 74,6%       | 68,4%    | 91,7%           |
+| Português com acento            | 84    | 224    | 54,8%   | 53,6%       | 47,6%    | 88,9%           |
+| Fora composição corporal (DEXA) | 666   | 1.703  | 69,8%   | 65,8%       | 58,6%    | 89,0%           |
 
-- **Só 131 alvos (272 testes) têm nome em português com acento**, a condição
-  que esta rodada existia para medir. Os outros 909 trazem o código do
-  catálogo como nome (228: o parser ou a importação gravou `VitaminB12`,
-  `TScore_Total`, `HOMA_IR`), ou um nome em inglês ou sigla (681: laudos
+- **Só 84 alvos com código (224 testes) têm nome em português com acento**, a
+  condição que esta rodada existia para medir. Os outros trazem o código do
+  catálogo como nome (193: o parser ou a importação gravou `VitaminB12`,
+  `TScore_Total`, `HOMA_IR`), ou um nome em inglês ou sigla (424: laudos
   estrangeiros, importação FHIR e Apple Health, e siglas como `HCM`, `VCM`,
   `RDW`). A busca em português com `language=11` não indexa o inglês, e a
-  composição corporal (189 alvos, DEXA) não tem variante pt-BR: 2,6% de
-  acerto. O campo `biomarkerName` da auditoria merece uma nota em PRE-486.
+  composição corporal (DEXA, 35 alvos com código) não tem variante pt-BR: 5
+  acertos. O campo `biomarkerName` da auditoria merece uma nota em PRE-486.
 - **No português de verdade, a variante pt-BR do LOINC não conhece a grafia
-  do laudo em 72 de 118 alvos** fora DEXA: "Triglicerídeos", "Ácido Úrico",
+  do laudo em 37 de 83 alvos** fora DEXA: "Triglicerídeos", "Ácido Úrico",
   "Transaminase oxalacética" e as cinco grafias de TGO/TGP, "Hemácias",
   "Leucócitos totais", "Filtração Glomerular Estimada", "Coeficiente de
   Variação do Volume Eritrocitário" (RDW). O LOINC traduz o componente

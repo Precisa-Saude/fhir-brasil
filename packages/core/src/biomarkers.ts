@@ -943,7 +943,14 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     code: 'HOMA_IR',
     loinc: '47214-2',
     names: {
-      en: ['HOMA-IR', 'Homeostatic Model Assessment for Insulin Resistance'],
+      // "Homeostasis model assessment" é o componente do 47214-2 no LOINC; o
+      // nome em inglês acima é como os laudos imprimem, e a busca por
+      // componente é o que casa o nome do laudo com o código (PRE-486).
+      en: [
+        'HOMA-IR',
+        'Homeostatic Model Assessment for Insulin Resistance',
+        'Homeostasis Model Assessment',
+      ],
       pt: ['HOMA-IR', 'Índice HOMA'],
     },
     unit: 'índice',
@@ -1164,7 +1171,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     code: 'Omega3_Total',
     loinc: '99620-7',
     names: {
-      en: ['Omega-3 Total', 'Total Omega-3'],
+      // O LOINC indexa o 99620-7 como "Omega 3 fatty acids (w3)", sem hífen e
+      // sem "total"; o alias segue essa grafia para a busca por nome.
+      en: ['Omega-3 Total', 'Total Omega-3', 'Omega 3 Fatty Acids'],
       pt: ['Ômega-3 Total'],
     },
     unit: '%',
@@ -1253,7 +1262,8 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     // somados, outro componente. Sem alias.
     loinc: '99621-5',
     names: {
-      en: ['Omega-6 Total', 'Total Omega-6'],
+      // Mesma grafia do LOINC que em `Omega3_Total`: "Omega 6 fatty acids (w6)".
+      en: ['Omega-6 Total', 'Total Omega-6', 'Omega 6 Fatty Acids'],
       pt: ['Ômega-6 Total'],
     },
     unit: '%',

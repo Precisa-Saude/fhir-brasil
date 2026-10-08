@@ -1,3 +1,13 @@
+## [0.39.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.38.4...v0.39.0) (2026-10-08)
+
+### Features
+
+* **core:** loinc-drilldown ordena pelo método padrão da classe e anota a variante mais comum ([#148](https://github.com/Precisa-Saude/fhir-brasil/issues/148)) ([9b5df22](https://github.com/Precisa-Saude/fhir-brasil/commit/9b5df224285c7c1faccd0041be6a521647b15e83))
+
+### Documentation
+
+* **core:** experimento de drill-down LOINC com busca por eixos e escolhedor de decisão ([#147](https://github.com/Precisa-Saude/fhir-brasil/issues/147)) ([58079b0](https://github.com/Precisa-Saude/fhir-brasil/commit/58079b065154355dca980efa331058938ca437df))
+
 ## [0.38.4](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.38.3...v0.38.4) (2026-10-08)
 
 ### Bug Fixes

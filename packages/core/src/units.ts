@@ -359,6 +359,9 @@ const CBC_DIFF_ALIASES: Record<string, string> = {
   'cells/ul': '/uL',
   'cells/µl': '/uL',
   'k/ul': 'K/uL',
+  // Como o laudo monoespaçado da Quest escreve a contagem: sem o alias, a
+  // unidade não convertia nem virava UCUM, e o Bundle levava texto livre.
+  'thousand/ul': 'K/uL',
   'x10e3/ul': 'K/uL',
 };
 const CBC_DIFF: Omit<BiomarkerUnitConfig, 'aliases'> = {
@@ -960,6 +963,7 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
       'm/ul': 'M/uL',
       'milhões/mm3': 'M/uL',
       'milhões/mm³': 'M/uL',
+      'million/ul': 'M/uL',
       'x10e6/ul': 'M/uL',
     },
     canonicalUcum: '10*6/uL',

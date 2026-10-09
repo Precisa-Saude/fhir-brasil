@@ -448,3 +448,14 @@ describe('convertUnit', () => {
     expect(convertUnit(100, 'mg/dL', 'kg', 'Glucose')).toBeNull();
   });
 });
+
+describe('contagem escrita por extenso no laudo americano', () => {
+  // O laudo monoespaçado da Quest imprime "Thousand/uL" e "Million/uL".
+  it.each([
+    ['Thousand/uL', 'WBC', '10*3/uL'],
+    ['Thousand/uL', 'Platelets', '10*3/uL'],
+    ['Million/uL', 'RBC', '10*6/uL'],
+  ])('%s em %s vira %s', (unit, code, ucum) => {
+    expect(resolveUcum(unit, code)).toBe(ucum);
+  });
+});

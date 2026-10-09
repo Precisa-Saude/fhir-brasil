@@ -1,3 +1,10 @@
+## [0.41.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.41.0...v0.41.1) (2026-10-09)
+
+### Bug Fixes
+
+* **core:** frase do espécime implícito só entra no prompt quando há pista ([#153](https://github.com/Precisa-Saude/fhir-brasil/issues/153)) ([1b0c8de](https://github.com/Precisa-Saude/fhir-brasil/commit/1b0c8de0a17aa7cd0bab2c5cf3f7ea59b603703e))
+* **core:** grafias do laudo americano, A/G Ratio pelo LOINC e densidade óssea por região ([#154](https://github.com/Precisa-Saude/fhir-brasil/issues/154)) ([e8f2933](https://github.com/Precisa-Saude/fhir-brasil/commit/e8f293301e680013a3955037ddd539c3d26145aa))
+
 ## [0.41.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.40.0...v0.41.0) (2026-10-09)
 
 ### Features

@@ -501,6 +501,14 @@ describe('massa corporal impressa em libras', () => {
   });
 });
 
+describe('grafia de massa que o catálogo não conhece', () => {
+  // Unidade sem tradução fica sem código: um UCUM aproximado seria afirmar sob
+  // o system do UCUM o que ninguém conferiu.
+  it.each(['st', 'oz', 'libras', ''])('"%s" fica sem UCUM em ArmsLeanMass', (unit) => {
+    expect(resolveUcum(unit, 'ArmsLeanMass')).toBeUndefined();
+  });
+});
+
 describe('HOMA-IR adimensional', () => {
   // A calculadora devolve `index`, o catálogo declara `índice`.
   it.each(['index', 'índice', 'Index'])('"%s" vira {index}', (unit) => {

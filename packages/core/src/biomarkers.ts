@@ -524,6 +524,141 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     },
     unit: 'IU/mL',
   },
+  {
+    category: 'autoimunidade',
+    code: 'AntiCCP',
+    loinc: '33935-8',
+    names: {
+      en: [
+        'Anti-CCP',
+        'CCP Antibody',
+        'Cyclic Citrullinated Peptide Antibody',
+        'Cyclic Citrullinated Peptide (CCP) Ab, IgG',
+        'CCP Ab IgG',
+      ],
+      pt: [
+        'Anti-CCP',
+        'Anticorpo Anti-Peptídeo Citrulinado Cíclico',
+        'Anti-Peptídeo Citrulinado Cíclico',
+      ],
+    },
+    unit: 'U/mL',
+  },
+  {
+    category: 'autoimunidade',
+    code: 'MPO_Antibody',
+    loinc: '6969-0',
+    names: {
+      en: [
+        'Myeloperoxidase Antibody',
+        'MPO Antibody',
+        'Myeloperoxidase Antibody (MPO)',
+        'Anti-MPO',
+      ],
+      pt: ['Anticorpo Antimieloperoxidase', 'Anti-MPO'],
+    },
+    unit: 'AI',
+  },
+  {
+    category: 'autoimunidade',
+    code: 'pANCA',
+    // Título, como a Quest imprime ("<1:20"). Laudo só com negativo ou positivo
+    // pediria o 30539-1 (presença); ver o registro de decisão.
+    loinc: '32787-4',
+    names: {
+      en: ['p-ANCA', 'P-ANCA', 'Perinuclear ANCA', 'ANCA, Perinuclear'],
+      pt: ['p-ANCA', 'ANCA Perinuclear'],
+    },
+    unit: 'titer',
+  },
+  {
+    category: 'autoimunidade',
+    code: 'AntiDsDNA',
+    loinc: '5130-0',
+    names: {
+      en: [
+        'Anti-dsDNA',
+        'dsDNA Antibody',
+        'DNA (DS) Antibody',
+        'Double-Stranded DNA Antibody',
+        'Anti-DNA (DS)',
+      ],
+      pt: ['Anti-DNA Nativo', 'Anti-dsDNA', 'Anticorpo Anti-DNA de Dupla Hélice'],
+    },
+    unit: 'IU/mL',
+  },
+  {
+    category: 'autoimunidade',
+    code: 'AntiSm',
+    loinc: '11090-8',
+    names: {
+      en: ['Sm Antibody', 'Anti-Sm', 'Smith Antibody'],
+      pt: ['Anti-Sm', 'Anticorpo Anti-Sm'],
+    },
+    unit: 'AI',
+  },
+  {
+    category: 'autoimunidade',
+    code: 'AntiRNP',
+    loinc: '29374-6',
+    names: {
+      en: ['RNP Antibody', 'Anti-RNP', 'U1-RNP Antibody'],
+      pt: ['Anti-RNP', 'Anticorpo Anti-RNP'],
+    },
+    unit: 'AI',
+  },
+  {
+    category: 'autoimunidade',
+    code: 'AntiSSA',
+    loinc: '17792-3',
+    names: {
+      en: [
+        "Sjogren's Antibody (SS-A)",
+        'SS-A Antibody',
+        'Anti-SSA',
+        'Anti-Ro',
+        'SSA (Ro) Antibody',
+      ],
+      pt: ['Anti-SSA', 'Anti-Ro', 'Anti-SSA (Ro)'],
+    },
+    unit: 'AI',
+  },
+  {
+    category: 'autoimunidade',
+    code: 'AntiSSB',
+    loinc: '17791-5',
+    names: {
+      en: [
+        "Sjogren's Antibody (SS-B)",
+        'SS-B Antibody',
+        'Anti-SSB',
+        'Anti-La',
+        'SSB (La) Antibody',
+      ],
+      pt: ['Anti-SSB', 'Anti-La', 'Anti-SSB (La)'],
+    },
+    unit: 'AI',
+  },
+  {
+    category: 'autoimunidade',
+    code: 'AntiScl70',
+    loinc: '27416-7',
+    names: {
+      en: ['Scleroderma Antibody (Scl-70)', 'Scl-70 Antibody', 'Anti-Scl-70'],
+      pt: ['Anti-Scl-70', 'Anti-Scl 70'],
+    },
+    unit: 'AI',
+  },
+  {
+    category: 'autoimunidade',
+    code: 'AntiJo1',
+    loinc: '11565-9',
+    names: {
+      en: ['Jo-1 Antibody', 'Anti-Jo-1'],
+      pt: ['Anti-Jo-1', 'Anti-Jo1'],
+    },
+    unit: 'AI',
+  },
 
   // ============================================================================
   // IMMUNE REGULATION / REGULACAO-IMUNOLOGICA
@@ -1828,6 +1963,25 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       pt: ['Tempo de Protrombina', 'TP', 'TAP'],
     },
     unit: 'segundos',
+  },
+  {
+    category: 'sangue',
+    code: 'APTT',
+    // Plasma pobre em plaquetas, ensaio de coagulação. A variante sensível a
+    // anticoagulante lúpico (34571-0) é outro teste.
+    loinc: '14979-9',
+    names: {
+      en: [
+        'aPTT',
+        'APTT',
+        'PTT',
+        'PTT, Activated',
+        'Activated Partial Thromboplastin Time',
+        'Partial Thromboplastin Time',
+      ],
+      pt: ['TTPA', 'TTPa', 'Tempo de Tromboplastina Parcial Ativada'],
+    },
+    unit: 's',
   },
   {
     category: 'sangue',

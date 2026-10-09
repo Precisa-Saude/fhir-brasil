@@ -149,27 +149,27 @@ echo "Hemoglobina 14.5 g/dL Glicose 99 mg/dL" | fhir-ocr codes --json
 
 Medido no `@precisa-saude/fhir@0.42.0`, gerado por `pnpm catalog:counts`.
 
-- **249 biomarcadores** definidos, dos quais **204 têm código LOINC** (81,9%) e 45 não têm.
-- **217 códigos LOINC aceitos** na busca por código: os 204 canônicos, as variantes por método e os aliases de códigos que o LOINC aposentou.
+- **260 biomarcadores** definidos, dos quais **215 têm código LOINC** (82,7%) e 45 não têm.
+- **228 códigos LOINC aceitos** na busca por código: os 215 canônicos, as variantes por método e os aliases de códigos que o LOINC aposentou.
 - **203 faixas de referência**, com variantes por sexo e idade.
 - **10 categorias clínicas** de primeiro nível sobre 20 subcategorias.
-- **Registro de decisão** dos 204 mapeamentos: 28 com evidência além do nome (unidade, material, método ou bula), 176 escolhidos só pelo nome, 0 com revisão independente. A ficha de cada um sai em `fhir-bio decision <código>`.
+- **Registro de decisão** dos 215 mapeamentos: 39 com evidência além do nome (unidade, material, método ou bula), 176 escolhidos só pelo nome, 0 com revisão independente. A ficha de cada um sai em `fhir-bio decision <código>`.
 
 | Categoria                            | Biomarcadores | Com LOINC | Exemplos                                                                          |
 | ------------------------------------ | ------------: | --------: | --------------------------------------------------------------------------------- |
 | Cardiovascular                       |            29 |        22 | ApoB, HDL, HDL_Large, CRP, LDL                                                    |
 | Composição Corporal e Envelhecimento |            52 |        15 | Cortisol, IGF1, BMI, BodyFatPct, FatMass                                          |
-| Hematológico                         |            19 |        19 | NRBC, NRBC_Abs, Hct, Hgb, MCH                                                     |
+| Hematológico                         |            20 |        20 | NRBC, NRBC_Abs, Hct, Hgb, MCH                                                     |
 | Hepático e Biliar                    |            12 |        12 | ALT, Albumin, Albumin_Globulin_Ratio, AlkalinePhosphatase, AST                    |
-| Imunológico                          |            27 |        27 | ANA_Screen, RheumatoidFactor, Basophils, Basophils_Abs, Eosinophils               |
+| Imunológico                          |            37 |        37 | ANA_Screen, RheumatoidFactor, AntiCCP, MPO_Antibody, pANCA                        |
 | Metabólico e Endócrino               |            24 |        24 | AntiThyroglobulin, AntiTPO, TSH, T4Free, Thyroglobulin                            |
 | Nutricional e Exposição Ambiental    |            33 |        33 | Lead, Mercury, AA_EPA_Ratio, Calcium, Phosphorus                                  |
 | Oncológico                           |             6 |         6 | AFP, CA125, CEA, CA199, CA153                                                     |
 | Renal e Eletrolítico                 |            33 |        33 | Microalbumin_Urine, ProteinCreatinineRatio_Urine, Urea, BUN, BUN_Creatinine_Ratio |
 | Saúde Reprodutiva                    |            15 |        14 | AMH, DHEAS, Estradiol, Estrone, FSH                                               |
-| **Total**                            |       **249** |   **204** |                                                                                   |
+| **Total**                            |       **260** |   **215** |                                                                                   |
 
-As linhas somam 250 porque 1 biomarcador aparece em duas categorias. O Beta-hCG é marcador tumoral e exame de saúde feminina ao mesmo tempo. O total não conta ninguém duas vezes.
+As linhas somam 261 porque 1 biomarcador aparece em duas categorias. O Beta-hCG é marcador tumoral e exame de saúde feminina ao mesmo tempo. O total não conta ninguém duas vezes.
 
 ### Os 45 sem LOINC, e por quê
 

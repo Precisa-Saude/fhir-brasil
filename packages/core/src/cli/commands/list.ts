@@ -3,16 +3,16 @@ import { parseArgs } from 'node:util';
 import {
   type BiomarkerDefinition,
   getAllDefinitions,
-  getBiomarkersByCategory,
   getVisibleDefinitions,
 } from '../../biomarkers.js';
 import { exitWithError, formatTable, outputJson, outputText } from '../../cli-utils.js';
+import { diagnosticSectionOf } from '../../diagnostic-sections.js';
 
 export async function list(args: string[], json: boolean): Promise<void> {
   const { values } = parseArgs({
     args,
     options: {
-      category: { type: 'string' },
+      section: { type: 'string' },
       visible: { default: false, type: 'boolean' },
     },
     strict: false,
@@ -20,10 +20,11 @@ export async function list(args: string[], json: boolean): Promise<void> {
 
   let defs: BiomarkerDefinition[];
 
-  if (values.category) {
-    defs = getBiomarkersByCategory(values.category as string);
+  if (values.section) {
+    const section = String(values.section).toUpperCase();
+    defs = getAllDefinitions().filter((d) => diagnosticSectionOf(d.code) === section);
     if (defs.length === 0) {
-      exitWithError(`Categoria não encontrada ou vazia: ${values.category}`);
+      exitWithError(`Seção não encontrada ou vazia: ${values.section}`);
     }
   } else if (values.visible) {
     defs = getVisibleDefinitions();
@@ -41,9 +42,9 @@ export async function list(args: string[], json: boolean): Promise<void> {
     d.loinc ?? '—',
     d.names.pt[0] ?? '',
     d.unit ?? '—',
-    Array.isArray(d.category) ? d.category.join(', ') : d.category,
+    diagnosticSectionOf(d.code) ?? '—',
   ]);
 
-  outputText(formatTable(['Código', 'LOINC', 'Nome (pt)', 'Unidade', 'Categoria'], rows));
+  outputText(formatTable(['Código', 'LOINC', 'Nome (pt)', 'Unidade', 'Seção'], rows));
   outputText(`\nTotal: ${defs.length} biomarcadores`);
 }

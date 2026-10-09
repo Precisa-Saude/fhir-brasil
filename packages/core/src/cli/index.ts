@@ -1,6 +1,5 @@
 import { exitWithError } from '../cli-utils.js';
 import { dividirArgv } from './argv.js';
-import { categories } from './commands/categories.js';
 import { convert } from './commands/convert.js';
 import { decision } from './commands/decision.js';
 import { importBundle } from './commands/import.js';
@@ -8,6 +7,7 @@ import { list } from './commands/list.js';
 import { loincMap } from './commands/loinc-map.js';
 import { lookup, lookupLoinc } from './commands/lookup.js';
 import { range } from './commands/range.js';
+import { sections } from './commands/sections.js';
 import { source } from './commands/source.js';
 import { units } from './commands/units.js';
 import { validate } from './commands/validate.js';
@@ -22,8 +22,8 @@ Comandos:
   lookup <código>         Buscar biomarcador por código interno
   lookup-loinc <loinc>    Buscar biomarcador por código LOINC
   list                    Listar todos os biomarcadores
-  categories              Listar biomarcadores agrupados por categoria
   range <código>          Faixa de referência para um biomarcador
+  sections                Listar biomarcadores pela seção de serviço (HL7 v2-0074)
   source [chave]          Citação de uma fonte, ou a lista toda
   units <código>          Informações de unidade de um biomarcador
   convert <arquivo>       Converter dados lab (JSON) para FHIR Bundle
@@ -41,7 +41,6 @@ Flags globais:
 type CommandFn = (args: string[], json: boolean) => Promise<void>;
 
 const COMMANDS: Record<string, CommandFn> = {
-  categories,
   convert,
   decision,
   import: importBundle,
@@ -50,6 +49,7 @@ const COMMANDS: Record<string, CommandFn> = {
   lookup,
   'lookup-loinc': lookupLoinc,
   range,
+  sections,
   source,
   units,
   validate,

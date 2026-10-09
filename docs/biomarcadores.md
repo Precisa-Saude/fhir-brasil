@@ -1,6 +1,6 @@
 # Biomarcadores
 
-Documentação de referência sobre o modelo de dados de biomarcadores, categorias, consultas e faixas de referência.
+Documentação de referência sobre o modelo de dados de biomarcadores, seções de serviço, consultas e faixas de referência.
 
 ## Modelo de dados: `BiomarkerDefinition`
 
@@ -17,7 +17,7 @@ interface BiomarkerDefinition {
     pt: string[]; // Nomes em português (primeiro = nome principal)
     en: string[]; // Nomes em inglês
   };
-  category: string | string[]; // Categoria(s) clínica(s)
+  section?: DiagnosticSection; // Seção v2-0074, só onde a classe do LOINC não a dá
   unit?: string; // Unidade padrão (ex: "mg/dL")
   sex?: 'male' | 'female' | 'both'; // Relevância por sexo
   hidden?: boolean; // Se true, extraído mas não exibido na UI
@@ -76,32 +76,35 @@ specimenMismatch('Urina de 24 horas', codeToLoinc('Sodium')!);
 // { reason: 'specimen-mismatch', material: 'urine', code: 'blood', system: 'Ser/Plas', ... }
 ```
 
-## Categorias
+## Seção de serviço (HL7 v2-0074)
 
-Os biomarcadores são organizados nas seguintes categorias clínicas:
+O catálogo não agrupa exame por sistema do corpo (coração, fígado): esse agrupamento é decisão de produto de quem usa o pacote. O agrupamento que o pacote expõe é o do padrão, a seção de serviço diagnóstico da tabela 0074 do HL7 v2, que vai em `DiagnosticReport.category` ao lado do `LAB` que o US Core pede no laudo de laboratório.
 
-| Categoria                 | Chave                     | Exemplos                                                |
-| ------------------------- | ------------------------- | ------------------------------------------------------- |
-| Coração                   | `coracao`                 | HDL, LDL, ApoB, CRP, Triglicerídeos, Lp(a)              |
-| Tireoide                  | `tireoide`                | TSH, T3 Livre, T4 Livre, Anti-TPO                       |
-| Autoimunidade             | `autoimunidade`           | FAN, Anti-TPO, FR, Anti-CCP                             |
-| Regulação imunológica     | `regulacao-imunologica`   | Leucócitos, Linfócitos, Neutrófilos, Hemoglobina        |
-| Saúde feminina            | `saude-feminina`          | Estradiol, FSH, Progesterona                            |
-| Saúde masculina           | `saude-masculina`         | Testosterona Total, PSA                                 |
-| Hormônios                 | `hormonios`               | Cortisol, DHEA-S, IGF-1                                 |
-| Metabólico                | `metabolico`              | Glicose, HbA1c, Insulina, HOMA-IR, Ácido Úrico          |
-| Toxinas ambientais        | `toxinas-ambientais`      | Chumbo, Mercúrio                                        |
-| Nutrientes                | `nutrientes`              | Vitamina D, B12, Ferro, Zinco, Magnésio, Folato         |
-| Estresse e envelhecimento | `estresse-envelhecimento` | 8-OHdG                                                  |
-| Fígado                    | `figado`                  | ALT, AST, GGT, Bilirrubina, Fosfatase Alcalina          |
-| Sangue                    | `sangue`                  | Hemácias, Hemoglobina, Hematócrito, VCM, RDW, Plaquetas |
-| Rins                      | `rins`                    | Creatinina, Ureia, TFG, Cistatina C, Ácido Úrico        |
-| Pâncreas                  | `pancreas`                | Amilase, Lipase                                         |
-| Eletrólitos               | `eletrolitos`             | Sódio, Potássio                                         |
-| Urina                     | `urina`                   | EAS (elementos e sedimentos), pH, Proteínas             |
-| Marcadores tumorais       | `marcadores-tumorais`     | PSA, CEA, AFP                                           |
-| Composição corporal       | `composicao-corporal`     | IMC, Gordura Corporal, Massa Magra (DEXA)               |
-| Densidade óssea           | `densidade-ossea`         | T-Score, Z-Score, BMD, BMC                              |
+Exame com LOINC tira a seção da classe do código (`CLASS` no snapshot do fhir.loinc.org). Exame sem LOINC declara a seção na definição, e um código cuja classe não é a seção em que o laudo o imprime também (as cetonas são `CHEM` no LOINC e saem na urinálise).
+
+| Classe do LOINC                                          | Seção             |
+| -------------------------------------------------------- | ----------------- |
+| `CHEM`, `CHAL.ROUTINE`                                   | `CH` Chemistry    |
+| `HEM/BC`, `COAG` (a v2-0074 não tem seção de coagulação) | `HM` Hematology   |
+| `UA`, e `SPEC` em urina                                  | `URN` Urinalysis  |
+| `SERO`                                                   | `SR` Serology     |
+| `ALLERGY`                                                | `IMM` Immunology  |
+| `DRUG/TOX` (inclui zinco e selênio, como o LOINC)        | `TX` Toxicology   |
+| `BLDBK`                                                  | `BLB` Blood Bank  |
+| `MICRO`                                                  | `MB` Microbiology |
+| `MOLPATH.MUT`                                            | `GE` Genetics     |
+| Medidas do corpo (`BDYWGT`, `SKNFLD`, `BDYCRC`…)         | `OTH` Other       |
+
+Sem LOINC: densitometria por DXA é `RAD`, escore de cálcio é `CT`, bioimpedância e antropometria são `OTH`.
+
+```typescript
+import { diagnosticSectionOf, diagnosticSectionsOfReport } from '@precisa-saude/fhir';
+
+diagnosticSectionOf('HDL'); // 'CH'
+diagnosticSectionsOfReport(['WBC', 'Glucose', 'Urobilinogen_Urine']); // ['LAB', 'CH', 'HM', 'URN']
+```
+
+A lista por seção sai em `fhir-bio sections`.
 
 ## Consultando definições
 
@@ -114,7 +117,6 @@ import { getDefinitionByCode, normalizeCode } from '@precisa-saude/fhir';
 const def = getDefinitionByCode('HDL');
 console.log(def?.names.pt[0]); // "Colesterol HDL"
 console.log(def?.loinc); // "2085-9"
-console.log(def?.category); // "coracao"
 console.log(def?.unit); // "mg/dL"
 ```
 

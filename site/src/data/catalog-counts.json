@@ -1,80 +1,90 @@
 {
   "acceptedLoincCodes": 230,
   "biomarkers": 260,
-  "byCategory": [
+  "bySection": [
     {
-      "count": 29,
+      "count": 126,
       "examples": ["ApoB", "HDL", "HDL_Large", "CRP", "LDL"],
-      "pt": "Cardiovascular",
-      "withLoinc": 22
-    },
-    {
-      "count": 52,
-      "examples": ["Cortisol", "IGF1", "BMI", "BodyFatPct", "FatMass"],
-      "pt": "Composição Corporal e Envelhecimento",
-      "withLoinc": 16
-    },
-    {
-      "count": 20,
-      "examples": ["NRBC", "NRBC_Abs", "Hct", "Hgb", "MCH"],
-      "pt": "Hematológico",
-      "withLoinc": 20
-    },
-    {
-      "count": 12,
-      "examples": ["ALT", "Albumin", "Albumin_Globulin_Ratio", "AlkalinePhosphatase", "AST"],
-      "pt": "Hepático e Biliar",
-      "withLoinc": 12
-    },
-    {
-      "count": 37,
-      "examples": ["ANA_Screen", "RheumatoidFactor", "AntiCCP", "MPO_Antibody", "pANCA"],
-      "pt": "Imunológico",
-      "withLoinc": 37
-    },
-    {
-      "count": 24,
-      "examples": ["AntiThyroglobulin", "AntiTPO", "TSH", "T4Free", "Thyroglobulin"],
-      "pt": "Metabólico e Endócrino",
-      "withLoinc": 24
+      "pt": "Bioquímica",
+      "section": "CH",
+      "withLoinc": 126
     },
     {
       "count": 33,
-      "examples": ["Lead", "Mercury", "AA_EPA_Ratio", "Calcium", "Phosphorus"],
-      "pt": "Nutricional e Exposição Ambiental",
+      "examples": ["Basophils", "Basophils_Abs", "Eosinophils", "Eosinophils_Abs", "Lymphocytes"],
+      "pt": "Hematologia",
+      "section": "HM",
       "withLoinc": 33
     },
     {
-      "count": 6,
-      "examples": ["AFP", "CA125", "CEA", "CA199", "CA153"],
-      "pt": "Oncológico",
-      "withLoinc": 6
+      "count": 28,
+      "examples": ["BMI", "BodyFatPct", "FatMass", "LeanMass", "FatFreeMass"],
+      "pt": "Outros (medida corporal)",
+      "section": "OTH",
+      "withLoinc": 14
     },
     {
-      "count": 33,
+      "count": 22,
+      "examples": ["BMC", "VATVolume", "VATMass", "AndroidGynoidRatio", "AndroidFatPct"],
+      "pt": "Radiologia (densitometria)",
+      "section": "RAD",
+      "withLoinc": 0
+    },
+    {
+      "count": 18,
+      "examples": ["AntiThyroglobulin", "AntiTPO", "ANA_Screen", "RheumatoidFactor", "AntiCCP"],
+      "pt": "Sorologia",
+      "section": "SR",
+      "withLoinc": 18
+    },
+    {
+      "count": 17,
       "examples": [
-        "Microalbumin_Urine",
-        "ProteinCreatinineRatio_Urine",
-        "Urea",
-        "BUN",
-        "BUN_Creatinine_Ratio"
+        "Appearance_Urine",
+        "Bacteria_Urine",
+        "Bilirubin_Urine",
+        "Blood_Urine",
+        "Color_Urine"
       ],
-      "pt": "Renal e Eletrolítico",
-      "withLoinc": 33
+      "pt": "Urinálise",
+      "section": "URN",
+      "withLoinc": 17
     },
     {
-      "count": 15,
-      "examples": ["AMH", "DHEAS", "Estradiol", "Estrone", "FSH"],
-      "pt": "Saúde Reprodutiva",
-      "withLoinc": 15
-    }
+      "count": 7,
+      "examples": ["CAC", "CAC_LMA", "CAC_LAD", "CAC_LCX", "CAC_RCA"],
+      "pt": "Tomografia",
+      "section": "CT",
+      "withLoinc": 0
+    },
+    {
+      "count": 4,
+      "examples": ["Lead", "Mercury", "Zinc", "Selenium"],
+      "pt": "Toxicologia",
+      "section": "TX",
+      "withLoinc": 4
+    },
+    {
+      "count": 2,
+      "examples": ["ABO_Group", "Rh_Type"],
+      "pt": "Banco de sangue",
+      "section": "BLB",
+      "withLoinc": 2
+    },
+    {
+      "count": 2,
+      "examples": ["IgE_E1_CatDander", "IgE_GX1_Grasses"],
+      "pt": "Imunologia",
+      "section": "IMM",
+      "withLoinc": 2
+    },
+    { "count": 1, "examples": ["APOE_Genotype"], "pt": "Genética", "section": "GE", "withLoinc": 1 }
   ],
-  "categoryGroups": 10,
   "decisions": { "nameOnly": 176, "reviewed": 0, "withEvidence": 41 },
   "loincCoveragePct": 83.5,
   "referenceRanges": 203,
-  "subcategories": 20,
-  "version": "0.43.0",
+  "sections": 11,
+  "version": "1.0.0",
   "withLoinc": 217,
   "withoutLoinc": 43,
   "withoutLoincByReason": { "ambiguous": 4, "no-concept": 39 }

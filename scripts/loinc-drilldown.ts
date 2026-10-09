@@ -767,6 +767,19 @@ const COMPOSICAO_CORPORAL_PT =
 const UNIDADE_CORPORAL = /^(cm|m|kg|lbs|g\/cm2|kg\/m2|%bywt|cm2|cm3|in3|kcal.*|bpm|°|angstrom)$/;
 
 // Categoria que o laudo implica, só pelo que ele imprime: espécime, nome e unidade.
+// A pista de material de um biomarcador do catálogo, sem olhar o código LOINC
+// que a corrida tenta recuperar: a seção declarada (densitometria, bioimpedância
+// e escore de cálcio não têm LOINC), o sufixo de urina e os metais. Até out/2026
+// vinha da categoria clínica do catálogo, que saiu do pacote; o sangue e a
+// coagulação seguem pelas regras de nome de `sistemas`.
+function categoriaDoCatalogo(d: { code: string; section?: string }): string {
+  if (d.section === 'RAD' || d.section === 'OTH' || d.section === 'CT')
+    return 'composicao-corporal';
+  if (/_urine$/i.test(d.code)) return 'urina';
+  if (/^(Lead|Mercury|Arsenic|Cadmium)/.test(d.code)) return 'toxinas-ambientais';
+  return 'soro';
+}
+
 function categoriaDoLaudo(nome: string, unidade: string | null, especime: string): string {
   const n = nome.toLowerCase();
   const e = especime.toLowerCase();
@@ -805,7 +818,7 @@ function alvosDosTestesLocais(arquivo: string): Alvo[] {
         ? BIOMARKER_DEFINITIONS.find((d) => d.code === t.biomarkerCode)
         : undefined;
       alvo = {
-        category: def ? String(def.category) : categoriaDoLaudo(nome, unidade, especime),
+        category: def ? categoriaDoCatalogo(def) : categoriaDoLaudo(nome, unidade, especime),
         code: def?.code ?? nome,
         en: def?.names.en ?? [],
         loinc: t.loincCode,
@@ -831,7 +844,7 @@ const alvos: Alvo[] = (
     ? alvosDosTestesLocais(TESTES_LOCAIS)
     : BIOMARKER_DEFINITIONS.filter((d) => d.loinc && (!APENAS || APENAS.includes(d.code))).map(
         (d) => ({
-          category: String(d.category),
+          category: categoriaDoCatalogo(d),
           code: d.code,
           en: d.names.en,
           loinc: d.loinc!,

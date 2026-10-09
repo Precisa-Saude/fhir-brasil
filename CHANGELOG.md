@@ -1,3 +1,25 @@
+## [1.0.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.43.0...v1.0.0) (2026-10-09)
+
+### ⚠ BREAKING CHANGES
+
+* **core:** sai o campo `category` de `BiomarkerDefinition` e de
+`BiomarkerSearchPattern` (no lugar, `section`), e saem
+`getBiomarkersByCategory`, `getBiomarkersForCategories`,
+`toBiomarkerTests`, `CATEGORY_GROUPS`, `getCategoryGroup`,
+`CATEGORY_SCREENING_INTERVALS`, `getScreeningInterval` e
+`DEXA_CATEGORIES`. As referências para o modelo e os padrões de busca
+continuam exportados na raiz do pacote, mas não mais pelo subpath
+`/biomarkers`. Quem agrupava por categoria mantém a própria tabela,
+como a plataforma da Precisa passou a fazer.
+
+Refs: PRE-479
+
+* test(core): comentário do teste da referência fala em seção, não em categoria
+
+### Features
+
+* **core:** seção de serviço HL7 v2-0074 no lugar da categoria clínica ([#159](https://github.com/Precisa-Saude/fhir-brasil/issues/159)) ([3b81812](https://github.com/Precisa-Saude/fhir-brasil/commit/3b81812e307b9ee47c0345ac5b13e9704aaea89b))
+
 ## [0.43.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.42.0...v0.43.0) (2026-10-09)
 
 ### Features

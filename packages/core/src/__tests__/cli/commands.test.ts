@@ -97,15 +97,13 @@ describe('cli: list', () => {
     expect(data.length).toBeGreaterThan(0);
   });
 
-  it('should filter by category', async () => {
+  it('should filter by section', async () => {
     const { list } = await import('../../cli/commands/list');
-    await list(['--category', 'metabolico'], true);
+    await list(['--section', 'urn'], true);
     const data = JSON.parse(stdoutOutput);
     expect(data.length).toBeGreaterThan(0);
-    for (const d of data) {
-      const cats = Array.isArray(d.category) ? d.category : [d.category];
-      expect(cats).toContain('metabolico');
-    }
+    expect(data.map((d: { code: string }) => d.code)).toContain('Urobilinogen_Urine');
+    expect(data.map((d: { code: string }) => d.code)).not.toContain('Glucose');
   });
 
   it('should filter visible-only biomarkers', async () => {
@@ -117,29 +115,29 @@ describe('cli: list', () => {
     }
   });
 
-  it('should error on invalid category', async () => {
+  it('should error on invalid section', async () => {
     const { list } = await import('../../cli/commands/list');
-    await expect(list(['--category', 'nonexistent'], false)).rejects.toThrow('process.exit called');
+    await expect(list(['--section', 'nonexistent'], false)).rejects.toThrow('process.exit called');
     expect(stderrOutput).toContain('não encontrada');
   });
 });
 
-// ─── categories ────────────────────────────────────────────────────────────────
+// ─── sections ──────────────────────────────────────────────────────────────────
 
-describe('cli: categories', () => {
-  it('should list categories with biomarker counts', async () => {
-    const { categories } = await import('../../cli/commands/categories');
-    await categories([], false);
-    expect(stdoutOutput).toContain('metabolico');
-    expect(stdoutOutput).toContain('tireoide');
+describe('cli: sections', () => {
+  it('should list sections with biomarker counts', async () => {
+    const { sections } = await import('../../cli/commands/sections');
+    await sections([], false);
+    expect(stdoutOutput).toContain('CH — Chemistry');
+    expect(stdoutOutput).toContain('URN — Urinalysis');
   });
 
-  it('should output JSON grouped by category', async () => {
-    const { categories } = await import('../../cli/commands/categories');
-    await categories([], true);
+  it('should output JSON grouped by section', async () => {
+    const { sections } = await import('../../cli/commands/sections');
+    await sections([], true);
     const data = JSON.parse(stdoutOutput);
-    expect(data).toHaveProperty('metabolico');
-    expect(Array.isArray(data.metabolico)).toBe(true);
+    expect(data.HM).toContain('INR');
+    expect(data.CT).toContain('CAC');
   });
 });
 

@@ -19,6 +19,8 @@
  * variante só vale quando o laudo afirma o método por escrito. Separado de
  * `loincAliases`, que quer dizer "código antigo para a mesma coisa".
  */
+import type { DiagnosticSection } from './diagnostic-sections';
+
 export interface MethodVariant {
   /**
    * Trechos que afirmam o método, comparados por token inteiro como as grafias
@@ -35,7 +37,6 @@ export interface MethodVariant {
 }
 
 export interface BiomarkerDefinition {
-  category: string | string[];
   code: string;
   codeAliases?: string[];
   hidden?: boolean; // If true, biomarker is extracted but not shown in UI
@@ -47,6 +48,13 @@ export interface BiomarkerDefinition {
     en: string[];
     pt: string[];
   };
+  /**
+   * Seção de serviço diagnóstico (v2-0074), declarada só onde a classe do LOINC
+   * não a dá: exame sem LOINC (densitometria, escore de cálcio, bioimpedância)
+   * ou código cuja classe não é a seção em que o laudo o imprime. Ver
+   * `diagnostic-sections.ts`.
+   */
+  section?: DiagnosticSection;
   sex?: 'male' | 'female' | 'both';
   unit?: string;
 }
@@ -62,7 +70,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // HEART / CORACAO
   // ============================================================================
   {
-    category: 'coracao',
     code: 'ApoB',
     loinc: '1884-6',
     names: {
@@ -72,7 +79,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'coracao',
     code: 'HDL',
     loinc: '2085-9',
     names: {
@@ -82,7 +88,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'coracao',
     code: 'HDL_Large',
     loinc: '43729-3',
     names: {
@@ -92,7 +97,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'nmol/L',
   },
   {
-    category: 'coracao',
     code: 'CRP',
     loinc: '1988-5',
     names: {
@@ -109,7 +113,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/L',
   },
   {
-    category: 'coracao',
     code: 'LDL',
     loinc: '2089-1',
     // Os três irmãos de 2089-1 no eixo Method, conferidos ativos em out/2026.
@@ -145,7 +148,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'coracao',
     code: 'LDL_Medium',
     // 96735-6 é "in Serum" só, enquanto as vizinhas LDL_Small (43727-7),
     // LDL_ParticleNumber (54434-6) e HDL_Large (43729-3) são Ser/Plas. É o
@@ -159,7 +161,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'nmol/L',
   },
   {
-    category: 'coracao',
     code: 'LDL_ParticleNumber',
     codeAliases: ['LDL_Particle_Number'],
     loinc: '54434-6',
@@ -170,7 +171,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'nmol/L',
   },
   {
-    category: 'coracao',
     code: 'LDL_Pattern',
     loinc: '35505-7',
     names: {
@@ -179,7 +179,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     },
   },
   {
-    category: 'coracao',
     code: 'LDL_Peak_Size',
     loinc: '17782-4',
     names: {
@@ -189,7 +188,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'Angstrom',
   },
   {
-    category: 'coracao',
     code: 'LDL_Small',
     loinc: '43727-7',
     names: {
@@ -203,7 +201,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     // Anteriormente 10835-7 ("Lipoprotein a [Mass/volume]", mg/dL),
     // incompatível com a unidade nmol/L declarada. SBC 2025 recomenda
     // ensaio independente de isoforma reportado em nmol/L.
-    category: 'coracao',
     code: 'Lipoprotein_a',
     loinc: '43583-4',
     names: {
@@ -213,7 +210,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'nmol/L',
   },
   {
-    category: 'coracao',
     code: 'NonHDL_Cholesterol',
     codeAliases: ['UNKNOWN_Colesterol_no_HDL', 'UNKNOWN_Colesterol_No_HDL'],
     loinc: '43396-1',
@@ -224,7 +220,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'coracao',
     code: 'Cholesterol',
     loinc: '2093-3',
     names: {
@@ -234,7 +229,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'coracao',
     code: 'Cholesterol_HDL_Ratio',
     codeAliases: ['CholHDL_Ratio'],
     loinc: '9830-1',
@@ -253,7 +247,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'razão',
   },
   {
-    category: 'coracao',
     code: 'Triglycerides',
     loinc: '2571-8',
     names: {
@@ -263,7 +256,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'coracao',
     code: 'VLDL',
     codeAliases: ['VLDL_Cholesterol'],
     loinc: '13458-5',
@@ -278,7 +270,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // CORONARY ARTERY CALCIUM (CAC) SCORE
   // ============================================================================
   {
-    category: 'coracao',
     code: 'CAC',
     hidden: true,
     names: {
@@ -300,20 +291,20 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Cálcio Coronariano',
       ],
     },
+    section: 'CT',
     unit: 'AU',
   },
   {
-    category: 'coracao',
     code: 'CAC_LMA',
     hidden: true,
     names: {
       en: ['Left Main Artery Calcium', 'LMA Calcium Score', 'Left Main Calcium'],
       pt: ['Cálcio Tronco Coronária Esquerda', 'Cálcio TCE', 'Cálcio Artéria Coronária Esquerda'],
     },
+    section: 'CT',
     unit: 'AU',
   },
   {
-    category: 'coracao',
     code: 'CAC_LAD',
     hidden: true,
     names: {
@@ -324,30 +315,30 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Cálcio Artéria Descendente Anterior',
       ],
     },
+    section: 'CT',
     unit: 'AU',
   },
   {
-    category: 'coracao',
     code: 'CAC_LCX',
     hidden: true,
     names: {
       en: ['Left Circumflex Calcium', 'LCX Calcium Score', 'LCX Calcium', 'Circumflex Calcium'],
       pt: ['Cálcio Circunflexa', 'Cálcio CX', 'Cálcio Artéria Circunflexa'],
     },
+    section: 'CT',
     unit: 'AU',
   },
   {
-    category: 'coracao',
     code: 'CAC_RCA',
     hidden: true,
     names: {
       en: ['Right Coronary Artery Calcium', 'RCA Calcium Score', 'RCA Calcium'],
       pt: ['Cálcio Coronária Direita', 'Cálcio CD', 'Cálcio Artéria Coronária Direita'],
     },
+    section: 'CT',
     unit: 'AU',
   },
   {
-    category: 'coracao',
     code: 'CAC_Percentile',
     names: {
       en: [
@@ -358,21 +349,21 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       ],
       pt: ['Percentil CAC', 'Percentil MESA', 'Percentil do Escore de Cálcio'],
     },
+    section: 'CT',
     unit: '%',
   },
   {
-    category: 'coracao',
     code: 'AorticValveCalcium',
     hidden: true,
     names: {
       en: ['Aortic Valve Calcium Score', 'Aortic Valve Calcium', 'AVC Score'],
       pt: ['Cálcio Valva Aórtica', 'Escore de Cálcio Valva Aórtica', 'Cálcio Válvula Aórtica'],
     },
+    section: 'CT',
     unit: 'AU',
   },
 
   {
-    category: 'coracao',
     code: 'ApoA1',
     codeAliases: ['Apolipoprotein_A1'],
     loinc: '1869-7',
@@ -387,7 +378,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // THYROID / TIREOIDE
   // ============================================================================
   {
-    category: 'tireoide',
     code: 'AntiThyroglobulin',
     loinc: '8098-6',
     names: {
@@ -410,7 +400,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'IU/mL',
   },
   {
-    category: 'tireoide',
     code: 'AntiTPO',
     loinc: '8099-4',
     names: {
@@ -425,7 +414,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'IU/mL',
   },
   {
-    category: 'tireoide',
     code: 'TSH',
     loinc: '3016-3',
     names: {
@@ -435,7 +423,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'uIU/mL',
   },
   {
-    category: 'tireoide',
     code: 'T4Free',
     loinc: '3024-7',
     names: {
@@ -453,7 +440,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'ng/dL',
   },
   {
-    category: 'tireoide',
     code: 'Thyroglobulin',
     // 3013-0 é a tireoglobulina sérica em massa/volume (ng/mL), a forma que o
     // laboratório reporta. Não a de moles/volume (14918-7) nem os painéis.
@@ -465,7 +451,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'ng/mL',
   },
   {
-    category: 'tireoide',
     code: 'T3Free',
     loinc: '3051-0',
     names: {
@@ -475,7 +460,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'pg/mL',
   },
   {
-    category: 'tireoide',
     code: 'T3Total',
     // 3053-6 é "Triiodothyronine (T3) [Mass/volume] in Serum or Plasma", o T3
     // total, conferido no fhir.loinc.org em out/2026. O catálogo só tinha o
@@ -491,7 +475,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'ng/dL',
   },
   {
-    category: 'tireoide',
     code: 'T4Total',
     codeAliases: ['Tiroxina_T4', 'Thyroxine_T4_serum'],
     loinc: '3026-2',
@@ -506,7 +489,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // AUTOIMMUNITY / AUTOIMUNIDADE
   // ============================================================================
   {
-    category: 'autoimunidade',
     code: 'ANA_Screen',
     loinc: '8061-4',
     names: {
@@ -515,7 +497,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     },
   },
   {
-    category: 'autoimunidade',
     code: 'RheumatoidFactor',
     loinc: '11572-5',
     names: {
@@ -525,7 +506,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'IU/mL',
   },
   {
-    category: 'autoimunidade',
     code: 'AntiCCP',
     loinc: '33935-8',
     names: {
@@ -545,7 +525,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'U/mL',
   },
   {
-    category: 'autoimunidade',
     code: 'MPO_Antibody',
     loinc: '6969-0',
     names: {
@@ -560,7 +539,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'AI',
   },
   {
-    category: 'autoimunidade',
     code: 'pANCA',
     // Título, como a Quest imprime ("<1:20"). Laudo só com negativo ou positivo
     // pediria o 30539-1 (presença); ver o registro de decisão.
@@ -572,7 +550,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'titer',
   },
   {
-    category: 'autoimunidade',
     code: 'AntiDsDNA',
     loinc: '5130-0',
     names: {
@@ -588,7 +565,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'IU/mL',
   },
   {
-    category: 'autoimunidade',
     code: 'AntiSm',
     loinc: '11090-8',
     names: {
@@ -598,7 +574,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'AI',
   },
   {
-    category: 'autoimunidade',
     code: 'AntiRNP',
     loinc: '29374-6',
     names: {
@@ -608,7 +583,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'AI',
   },
   {
-    category: 'autoimunidade',
     code: 'AntiSSA',
     loinc: '17792-3',
     names: {
@@ -624,7 +598,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'AI',
   },
   {
-    category: 'autoimunidade',
     code: 'AntiSSB',
     loinc: '17791-5',
     names: {
@@ -640,7 +613,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'AI',
   },
   {
-    category: 'autoimunidade',
     code: 'AntiScl70',
     loinc: '27416-7',
     names: {
@@ -650,7 +622,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'AI',
   },
   {
-    category: 'autoimunidade',
     code: 'AntiJo1',
     loinc: '11565-9',
     names: {
@@ -667,7 +638,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // laudo em colunas da Labcorp imprime o diferencial. Sem eles a âncora não
   // achava a linha e a leitura do modelo era recusada como alucinação.
   {
-    category: 'regulacao-imunologica',
     code: 'Basophils',
     loinc: '706-2',
     names: {
@@ -677,7 +647,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '%',
   },
   {
-    category: 'regulacao-imunologica',
     code: 'Basophils_Abs',
     hidden: true,
     loinc: '704-7',
@@ -688,7 +657,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'K/uL',
   },
   {
-    category: 'regulacao-imunologica',
     code: 'Eosinophils',
     loinc: '713-8',
     names: {
@@ -698,7 +666,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '%',
   },
   {
-    category: 'regulacao-imunologica',
     code: 'Eosinophils_Abs',
     hidden: true,
     loinc: '711-2',
@@ -709,7 +676,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'K/uL',
   },
   {
-    category: 'regulacao-imunologica',
     code: 'Lymphocytes',
     loinc: '736-9',
     names: {
@@ -719,7 +685,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '%',
   },
   {
-    category: 'regulacao-imunologica',
     code: 'Lymphocytes_Abs',
     hidden: true,
     loinc: '731-0',
@@ -730,7 +695,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'K/uL',
   },
   {
-    category: 'regulacao-imunologica',
     code: 'Monocytes',
     loinc: '5905-5',
     names: {
@@ -740,7 +704,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '%',
   },
   {
-    category: 'regulacao-imunologica',
     code: 'Monocytes_Abs',
     hidden: true,
     loinc: '742-7',
@@ -751,7 +714,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'K/uL',
   },
   {
-    category: 'regulacao-imunologica',
     code: 'Neutrophils',
     loinc: '770-8',
     names: {
@@ -766,7 +728,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '%',
   },
   {
-    category: 'regulacao-imunologica',
     code: 'Neutrophils_Abs',
     hidden: true,
     loinc: '751-8',
@@ -777,7 +738,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'K/uL',
   },
   {
-    category: 'regulacao-imunologica',
     code: 'ImmatureGranulocytes',
     // Contagem automatizada, como o resto do leucograma do catálogo.
     loinc: '71695-1',
@@ -788,7 +748,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '%',
   },
   {
-    category: 'regulacao-imunologica',
     code: 'ImmatureGranulocytes_Abs',
     hidden: true,
     loinc: '53115-2',
@@ -803,7 +762,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'K/uL',
   },
   {
-    category: 'sangue',
     code: 'NRBC',
     loinc: '58413-6',
     names: {
@@ -813,7 +771,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '/100 WBC',
   },
   {
-    category: 'sangue',
     code: 'NRBC_Abs',
     hidden: true,
     loinc: '771-6',
@@ -824,7 +781,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'K/uL',
   },
   {
-    category: 'regulacao-imunologica',
     code: 'WBC',
     loinc: '6690-2',
     names: {
@@ -834,7 +790,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'K/uL',
   },
   {
-    category: 'regulacao-imunologica',
     code: 'IgA',
     loinc: '2458-8',
     names: {
@@ -844,7 +799,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'regulacao-imunologica',
     code: 'IgG',
     codeAliases: ['IgG_Immunoglobulin', 'Immunoglobulin_G'],
     loinc: '2465-3',
@@ -855,7 +809,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'regulacao-imunologica',
     code: 'IgE_Total',
     codeAliases: ['IgE_Immunoglobulin', 'Total_IgE'],
     loinc: '19113-0',
@@ -866,7 +819,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'IU/mL',
   },
   {
-    category: 'regulacao-imunologica',
     code: 'IgE_E1_CatDander',
     codeAliases: ['IgE_Cat_Dander', 'IgE_E1', 'IgE_Specific_E1__Cat_Dander'],
     loinc: '6833-8',
@@ -877,7 +829,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'kU/L',
   },
   {
-    category: 'regulacao-imunologica',
     code: 'IgE_GX1_Grasses',
     codeAliases: ['IgE_GX1', 'IgE_Grass_Pollen', 'IgE_Specific_GX1__Grasses'],
     loinc: '30189-5',
@@ -892,7 +843,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // WOMEN'S HEALTH / SAUDE-FEMININA
   // ============================================================================
   {
-    category: 'saude-feminina',
     code: 'AMH',
     loinc: '38476-8',
     names: {
@@ -903,7 +853,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'ng/mL',
   },
   {
-    category: ['saude-feminina', 'saude-masculina'],
     code: 'DHEAS',
     loinc: '2191-5',
     names: {
@@ -913,7 +862,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mcg/dL',
   },
   {
-    category: ['saude-feminina', 'saude-masculina'],
     code: 'Estradiol',
     loinc: '2243-4',
     names: {
@@ -923,7 +871,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'pg/mL',
   },
   {
-    category: ['saude-feminina', 'saude-masculina'],
     code: 'Estrone',
     // https://loinc.org/2258-2: estrona em soro/plasma, massa/volume,
     // sem fração ou método especificado. Conferido no LOINC 2.83 em
@@ -936,7 +883,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'pg/mL',
   },
   {
-    category: ['saude-feminina', 'saude-masculina'],
     code: 'FSH',
     loinc: '15067-2',
     names: {
@@ -946,7 +892,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mIU/mL',
   },
   {
-    category: ['saude-feminina', 'saude-masculina'],
     code: 'LH',
     loinc: '10501-5',
     names: {
@@ -956,7 +901,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mIU/mL',
   },
   {
-    category: ['saude-feminina', 'saude-masculina'],
     code: 'Prolactin',
     loinc: '2842-3',
     names: {
@@ -966,7 +910,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'ng/mL',
   },
   {
-    category: ['saude-feminina', 'saude-masculina'],
     code: 'SHBG',
     loinc: '13967-5',
     names: {
@@ -976,7 +919,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'nmol/L',
   },
   {
-    category: ['saude-feminina', 'saude-masculina'],
     code: 'TestosteroneFree',
     loinc: '2991-8',
     names: {
@@ -993,7 +935,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'pg/mL',
   },
   {
-    category: ['saude-feminina', 'saude-masculina'],
     code: 'Testosterone',
     loinc: '2986-8',
     names: {
@@ -1003,7 +944,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'ng/dL',
   },
   {
-    category: 'saude-feminina',
     code: 'Progesterone',
     loinc: '2839-9',
     names: {
@@ -1018,7 +958,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // MEN'S HEALTH / SAUDE-MASCULINA
   // ============================================================================
   {
-    category: 'saude-masculina',
     code: 'PSA',
     loinc: '2857-1',
     names: {
@@ -1029,7 +968,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'ng/mL',
   },
   {
-    category: 'saude-masculina',
     code: 'PSA_Free',
     loinc: '10886-0',
     names: {
@@ -1040,7 +978,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'ng/mL',
   },
   {
-    category: 'saude-masculina',
     code: 'PSA_FreeRatio',
     loinc: '12841-3',
     names: {
@@ -1051,7 +988,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '%',
   },
   {
-    category: 'hormonios',
     code: 'DHT',
     codeAliases: ['Dihydrotestosterone'],
     loinc: '1848-1',
@@ -1079,7 +1015,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // faixa `fastingRequired: 'strict'`: o código dizia genérico e a faixa dizia
   // jejum. A grafia é que decide agora.
   {
-    category: 'metabolico',
     code: 'Glucose',
     loinc: '2345-7',
     names: {
@@ -1089,7 +1024,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'metabolico',
     code: 'Glucose_Fasting',
     loinc: '1558-6',
     names: {
@@ -1099,7 +1033,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'metabolico',
     code: 'HbA1c',
     loinc: '4548-4',
     names: {
@@ -1109,7 +1042,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '%',
   },
   {
-    category: 'metabolico',
     code: 'eAG',
     codeAliases: ['Estimated_Average_Glucose'],
     loinc: '27353-2',
@@ -1120,7 +1052,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'metabolico',
     code: 'Insulin',
     loinc: '20448-7',
     names: {
@@ -1130,7 +1061,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'uIU/mL',
   },
   {
-    category: 'metabolico',
     code: 'CPeptide',
     loinc: '1986-9',
     names: {
@@ -1140,7 +1070,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'ng/mL',
   },
   {
-    category: 'metabolico',
     code: 'HOMA_IR',
     loinc: '47214-2',
     names: {
@@ -1157,7 +1086,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'índice',
   },
   {
-    category: 'metabolico',
     code: 'Leptin',
     loinc: '21365-2',
     names: {
@@ -1167,7 +1095,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'ng/mL',
   },
   {
-    category: 'metabolico',
     code: 'UricAcid',
     loinc: '3084-1',
     names: {
@@ -1177,7 +1104,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'metabolico',
     code: 'CK',
     codeAliases: ['Creatine_Kinase', 'CK_Total'],
     loinc: '2157-6',
@@ -1192,7 +1118,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // ENVIRONMENTAL TOXINS / TOXINAS-AMBIENTAIS
   // ============================================================================
   {
-    category: 'toxinas-ambientais',
     code: 'Lead',
     loinc: '77307-7',
     names: {
@@ -1202,7 +1127,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mcg/dL',
   },
   {
-    category: 'toxinas-ambientais',
     code: 'Mercury',
     loinc: '5685-3',
     names: {
@@ -1216,7 +1140,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // NUTRIENTS / NUTRIENTES
   // ============================================================================
   {
-    category: 'nutrientes',
     code: 'AA_EPA_Ratio',
     codeAliases: ['Arachidonic_AcidEPA_Ratio'],
     loinc: '90909-3',
@@ -1227,7 +1150,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'razão',
   },
   {
-    category: 'nutrientes',
     code: 'Calcium',
     loinc: '17861-6',
     names: {
@@ -1237,7 +1159,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'nutrientes',
     code: 'Phosphorus',
     loinc: '2777-1',
     names: {
@@ -1247,7 +1168,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'nutrientes',
     code: 'IonizedCalcium',
     // 1995-0 é o conceito base em soro ou plasma, em mmol/L, como o laudo
     // brasileiro imprime. A Quest imprime em mg/dL; a conversão pela massa
@@ -1260,7 +1180,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mmol/L',
   },
   {
-    category: 'nutrientes',
     code: 'Ferritin',
     loinc: '2276-4',
     names: {
@@ -1270,7 +1189,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'ng/mL',
   },
   {
-    category: 'nutrientes',
     code: 'Folate',
     loinc: '2284-8',
     names: {
@@ -1280,7 +1198,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'ng/mL',
   },
   {
-    category: 'nutrientes',
     code: 'Homocysteine',
     loinc: '13965-9',
     names: {
@@ -1290,7 +1207,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'umol/L',
   },
   {
-    category: 'nutrientes',
     code: 'Iron',
     loinc: '2498-4',
     names: {
@@ -1300,7 +1216,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mcg/dL',
   },
   {
-    category: 'nutrientes',
     code: 'TransferrinSaturation',
     codeAliases: ['Saturation_of_Transferrin'],
     loinc: '2502-3',
@@ -1326,7 +1241,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '%',
   },
   {
-    category: 'nutrientes',
     code: 'TIBC',
     loinc: '2500-7',
     names: {
@@ -1342,7 +1256,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mcg/dL',
   },
   {
-    category: 'nutrientes',
     code: 'Transferrin',
     loinc: '3034-6',
     names: {
@@ -1352,7 +1265,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'nutrientes',
     code: 'Magnesium_RBC',
     loinc: '26746-8',
     names: {
@@ -1368,7 +1280,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'nutrientes',
     code: 'Magnesium',
     // Magnésio sérico em massa/volume. Distinto do Magnesium_RBC (26746-8),
     // que mede a fração intraeritrocitária.
@@ -1380,7 +1291,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'nutrientes',
     code: 'MMA',
     loinc: '13964-2',
     names: {
@@ -1401,7 +1311,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     // propriedade é moles/volume enquanto o laudo imprime %. O teste de eixos
     // (`loinc-axes.test.ts`) lista esta entrada como exceção com este motivo.
     // Mesmo compromisso em `Omega6_Total` (99621-5).
-    category: 'nutrientes',
     code: 'Omega3_Total',
     loinc: '99620-7',
     names: {
@@ -1413,7 +1322,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '%',
   },
   {
-    category: 'nutrientes',
     code: 'Omega3_DHA',
     codeAliases: ['DHA'],
     // Ácidos graxos individuais: fração do total (% dos ácidos graxos C14-C22),
@@ -1435,7 +1343,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '%',
   },
   {
-    category: 'nutrientes',
     code: 'Omega3_DPA',
     codeAliases: ['DPA'],
     // Fração em sangue, painel 90918-4. Ver `Omega3_DHA`.
@@ -1448,7 +1355,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '%',
   },
   {
-    category: 'nutrientes',
     code: 'Omega3_EPA',
     codeAliases: ['EPA'],
     // Fração em sangue, painel 90918-4. Ver `Omega3_DHA`.
@@ -1461,7 +1367,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '%',
   },
   {
-    category: 'nutrientes',
     code: 'EPADPADHA',
     // 90911-9 é a fração EPA+DPA+DHA / ácidos graxos C14-C22 em sangue, o
     // valor em %. Até out/2026 apontava para 90908-5, que é a *interpretação*
@@ -1476,7 +1381,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '%',
   },
   {
-    category: 'nutrientes',
     code: 'Omega6_Omega3_Ratio',
     codeAliases: ['Omega6Omega3_Ratio'],
     loinc: '90910-1',
@@ -1487,7 +1391,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'razão',
   },
   {
-    category: 'nutrientes',
     code: 'Omega6_Total',
     // 99621-5 é "Omega 6 fatty acids (w6) [Moles/volume] in RBC.lysate", o
     // par exato do 99620-7 de `Omega3_Total`, com o mesmo compromisso de
@@ -1503,7 +1406,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '%',
   },
   {
-    category: 'nutrientes',
     code: 'Omega6_AA',
     codeAliases: ['Arachidonic_Acid'],
     // Fração em sangue, painel 90918-4. Ver `Omega3_DHA`.
@@ -1516,7 +1418,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '%',
   },
   {
-    category: 'nutrientes',
     code: 'Omega6_LA',
     codeAliases: ['Linoleic_Acid'],
     // Fração em sangue, painel 90918-4. Ver `Omega3_DHA`.
@@ -1529,7 +1430,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '%',
   },
   {
-    category: 'nutrientes',
     code: 'VitaminA',
     loinc: '2923-1',
     names: {
@@ -1539,7 +1439,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mcg/dL',
   },
   {
-    category: 'nutrientes',
     code: 'VitaminB12',
     loinc: '2132-9',
     names: {
@@ -1558,7 +1457,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'pg/mL',
   },
   {
-    category: 'nutrientes',
     code: 'VitaminC',
     loinc: '1903-4',
     names: {
@@ -1575,7 +1473,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'nutrientes',
     code: 'VitaminD',
     // 62292-8 é 25(OH)D2 + 25(OH)D3, o total que os imunoensaios reportam
     // como "Vitamina D 25-OH". Até set/2026 apontava para 1989-3, que é só
@@ -1603,7 +1500,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'ng/mL',
   },
   {
-    category: 'nutrientes',
     code: 'VitaminD2',
     // A Quest imprime as frações ao lado do total quando a dosagem é por
     // LC/MS/MS. O total continua em `VitaminD` (62292-8).
@@ -1615,7 +1511,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'ng/mL',
   },
   {
-    category: 'nutrientes',
     code: 'VitaminD3',
     // 1989-3 é a fração D3, e não o total: até set/2026 era o código errado
     // de `VitaminD`.
@@ -1627,7 +1522,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'ng/mL',
   },
   {
-    category: 'nutrientes',
     code: 'Zinc',
     // 5763-8 é "Zinc [Mass/volume] in Serum or Plasma", o zinco sérico da
     // rotina brasileira (o nome em inglês já dizia "Serum Zinc"). Até out/2026
@@ -1645,7 +1539,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // STRESS & AGING / ESTRESSE-ENVELHECIMENTO
   // ============================================================================
   {
-    category: 'estresse-envelhecimento',
     code: 'Cortisol',
     loinc: '2143-6',
     names: {
@@ -1655,7 +1548,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mcg/dL',
   },
   {
-    category: 'estresse-envelhecimento',
     code: 'IGF1',
     loinc: '2484-4',
     names: {
@@ -1676,7 +1568,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // LIVER / FIGADO
   // ============================================================================
   {
-    category: 'figado',
     code: 'ALT',
     loinc: '1742-6',
     names: {
@@ -1694,7 +1585,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'U/L',
   },
   {
-    category: 'figado',
     code: 'Albumin',
     loinc: '1751-7',
     names: {
@@ -1704,7 +1594,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'g/dL',
   },
   {
-    category: 'figado',
     code: 'Albumin_Globulin_Ratio',
     codeAliases: ['AG_Ratio'],
     loinc: '1759-0',
@@ -1715,7 +1604,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'razão',
   },
   {
-    category: 'figado',
     code: 'AlkalinePhosphatase',
     loinc: '6768-6',
     names: {
@@ -1725,7 +1613,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'U/L',
   },
   {
-    category: 'figado',
     code: 'AST',
     loinc: '1920-8',
     names: {
@@ -1743,7 +1630,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'U/L',
   },
   {
-    category: 'figado',
     code: 'GGT',
     loinc: '2324-2',
     names: {
@@ -1753,7 +1639,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'U/L',
   },
   {
-    category: 'figado',
     code: 'Globulin',
     // 2336-6 é "Globulin [Mass/volume] in Serum", soro só: o LOINC 2.82 não
     // tem a versão Ser/Plas da globulina total (as frações alfa, beta e gama
@@ -1766,7 +1651,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'g/dL',
   },
   {
-    category: 'figado',
     code: 'TotalProtein',
     loinc: '2885-2',
     names: {
@@ -1781,7 +1665,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'g/dL',
   },
   {
-    category: 'figado',
     code: 'BilirubinTotal',
     loinc: '1975-2',
     names: {
@@ -1791,7 +1674,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'figado',
     code: 'BilirubinDirect',
     codeAliases: ['Bilirubin_Direct', 'Direct_Bilirubin', 'Bilirrubina_Direta'],
     loinc: '1968-7',
@@ -1802,7 +1684,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'figado',
     code: 'BilirubinIndirect',
     codeAliases: ['Bilirubin_Indirect', 'Indirect_Bilirubin', 'Bilirrubina_Indireta'],
     loinc: '1971-1',
@@ -1817,7 +1698,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // BLOOD / SANGUE
   // ============================================================================
   {
-    category: 'sangue',
     code: 'Hct',
     loinc: '4544-3',
     names: {
@@ -1827,7 +1707,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '%',
   },
   {
-    category: 'sangue',
     code: 'Hgb',
     loinc: '718-7',
     names: {
@@ -1837,7 +1716,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'g/dL',
   },
   {
-    category: 'sangue',
     code: 'MCH',
     loinc: '785-6',
     names: {
@@ -1847,7 +1725,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'pg',
   },
   {
-    category: 'sangue',
     code: 'MCHC',
     loinc: '786-4',
     names: {
@@ -1857,7 +1734,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'g/dL',
   },
   {
-    category: 'sangue',
     code: 'MCV',
     loinc: '787-2',
     names: {
@@ -1867,7 +1743,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'fL',
   },
   {
-    category: 'sangue',
     code: 'MPV',
     loinc: '32623-1',
     names: {
@@ -1877,7 +1752,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'fL',
   },
   {
-    category: 'sangue',
     code: 'Platelets',
     loinc: '777-3',
     names: {
@@ -1887,7 +1761,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'K/uL',
   },
   {
-    category: 'sangue',
     code: 'RBC',
     loinc: '789-8',
     names: {
@@ -1897,7 +1770,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'M/uL',
   },
   {
-    category: 'sangue',
     code: 'RDW',
     loinc: '788-0',
     names: {
@@ -1911,7 +1783,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '%',
   },
   {
-    category: 'sangue',
     code: 'ABO_Group',
     hidden: true,
     loinc: '883-9',
@@ -1921,7 +1792,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     },
   },
   {
-    category: 'sangue',
     code: 'Rh_Type',
     hidden: true,
     loinc: '10331-7',
@@ -1931,7 +1801,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     },
   },
   {
-    category: 'sangue',
     code: 'ESR',
     codeAliases: ['Erythrocyte_Sedimentation_Rate', 'VHS'],
     loinc: '30341-2',
@@ -1942,7 +1811,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mm/hr',
   },
   {
-    category: 'sangue',
     code: 'INR',
     codeAliases: ['International_Normalized_Ratio'],
     loinc: '6301-6',
@@ -1953,7 +1821,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'razão',
   },
   {
-    category: 'sangue',
     code: 'ProthrombinTime',
     codeAliases: ['Prothrombin_Time', 'PT_Time'],
     loinc: '5902-2',
@@ -1964,7 +1831,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'segundos',
   },
   {
-    category: 'sangue',
     code: 'APTT',
     // Plasma pobre em plaquetas, ensaio de coagulação. A variante sensível a
     // anticoagulante lúpico (34571-0) é outro teste.
@@ -1983,7 +1849,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 's',
   },
   {
-    category: 'sangue',
     code: 'Reticulocytes',
     codeAliases: ['Reticulocyte_Count', 'Reticulocyte_Fraction'],
     loinc: '4679-7',
@@ -1998,7 +1863,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // KIDNEYS / RINS
   // ============================================================================
   {
-    category: 'rins',
     code: 'Microalbumin_Urine',
     codeAliases: ['Urine_Microalbumin'],
     loinc: '14957-5',
@@ -2046,7 +1910,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/L',
   },
   {
-    category: 'rins',
     code: 'ProteinCreatinineRatio_Urine',
     loinc: '2890-2',
     names: {
@@ -2070,7 +1933,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     // de referência brasileira (15-50 mg/dL) e com os nomes pt-BR (Ureia).
     // Aliases 'BUN' e 'Blood Urea Nitrogen' removidos para evitar matching
     // de relatórios de BUN contra faixas de Ureia (BUN ≈ Ureia / 2,14).
-    category: 'rins',
     code: 'Urea',
     loinc: '3091-6',
     names: {
@@ -2092,7 +1954,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     // Clinical Methods, 3. ed., cap. 193: "The normal range of urea nitrogen in
     // blood or serum is 5 to 20 mg/dl, or 1.8 to 7.1 mmol urea per liter." O
     // capítulo não publica intervalo ótimo, e a faixa fica sem um.
-    category: 'rins',
     code: 'BUN',
     loinc: '3094-0',
     names: {
@@ -2102,7 +1963,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'rins',
     code: 'BUN_Creatinine_Ratio',
     // 3097-3 é "Urea nitrogen/Creatinine [Mass Ratio]", a razão BUN/creatinina,
     // e a faixa de referência (10-20, Tietz) é a dessa convenção. Até out/2026
@@ -2121,7 +1981,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'razão',
   },
   {
-    category: 'rins',
     code: 'Urea_Creatinine_Ratio',
     // 56997-0 é "Urea/Creatinine [Mass Ratio] in Serum or Plasma": a mesma
     // propriedade (MRto) e o mesmo material de 3097-3, com componente ureia
@@ -2140,7 +1999,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'razão',
   },
   {
-    category: 'rins',
     code: 'Creatinine',
     loinc: '2160-0',
     names: {
@@ -2150,7 +2008,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'rins',
     code: 'eGFR',
     codeAliases: ['CKDEPI_2021', 'CKDEPI_eGFR_2021', 'eGFR_CKDEPI_2021', 'eGFR_MDRD'],
     loinc: '98979-8',
@@ -2185,7 +2042,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mL/min/1.73m²',
   },
   {
-    category: 'rins',
     code: 'Potassium',
     loinc: '2823-3',
     names: {
@@ -2195,7 +2051,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mEq/L',
   },
   {
-    category: 'rins',
     code: 'Sodium',
     loinc: '2951-2',
     names: {
@@ -2205,7 +2060,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mEq/L',
   },
   {
-    category: 'rins',
     code: 'AnionGap',
     // Conceito base, calculado: o laudo não diz se entrou o potássio. O
     // painel metabólico americano imprime o resultado; o brasileiro raramente.
@@ -2217,7 +2071,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mEq/L',
   },
   {
-    category: 'rins',
     code: 'Creatinine_Urine',
     codeAliases: ['Urine_Creatinine'],
     loinc: '2161-8',
@@ -2228,7 +2081,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'rins',
     code: 'Albumin_Creatinine_Ratio',
     codeAliases: ['ACR'],
     loinc: '9318-7',
@@ -2253,7 +2105,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // PANCREAS
   // ============================================================================
   {
-    category: 'pancreas',
     code: 'Amylase',
     loinc: '1798-8',
     names: {
@@ -2263,7 +2114,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'U/L',
   },
   {
-    category: 'pancreas',
     code: 'Lipase',
     loinc: '3040-3',
     names: {
@@ -2277,7 +2127,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // ELECTROLYTES / ELETROLITOS
   // ============================================================================
   {
-    category: 'eletrolitos',
     code: 'CO2',
     loinc: '2028-9',
     names: {
@@ -2287,7 +2136,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mEq/L',
   },
   {
-    category: 'eletrolitos',
     code: 'Chloride',
     loinc: '2075-0',
     names: {
@@ -2301,7 +2149,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // URINE / URINA
   // ============================================================================
   {
-    category: 'urina',
     code: 'Appearance_Urine',
     codeAliases: ['UrineAppearance'],
     loinc: '5767-9',
@@ -2311,7 +2158,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     },
   },
   {
-    category: 'urina',
     code: 'Bacteria_Urine',
     codeAliases: ['UrineBacteria'],
     // 5769-5 é "Bacteria [#/area] in Urine sediment by Microscopy high power
@@ -2327,7 +2173,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '/HPF',
   },
   {
-    category: 'urina',
     code: 'Bilirubin_Urine',
     codeAliases: ['UrineBilirubin'],
     loinc: '5770-3',
@@ -2337,7 +2182,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     },
   },
   {
-    category: 'urina',
     code: 'Blood_Urine',
     codeAliases: ['UrineBlood'],
     loinc: '5794-3',
@@ -2347,7 +2191,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     },
   },
   {
-    category: 'urina',
     code: 'Color_Urine',
     codeAliases: ['UrineColor'],
     loinc: '5778-6',
@@ -2357,7 +2200,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     },
   },
   {
-    category: 'urina',
     code: 'Glucose_Urine',
     // 25428-4 é "Glucose [Presence] in Urine by Test strip": o EAS brasileiro
     // imprime glicose como Negativo, Traços ou cruzes, resultado qualitativo,
@@ -2371,7 +2213,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     },
   },
   {
-    category: 'urina',
     code: 'HyalineCasts_Urine',
     codeAliases: ['UrineHyalineCast'],
     loinc: '5796-8',
@@ -2382,7 +2223,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '/LPF',
   },
   {
-    category: 'urina',
     code: 'Ketones_Urine',
     codeAliases: ['UrineKetones'],
     // 2514-8 é "Ketones [Presence] in Urine by Test strip": o EAS imprime
@@ -2394,9 +2234,11 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Urine Ketones', 'Ketones Urine', 'Ketones, Urine', 'Ketones'],
       pt: ['Cetonas na Urina', 'Cetonas'],
     },
+    // O código é de classe CHEM no LOINC, mas o laudo imprime as cetonas na
+    // fita da urina tipo I, e é ali que a ancoragem da urinálise as procura.
+    section: 'URN',
   },
   {
-    category: 'urina',
     code: 'LeukocyteEsterase_Urine',
     loinc: '5799-2',
     names: {
@@ -2405,7 +2247,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     },
   },
   {
-    category: 'urina',
     code: 'Leukocytes_Urine',
     codeAliases: ['UrineLeukocytes'],
     loinc: '5821-4',
@@ -2416,7 +2257,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '/HPF',
   },
   {
-    category: 'urina',
     code: 'Nitrite_Urine',
     codeAliases: ['UrineNitrite'],
     loinc: '5802-4',
@@ -2426,7 +2266,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     },
   },
   {
-    category: 'urina',
     code: 'pH_Urine',
     codeAliases: ['UrinaryPH'],
     loinc: '5803-2',
@@ -2436,7 +2275,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     },
   },
   {
-    category: 'urina',
     code: 'Protein_Urine',
     // 20454-5 é "Protein [Presence] in Urine by Test strip": o EAS imprime
     // Negativo, Traços ou cruzes, propriedade PrThr. Até out/2026 apontava para
@@ -2449,7 +2287,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     },
   },
   {
-    category: 'urina',
     code: 'RBC_Urine',
     // 13945-1 é "Erythrocytes [#/area] in Urine sediment by Microscopy high
     // power field", o /HPF que o laudo imprime e que `Leukocytes_Urine` já usa
@@ -2466,7 +2303,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '/HPF',
   },
   {
-    category: 'urina',
     code: 'SpecificGravity_Urine',
     codeAliases: ['SpecificGravity'],
     loinc: '5811-5',
@@ -2481,7 +2317,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     },
   },
   {
-    category: 'urina',
     code: 'SquamousEpithelial_Urine',
     codeAliases: ['UrineSquamousEpithelial'],
     loinc: '11277-1',
@@ -2497,7 +2332,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '/HPF',
   },
   {
-    category: 'urina',
     code: 'Urobilinogen_Urine',
     codeAliases: ['Urine_Urobilinogen'],
     loinc: '20405-7',
@@ -2512,7 +2346,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // TUMOR MARKERS / MARCADORES TUMORAIS
   // ============================================================================
   {
-    category: 'marcadores-tumorais',
     code: 'AFP',
     codeAliases: ['AlfaFetoproteina', 'Alfa_Fetoprotena'],
     loinc: '1834-1',
@@ -2523,7 +2356,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'ng/mL',
   },
   {
-    category: 'marcadores-tumorais',
     code: 'CA125',
     codeAliases: ['CA_125'],
     loinc: '10334-1',
@@ -2535,7 +2367,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'U/mL',
   },
   {
-    category: 'marcadores-tumorais',
     code: 'CEA',
     codeAliases: ['Carcinoembryonic_Antigen_CEA_Serum'],
     loinc: '2039-6',
@@ -2554,7 +2385,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
 
   // --- CELIAC / GLUTEN INTOLERANCE (Add-on) ---
   {
-    category: 'autoimunidade',
     code: 'Gliadin_Deamidated_IgA',
     // 63453-5 e 63459-2 (IgG) afirmam método, "by Immunoassay", e material,
     // "Serum". É o que os kits de DGP usam. A propriedade é unidades
@@ -2576,7 +2406,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'U/mL',
   },
   {
-    category: 'autoimunidade',
     code: 'Gliadin_Deamidated_IgG',
     loinc: '63459-2',
     names: {
@@ -2594,7 +2423,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'U/mL',
   },
   {
-    category: 'autoimunidade',
     code: 'tTG_IgA',
     loinc: '31017-7',
     names: {
@@ -2613,7 +2441,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'U/mL',
   },
   {
-    category: 'autoimunidade',
     code: 'tTG_IgG',
     loinc: '32998-7',
     names: {
@@ -2636,7 +2463,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // CARDIOVASCULAR GENETICS / GENÉTICA CARDIOVASCULAR
   // ============================================================================
   {
-    category: 'coracao',
     code: 'APOE_Genotype',
     loinc: '21619-2',
     names: {
@@ -2655,7 +2481,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // METABOLIC ADD-ONS / MARCADORES METABÓLICOS ADICIONAIS
   // ============================================================================
   {
-    category: 'metabolico',
     code: 'Adiponectin',
     loinc: '47828-9',
     names: {
@@ -2669,7 +2494,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // BODY COMPOSITION / COMPOSIÇÃO CORPORAL (DEXA Scan)
   // ============================================================================
   {
-    category: 'composicao-corporal',
     code: 'BMI',
     codeAliases: ['Body_Mass_Index'],
     loinc: '39156-5',
@@ -2680,7 +2504,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'kg/m2',
   },
   {
-    category: 'composicao-corporal',
     code: 'BodyFatPct',
     loinc: '41982-0',
     names: {
@@ -2714,7 +2537,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '%',
   },
   {
-    category: 'composicao-corporal',
     code: 'FatMass',
     loinc: '73708-0',
     names: {
@@ -2737,7 +2559,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // magro sem mineral ósseo; ver a auditoria de 09/10/2026.
   // Quem quer massa muscular usa MuscleMass, abaixo.
   {
-    category: 'composicao-corporal',
     code: 'LeanMass',
     names: {
       // "Total Lean" é a coluna "Total Lean (lbs)" da mesma tabela de
@@ -2754,10 +2575,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       ],
       pt: ['Massa Magra', 'Massa Corporal Magra', 'Tecido Magro', 'Massa Magra Total'],
     },
+    section: 'OTH',
     unit: 'kg',
   },
   {
-    category: 'composicao-corporal',
     code: 'BMC',
     // 101685-6 (Body bone mass) é candidato, mas não explicita mineral ósseo.
     // A equivalência com BMC de DXA permanece em revisão.
@@ -2777,10 +2598,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'CMO Total',
       ],
     },
+    section: 'RAD',
     unit: 'kg',
   },
   {
-    category: 'composicao-corporal',
     code: 'FatFreeMass',
     // O laudo DXA define Fat Free como Lean Tissue + BMC, equivalente ao
     // peso total menos gordura. O mesmo componente LOINC aparece na fórmula
@@ -2793,7 +2614,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'kg',
   },
   {
-    category: 'composicao-corporal',
     code: 'VATVolume',
     // A tabela de tendência do DEXA traz a seção "Visceral Adipose Tissue (VAT)"
     // com as colunas "Fat Mass" e "Volume", e o modelo nomeia a linha com o
@@ -2825,10 +2645,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Volume Visceral',
       ],
     },
+    section: 'RAD',
     unit: 'cm³',
   },
   {
-    category: 'composicao-corporal',
     code: 'VATMass',
     // Mesmo caso do `VATVolume`: a coluna da tendência do DEXA é "Fat Mass", e
     // o nome chega como "Visceral Adipose Tissue (VAT) Fat Mass".
@@ -2854,10 +2674,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Massa Visceral',
       ],
     },
+    section: 'RAD',
     unit: 'kg',
   },
   {
-    category: 'composicao-corporal',
     code: 'AndroidGynoidRatio',
     // No official LOINC code exists for android/gynoid ratio
     names: {
@@ -2879,10 +2699,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Índice Androide/Ginoide',
       ],
     },
+    section: 'RAD',
     unit: 'razão',
   },
   {
-    category: 'composicao-corporal',
     code: 'AndroidFatPct',
     // No official LOINC code exists for android region fat percentage
     names: {
@@ -2906,10 +2726,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         '% Gordura Abdominal',
       ],
     },
+    section: 'RAD',
     unit: '%',
   },
   {
-    category: 'composicao-corporal',
     code: 'GynoidFatPct',
     // No official LOINC code exists for gynoid region fat percentage
     names: {
@@ -2934,10 +2754,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         '% Gordura Quadril',
       ],
     },
+    section: 'RAD',
     unit: '%',
   },
   {
-    category: 'composicao-corporal',
     code: 'TotalMass',
     loinc: '29463-7',
     names: {
@@ -2997,7 +2817,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
 
   // Bioimpedância (BIA)
   {
-    category: 'composicao-corporal',
     code: 'TotalBodyWater',
     // 101683-1 é "Body water mass", em kg; o aparelho de bioimpedância imprime
     // litros. É o único código de água corporal total no LOINC 2.82 (o outro,
@@ -3011,7 +2830,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'L',
   },
   {
-    category: 'composicao-corporal',
     code: 'BodyWaterPct',
     loinc: '101684-9',
     names: {
@@ -3021,7 +2839,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '%',
   },
   {
-    category: 'composicao-corporal',
     code: 'MuscleMass',
     loinc: '73964-9',
     names: {
@@ -3057,16 +2874,15 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // Por isso o índice existe para acompanhar a própria evolução, e não para
   // classificar.
   {
-    category: 'composicao-corporal',
     code: 'MuscleMassIndex',
     names: {
       en: ['Muscle Mass Index', 'Skeletal Muscle Mass Index', 'SMI', 'SMMI'],
       pt: ['Índice de Massa Muscular', 'IMM', 'Índice de Massa Muscular Esquelética'],
     },
+    section: 'OTH',
     unit: 'kg/m2',
   },
   {
-    category: 'composicao-corporal',
     code: 'PhaseAngle',
     // 107160-4 é "Phase angle Xc/R [Ratio] Bioelectrical impedance analysis",
     // único código de ângulo de fase. O aparelho imprime graus (arctan Xc/R)
@@ -3085,7 +2901,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // área, então também não serve. Fica sem código, com unidade vazia, para
   // não ser confundido com nenhum dos três.
   {
-    category: 'composicao-corporal',
     code: 'VisceralFatLevel',
     names: {
       en: ['Visceral Fat Level', 'Visceral Fat Index', 'VFL', 'Visceral Fat'],
@@ -3098,48 +2913,49 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Gordura Visceral',
       ],
     },
+    section: 'OTH',
     unit: '',
   },
   // Compartimentos de água: buscar "fluid" encontra 73706-4 (Measured)
   // e 73705-6 (Estimated). A entrada genérica não declara esses métodos;
   // a adoção depende do laudo/manual, conforme NO_LOINC_DECISIONS.
   {
-    category: 'composicao-corporal',
     code: 'ExtracellularWater',
     names: {
       en: ['Extracellular Water', 'ECW'],
       pt: ['Água Extracelular', 'AEC'],
     },
+    section: 'OTH',
     unit: 'L',
   },
   {
-    category: 'composicao-corporal',
     code: 'IntracellularWater',
     names: {
       en: ['Intracellular Water', 'ICW'],
       pt: ['Água Intracelular', 'AIC'],
     },
+    section: 'OTH',
     unit: 'L',
   },
   // Razão entre água extracelular e total. É o marcador de retenção hídrica
   // e de estado inflamatório que os aparelhos de bioimpedância reportam, e
   // vem adimensional.
   {
-    category: 'composicao-corporal',
     code: 'ECWToTBWRatio',
     names: {
       en: ['ECW/TBW', 'ECW_TBW', 'ECW to TBW Ratio', 'Extracellular Water Ratio'],
       pt: ['Relação AEC/ACT', 'Razão Água Extracelular'],
     },
+    section: 'OTH',
     unit: '',
   },
   {
-    category: 'composicao-corporal',
     code: 'ResidualMass',
     names: {
       en: ['Residual Mass', 'Residual Weight'],
       pt: ['Massa Residual', 'Peso Residual'],
     },
+    section: 'OTH',
     unit: 'kg',
   },
   // Sem `loinc` até alguém decidir com a definição completa em mãos. Os
@@ -3150,18 +2966,17 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // ainda é RMR e não TMB. Colocar qualquer um deles repetiria o erro que
   // esta mesma PR corrige em LeanMass.
   {
-    category: 'composicao-corporal',
     code: 'BasalMetabolicRate',
     names: {
       en: ['Basal Metabolic Rate', 'BMR'],
       pt: ['Taxa Metabólica Basal', 'TMB', 'Metabolismo Basal', 'Gasto Energético Basal'],
     },
+    section: 'OTH',
     unit: 'kcal/d',
   },
 
   // Antropometria
   {
-    category: 'composicao-corporal',
     code: 'WaistCircumference',
     // 8280-0 é a medida em si, e afirma sítio e método: "at umbilicus by Tape
     // measure". 56086-2, que parecia o óbvio pela busca, é "Adult Waist
@@ -3181,7 +2996,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // O EWGSOP2 usa a panturrilha como proxy de massa muscular onde não há
   // outro método disponível, o que a torna útil em consulta sem aparelho.
   {
-    category: 'composicao-corporal',
     code: 'CalfCircumference',
     loinc: '107112-5',
     names: {
@@ -3191,21 +3005,21 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'cm',
   },
   {
-    category: 'composicao-corporal',
     code: 'WaistToHeightRatio',
     names: {
       en: ['Waist to Height Ratio', 'Waist-to-Height Ratio', 'WHtR'],
       pt: ['Razão Cintura-Altura', 'Relação Cintura-Estatura', 'RCEst'],
     },
+    section: 'OTH',
     unit: '',
   },
   {
-    category: 'composicao-corporal',
     code: 'ConicityIndex',
     names: {
       en: ['Conicity Index', 'C Index'],
       pt: ['Índice de Conicidade', 'Índice C'],
     },
+    section: 'OTH',
     unit: '',
   },
 
@@ -3217,7 +3031,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // protocolo de somatório varia (Pollock 3 ou 7 dobras, Faulkner, Guedes) e
   // guardar só a soma perderia o dado de origem.
   {
-    category: 'composicao-corporal',
     code: 'SkinfoldTriceps',
     loinc: '8354-3',
     names: {
@@ -3227,7 +3040,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mm',
   },
   {
-    category: 'composicao-corporal',
     code: 'SkinfoldThigh',
     loinc: '8353-5',
     names: {
@@ -3237,7 +3049,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mm',
   },
   {
-    category: 'composicao-corporal',
     code: 'SkinfoldAbdominal',
     loinc: '8355-0',
     names: {
@@ -3247,39 +3058,39 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mm',
   },
   {
-    category: 'composicao-corporal',
     code: 'SkinfoldSubscapular',
     names: {
       en: ['Subscapular Skinfold', 'Subscapular'],
       pt: ['Dobra Subescapular', 'Dobra Cutânea Subescapular', 'Subescapular'],
     },
+    section: 'OTH',
     unit: 'mm',
   },
   {
-    category: 'composicao-corporal',
     code: 'SkinfoldSuprailiac',
     names: {
       en: ['Suprailiac Skinfold', 'Supra-iliac Skinfold', 'Suprailiac'],
       pt: ['Dobra Supra-ilíaca', 'Dobra Cutânea Supra-ilíaca', 'Supra-ilíaca', 'Suprailiaca'],
     },
+    section: 'OTH',
     unit: 'mm',
   },
   {
-    category: 'composicao-corporal',
     code: 'SkinfoldChest',
     names: {
       en: ['Chest Skinfold', 'Pectoral Skinfold', 'Chest'],
       pt: ['Dobra Peitoral', 'Dobra Cutânea Peitoral', 'Peitoral', 'Dobra Torácica'],
     },
+    section: 'OTH',
     unit: 'mm',
   },
   {
-    category: 'composicao-corporal',
     code: 'SkinfoldMidaxillary',
     names: {
       en: ['Midaxillary Skinfold', 'Mid-axillary Skinfold', 'Midaxillary', 'MidAxilla'],
       pt: ['Dobra Axilar Média', 'Dobra Cutânea Axilar Média', 'Axilar Média'],
     },
+    section: 'OTH',
     unit: 'mm',
   },
 
@@ -3302,7 +3113,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // o catálogo não tem código regional para nenhum dos dois. "Right Arm" e
   // "Left Arm" são um lado só, e "Arms Difference" é direito menos esquerdo.
   {
-    category: 'composicao-corporal',
     code: 'ArmsLeanMass',
     codeAliases: ['UNKNOWN_Arms_Total_Lean_Mass'],
     hidden: true,
@@ -3331,10 +3141,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Membros Superiores Magro',
       ],
     },
+    section: 'RAD',
     unit: 'kg',
   },
   {
-    category: 'composicao-corporal',
     code: 'ArmsFatMass',
     codeAliases: ['UNKNOWN_Arms_Total_Fat_Mass'],
     hidden: true,
@@ -3364,10 +3174,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Membros Superiores Gordura',
       ],
     },
+    section: 'RAD',
     unit: 'kg',
   },
   {
-    category: 'composicao-corporal',
     code: 'LegsLeanMass',
     codeAliases: ['UNKNOWN_Legs_Total_Lean_Mass'],
     hidden: true,
@@ -3396,10 +3206,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Membros Inferiores Magro',
       ],
     },
+    section: 'RAD',
     unit: 'kg',
   },
   {
-    category: 'composicao-corporal',
     code: 'LegsFatMass',
     codeAliases: ['UNKNOWN_Legs_Total_Fat_Mass'],
     hidden: true,
@@ -3429,10 +3239,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Membros Inferiores Gordura',
       ],
     },
+    section: 'RAD',
     unit: 'kg',
   },
   {
-    category: 'composicao-corporal',
     code: 'TrunkLeanMass',
     hidden: true,
     names: {
@@ -3454,10 +3264,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Massa Magra do Tronco',
       ],
     },
+    section: 'RAD',
     unit: 'kg',
   },
   {
-    category: 'composicao-corporal',
     code: 'TrunkFatMass',
     hidden: true,
     names: {
@@ -3480,6 +3290,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Tronco Massa Gorda',
       ],
     },
+    section: 'RAD',
     unit: 'kg',
   },
 
@@ -3487,7 +3298,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // BONE DENSITY / DENSIDADE ÓSSEA (DEXA Scan)
   // ============================================================================
   {
-    category: 'densidade-ossea',
     code: 'BMD_Total',
     // No official LOINC code exists for total body BMD (only site-specific)
     names: {
@@ -3510,10 +3320,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Densidade Óssea',
       ],
     },
+    section: 'RAD',
     unit: 'g/cm²',
   },
   {
-    category: 'densidade-ossea',
     code: 'TScore_Total',
     // No official LOINC code exists for total body T-score (only site-specific)
     names: {
@@ -3530,10 +3340,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       ],
       pt: ['T-Score Corpo Total', 'T-Score', 'Escore T', 'T-Score DMO', 'T-Score Densidade Óssea'],
     },
+    section: 'RAD',
     unit: 'score',
   },
   {
-    category: 'densidade-ossea',
     code: 'ZScore_Total',
     // No official LOINC code exists for total body Z-score (only site-specific)
     names: {
@@ -3550,13 +3360,13 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       ],
       pt: ['Z-Score Corpo Total', 'Z-Score', 'Escore Z', 'Z-Score DMO', 'Z-Score Densidade Óssea'],
     },
+    section: 'RAD',
     unit: 'score',
   },
   // Densidade por região da densitometria de corpo inteiro, a tabela "Region /
   // BMD" do relatório. A coluna aqui é a região do corpo inteiro, e não a
   // coluna lombar (L1-L4) do exame de coluna e quadril, que é outro exame.
   {
-    category: 'densidade-ossea',
     code: 'BMD_Arms',
     // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
     hidden: true,
@@ -3564,10 +3374,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Arms BMD', 'BMD Arms', 'Arms Bone Mineral Density', 'Arms Bone Density'],
       pt: ['DMO Braços', 'Densidade Mineral Óssea Braços', 'Densidade Óssea Braços'],
     },
+    section: 'RAD',
     unit: 'g/cm²',
   },
   {
-    category: 'densidade-ossea',
     code: 'BMD_Head',
     // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
     hidden: true,
@@ -3575,10 +3385,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Head BMD', 'BMD Head', 'Head Bone Mineral Density', 'Head Bone Density'],
       pt: ['DMO Cabeça', 'Densidade Mineral Óssea Cabeça', 'Densidade Óssea Cabeça'],
     },
+    section: 'RAD',
     unit: 'g/cm²',
   },
   {
-    category: 'densidade-ossea',
     code: 'BMD_Legs',
     // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
     hidden: true,
@@ -3586,10 +3396,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Legs BMD', 'BMD Legs', 'Legs Bone Mineral Density', 'Legs Bone Density'],
       pt: ['DMO Pernas', 'Densidade Mineral Óssea Pernas', 'Densidade Óssea Pernas'],
     },
+    section: 'RAD',
     unit: 'g/cm²',
   },
   {
-    category: 'densidade-ossea',
     code: 'BMD_Pelvis',
     // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
     hidden: true,
@@ -3597,10 +3407,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Pelvis BMD', 'BMD Pelvis', 'Pelvis Bone Mineral Density', 'Pelvis Bone Density'],
       pt: ['DMO Pelve', 'Densidade Mineral Óssea Pelve', 'Densidade Óssea Pelve'],
     },
+    section: 'RAD',
     unit: 'g/cm²',
   },
   {
-    category: 'densidade-ossea',
     code: 'BMD_Ribs',
     // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
     hidden: true,
@@ -3608,10 +3418,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Ribs BMD', 'BMD Ribs', 'Ribs Bone Mineral Density', 'Ribs Bone Density'],
       pt: ['DMO Costelas', 'Densidade Mineral Óssea Costelas', 'Densidade Óssea Costelas'],
     },
+    section: 'RAD',
     unit: 'g/cm²',
   },
   {
-    category: 'densidade-ossea',
     code: 'BMD_Spine',
     // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
     hidden: true,
@@ -3619,10 +3429,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Spine BMD', 'BMD Spine', 'Spine Bone Mineral Density', 'Spine Bone Density'],
       pt: ['DMO Coluna', 'Densidade Mineral Óssea Coluna', 'Densidade Óssea Coluna'],
     },
+    section: 'RAD',
     unit: 'g/cm²',
   },
   {
-    category: 'densidade-ossea',
     code: 'BMD_Trunk',
     // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
     hidden: true,
@@ -3630,6 +3440,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Trunk BMD', 'BMD Trunk', 'Trunk Bone Mineral Density', 'Trunk Bone Density'],
       pt: ['DMO Tronco', 'Densidade Mineral Óssea Tronco', 'Densidade Óssea Tronco'],
     },
+    section: 'RAD',
     unit: 'g/cm²',
   },
 
@@ -3637,7 +3448,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // CARDIOVASCULAR MARKERS — Insuficiência cardíaca e dano miocárdico
   // ============================================================================
   {
-    category: 'coracao',
     code: 'NTproBNP',
     loinc: '33762-6',
     names: {
@@ -3647,7 +3457,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'pg/mL',
   },
   {
-    category: 'coracao',
     code: 'BNP',
     loinc: '30934-4',
     names: {
@@ -3657,7 +3466,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'pg/mL',
   },
   {
-    category: 'coracao',
     code: 'TroponinI',
     // 49563-0 afirma método: limite de detecção ≤ 0,01 ng/mL, o ensaio de alta
     // sensibilidade. Um resultado de troponina I convencional pede o código
@@ -3671,7 +3479,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'ng/mL',
   },
   {
-    category: 'coracao',
     code: 'TroponinT',
     // 6598-7 não afirma método. A unidade ng/L é a convenção do ensaio de alta
     // sensibilidade (hs-cTnT), e o ensaio convencional em ng/mL converte por
@@ -3688,7 +3495,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // COAGULATION — Coagulação
   // ============================================================================
   {
-    category: 'sangue',
     code: 'DDimer',
     // 48065-7 é "Fibrin D-dimer FEU [Mass/volume] in Platelet poor plasma".
     // Até out/2026 apontava para 48066-5, o mesmo analito em DDU (unidades de
@@ -3706,7 +3512,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'ng/mL',
   },
   {
-    category: 'sangue',
     code: 'Fibrinogen',
     loinc: '3255-7',
     names: {
@@ -3720,7 +3525,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // HEMATOLOGY — Hematologia adicional
   // ============================================================================
   {
-    category: 'figado',
     code: 'LDH',
     // 14804-9 afirma método: reação lactato → piruvato (L→P). O código sem
     // método, 2532-0, está DISCOURAGED, então um método tem que ser escolhido,
@@ -3744,7 +3548,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // ENDOCRINE — Eixo cálcio/fósforo
   // ============================================================================
   {
-    category: 'hormonios',
     code: 'PTH',
     loinc: '2731-8',
     names: {
@@ -3758,7 +3561,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // IMMUNOLOGY — Complemento e imunoglobulinas
   // ============================================================================
   {
-    category: 'autoimunidade',
     code: 'IgM',
     loinc: '2472-9',
     names: {
@@ -3768,7 +3570,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'autoimunidade',
     code: 'C3',
     loinc: '4485-9',
     names: {
@@ -3778,7 +3579,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/dL',
   },
   {
-    category: 'autoimunidade',
     code: 'C4',
     loinc: '4498-2',
     names: {
@@ -3792,7 +3592,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // TUMOR MARKERS — Marcadores tumorais adicionais
   // ============================================================================
   {
-    category: 'marcadores-tumorais',
     code: 'CA199',
     loinc: '24108-3',
     names: {
@@ -3802,7 +3601,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'U/mL',
   },
   {
-    category: 'marcadores-tumorais',
     code: 'CA153',
     loinc: '6875-9',
     names: {
@@ -3813,7 +3611,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'U/mL',
   },
   {
-    category: ['saude-feminina', 'marcadores-tumorais'],
     code: 'BetaHCG',
     loinc: '19080-1',
     names: {
@@ -3833,7 +3630,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // RENAL — Filtração glomerular alternativa
   // ============================================================================
   {
-    category: 'rins',
     code: 'CystatinC',
     loinc: '33863-2',
     names: {
@@ -3847,7 +3643,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // NUTRIENTS — Oligoelementos adicionais
   // ============================================================================
   {
-    category: 'nutrientes',
     code: 'Selenium',
     loinc: '5724-0',
     names: {
@@ -3861,7 +3656,6 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // METABOLIC — Cetonas séricas
   // ============================================================================
   {
-    category: 'pancreas',
     code: 'BetaHydroxybutyrate',
     // 6873-4 é "Beta hydroxybutyrate [Moles/volume] in Serum or Plasma", o
     // que o laudo dosa em mmol/L. Até out/2026 apontava para 53060-0, que é
@@ -4058,271 +3852,6 @@ export function getAllLoincCodes(): string[] {
 }
 
 /**
- * Imprime o bloco de um biomarcador na referência entregue ao modelo de
- * extração. Compartilhado por generateLLMReference e
- * generateFilteredLLMReference, que antes duplicavam este trecho.
- *
- * Com LOINC, o bloco mantém três linhas (LOINC | Code, EN, PT). Sem LOINC,
- * tudo vai em uma linha só. Medido em produção (PRE-391): 20 observações de
- * 4 usuários gravadas com biomarkerName igual à linha "EN:" inteira, por
- * exemplo "Subscapular Skinfold, Subscapular". O modelo copiava a linha
- * como nome do analito, o code nunca resolvia e a medida se perdia. Só as
- * entradas sem LOINC eram afetadas, então só elas mudam de formato: sem uma
- * linha que comece com "EN:" ou "PT:", não há o que copiar por engano, e os
- * nomes continuam disponíveis para casar com o texto do PDF.
- */
-function pushDefinitionReference(lines: string[], def: BiomarkerDefinition): void {
-  const ptNames = def.names.pt.join(', ');
-  const enNames = def.names.en.join(', ');
-  if (def.loinc) {
-    lines.push(`- LOINC: ${def.loinc} | Code: ${def.code}`);
-    lines.push(`  EN: ${enNames}`);
-    lines.push(`  PT: ${ptNames}`);
-    return;
-  }
-  lines.push(`- Code: ${def.code} (no LOINC, use the Code) | EN: ${enNames} | PT: ${ptNames}`);
-}
-
-/**
- * Generate LLM reference prompt for biomarker extraction
- * This is included in the extraction prompt so the LLM can output LOINC codes directly
- */
-export function generateLLMReference(): string {
-  const lines: string[] = [
-    'SUPPORTED BIOMARKERS (output the LOINC code or internal Code for each matched biomarker):',
-    '',
-  ];
-
-  // Group by category for better organization
-  const byCategory = new Map<string, BiomarkerDefinition[]>();
-  for (const def of BIOMARKER_DEFINITIONS) {
-    const categories = Array.isArray(def.category) ? def.category : [def.category];
-    for (const cat of categories) {
-      const existing = byCategory.get(cat) || [];
-      existing.push(def);
-      byCategory.set(cat, existing);
-    }
-  }
-
-  for (const [category, defs] of byCategory) {
-    lines.push(`[${category.toUpperCase()}]`);
-    for (const def of defs) {
-      pushDefinitionReference(lines, def);
-    }
-    lines.push('');
-  }
-
-  return lines.join('\n');
-}
-
-/**
- * Generate biomarkerTests format for UI compatibility
- * This replaces the old hardcoded biomarkerTests.ts
- * Excludes hidden biomarkers from the output
- */
-export function toBiomarkerTests(): Record<
-  string,
-  Array<{ pt: string; en: string; code: string }>
-> {
-  const result: Record<string, Array<{ pt: string; en: string; code: string }>> = {};
-
-  for (const def of BIOMARKER_DEFINITIONS) {
-    // Skip hidden biomarkers
-    if (def.hidden) continue;
-
-    const categories = Array.isArray(def.category) ? def.category : [def.category];
-    const ptName = def.names.pt[0] ?? def.code;
-    const enName = def.names.en[0] ?? def.code;
-    for (const category of categories) {
-      if (!result[category]) {
-        result[category] = [];
-      }
-      result[category]!.push({
-        code: def.code,
-        en: enName,
-        pt: ptName,
-      });
-    }
-  }
-
-  return result;
-}
-
-/**
- * Biomarker search pattern for OCR text anchoring
- */
-export interface BiomarkerSearchPattern {
-  category: string | string[];
-  code: string;
-  loinc?: string;
-  names: string[]; // All names (EN + PT) for this biomarker
-  unit?: string; // Absent for qualitative biomarkers (urine dipstick, etc.)
-}
-
-/**
- * Get all biomarker search patterns for OCR text anchoring
- * Returns a flat list of all biomarker codes with their searchable names
- *
- * `category` and `unit` are exposed so anchoring consumers can tell
- * quantitative biomarkers from qualitative ones (which need different
- * matching rules — a qualitative marker has no number next to it).
- */
-export function getAllSearchPatterns(): BiomarkerSearchPattern[] {
-  return BIOMARKER_DEFINITIONS.map((def) => ({
-    category: def.category,
-    code: def.code,
-    ...(def.loinc && { loinc: def.loinc }),
-    names: [...def.names.en, ...def.names.pt],
-    ...(def.unit && { unit: def.unit }),
-  }));
-}
-
-/**
- * Generate filtered LLM reference for specific biomarker codes
- * Only includes biomarkers that were found in the OCR text
- */
-export function generateFilteredLLMReference(codes: string[]): string {
-  const codeSet = new Set(codes);
-  const filteredDefs = BIOMARKER_DEFINITIONS.filter((def) => codeSet.has(def.code));
-
-  if (filteredDefs.length === 0) {
-    return 'NO MATCHING BIOMARKERS FOUND IN TEXT - Return empty biomarkers array.';
-  }
-
-  const lines: string[] = [
-    'ALLOWED BIOMARKERS (ONLY extract these - they were found in the document):',
-    '',
-  ];
-
-  // Group by category for organization
-  const byCategory = new Map<string, BiomarkerDefinition[]>();
-  for (const def of filteredDefs) {
-    const categories = Array.isArray(def.category) ? def.category : [def.category];
-    for (const cat of categories) {
-      const existing = byCategory.get(cat) || [];
-      existing.push(def);
-      byCategory.set(cat, existing);
-    }
-  }
-
-  for (const [category, defs] of byCategory) {
-    lines.push(`[${category.toUpperCase()}]`);
-    for (const def of defs) {
-      pushDefinitionReference(lines, def);
-    }
-    lines.push('');
-  }
-
-  return lines.join('\n');
-}
-
-/**
- * Códigos que identificam um documento de composição corporal.
- *
- * O nome diz DEXA por herança: quando a lista foi escrita, densitometria era a
- * única fonte desse tipo de laudo. Hoje ela decide o caminho para
- * bioimpedância e adipometria também, e a lista tinha ficado para trás.
- *
- * Medido em produção: um laudo de adipometria com sete dobras cutâneas,
- * circunferência de cintura e IMC não casava nenhum indicador e caía no
- * caminho genérico, perdendo a referência filtrada e a extração de tendência.
- * As dobras e as circunferências não aparecem em DEXA, então só elas
- * identificam esse aparelho.
- *
- * Massa muscular e os compartimentos de água entram pela mesma razão: são o
- * que a bioimpedância imprime e o DEXA não.
- */
-export const DEXA_INDICATOR_CODES = [
-  // Densitometria e composição corporal clássica
-  'BodyFatPct',
-  'FatMass',
-  'LeanMass',
-  'BMC',
-  'FatFreeMass',
-  'TotalMass',
-  // Bioimpedância
-  'MuscleMass',
-  'TotalBodyWater',
-  'BodyWaterPct',
-  'PhaseAngle',
-  'ExtracellularWater',
-  'IntracellularWater',
-  // Adipometria: sete sítios, e nenhum aparece em laudo de DEXA
-  'SkinfoldTriceps',
-  'SkinfoldSubscapular',
-  'SkinfoldSuprailiac',
-  'SkinfoldAbdominal',
-  'SkinfoldThigh',
-  'SkinfoldChest',
-  'SkinfoldMidaxillary',
-  // Antropometria
-  'WaistCircumference',
-  'CalfCircumference',
-] as const;
-
-/**
- * DEXA-related categories that should be included when a DEXA document is detected
- */
-export const DEXA_CATEGORIES = ['composicao-corporal', 'densidade-ossea'] as const;
-
-/**
- * Generate full DEXA/body composition reference for LLM extraction
- * This includes ALL body composition biomarkers (regional metrics, VAT, bone density)
- * that may not be detected by OCR anchoring due to table layouts
- *
- * Use this when DEXA indicator biomarkers (BodyFatPct, FatMass, LeanMass, etc.)
- * are detected in the document
- */
-export function generateDexaFullReference(): string {
-  const dexaCodes = BIOMARKER_DEFINITIONS.filter((def) => {
-    const categories = Array.isArray(def.category) ? def.category : [def.category];
-    return categories.some((cat) =>
-      DEXA_CATEGORIES.includes(cat as (typeof DEXA_CATEGORIES)[number]),
-    );
-  }).map((def) => def.code);
-
-  return generateFilteredLLMReference(dexaCodes);
-}
-
-/**
- * Check if a list of biomarker codes indicates a DEXA/body composition document
- */
-export function isDexaDocument(matchedCodes: string[]): boolean {
-  return DEXA_INDICATOR_CODES.some((code) => matchedCodes.includes(code));
-}
-
-/**
- * CAC (Coronary Artery Calcium) indicator biomarker codes
- * When these are found in OCR text, the document is likely a CAC scoring report
- */
-export const CAC_INDICATOR_CODES = [
-  'CAC',
-  'CAC_LAD',
-  'CAC_LCX',
-  'CAC_RCA',
-  'CAC_Percentile',
-] as const;
-
-/**
- * Generate full CAC reference for LLM extraction
- * This includes all CAC-related biomarkers (total score, per-vessel, percentile, aortic valve)
- */
-export function generateCacFullReference(): string {
-  const cacCodes = BIOMARKER_DEFINITIONS.filter((def) => {
-    return def.code === 'CAC' || def.code.startsWith('CAC_') || def.code === 'AorticValveCalcium';
-  }).map((def) => def.code);
-
-  return generateFilteredLLMReference(cacCodes);
-}
-
-/**
- * Check if a list of biomarker codes indicates a CAC scoring document
- */
-export function isCacDocument(matchedCodes: string[]): boolean {
-  return CAC_INDICATOR_CODES.some((code) => matchedCodes.includes(code));
-}
-
-/**
  * Normalize text for comparison
  * - Splits camelCase/PascalCase into words (e.g., "ArmsLeanMass" → "arms lean mass")
  * - Removes diacritics
@@ -4484,60 +4013,4 @@ export function isBiomarkerVisible(code: string): boolean {
  */
 export function filterVisibleBiomarkers<T extends { code: string }>(biomarkers: T[]): T[] {
   return biomarkers.filter((b) => isBiomarkerVisible(b.code));
-}
-
-/**
- * Get all biomarkers for a specific category
- *
- * @param category - The category slug (e.g., 'coracao', 'tireoide')
- * @param options - Optional filters
- * @param options.includeHidden - Include hidden biomarkers (default: false)
- * @param options.sex - Filter by sex ('male', 'female', or 'both' for all)
- * @returns Array of biomarker definitions for the category
- */
-export function getBiomarkersByCategory(
-  category: string,
-  options?: {
-    includeHidden?: boolean;
-    sex?: 'male' | 'female' | 'both';
-  },
-): BiomarkerDefinition[] {
-  const { includeHidden = false, sex = 'both' } = options ?? {};
-
-  return BIOMARKER_DEFINITIONS.filter((def) => {
-    const categories = Array.isArray(def.category) ? def.category : [def.category];
-    if (!categories.includes(category)) return false;
-    if (!includeHidden && def.hidden) return false;
-    if (sex !== 'both') {
-      // Include biomarkers that are for this sex or for 'both' (undefined)
-      if (def.sex && def.sex !== sex && def.sex !== 'both') return false;
-    }
-    return true;
-  });
-}
-
-/**
- * Get all biomarkers for multiple categories
- *
- * @param categories - Array of category slugs
- * @param options - Optional filters (same as getBiomarkersByCategory)
- * @returns Array of biomarker definitions grouped by category
- */
-export function getBiomarkersForCategories(
-  categories: string[],
-  options?: {
-    includeHidden?: boolean;
-    sex?: 'male' | 'female' | 'both';
-  },
-): Record<string, BiomarkerDefinition[]> {
-  const result: Record<string, BiomarkerDefinition[]> = {};
-
-  for (const category of categories) {
-    const biomarkers = getBiomarkersByCategory(category, options);
-    if (biomarkers.length > 0) {
-      result[category] = biomarkers;
-    }
-  }
-
-  return result;
 }

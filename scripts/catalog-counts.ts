@@ -1,7 +1,7 @@
 /* eslint-disable no-console -- script de CLI: a saída é o produto */
 /**
  * Fonte única dos números do catálogo: quantos biomarcadores existem, quantos
- * têm código LOINC, quantas faixas de referência, quantas categorias.
+ * têm código LOINC, quantas faixas de referência, quantas seções de serviço.
  *
  * Uso: pnpm catalog:counts          # regrava o bloco gerado no README.md
  *      pnpm catalog:counts --json   # imprime os números, não escreve nada
@@ -46,7 +46,7 @@ registerHooks({
 // registerHooks acima e o hook não pegaria a resolução.
 const { BIOMARKER_DEFINITIONS, getAllLoincCodes } =
   await import('../packages/core/src/biomarkers.ts');
-const { CATEGORY_GROUPS } = await import('../packages/core/src/category-groups.ts');
+const { diagnosticSectionOf } = await import('../packages/core/src/diagnostic-sections.ts');
 const { defaultReferenceRanges } = await import('../packages/core/src/reference-ranges.ts');
 const { MAPPING_DECISIONS, NO_LOINC_DECISIONS } =
   await import('../packages/core/src/mapping-decisions.ts');
@@ -63,9 +63,6 @@ const version = JSON.parse(
   readFileSync(resolve(__dirname, '../packages/core/package.json'), 'utf8'),
 ).version as string;
 
-const categoriesOf = (d: { category: string | string[] }): string[] =>
-  Array.isArray(d.category) ? d.category : [d.category];
-
 const total = BIOMARKER_DEFINITIONS.length;
 const withLoinc = BIOMARKER_DEFINITIONS.filter((d) => d.loinc).length;
 const withoutLoinc = total - withLoinc;
@@ -73,8 +70,6 @@ const withoutLoinc = total - withLoinc;
 // o bloco fica sujando diff sem que nada de relevante tenha mudado.
 const loincPct = ((withLoinc / total) * 100).toFixed(1).replace('.', ',');
 const ranges = Object.keys(defaultReferenceRanges).length;
-const groups = Object.entries(CATEGORY_GROUPS);
-const subcategories = new Set(groups.flatMap(([, g]) => g.subcategories)).size;
 // Inclui os aliases e as variantes por método: o LDH carrega o 2532-0 antigo,
 // que o LOINC marca como DISCOURAGED, e o LDL os três códigos por método (ver
 // `methodVariants`), além do código canônico. Por isso a contagem de códigos
@@ -106,23 +101,37 @@ const gapsByReason = Object.keys(NO_LOINC_LABEL)
   .map((reason) => ({ reason, rows: gaps.filter((g) => g.reason === reason) }))
   .filter((g) => g.rows.length);
 
-const rows = groups.map(([, g]) => {
-  const matched = BIOMARKER_DEFINITIONS.filter((d) =>
-    categoriesOf(d).some((c) => g.subcategories.includes(c)),
-  );
-  return {
+// Seção de serviço diagnóstico (HL7 v2-0074), a que vai em
+// `DiagnosticReport.category`. Nome em pt-BR só aqui, para o README.
+const SECTION_PT: Record<string, string> = {
+  BLB: 'Banco de sangue',
+  CH: 'Bioquímica',
+  CT: 'Tomografia',
+  GE: 'Genética',
+  HM: 'Hematologia',
+  IMM: 'Imunologia',
+  LAB: 'Laboratório',
+  MB: 'Microbiologia',
+  OTH: 'Outros (medida corporal)',
+  RAD: 'Radiologia (densitometria)',
+  SR: 'Sorologia',
+  TX: 'Toxicologia',
+  URN: 'Urinálise',
+};
+const bySection = new Map<string, (typeof BIOMARKER_DEFINITIONS)[number][]>();
+for (const d of BIOMARKER_DEFINITIONS) {
+  const section = diagnosticSectionOf(d.code) ?? '—';
+  bySection.set(section, [...(bySection.get(section) ?? []), d]);
+}
+const rows = [...bySection]
+  .map(([section, matched]) => ({
     count: matched.length,
     examples: matched.slice(0, 5).map((d) => d.code),
-    pt: g.pt,
+    pt: SECTION_PT[section] ?? section,
+    section,
     withLoinc: matched.filter((d) => d.loinc).length,
-  };
-});
-
-// A soma das linhas passa do total porque um biomarcador pode pertencer a mais
-// de um grupo. O Beta-hCG é marcador tumoral e exame de saúde feminina. Sem
-// dizer isso, a tabela parece ter erro de conta.
-const rowSum = rows.reduce((acc, r) => acc + r.count, 0);
-const overlap = rowSum - total;
+  }))
+  .sort((a, b) => b.count - a.count || a.section.localeCompare(b.section));
 
 const block = [
   START,
@@ -132,17 +141,16 @@ const block = [
   `- **${total} biomarcadores** definidos, dos quais **${withLoinc} têm código LOINC** (${loincPct}%) e ${withoutLoinc} não têm.`,
   `- **${acceptedLoincCodes} códigos LOINC aceitos** na busca por código: os ${withLoinc} canônicos, as variantes por método e os aliases de códigos que o LOINC aposentou.`,
   `- **${ranges} faixas de referência**, com variantes por sexo e idade.`,
-  `- **${groups.length} categorias clínicas** de primeiro nível sobre ${subcategories} subcategorias.`,
+  `- **${rows.length} seções de serviço** (HL7 v2-0074), a categoria que sai no \`DiagnosticReport\`: da classe do LOINC, ou declarada no exame sem LOINC.`,
   `- **Registro de decisão** dos ${withLoinc} mapeamentos: ${withEvidence} com evidência além do nome (unidade, material, método ou bula), ${nameOnly} escolhidos só pelo nome, ${reviewed} com revisão independente. A ficha de cada um sai em \`fhir-bio decision <código>\`.`,
   '',
-  '| Categoria | Biomarcadores | Com LOINC | Exemplos |',
-  '| --------- | ------------: | --------: | -------- |',
-  ...rows.map((r) => `| ${r.pt} | ${r.count} | ${r.withLoinc} | ${r.examples.join(', ')} |`),
+  '| Seção | Biomarcadores | Com LOINC | Exemplos |',
+  '| ----- | ------------: | --------: | -------- |',
+  ...rows.map(
+    (r) =>
+      `| ${r.pt} (\`${r.section}\`) | ${r.count} | ${r.withLoinc} | ${r.examples.join(', ')} |`,
+  ),
   `| **Total** | **${total}** | **${withLoinc}** | |`,
-  '',
-  overlap > 0
-    ? `As linhas somam ${rowSum} porque ${overlap} biomarcador aparece em duas categorias. O Beta-hCG é marcador tumoral e exame de saúde feminina ao mesmo tempo. O total não conta ninguém duas vezes.`
-    : 'Cada biomarcador pertence a uma única categoria, então as linhas somam o total.',
   '',
   `### Os ${withoutLoinc} sem LOINC, e por quê`,
   '',
@@ -160,12 +168,11 @@ const block = [
 const counts = {
   acceptedLoincCodes,
   biomarkers: total,
-  byCategory: rows,
-  categoryGroups: groups.length,
+  bySection: rows,
   decisions: { nameOnly, reviewed, withEvidence },
   loincCoveragePct: Number(((withLoinc / total) * 100).toFixed(1)),
   referenceRanges: ranges,
-  subcategories,
+  sections: rows.length,
   version,
   withLoinc,
   withoutLoinc,

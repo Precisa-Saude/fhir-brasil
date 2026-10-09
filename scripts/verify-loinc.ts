@@ -93,6 +93,8 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
  * imprime na página do código.
  */
 interface Axes {
+  /** Classe do LOINC (`CHEM`, `HEM/BC`, `UA`): dela sai a seção de serviço do laudo. */
+  class: string | null;
   component: string | null;
   method: string | null;
   property: string | null;
@@ -123,6 +125,7 @@ interface LookupResult extends Partial<Axes> {
 
 /** Nome das propriedades no `$lookup`, na ordem em que o snapshot as grava. */
 const EIXOS: ReadonlyArray<[keyof Axes, string]> = [
+  ['class', 'CLASS'],
   ['property', 'PROPERTY'],
   ['system', 'SYSTEM'],
   ['scale', 'SCALE_TYP'],
@@ -225,6 +228,7 @@ async function displayDaParte(parte: string): Promise<string | LookupResult> {
 /** Os seis eixos de um código, já com as partes resolvidas em display. */
 async function lerEixos(parameters: unknown[]): Promise<Axes | LookupResult> {
   const eixos: Axes = {
+    class: null,
     component: null,
     method: null,
     property: null,
@@ -427,6 +431,7 @@ async function main() {
         continue;
       }
       codes[code] = {
+        class: r.class ?? null,
         component: r.component ?? null,
         display: r.display,
         ...(r.groups && { groups: r.groups }),

@@ -1045,6 +1045,42 @@ describe('nomes do laudo americano em colunas e do monoespaçado', () => {
   ])('resolve %s para %s', (printed, expected) => {
     expect(findCodeByName(printed)).toBe(expected);
   });
+
+  // Nome novo que já fosse de outro exame trocaria a leitura dele sem aviso: o
+  // índice de nomes guarda um dono só.
+  it('nenhuma grafia nova é nome de outro exame', () => {
+    const key = (name: string) =>
+      name
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '');
+    const added = [
+      'Lymphs',
+      'Lymphs (Absolute)',
+      'Eos',
+      'Eos (Absolute)',
+      'Basos',
+      'Baso (Absolute)',
+      'Basos (Absolute)',
+      'Monocytes (Absolute)',
+      'Neutrophils (Absolute)',
+      'Cholesterol, Total',
+      'HS CRP',
+      'CRP High Sensitivity',
+      'Vitamin D, 25-OH, Total',
+      'Vitamin D, 25-OH, Total, IA',
+    ];
+    for (const name of added) {
+      const owners = BIOMARKER_DEFINITIONS.filter((d) =>
+        [...d.names.en, ...d.names.pt].some((n) => key(n) === key(name)),
+      );
+      expect(
+        owners.map((d) => d.code),
+        name,
+      ).toHaveLength(1);
+    }
+  });
 });
 
 describe('validateLoincNameMatch com nome de mais de um exame', () => {
@@ -1074,6 +1110,16 @@ describe('densidade óssea por região da densitometria de corpo inteiro', () =>
     ['DMO Pelve', 'BMD_Pelvis'],
   ])('resolve %s para %s', (printed, expected) => {
     expect(findCodeByName(printed)).toBe(expected);
+  });
+
+  it('nenhum nome de região é de outro exame', () => {
+    const regional = BIOMARKER_DEFINITIONS.filter((d) => /^BMD_(?!Total)/.test(d.code));
+    expect(regional).toHaveLength(7);
+    for (const region of regional) {
+      for (const name of [...region.names.en, ...region.names.pt]) {
+        expect(findCodeByName(name), name).toBe(region.code);
+      }
+    }
   });
 
   it('a densidade do corpo inteiro continua BMD_Total', () => {

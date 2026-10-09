@@ -22,13 +22,14 @@ export * from './biomarkers';
 export * from './code-systems';
 
 // Export 10-group taxonomy over the 20 biomarker subcategories
-export * from './category-groups';
 
 // Export unit mappings and configurations
 export * from './units';
 
 // Export FHIR converter
 export * from './converter';
+export * from './diagnostic-sections';
+export * from './llm-reference';
 
 // Export FHIR intervention converter
 export * from './intervention-converter';
@@ -49,7 +50,6 @@ export * from './reference-ranges';
 export * from './dexa-zone-data';
 
 // Export screening intervals configuration
-export * from './screening-intervals';
 
 // Export i18n utilities
 export * from './i18n';

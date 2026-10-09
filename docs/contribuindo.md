@@ -156,7 +156,6 @@ Em `packages/core/src/biomarkers.ts`, adicione uma entrada no array `BIOMARKER_D
 
 ```typescript
 {
-  category: 'nutrientes',        // Categoria clínica
   code: 'VitaminaK',            // Código canônico (PascalCase)
   loinc: '32622-8',             // Código LOINC (obrigatório quando existir)
   names: {
@@ -172,7 +171,7 @@ Em `packages/core/src/biomarkers.ts`, adicione uma entrada no array `BIOMARKER_D
 - O `code` deve ser `PascalCase` com underscores para nomes compostos (ex: `LDL_Peak_Size`)
 - O `loinc` é obrigatório quando o código LOINC existe (alguns biomarcadores DEXA regionais não possuem)
 - `names.pt[0]` é o nome principal exibido na interface
-- Mantenha a ordem alfabética dentro da categoria
+- A seção de serviço (v2-0074) sai da classe do LOINC; declare `section` só no exame sem LOINC ou quando a classe do código não é a seção em que o laudo o imprime
 
 ### Passo 2: Adicionar a faixa de referência
 

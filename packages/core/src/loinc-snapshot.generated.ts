@@ -9,6 +9,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
     'This material contains content from LOINC (http://loinc.org). LOINC is copyright © Regenstrief Institute, Inc. and the Logical Observation Identifiers Names and Codes (LOINC) Committee and is available at no cost under the license at http://loinc.org/license. LOINC® is a registered United States trademark of Regenstrief Institute, Inc.',
   codes: {
     '101683-1': {
+      class: 'BDYWGT.MOLEC',
       component: 'Body water',
       display: 'Body water mass',
       method: null,
@@ -19,6 +20,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '101684-9': {
+      class: 'BDYWGT.MOLEC',
       component: 'Body water',
       display: 'Percentage of body water',
       method: 'Measured',
@@ -29,6 +31,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '10331-7': {
+      class: 'BLDBK',
       component: 'Rh',
       display: 'Rh [Type] in Blood',
       method: null,
@@ -39,6 +42,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '10334-1': {
+      class: 'CHEM',
       component: 'Cancer Ag 125',
       display: 'Cancer Ag 125 [Units/volume] in Serum or Plasma',
       groups: {
@@ -52,6 +56,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '10466-1': {
+      class: 'CHEM',
       component: 'Anion gap',
       display: 'Anion gap in Serum or Plasma by Calculated.3Ions',
       groups: {
@@ -65,6 +70,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '10501-5': {
+      class: 'CHEM',
       component: 'Lutropin',
       display: 'Lutropin [Units/volume] in Serum or Plasma',
       groups: {
@@ -78,6 +84,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '107112-5': {
+      class: 'NUTRITION&DIETETICS',
       component: 'Calf circumference',
       display: 'Calf circumference',
       method: null,
@@ -88,6 +95,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '107160-4': {
+      class: 'NUTRITION&DIETETICS',
       component: 'Phase angle Xc/R',
       display: 'Phase angle Xc/R [Ratio] Bioelectrical impedance analysis',
       method: 'BIA',
@@ -98,6 +106,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '10835-7': {
+      class: 'CHEM',
       component: 'Lipoprotein (little a)',
       display: 'Lipoprotein a [Mass/volume] in Serum or Plasma',
       groups: {
@@ -111,6 +120,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '10886-0': {
+      class: 'CHEM',
       component: 'Prostate specific Ag.free',
       display: 'Prostate Specific Ag Free [Mass/volume] in Serum or Plasma',
       groups: {
@@ -125,6 +135,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '11090-8': {
+      class: 'SERO',
       component: 'Smith extractable nuclear Ab',
       display: 'Smith extractable nuclear Ab [Units/volume] in Serum',
       groups: {
@@ -138,6 +149,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '11277-1': {
+      class: 'UA',
       component: 'Epithelial cells.squamous',
       display:
         'Epithelial cells.squamous [#/area] in Urine sediment by Microscopy high power field',
@@ -152,6 +164,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '11565-9': {
+      class: 'SERO',
       component: 'Jo-1 extractable nuclear Ab',
       display: 'Jo-1 extractable nuclear Ab [Units/volume] in Serum',
       groups: {
@@ -165,6 +178,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '11572-5': {
+      class: 'SERO',
       component: 'Rheumatoid factor',
       display: 'Rheumatoid factor [Units/volume] in Serum or Plasma',
       groups: {
@@ -178,6 +192,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '12180-6': {
+      class: 'CHEM',
       component: 'Calcium.ionized',
       display:
         'Calcium.ionized [Moles/volume] in Serum or Plasma by Ion-selective membrane electrode (ISE)',
@@ -193,6 +208,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '12841-3': {
+      class: 'CHEM',
       component: 'Prostate specific Ag.free/Prostate specific Ag.total',
       display: 'Prostate Specific Ag Free/Prostate specific Ag.total in Serum or Plasma',
       groups: {
@@ -206,6 +222,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '13457-7': {
+      class: 'CHEM',
       component: 'Cholesterol.in LDL',
       display: 'Cholesterol in LDL [Mass/volume] in Serum or Plasma by calculation',
       groups: {
@@ -219,6 +236,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '13458-5': {
+      class: 'CHEM',
       component: 'Cholesterol.in VLDL',
       display: 'Cholesterol in VLDL [Mass/volume] in Serum or Plasma by calculation',
       groups: {
@@ -232,6 +250,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '13801-6': {
+      class: 'CHEM',
       component: 'Protein/Creatinine',
       display: 'Protein/Creatinine [Mass Ratio] in 24 hour Urine',
       groups: {
@@ -245,6 +264,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: '24H',
     },
     '13945-1': {
+      class: 'UA',
       component: 'Erythrocytes',
       display: 'Erythrocytes [#/area] in Urine sediment by Microscopy high power field',
       groups: {
@@ -258,6 +278,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '13964-2': {
+      class: 'CHEM',
       component: 'Methylmalonate',
       display: 'Methylmalonate [Moles/volume] in Serum or Plasma',
       groups: {
@@ -271,6 +292,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '13965-9': {
+      class: 'CHEM',
       component: 'Homocysteine',
       display: 'Homocysteine [Moles/volume] in Serum or Plasma',
       groups: {
@@ -284,6 +306,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '13967-5': {
+      class: 'CHEM',
       component: 'Sex hormone binding globulin',
       display: 'Sex hormone binding globulin [Moles/volume] in Serum or Plasma',
       groups: {
@@ -297,6 +320,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '14278-6': {
+      class: 'SERO',
       component: 'Neutrophil cytoplasmic Ab.perinuclear',
       display: 'Neutrophil cytoplasmic Ab.perinuclear [Titer] in Serum by Immunofluorescence',
       groups: {
@@ -310,6 +334,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '14633-2': {
+      class: 'CHEM',
       component: 'C peptide',
       display: 'C peptide [Moles/volume] in Serum or Plasma',
       groups: {
@@ -323,6 +348,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '14804-9': {
+      class: 'CHEM',
       component: 'Lactate dehydrogenase',
       display:
         'Lactate dehydrogenase [Enzymatic activity/volume] in Serum or Plasma by Lactate to pyruvate reaction',
@@ -334,6 +360,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '14879-1': {
+      class: 'CHEM',
       component: 'Phosphate',
       display: 'Phosphate [Moles/volume] in Serum or Plasma',
       groups: {
@@ -348,6 +375,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '14957-5': {
+      class: 'CHEM',
       component: 'Albumin',
       display: 'Microalbumin [Mass/volume] in Urine',
       groups: {
@@ -361,6 +389,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '14979-9': {
+      class: 'COAG',
       component: 'Coagulation',
       display: 'aPTT in Platelet poor plasma by Coagulation assay',
       groups: {
@@ -374,6 +403,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '15067-2': {
+      class: 'CHEM',
       component: 'Follitropin',
       display: 'Follitropin [Units/volume] in Serum or Plasma',
       groups: {
@@ -387,6 +417,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '1558-6': {
+      class: 'CHAL.ROUTINE',
       component: 'Glucose^post CFst',
       display: 'Fasting glucose [Mass/volume] in Serum or Plasma',
       groups: {
@@ -400,6 +431,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '17316-1': {
+      class: 'SERO',
       component: 'Myeloperoxidase Ab',
       display: 'Myeloperoxidase Ab [Presence] in Serum',
       groups: {
@@ -413,6 +445,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '1742-6': {
+      class: 'CHEM',
       component: 'Alanine aminotransferase',
       display: 'Alanine aminotransferase [Enzymatic activity/volume] in Serum or Plasma',
       groups: {
@@ -426,6 +459,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '1751-7': {
+      class: 'CHEM',
       component: 'Albumin',
       display: 'Albumin [Mass/volume] in Serum or Plasma',
       groups: {
@@ -440,6 +474,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '1759-0': {
+      class: 'CHEM',
       component: 'Albumin/Globulin',
       display: 'Albumin/Globulin [Mass Ratio] in Serum or Plasma',
       groups: {
@@ -453,6 +488,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '17782-4': {
+      class: 'CHEM',
       component: 'Lipoprotein.beta.subparticle',
       display: 'Lipoprotein.beta.subparticle [Entitic length] in Serum or Plasma',
       method: null,
@@ -463,6 +499,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '17791-5': {
+      class: 'SERO',
       component: 'Sjogrens syndrome-B extractable nuclear Ab',
       display: 'Sjogrens syndrome-B extractable nuclear Ab [Units/volume] in Serum',
       groups: {
@@ -476,6 +513,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '17792-3': {
+      class: 'SERO',
       component: 'Sjogrens syndrome-A extractable nuclear Ab',
       display: 'Sjogrens syndrome-A extractable nuclear Ab [Units/volume] in Serum',
       groups: {
@@ -489,6 +527,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '17861-6': {
+      class: 'CHEM',
       component: 'Calcium',
       display: 'Calcium [Mass/volume] in Serum or Plasma',
       groups: {
@@ -503,6 +542,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '1798-8': {
+      class: 'CHEM',
       component: 'Amylase',
       display: 'Amylase [Enzymatic activity/volume] in Serum or Plasma',
       groups: {
@@ -516,6 +556,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '18262-6': {
+      class: 'CHEM',
       component: 'Cholesterol.in LDL',
       display: 'Cholesterol in LDL [Mass/volume] in Serum or Plasma by Direct assay',
       groups: {
@@ -530,6 +571,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '18309-5': {
+      class: 'HEM/BC',
       component: 'Erythrocytes.nucleated/Leukocytes',
       display: 'Nucleated erythrocytes/Leukocytes [Ratio] in Blood by Manual count',
       method: 'Manual count',
@@ -540,6 +582,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '18323-6': {
+      class: 'SERO',
       component: 'Smith extractable nuclear Ab.IgG',
       display: 'Smith extractable nuclear IgG Ab [Units/volume] in Serum',
       groups: {
@@ -553,6 +596,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '1834-1': {
+      class: 'CHEM',
       component: 'Alpha-1-Fetoprotein',
       display: 'Alpha-1-Fetoprotein [Mass/volume] in Serum or Plasma',
       groups: {
@@ -567,6 +611,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '1848-1': {
+      class: 'CHEM',
       component: 'Androstanolone',
       display: 'Androstanolone [Mass/volume] in Serum or Plasma',
       groups: {
@@ -581,6 +626,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '1863-0': {
+      class: 'CHEM',
       component: 'Anion gap',
       display: 'Anion gap in Serum or Plasma by Calculated.4Ions',
       groups: {
@@ -594,6 +640,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '1869-7': {
+      class: 'CHEM',
       component: 'Apolipoprotein A-I',
       display: 'Apolipoprotein A-I [Mass/volume] in Serum or Plasma',
       groups: {
@@ -607,6 +654,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '1884-6': {
+      class: 'CHEM',
       component: 'Apolipoprotein B',
       display: 'Apolipoprotein B [Mass/volume] in Serum or Plasma',
       groups: {
@@ -621,6 +669,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '1903-4': {
+      class: 'CHEM',
       component: 'Ascorbate',
       display: 'Ascorbate [Mass/volume] in Serum or Plasma',
       groups: {
@@ -635,6 +684,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '19048-8': {
+      class: 'HEM/BC',
       component: 'Erythrocytes.nucleated/Leukocytes',
       display: 'Nucleated erythrocytes/Leukocytes [Ratio] in Blood',
       method: null,
@@ -645,6 +695,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '19080-1': {
+      class: 'CHEM',
       component: 'Choriogonadotropin',
       display: 'Choriogonadotropin [Units/volume] in Serum or Plasma',
       groups: {
@@ -658,6 +709,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '19113-0': {
+      class: 'CHEM',
       component: 'IgE',
       display: 'IgE [Units/volume] in Serum or Plasma',
       groups: {
@@ -671,6 +723,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '19123-9': {
+      class: 'CHEM',
       component: 'Magnesium',
       display: 'Magnesium [Mass/volume] in Serum or Plasma',
       groups: {
@@ -685,6 +738,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '1920-8': {
+      class: 'CHEM',
       component: 'Aspartate aminotransferase',
       display: 'Aspartate aminotransferase [Enzymatic activity/volume] in Serum or Plasma',
       groups: {
@@ -698,6 +752,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '1968-7': {
+      class: 'CHEM',
       component: 'Bilirubin.glucuronidated+Bilirubin.albumin bound',
       display: 'Bilirubin.direct [Mass/volume] in Serum or Plasma',
       groups: {
@@ -712,6 +767,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '1971-1': {
+      class: 'CHEM',
       component: 'Bilirubin.non-glucuronidated',
       display: 'Bilirubin.indirect [Mass/volume] in Serum or Plasma',
       groups: {
@@ -726,6 +782,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '1975-2': {
+      class: 'CHEM',
       component: 'Bilirubin',
       display: 'Bilirubin.total [Mass/volume] in Serum or Plasma',
       groups: {
@@ -740,6 +797,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '1986-9': {
+      class: 'CHEM',
       component: 'C peptide',
       display: 'C peptide [Mass/volume] in Serum or Plasma',
       groups: {
@@ -754,6 +812,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '1988-5': {
+      class: 'CHEM',
       component: 'C reactive protein',
       display: 'C reactive protein [Mass/volume] in Serum or Plasma',
       groups: {
@@ -769,6 +828,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '1989-3': {
+      class: 'CHEM',
       component: 'Calcidiol',
       display: '25-hydroxyvitamin D3 [Mass/volume] in Serum or Plasma',
       groups: {
@@ -783,6 +843,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '1994-3': {
+      class: 'CHEM',
       component: 'Calcium.ionized',
       display: 'Calcium.ionized [Moles/volume] in Blood',
       groups: {
@@ -797,6 +858,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '1995-0': {
+      class: 'CHEM',
       component: 'Calcium.ionized',
       display: 'Calcium.ionized [Moles/volume] in Serum or Plasma',
       groups: {
@@ -811,6 +873,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2028-9': {
+      class: 'CHEM',
       component: 'Carbon dioxide',
       display: 'Carbon dioxide, total [Moles/volume] in Serum or Plasma',
       groups: {
@@ -824,6 +887,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2039-6': {
+      class: 'CHEM',
       component: 'Carcinoembryonic Ag',
       display: 'Carcinoembryonic Ag [Mass/volume] in Serum or Plasma',
       groups: {
@@ -838,6 +902,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '20405-7': {
+      class: 'UA',
       component: 'Urobilinogen',
       display: 'Urobilinogen [Mass/volume] in Urine by Test strip',
       groups: {
@@ -853,6 +918,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '20448-7': {
+      class: 'CHEM',
       component: 'Insulin',
       display: 'Insulin [Units/volume] in Serum or Plasma',
       method: null,
@@ -863,6 +929,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '20454-5': {
+      class: 'UA',
       component: 'Protein',
       display: 'Protein [Presence] in Urine by Test strip',
       groups: {
@@ -877,6 +944,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2075-0': {
+      class: 'CHEM',
       component: 'Chloride',
       display: 'Chloride [Moles/volume] in Serum or Plasma',
       groups: {
@@ -890,6 +958,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2085-9': {
+      class: 'CHEM',
       component: 'Cholesterol.in HDL',
       display: 'Cholesterol in HDL [Mass/volume] in Serum or Plasma',
       groups: {
@@ -904,6 +973,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2089-1': {
+      class: 'CHEM',
       component: 'Cholesterol.in LDL',
       display: 'Cholesterol in LDL [Mass/volume] in Serum or Plasma',
       groups: {
@@ -918,6 +988,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2093-3': {
+      class: 'CHEM',
       component: 'Cholesterol',
       display: 'Cholesterol [Mass/volume] in Serum or Plasma',
       groups: {
@@ -932,6 +1003,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2132-9': {
+      class: 'CHEM',
       component: 'Cobalamins',
       display: 'Cobalamin (Vitamin B12) [Mass/volume] in Serum or Plasma',
       groups: {
@@ -946,6 +1018,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '21365-2': {
+      class: 'CHEM',
       component: 'Leptin',
       display: 'Leptin [Mass/volume] in Serum or Plasma',
       method: null,
@@ -956,6 +1029,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2143-6': {
+      class: 'CHEM',
       component: 'Cortisol',
       display: 'Cortisol [Mass/volume] in Serum or Plasma',
       groups: {
@@ -970,6 +1044,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2157-6': {
+      class: 'CHEM',
       component: 'Creatine kinase',
       display: 'Creatine kinase [Enzymatic activity/volume] in Serum or Plasma',
       method: null,
@@ -980,6 +1055,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2160-0': {
+      class: 'CHEM',
       component: 'Creatinine',
       display: 'Creatinine [Mass/volume] in Serum or Plasma',
       groups: {
@@ -995,6 +1071,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2161-8': {
+      class: 'CHEM',
       component: 'Creatinine',
       display: 'Creatinine [Mass/volume] in Urine',
       groups: {
@@ -1010,6 +1087,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '21619-2': {
+      class: 'MOLPATH.MUT',
       component: 'APOE gene mutations',
       display:
         'APOE gene mutations found [Identifier] in Blood or Tissue by Targeted gene mutation analysis Nominal',
@@ -1021,6 +1099,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2191-5': {
+      class: 'CHEM',
       component: 'Dehydroepiandrosterone sulfate',
       display: 'Dehydroepiandrosterone sulfate (DHEA-S) [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1035,6 +1114,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2243-4': {
+      class: 'CHEM',
       component: 'Estradiol',
       display: 'Estradiol (E2) [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1049,6 +1129,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2276-4': {
+      class: 'CHEM',
       component: 'Ferritin',
       display: 'Ferritin [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1063,6 +1144,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2284-8': {
+      class: 'CHEM',
       component: 'Folate',
       display: 'Folate [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1077,6 +1159,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2324-2': {
+      class: 'CHEM',
       component: 'Gamma glutamyl transferase',
       display: 'Gamma glutamyl transferase [Enzymatic activity/volume] in Serum or Plasma',
       method: null,
@@ -1087,6 +1170,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2336-6': {
+      class: 'CHEM',
       component: 'Globulin',
       display: 'Globulin [Mass/volume] in Serum',
       groups: {
@@ -1101,6 +1185,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2345-7': {
+      class: 'CHEM',
       component: 'Glucose',
       display: 'Glucose [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1115,6 +1200,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '24108-3': {
+      class: 'CHEM',
       component: 'Cancer Ag 19-9',
       display: 'Cancer Ag 19-9 [Units/volume] in Serum or Plasma',
       groups: {
@@ -1128,6 +1214,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2458-8': {
+      class: 'CHEM',
       component: 'IgA',
       display: 'IgA [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1142,6 +1229,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2465-3': {
+      class: 'CHEM',
       component: 'IgG',
       display: 'IgG [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1156,6 +1244,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2472-9': {
+      class: 'CHEM',
       component: 'IgM',
       display: 'IgM [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1170,6 +1259,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2484-4': {
+      class: 'CHEM',
       component: 'Insulin-like growth factor-I',
       display: 'Insulin-like growth factor-I [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1184,6 +1274,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2498-4': {
+      class: 'CHEM',
       component: 'Iron',
       display: 'Iron [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1197,6 +1288,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2500-7': {
+      class: 'CHEM',
       component: 'Iron binding capacity',
       display: 'Iron binding capacity [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1210,6 +1302,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2502-3': {
+      class: 'CHEM',
       component: 'Iron saturation',
       display: 'Iron saturation [Mass Fraction] in Serum or Plasma',
       method: null,
@@ -1220,6 +1313,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2514-8': {
+      class: 'CHEM',
       component: 'Ketones',
       display: 'Ketones [Presence] in Urine by Test strip',
       groups: {
@@ -1234,6 +1328,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '25428-4': {
+      class: 'UA',
       component: 'Glucose',
       display: 'Glucose [Presence] in Urine by Test strip',
       groups: {
@@ -1248,6 +1343,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2571-8': {
+      class: 'CHEM',
       component: 'Triglyceride',
       display: 'Triglyceride [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1262,6 +1358,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '26746-8': {
+      class: 'CHEM',
       component: 'Magnesium',
       display: 'Magnesium [Mass/volume] in Red Blood Cells',
       groups: {
@@ -1275,6 +1372,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2731-8': {
+      class: 'CHEM',
       component: 'Parathyrin.intact',
       display: 'Parathyrin.intact [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1289,6 +1387,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '27353-2': {
+      class: 'CHEM',
       component: 'Estimated average glucose',
       display: 'Glucose mean value [Mass/volume] in Blood Estimated from glycated hemoglobin',
       groups: {
@@ -1302,6 +1401,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '27416-7': {
+      class: 'SERO',
       component: 'SCL-70 extractable nuclear Ab',
       display: 'SCL-70 extractable nuclear Ab [Units/volume] in Serum',
       groups: {
@@ -1315,6 +1415,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2777-1': {
+      class: 'CHEM',
       component: 'Phosphate',
       display: 'Phosphate [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1329,6 +1430,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2823-3': {
+      class: 'CHEM',
       component: 'Potassium',
       display: 'Potassium [Moles/volume] in Serum or Plasma',
       groups: {
@@ -1343,6 +1445,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2839-9': {
+      class: 'CHEM',
       component: 'Progesterone',
       display: 'Progesterone [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1357,6 +1460,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2842-3': {
+      class: 'CHEM',
       component: 'Prolactin',
       display: 'Prolactin [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1370,6 +1474,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2857-1': {
+      class: 'CHEM',
       component: 'Prostate specific Ag',
       display: 'Prostate specific Ag [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1384,6 +1489,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2885-2': {
+      class: 'CHEM',
       component: 'Protein',
       display: 'Protein [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1398,6 +1504,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2890-2': {
+      class: 'CHEM',
       component: 'Protein/Creatinine',
       display: 'Protein/Creatinine [Mass Ratio] in Urine',
       groups: {
@@ -1411,6 +1518,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2923-1': {
+      class: 'CHEM',
       component: 'Retinol',
       display: 'Retinol [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1425,6 +1533,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '29374-6': {
+      class: 'SERO',
       component: 'Ribonucleoprotein extractable nuclear Ab',
       display: 'Ribonucleoprotein extractable nuclear Ab [Units/volume] in Serum',
       groups: {
@@ -1438,6 +1547,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '29463-7': {
+      class: 'BDYWGT.ATOM',
       component: 'Body weight',
       display: 'Body weight',
       groups: {
@@ -1451,6 +1561,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2951-2': {
+      class: 'CHEM',
       component: 'Sodium',
       display: 'Sodium [Moles/volume] in Serum or Plasma',
       groups: {
@@ -1465,6 +1576,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2986-8': {
+      class: 'CHEM',
       component: 'Testosterone',
       display: 'Testosterone [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1479,6 +1591,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '2991-8': {
+      class: 'CHEM',
       component: 'Testosterone.free',
       display: 'Testosterone Free [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1493,6 +1606,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '3013-0': {
+      class: 'CHEM',
       component: 'Thyroglobulin',
       display: 'Thyroglobulin [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1506,6 +1620,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '3016-3': {
+      class: 'CHEM',
       component: 'Thyrotropin',
       display: 'Thyrotropin [Units/volume] in Serum or Plasma',
       groups: {
@@ -1519,6 +1634,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '30189-5': {
+      class: 'ALLERGY',
       component:
         '(Dactylis glomerata+Festuca elatior+Lolium perenne+Phleum pratense+Poa pratensis) Ab.IgE',
       display:
@@ -1531,6 +1647,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '3024-7': {
+      class: 'CHEM',
       component: 'Thyroxine.free',
       display: 'Thyroxine (T4) free [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1545,6 +1662,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '3026-2': {
+      class: 'CHEM',
       component: 'Thyroxine',
       display: 'Thyroxine (T4) [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1559,6 +1677,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '3034-6': {
+      class: 'CHEM',
       component: 'Transferrin',
       display: 'Transferrin [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1573,6 +1692,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '30341-2': {
+      class: 'HEM/BC',
       component: 'Erythrocyte',
       display: 'Erythrocyte [Sedimentation Rate] in Blood',
       method: null,
@@ -1583,6 +1703,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '30392-5': {
+      class: 'HEM/BC',
       component: 'Erythrocytes.nucleated',
       display: 'Nucleated erythrocytes [#/volume] in Blood',
       groups: {
@@ -1596,6 +1717,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '3040-3': {
+      class: 'CHEM',
       component: 'Triacylglycerol lipase',
       display: 'Lipase [Enzymatic activity/volume] in Serum or Plasma',
       method: null,
@@ -1606,6 +1728,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '3051-0': {
+      class: 'CHEM',
       component: 'Triiodothyronine.free',
       display: 'Triiodothyronine (T3) Free [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1620,6 +1743,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '3053-6': {
+      class: 'CHEM',
       component: 'Triiodothyronine',
       display: 'Triiodothyronine (T3) [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1635,6 +1759,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '30539-1': {
+      class: 'SERO',
       component: 'Neutrophil cytoplasmic Ab.perinuclear',
       display: 'Neutrophil cytoplasmic Ab.perinuclear [Presence] in Serum',
       groups: {
@@ -1648,6 +1773,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '3084-1': {
+      class: 'CHEM',
       component: 'Urate',
       display: 'Urate [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1662,6 +1788,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '3091-6': {
+      class: 'CHEM',
       component: 'Urea',
       display: 'Urea [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1676,6 +1803,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '30934-4': {
+      class: 'CHEM',
       component: 'Natriuretic peptide.B',
       display: 'Natriuretic peptide B [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1691,6 +1819,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '3094-0': {
+      class: 'CHEM',
       component: 'Urea nitrogen',
       display: 'Urea nitrogen [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1705,6 +1834,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '3097-3': {
+      class: 'CHEM',
       component: 'Urea nitrogen/Creatinine',
       display: 'Urea nitrogen/Creatinine [Mass Ratio] in Serum or Plasma',
       groups: {
@@ -1718,6 +1848,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '31017-7': {
+      class: 'SERO',
       component: 'Tissue transglutaminase Ab.IgA',
       display: 'Tissue transglutaminase IgA Ab [Units/volume] in Serum',
       groups: {
@@ -1731,6 +1862,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '31588-7': {
+      class: 'SERO',
       component: 'Ribonucleoprotein extractable nuclear Ab.IgG',
       display: 'Ribonucleoprotein extractable nuclear IgG Ab [Units/volume] in Serum',
       groups: {
@@ -1744,6 +1876,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '31627-3': {
+      class: 'SERO',
       component: 'Smith extractable nuclear Ab',
       display: 'Smith extractable nuclear Ab [Presence] in Serum',
       groups: {
@@ -1757,6 +1890,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '3173-2': {
+      class: 'COAG',
       component: 'Coagulation',
       display: 'aPTT in Blood by Coagulation assay',
       groups: {
@@ -1770,6 +1904,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '3255-7': {
+      class: 'COAG',
       component: 'Fibrinogen',
       display: 'Fibrinogen [Mass/volume] in Platelet poor plasma by Coagulation assay',
       groups: {
@@ -1783,6 +1918,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '32623-1': {
+      class: 'HEM/BC',
       component: 'Platelet',
       display: 'Platelet [Entitic mean volume] in Blood by Automated count',
       method: 'Automated count',
@@ -1793,6 +1929,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '32677-7': {
+      class: 'SERO',
       component: 'DNA double strand Ab',
       display: 'DNA double strand Ab [Units/volume] in Serum by Immunoassay',
       groups: {
@@ -1806,6 +1943,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '32787-4': {
+      class: 'SERO',
       component: 'Neutrophil cytoplasmic Ab.perinuclear',
       display: 'Neutrophil cytoplasmic Ab.perinuclear [Titer] in Serum',
       groups: {
@@ -1819,6 +1957,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '32998-7': {
+      class: 'SERO',
       component: 'Tissue transglutaminase Ab.IgG',
       display: 'Tissue transglutaminase IgG Ab [Units/volume] in Serum',
       groups: {
@@ -1832,6 +1971,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '33037-3': {
+      class: 'CHEM',
       component: 'Anion gap',
       display: 'Anion gap in Serum or Plasma by calculation',
       method: 'Calculated',
@@ -1842,6 +1982,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '33571-1': {
+      class: 'SERO',
       component: 'Jo-1 extractable nuclear Ab.IgG',
       display: 'Jo-1 extractable nuclear IgG Ab [Units/volume] in Serum',
       method: null,
@@ -1852,6 +1993,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '33610-7': {
+      class: 'SERO',
       component: 'Sjogrens syndrome-A extractable nuclear Ab.IgG',
       display: 'Sjogrens syndrome-A extractable nuclear IgG Ab [Units/volume] in Serum',
       groups: {
@@ -1865,6 +2007,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '33613-1': {
+      class: 'SERO',
       component: 'Sjogrens syndrome-B extractable nuclear Ab.IgG',
       display: 'Sjogrens syndrome-B extractable nuclear IgG Ab [Units/volume] in Serum',
       groups: {
@@ -1878,6 +2021,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '33762-6': {
+      class: 'CHEM',
       component: 'Natriuretic peptide.B prohormone N-Terminal',
       display: 'Natriuretic peptide.B prohormone N-Terminal [Mass/volume] in Serum or Plasma',
       groups: {
@@ -1893,6 +2037,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '33800-4': {
+      class: 'SERO',
       component: 'DNA double strand Ab.IgG',
       display: 'DNA double strand IgG Ab [Units/volume] in Serum',
       groups: {
@@ -1906,6 +2051,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '33863-2': {
+      class: 'CHEM',
       component: 'Cystatin C',
       display: 'Cystatin C [Mass/volume] in Serum or Plasma',
       method: null,
@@ -1916,6 +2062,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '33935-8': {
+      class: 'SERO',
       component: 'Cyclic citrullinated peptide Ab.IgG',
       display: 'Cyclic citrullinated peptide IgG Ab [Units/volume] in Serum or Plasma',
       groups: {
@@ -1929,6 +2076,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '34366-5': {
+      class: 'CHEM',
       component: 'Protein/Creatinine',
       display: 'Protein/Creatinine [Ratio] in Urine',
       groups: {
@@ -1942,6 +2090,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '34571-0': {
+      class: 'COAG',
       component: 'Coagulation',
       display: 'aPTT.lupus sensitive (LA screen)',
       method: 'Coag.surface induced.lupus sensitive',
@@ -1952,6 +2101,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '35177-5': {
+      class: 'CHEM',
       component: 'Fatty acids.polyunsaturated',
       display: 'Polyunsaturated fatty acids [Moles/volume] in Serum or Plasma',
       method: null,
@@ -1962,6 +2112,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '35505-7': {
+      class: 'CHEM',
       component: 'Lipoprotein.beta.subparticle',
       display: 'Lipoprotein.beta.subparticle [Type] in Serum or Plasma',
       method: null,
@@ -1972,6 +2123,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '38230-9': {
+      class: 'CHEM',
       component: 'Calcium.ionized',
       display: 'Calcium.ionized [Mass/volume] in Blood',
       groups: {
@@ -1986,6 +2138,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '38476-8': {
+      class: 'CHEM',
       component: 'Mullerian inhibiting substance',
       display: 'Mullerian inhibiting substance [Mass/volume] in Serum or Plasma',
       groups: {
@@ -2000,6 +2153,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '38518-7': {
+      class: 'HEM/BC',
       component: 'Granulocytes.immature/Leukocytes',
       display: 'Immature granulocytes/Leukocytes in Blood',
       method: null,
@@ -2010,6 +2164,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '39156-5': {
+      class: 'BDYWGT.ATOM',
       component: 'Body mass index',
       display: 'Body mass index (BMI) [Ratio]',
       method: null,
@@ -2020,6 +2175,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '41276-7': {
+      class: 'CHEM',
       component: 'Anion gap',
       display: 'Anion gap in Blood by calculation',
       method: 'Calculated',
@@ -2030,6 +2186,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '41982-0': {
+      class: 'BDYWGT.ATOM',
       component: 'Body fat percentage',
       display: 'Percentage of body fat Measured',
       method: 'Measured',
@@ -2040,6 +2197,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '43396-1': {
+      class: 'CHEM',
       component: 'Cholesterol.non HDL',
       display: 'Cholesterol non HDL [Mass/volume] in Serum or Plasma',
       groups: {
@@ -2053,6 +2211,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '43583-4': {
+      class: 'CHEM',
       component: 'Lipoprotein (little a)',
       display: 'Lipoprotein a [Moles/volume] in Serum or Plasma',
       groups: {
@@ -2066,6 +2225,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '43727-7': {
+      class: 'CHEM',
       component: 'Lipoprotein.beta.subparticle.small',
       display: 'Lipoprotein.beta.subparticle.small [Moles/volume] in Serum or Plasma',
       method: null,
@@ -2076,6 +2236,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '43729-3': {
+      class: 'CHEM',
       component: 'Lipoprotein.alpha.subparticle.large',
       display: 'Lipoprotein.alpha.subparticle.large [Moles/volume] in Serum or Plasma',
       method: null,
@@ -2086,6 +2247,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '4485-9': {
+      class: 'HEM/BC',
       component: 'Complement C3',
       display: 'Complement C3 [Mass/volume] in Serum or Plasma',
       method: null,
@@ -2096,6 +2258,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '4498-2': {
+      class: 'HEM/BC',
       component: 'Complement C4',
       display: 'Complement C4 [Mass/volume] in Serum or Plasma',
       groups: {
@@ -2109,6 +2272,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '4544-3': {
+      class: 'HEM/BC',
       component: 'Erythrocyte/Blood',
       display: 'Hematocrit [Volume Fraction] of Blood by Automated count',
       method: 'Automated count',
@@ -2119,6 +2283,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '4548-4': {
+      class: 'CHEM',
       component: 'Hemoglobin A1c/Hemoglobin.total',
       display: 'Hemoglobin A1c/Hemoglobin.total in Blood',
       groups: {
@@ -2132,6 +2297,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '4679-7': {
+      class: 'HEM/BC',
       component: 'Reticulocytes/Erythrocytes',
       display: 'Reticulocytes/Erythrocytes in Blood',
       method: null,
@@ -2142,6 +2308,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '47214-2': {
+      class: 'CHEM',
       component: 'Homeostasis model assessment',
       display: 'Homeostasis model assessment',
       method: null,
@@ -2152,6 +2319,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '47828-9': {
+      class: 'CHEM',
       component: 'Adiponectin',
       display: 'Adiponectin [Mass/volume] in Serum or Plasma',
       method: null,
@@ -2162,6 +2330,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '48065-7': {
+      class: 'COAG',
       component: 'Fibrin D-dimer',
       display: 'Fibrin D-dimer FEU [Mass/volume] in Platelet poor plasma',
       groups: {
@@ -2175,6 +2344,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '48066-5': {
+      class: 'COAG',
       component: 'Fibrin D-dimer',
       display: 'Fibrin D-dimer DDU [Mass/volume] in Platelet poor plasma',
       groups: {
@@ -2188,6 +2358,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '49054-0': {
+      class: 'CHEM',
       component: 'Ercalcidiol',
       display: '25-hydroxyvitamin D2 [Mass/volume] in Serum or Plasma',
       groups: {
@@ -2202,6 +2373,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '49563-0': {
+      class: 'CHEM',
       component: 'Troponin I.cardiac',
       display:
         'Troponin I.cardiac [Mass/volume] in Serum or Plasma by Detection limit <= 0.01 ng/mL',
@@ -2213,6 +2385,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '5130-0': {
+      class: 'SERO',
       component: 'DNA double strand Ab',
       display: 'DNA double strand Ab [Units/volume] in Serum',
       groups: {
@@ -2226,6 +2399,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '51584-1': {
+      class: 'HEM/BC',
       component: 'Granulocytes.immature',
       display: 'Immature granulocytes [#/volume] in Blood',
       groups: {
@@ -2239,6 +2413,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '53028-7': {
+      class: 'SERO',
       component: 'Cyclic citrullinated peptide Ab',
       display: 'Cyclic citrullinated peptide Ab [Presence] in Serum',
       method: null,
@@ -2249,6 +2424,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '53060-0': {
+      class: 'CHEM',
       component: 'Butyrylcarnitine (C4)',
       display: 'Butyrylcarnitine (C4) [Moles/volume] in Amniotic fluid',
       method: null,
@@ -2259,6 +2435,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '53115-2': {
+      class: 'HEM/BC',
       component: 'Granulocytes.immature',
       display: 'Immature granulocytes [#/volume] in Blood by Automated count',
       groups: {
@@ -2272,6 +2449,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '54434-6': {
+      class: 'CHEM',
       component: 'Lipoprotein.beta.subparticle',
       display: 'Lipoprotein.beta.subparticle [Moles/volume] in Serum or Plasma',
       method: null,
@@ -2282,6 +2460,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '5685-3': {
+      class: 'DRUG/TOX',
       component: 'Mercury',
       display: 'Mercury [Mass/volume] in Blood',
       groups: {
@@ -2296,6 +2475,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '56997-0': {
+      class: 'CHEM',
       component: 'Urea/Creatinine',
       display: 'Urea/Creatinine [Mass Ratio] in Serum or Plasma',
       method: null,
@@ -2306,6 +2486,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '5724-0': {
+      class: 'DRUG/TOX',
       component: 'Selenium',
       display: 'Selenium [Mass/volume] in Serum or Plasma',
       groups: {
@@ -2320,6 +2501,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '5763-8': {
+      class: 'DRUG/TOX',
       component: 'Zinc',
       display: 'Zinc [Mass/volume] in Serum or Plasma',
       groups: {
@@ -2334,6 +2516,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '5767-9': {
+      class: 'SPEC',
       component: 'Observation',
       display: 'Appearance of Urine',
       method: null,
@@ -2344,6 +2527,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '5769-5': {
+      class: 'UA',
       component: 'Bacteria',
       display: 'Bacteria [#/area] in Urine sediment by Microscopy high power field',
       groups: {
@@ -2357,6 +2541,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '5770-3': {
+      class: 'UA',
       component: 'Bilirubin',
       display: 'Bilirubin.total [Presence] in Urine by Test strip',
       groups: {
@@ -2371,6 +2556,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '5778-6': {
+      class: 'SPEC',
       component: 'Observation',
       display: 'Color of Urine',
       groups: {
@@ -2384,6 +2570,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '5792-7': {
+      class: 'UA',
       component: 'Glucose',
       display: 'Glucose [Mass/volume] in Urine by Test strip',
       groups: {
@@ -2399,6 +2586,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '5794-3': {
+      class: 'UA',
       component: 'Hemoglobin',
       display: 'Hemoglobin [Presence] in Urine by Test strip',
       groups: {
@@ -2413,6 +2601,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '5796-8': {
+      class: 'UA',
       component: 'Hyaline casts',
       display: 'Hyaline casts [#/area] in Urine sediment by Microscopy low power field',
       groups: {
@@ -2426,6 +2615,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '5797-6': {
+      class: 'UA',
       component: 'Ketones',
       display: 'Ketones [Mass/volume] in Urine by Test strip',
       groups: {
@@ -2441,6 +2631,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '5799-2': {
+      class: 'UA',
       component: 'Leukocyte esterase',
       display: 'Leukocyte esterase [Presence] in Urine by Test strip',
       groups: {
@@ -2455,6 +2646,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '5802-4': {
+      class: 'UA',
       component: 'Nitrite',
       display: 'Nitrite [Presence] in Urine by Test strip',
       groups: {
@@ -2469,6 +2661,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '5803-2': {
+      class: 'UA',
       component: 'pH',
       display: 'pH of Urine by Test strip',
       groups: {
@@ -2483,6 +2676,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '5804-0': {
+      class: 'UA',
       component: 'Protein',
       display: 'Protein [Mass/volume] in Urine by Test strip',
       groups: {
@@ -2497,6 +2691,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '5808-1': {
+      class: 'UA',
       component: 'Erythrocytes',
       display: 'Erythrocytes [#/volume] in Urine sediment by Microscopy high power field',
       groups: {
@@ -2510,6 +2705,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '5811-5': {
+      class: 'UA',
       component: 'Observation',
       display: 'Specific gravity of Urine by Test strip',
       groups: {
@@ -2524,6 +2720,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '5821-4': {
+      class: 'UA',
       component: 'Leukocytes',
       display: 'Leukocytes [#/area] in Urine sediment by Microscopy high power field',
       groups: {
@@ -2537,6 +2734,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '58413-6': {
+      class: 'HEM/BC',
       component: 'Erythrocytes.nucleated/Leukocytes',
       display: 'Nucleated erythrocytes/Leukocytes [Ratio] in Blood by Automated count',
       method: 'Automated count',
@@ -2547,6 +2745,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '5902-2': {
+      class: 'COAG',
       component: 'Coagulation',
       display: 'Prothrombin time (PT)',
       method: 'Coag.tissue factor induced',
@@ -2557,6 +2756,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '5905-5': {
+      class: 'HEM/BC',
       component: 'Monocytes/leukocytes',
       display: 'Monocytes/Leukocytes in Blood by Automated count',
       method: 'Automated count',
@@ -2567,6 +2767,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '62292-8': {
+      class: 'CHEM',
       component: 'Calcidiol+ercalcidiol',
       display: '25-Hydroxyvitamin D3+25-Hydroxyvitamin D2 [Mass/volume] in Serum or Plasma',
       groups: {
@@ -2581,6 +2782,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '630-4': {
+      class: 'MICRO',
       component: 'Bacteria',
       display: 'Bacteria identified in Urine by Culture',
       groups: {
@@ -2595,6 +2797,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '6301-6': {
+      class: 'COAG',
       component: 'Coagulation',
       display: 'INR in Platelet poor plasma by Coagulation assay',
       method: 'Coag.tissue factor induced.INR',
@@ -2605,6 +2808,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '63453-5': {
+      class: 'SERO',
       component: 'Gliadin peptide Ab.IgA',
       display: 'Gliadin peptide IgA Ab [Units/volume] in Serum by Immunoassay',
       groups: {
@@ -2618,6 +2822,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '63459-2': {
+      class: 'SERO',
       component: 'Gliadin peptide Ab.IgG',
       display: 'Gliadin peptide IgG Ab [Units/volume] in Serum by Immunoassay',
       groups: {
@@ -2631,6 +2836,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '6598-7': {
+      class: 'CHEM',
       component: 'Troponin T.cardiac',
       display: 'Troponin T.cardiac [Mass/volume] in Serum or Plasma',
       groups: {
@@ -2644,6 +2850,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '6690-2': {
+      class: 'HEM/BC',
       component: 'Leukocytes',
       display: 'Leukocytes [#/volume] in Blood by Automated count',
       groups: {
@@ -2657,6 +2864,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '6768-6': {
+      class: 'CHEM',
       component: 'Alkaline phosphatase',
       display: 'Alkaline phosphatase [Enzymatic activity/volume] in Serum or Plasma',
       groups: {
@@ -2670,6 +2878,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '6833-8': {
+      class: 'ALLERGY',
       component: 'Cat dander Ab.IgE',
       display: 'Cat dander IgE Ab [Units/volume] in Serum',
       method: null,
@@ -2680,6 +2889,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '6873-4': {
+      class: 'CHEM',
       component: 'Beta hydroxybutyrate',
       display: 'Beta hydroxybutyrate [Moles/volume] in Serum or Plasma',
       groups: {
@@ -2694,6 +2904,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '6875-9': {
+      class: 'CHEM',
       component: 'Cancer Ag 15-3',
       display: 'Cancer Ag 15-3 [Units/volume] in Serum or Plasma',
       groups: {
@@ -2707,6 +2918,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '6969-0': {
+      class: 'SERO',
       component: 'Myeloperoxidase Ab',
       display: 'Myeloperoxidase Ab [Units/volume] in Serum',
       groups: {
@@ -2720,6 +2932,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '704-7': {
+      class: 'HEM/BC',
       component: 'Basophils',
       display: 'Basophils [#/volume] in Blood by Automated count',
       groups: {
@@ -2733,6 +2946,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '706-2': {
+      class: 'HEM/BC',
       component: 'Basophils/leukocytes',
       display: 'Basophils/Leukocytes in Blood by Automated count',
       method: 'Automated count',
@@ -2743,6 +2957,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '711-2': {
+      class: 'HEM/BC',
       component: 'Eosinophils',
       display: 'Eosinophils [#/volume] in Blood by Automated count',
       groups: {
@@ -2756,6 +2971,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '713-8': {
+      class: 'HEM/BC',
       component: 'Eosinophils/leukocytes',
       display: 'Eosinophils/Leukocytes in Blood by Automated count',
       method: 'Automated count',
@@ -2766,6 +2982,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '71695-1': {
+      class: 'HEM/BC',
       component: 'Granulocytes.immature/Leukocytes',
       display: 'Immature granulocytes/Leukocytes in Blood by Automated count',
       method: 'Automated count',
@@ -2776,6 +2993,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '718-7': {
+      class: 'HEM/BC',
       component: 'Hemoglobin',
       display: 'Hemoglobin [Mass/volume] in Blood',
       groups: {
@@ -2789,6 +3007,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '731-0': {
+      class: 'HEM/BC',
       component: 'Lymphocytes',
       display: 'Lymphocytes [#/volume] in Blood by Automated count',
       groups: {
@@ -2802,6 +3021,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '73561-3': {
+      class: 'CHEM',
       component: 'Insulin-like growth factor-I',
       display: 'Insulin-like growth factor-I [Z-score] in Serum or Plasma',
       method: null,
@@ -2812,6 +3032,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '736-9': {
+      class: 'HEM/BC',
       component: 'Lymphocytes/leukocytes',
       display: 'Lymphocytes/Leukocytes in Blood by Automated count',
       method: 'Automated count',
@@ -2822,6 +3043,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '73708-0': {
+      class: 'BDYWGT.ATOM',
       component: 'Body fat mass',
       display: 'Body fat [Mass] Calculated',
       method: 'Calculated',
@@ -2832,6 +3054,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '73964-9': {
+      class: 'BDYWGT.MOLEC',
       component: 'Body muscle mass',
       display: 'Body muscle mass Calculated',
       method: 'Calculated',
@@ -2842,6 +3065,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '742-7': {
+      class: 'HEM/BC',
       component: 'Monocytes',
       display: 'Monocytes [#/volume] in Blood by Automated count',
       groups: {
@@ -2855,6 +3079,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '751-8': {
+      class: 'HEM/BC',
       component: 'Neutrophils',
       display: 'Neutrophils [#/volume] in Blood by Automated count',
       groups: {
@@ -2868,6 +3093,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '770-8': {
+      class: 'HEM/BC',
       component: 'Neutrophils/leukocytes',
       display: 'Neutrophils/Leukocytes in Blood by Automated count',
       method: 'Automated count',
@@ -2878,6 +3104,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '771-6': {
+      class: 'HEM/BC',
       component: 'Erythrocytes.nucleated',
       display: 'Nucleated erythrocytes [#/volume] in Blood by Automated count',
       groups: {
@@ -2891,6 +3118,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '772-4': {
+      class: 'HEM/BC',
       component: 'Erythrocytes.nucleated',
       display: 'Nucleated erythrocytes [#/volume] in Blood by Manual count',
       groups: {
@@ -2904,6 +3132,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '77307-7': {
+      class: 'DRUG/TOX',
       component: 'Lead',
       display: 'Lead [Mass/volume] in Venous blood',
       groups: {
@@ -2917,6 +3146,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '777-3': {
+      class: 'HEM/BC',
       component: 'Platelets',
       display: 'Platelets [#/volume] in Blood by Automated count',
       groups: {
@@ -2930,6 +3160,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '785-6': {
+      class: 'HEM/BC',
       component: 'Hemoglobin',
       display: 'MCH [Entitic mass] by Automated count',
       method: 'Automated count',
@@ -2940,6 +3171,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '786-4': {
+      class: 'HEM/BC',
       component: 'Hemoglobin',
       display: 'MCHC [Entitic Mass/volume] in Red Blood Cells by Automated count',
       method: 'Automated count',
@@ -2950,6 +3182,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '787-2': {
+      class: 'HEM/BC',
       component: 'Observation',
       display: 'MCV [Entitic mean volume] in Red Blood Cells by Automated count',
       method: 'Automated count',
@@ -2960,6 +3193,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '788-0': {
+      class: 'HEM/BC',
       component: 'Erythrocyte',
       display: 'Erythrocyte [DistWidth] in Blood by Automated count',
       method: 'Automated count',
@@ -2970,6 +3204,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '789-8': {
+      class: 'HEM/BC',
       component: 'Erythrocytes',
       display: 'Erythrocytes [#/volume] in Blood by Automated count',
       groups: {
@@ -2983,6 +3218,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '8061-4': {
+      class: 'SERO',
       component: 'Nuclear Ab',
       display: 'Nuclear Ab [Presence] in Serum',
       groups: {
@@ -2996,6 +3232,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '8076-2': {
+      class: 'SERO',
       component: 'Jo-1 extractable nuclear Ab',
       display: 'Jo-1 extractable nuclear Ab [Presence] in Serum',
       groups: {
@@ -3009,6 +3246,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '8091-1': {
+      class: 'SERO',
       component: 'Ribonucleoprotein extractable nuclear Ab',
       display: 'Ribonucleoprotein extractable nuclear Ab [Presence] in Serum',
       groups: {
@@ -3022,6 +3260,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '8092-9': {
+      class: 'SERO',
       component: 'SCL-70 extractable nuclear Ab',
       display: 'SCL-70 extractable nuclear Ab [Presence] in Serum',
       groups: {
@@ -3035,6 +3274,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '8093-7': {
+      class: 'SERO',
       component: 'Sjogrens syndrome-A extractable nuclear Ab',
       display: 'Sjogrens syndrome-A extractable nuclear Ab [Presence] in Serum',
       groups: {
@@ -3048,6 +3288,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '8094-5': {
+      class: 'SERO',
       component: 'Sjogrens syndrome-B extractable nuclear Ab',
       display: 'Sjogrens syndrome-B extractable nuclear Ab [Presence] in Serum',
       groups: {
@@ -3061,6 +3302,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '8098-6': {
+      class: 'SERO',
       component: 'Thyroglobulin Ab',
       display: 'Thyroglobulin Ab [Units/volume] in Serum or Plasma',
       groups: {
@@ -3074,6 +3316,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '8099-4': {
+      class: 'SERO',
       component: 'Thyroperoxidase Ab',
       display: 'Thyroperoxidase Ab [Units/volume] in Serum or Plasma',
       groups: {
@@ -3087,6 +3330,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '8245-3': {
+      class: 'DRUG/TOX',
       component: 'Zinc',
       display: 'Zinc [Mass/volume] in Blood',
       groups: {
@@ -3100,6 +3344,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '8280-0': {
+      class: 'BDYCRC.MOLEC',
       component: 'Circumference.at umbilicus',
       display: 'Waist Circumference at umbilicus by Tape measure',
       method: 'Tape measure',
@@ -3110,6 +3355,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '8353-5': {
+      class: 'SKNFLD.MOLEC',
       component: 'Skin fold thickness',
       display: 'Skin fold thickness Thigh',
       method: null,
@@ -3120,6 +3366,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '8354-3': {
+      class: 'SKNFLD.MOLEC',
       component: 'Skin fold thickness',
       display: 'Skin fold thickness Triceps',
       method: null,
@@ -3130,6 +3377,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '8355-0': {
+      class: 'SKNFLD.MOLEC',
       component: 'Skin fold thickness',
       display: 'Skin fold thickness Waist',
       method: null,
@@ -3140,6 +3388,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '883-9': {
+      class: 'BLDBK',
       component: 'ABO group',
       display: 'ABO group [Type] in Blood',
       method: null,
@@ -3150,6 +3399,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '90908-5': {
+      class: 'CHEM',
       component: 'Eicosapentaenoate+Docosapentaenate w3+Docosahexaenoate/Fatty acids.C14-C22 risk',
       display:
         'Eicosapentaenoate (C20:5w3)+Docosapentaenate (C22:5w3)+Docosahexaenoate (C22:6w3)/Fatty acids.C14-C22 risk [Interpretation] in Blood Qualitative',
@@ -3161,6 +3411,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '90909-3': {
+      class: 'CHEM',
       component: 'Arachidonate/Eicosapentaenoate',
       display: 'Arachidonate (C20:4w6)/Eicosapentaenoate (C20:5w3) [Mass Ratio] in Blood',
       method: null,
@@ -3171,6 +3422,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '90910-1': {
+      class: 'CHEM',
       component: 'Fatty acids.omega 6/Fatty acids.omega 3',
       display: 'Omega 6 fatty acids (w6)/Omega 3 fatty acids (w3) [Mass Ratio] in Blood',
       method: null,
@@ -3181,6 +3433,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '90911-9': {
+      class: 'CHEM',
       component: 'Eicosapentaenoate+Docosapentaenate w3+Docosahexaenoate/Fatty acids.C14-C22',
       display:
         'Eicosapentaenoate (C20:5w3)+Docosapentaenate (C22:5w3)+Docosahexaenoate (C22:6w3)/Fatty acids.C14-C22 in Blood',
@@ -3192,6 +3445,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '90912-7': {
+      class: 'CHEM',
       component: 'Eicosapentaenoate/Fatty acids.C14-C22',
       display: 'Eicosapentaenoate (C20:5w3)/Fatty acids.C14-C22 in Blood',
       method: null,
@@ -3202,6 +3456,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '90913-5': {
+      class: 'CHEM',
       component: 'Docosapentaenate w3/Fatty acids.C14-C22',
       display: 'Docosapentaenate (C22:5w3)/Fatty acids.C14-C22 in Blood',
       method: null,
@@ -3212,6 +3467,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '90914-3': {
+      class: 'CHEM',
       component: 'Docosahexaenoate/Fatty acids.C14-C22',
       display: 'Docosahexaenoate (C22:6w3)/Fatty acids.C14-C22 in Blood',
       method: null,
@@ -3222,6 +3478,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '90916-8': {
+      class: 'CHEM',
       component: 'Arachidonate/Fatty acids.C14-C22',
       display: 'Arachidonate (C20:4w6)/Fatty acids.C14-C22 in Blood',
       method: null,
@@ -3232,6 +3489,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '90917-6': {
+      class: 'CHEM',
       component: 'Linoleate/Fatty acids.C14-C22',
       display: 'Linoleate (C18:2w6)/Fatty acids.C14-C22 in Blood',
       method: null,
@@ -3242,6 +3500,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '9318-7': {
+      class: 'CHEM',
       component: 'Albumin/Creatinine',
       display: 'Albumin/Creatinine [Mass Ratio] in Urine',
       groups: {
@@ -3256,6 +3515,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '96259-7': {
+      class: 'CHEM',
       component: 'Cholesterol.in LDL',
       display:
         'Cholesterol in LDL [Mass/volume] in Serum or Plasma by Calculated by Martin-Hopkins',
@@ -3271,6 +3531,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '96735-6': {
+      class: 'CHEM',
       component: 'Lipoprotein.beta.subparticle.medium',
       display: 'Lipoprotein.beta.subparticle.medium [Moles/volume] in Serum',
       method: null,
@@ -3281,6 +3542,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '9830-1': {
+      class: 'CHEM',
       component: 'Cholesterol.total/Cholesterol.in HDL',
       display: 'Cholesterol.total/Cholesterol in HDL [Mass Ratio] in Serum or Plasma',
       method: null,
@@ -3291,6 +3553,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '98979-8': {
+      class: 'CHEM',
       component: 'Glomerular filtration rate',
       display:
         'Glomerular filtration rate [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI 2021)/1.73 sq M',
@@ -3305,6 +3568,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '99620-7': {
+      class: 'CHEM',
       component: 'Fatty acids.omega 3',
       display: 'Omega 3 fatty acids (w3) [Moles/volume] in RBC.lysate',
       method: null,
@@ -3315,6 +3579,7 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       time: 'Pt',
     },
     '99621-5': {
+      class: 'CHEM',
       component: 'Fatty acids.omega 6',
       display: 'Omega 6 fatty acids (w6) [Moles/volume] in RBC.lysate',
       method: null,

@@ -269,8 +269,7 @@ function buildNamePattern(normalizedName: string): RegExp {
 }
 
 function isQualitativeUrine(pattern: BiomarkerSearchPattern): boolean {
-  const categories = Array.isArray(pattern.category) ? pattern.category : [pattern.category];
-  return categories.includes('urina') && !pattern.unit;
+  return pattern.section === 'URN' && !pattern.unit;
 }
 
 /**

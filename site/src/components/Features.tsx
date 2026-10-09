@@ -18,7 +18,7 @@ interface Feature {
 const FEATURES: Feature[] = [
   {
     title: `${catalog.biomarkers} Biomarcadores`,
-    description: `${catalog.withLoinc} dos ${catalog.biomarkers} têm código LOINC. Nomes em pt-BR e en-US, unidades UCUM, ${catalog.categoryGroups} categorias clínicas sobre ${catalog.subcategories} sub-categorias, normalização de aliases.`,
+    description: `${catalog.withLoinc} dos ${catalog.biomarkers} têm código LOINC. Nomes em pt-BR e en-US, unidades UCUM, seção de serviço HL7 v2-0074 em cada laudo, normalização de aliases.`,
     links: [
       { label: 'LOINC', href: 'https://loinc.org/' },
       { label: 'UCUM', href: 'https://ucum.org/' },

@@ -2,12 +2,8 @@ import { describe, expect, it } from 'vitest';
 
 import {
   BIOMARKER_DEFINITIONS,
-  CAC_INDICATOR_CODES,
   codeToLoinc,
   findCodeByName,
-  generateCacFullReference,
-  generateFilteredLLMReference,
-  generateLLMReference,
   getAllCodes,
   getAllDefinitions,
   getAllLoincCodes,
@@ -15,15 +11,21 @@ import {
   getDefinitionByLoinc,
   getDefinitionsBySex,
   getSexForCode,
-  isCacDocument,
-  isDexaDocument,
   isValidCode,
   isValidLoinc,
   loincToCode,
   normalizeCode,
-  toBiomarkerTests,
   validateLoincNameMatch,
 } from '../biomarkers';
+import { diagnosticSectionOf } from '../diagnostic-sections';
+import {
+  CAC_INDICATOR_CODES,
+  generateCacFullReference,
+  generateFilteredLLMReference,
+  generateLLMReference,
+  isCacDocument,
+  isDexaDocument,
+} from '../llm-reference';
 
 describe('BIOMARKER_DEFINITIONS', () => {
   it('should contain biomarker definitions', () => {
@@ -34,7 +36,6 @@ describe('BIOMARKER_DEFINITIONS', () => {
     for (const def of BIOMARKER_DEFINITIONS) {
       expect(def.code).toBeDefined();
       // loinc is optional for some DEXA regional biomarkers
-      expect(def.category).toBeDefined();
       expect(def.names.en).toBeDefined();
       expect(def.names.pt).toBeDefined();
       expect(def.names.en.length).toBeGreaterThan(0);
@@ -314,7 +315,7 @@ describe('getDefinitionByCode', () => {
     const def = getDefinitionByCode('HDL');
     expect(def).toBeDefined();
     expect(def?.loinc).toBe('2085-9');
-    expect(def?.category).toBe('coracao');
+    expect(diagnosticSectionOf('HDL')).toBe('CH');
   });
 
   it('should return definition for code aliases', () => {
@@ -419,7 +420,6 @@ describe('getDefinitionByLoinc', () => {
     const def = getDefinitionByLoinc('2085-9');
     expect(def).toBeDefined();
     expect(def?.code).toBe('HDL');
-    expect(def?.category).toBe('coracao');
   });
 
   it('should return definition for LOINC aliases', () => {
@@ -477,11 +477,11 @@ describe('generateLLMReference', () => {
     expect(reference.length).toBeGreaterThan(0);
   });
 
-  it('should include category headers', () => {
+  it('agrupa pela seção de serviço (v2-0074)', () => {
     const reference = generateLLMReference();
-    expect(reference).toContain('[CORACAO]');
-    expect(reference).toContain('[TIREOIDE]');
-    expect(reference).toContain('[METABOLICO]');
+    expect(reference).toContain('[CHEMISTRY]');
+    expect(reference).toContain('[HEMATOLOGY]');
+    expect(reference).toContain('[URINALYSIS]');
   });
 
   it('should include LOINC codes', () => {
@@ -578,36 +578,6 @@ describe('referência LLM para biomarcadores sem LOINC (PRE-391)', () => {
   });
 });
 
-describe('toBiomarkerTests', () => {
-  it('should return biomarker tests grouped by category', () => {
-    const tests = toBiomarkerTests();
-    expect(Object.keys(tests).length).toBeGreaterThan(0);
-    expect(tests.coracao).toBeDefined();
-    expect(tests.tireoide).toBeDefined();
-  });
-
-  it('should have pt, en, and code for each test', () => {
-    const tests = toBiomarkerTests();
-    for (const category of Object.keys(tests)) {
-      const categoryTests = tests[category];
-      expect(categoryTests).toBeDefined();
-      for (const test of categoryTests!) {
-        expect(test.pt).toBeDefined();
-        expect(test.en).toBeDefined();
-        expect(test.code).toBeDefined();
-      }
-    }
-  });
-
-  it('should include HDL in coracao category', () => {
-    const tests = toBiomarkerTests();
-    const hdl = tests.coracao?.find((t) => t.code === 'HDL');
-    expect(hdl).toBeDefined();
-    expect(hdl?.en).toContain('HDL');
-    expect(hdl?.pt).toContain('HDL');
-  });
-});
-
 describe('findCodeByName', () => {
   it('should find code by English name', () => {
     expect(findCodeByName('Hemoglobin')).toBe('Hgb');
@@ -663,13 +633,13 @@ describe('findCodeByName', () => {
 });
 
 describe('CAC (Coronary Artery Calcium) support', () => {
-  it('should have CAC biomarker definitions in coracao category', () => {
+  it('should have CAC biomarker definitions in the CT section', () => {
     const cacDefs = BIOMARKER_DEFINITIONS.filter(
       (d) => d.code === 'CAC' || d.code.startsWith('CAC_') || d.code === 'AorticValveCalcium',
     );
     expect(cacDefs.length).toBe(7);
     for (const def of cacDefs) {
-      expect(def.category).toBe('coracao');
+      expect(diagnosticSectionOf(def.code)).toBe('CT');
       expect(def.unit).toBeDefined();
     }
   });
@@ -739,25 +709,24 @@ describe('alias matching fixes', () => {
 
 describe('new biomarker definitions', () => {
   const newBiomarkers = [
-    { code: 'ESR', category: 'sangue', loinc: '30341-2' },
-    { code: 'AFP', category: 'marcadores-tumorais', loinc: '1834-1' },
-    { code: 'CA125', category: 'marcadores-tumorais', loinc: '10334-1' },
-    { code: 'CEA', category: 'marcadores-tumorais', loinc: '2039-6' },
-    { code: 'ApoA1', category: 'coracao', loinc: '1869-7' },
-    { code: 'Reticulocytes', category: 'sangue', loinc: '4679-7' },
-    { code: 'Urobilinogen_Urine', category: 'urina', loinc: '20405-7' },
-    { code: 'BilirubinDirect', category: 'figado', loinc: '1968-7' },
-    { code: 'BilirubinIndirect', category: 'figado', loinc: '1971-1' },
-    { code: 'T4Total', category: 'tireoide', loinc: '3026-2' },
-    { code: 'CK', category: 'metabolico', loinc: '2157-6' },
+    { code: 'ESR', section: 'HM', loinc: '30341-2' },
+    { code: 'AFP', section: 'CH', loinc: '1834-1' },
+    { code: 'CA125', section: 'CH', loinc: '10334-1' },
+    { code: 'CEA', section: 'CH', loinc: '2039-6' },
+    { code: 'ApoA1', section: 'CH', loinc: '1869-7' },
+    { code: 'Reticulocytes', section: 'HM', loinc: '4679-7' },
+    { code: 'Urobilinogen_Urine', section: 'URN', loinc: '20405-7' },
+    { code: 'BilirubinDirect', section: 'CH', loinc: '1968-7' },
+    { code: 'BilirubinIndirect', section: 'CH', loinc: '1971-1' },
+    { code: 'T4Total', section: 'CH', loinc: '3026-2' },
+    { code: 'CK', section: 'CH', loinc: '2157-6' },
   ];
 
-  it.each(newBiomarkers)('should have definition for $code', ({ code, category, loinc }) => {
+  it.each(newBiomarkers)('should have definition for $code', ({ code, loinc, section }) => {
     const def = getDefinitionByCode(code);
     expect(def).toBeDefined();
     expect(def?.loinc).toBe(loinc);
-    const categories = Array.isArray(def?.category) ? def?.category : [def?.category];
-    expect(categories).toContain(category);
+    expect(diagnosticSectionOf(code)).toBe(section);
   });
 
   it('should resolve new code aliases', () => {
@@ -801,9 +770,8 @@ describe('new biomarker definitions', () => {
     expect(findCodeByName('Velocidade de Hemossedimentação')).toBe('ESR');
   });
 
-  it('tumor markers category should appear in LLM reference', () => {
+  it('tumor markers appear in LLM reference', () => {
     const reference = generateLLMReference();
-    expect(reference).toContain('[MARCADORES-TUMORAIS]');
     expect(reference).toContain('AFP');
     expect(reference).toContain('CA125');
     expect(reference).toContain('CEA');

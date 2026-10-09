@@ -16,7 +16,7 @@ Documentação completa e contexto do projeto em [fhir-brasil.dev.br](https://fh
 
 O sistema de saúde brasileiro opera como redes paralelas com troca mínima de dados — laboratórios privados entregam PDFs sem padrão, laboratórios do SUS usam sistemas internos, e nenhum enxerga o outro. O **fhir-brasil** fornece a infraestrutura de código aberto para resolver essa fragmentação via FHIR R4:
 
-- **Catálogo de biomarcadores** com códigos LOINC, nomes em pt-BR/en-US, unidades UCUM e categorias clínicas. As contagens exatas estão em [Catálogo em números](#catálogo-em-números)
+- **Catálogo de biomarcadores** com códigos LOINC, nomes em pt-BR/en-US, unidades UCUM e a seção de serviço HL7 v2-0074 de cada exame. As contagens exatas estão em [Catálogo em números](#catálogo-em-números)
 - **Faixas de referência** com variantes por sexo/idade, baseadas em diretrizes SBPC/ML, SBC e SBD
 - **Normalização de aliases** — cada laboratório usa nomes diferentes para o mesmo exame; `normalizeCode('colesterol HDL')` retorna `'HDL'`
 - **Utilitários OCR** — ancoragem de texto para extração de biomarcadores de PDFs de resultados de laboratório
@@ -126,7 +126,7 @@ fhir-bio source --biomarker TSH       # A citação por trás da faixa
 fhir-bio source sbem-thyroid-2013     # Ou direto pela chave que o range imprime
 fhir-bio lookup-loinc 718-7           # Buscar por código LOINC
 fhir-bio list                         # Listar todos os biomarcadores
-fhir-bio categories                   # Listar por categoria
+fhir-bio sections                     # Listar pela seção de serviço (v2-0074)
 fhir-bio convert resultado.json       # Converter JSON para FHIR Bundle
 fhir-bio validate bundle.json         # Validar recurso FHIR
 fhir-bio import bundle.json           # Importar Bundle e extrair observações
@@ -152,24 +152,23 @@ Medido no `@precisa-saude/fhir@0.43.0`, gerado por `pnpm catalog:counts`.
 - **260 biomarcadores** definidos, dos quais **215 têm código LOINC** (82,7%) e 45 não têm.
 - **228 códigos LOINC aceitos** na busca por código: os 215 canônicos, as variantes por método e os aliases de códigos que o LOINC aposentou.
 - **203 faixas de referência**, com variantes por sexo e idade.
-- **10 categorias clínicas** de primeiro nível sobre 20 subcategorias.
+- **11 seções de serviço** (HL7 v2-0074), a categoria que sai no `DiagnosticReport`: da classe do LOINC, ou declarada no exame sem LOINC.
 - **Registro de decisão** dos 215 mapeamentos: 39 com evidência além do nome (unidade, material, método ou bula), 176 escolhidos só pelo nome, 0 com revisão independente. A ficha de cada um sai em `fhir-bio decision <código>`.
 
-| Categoria                            | Biomarcadores | Com LOINC | Exemplos                                                                          |
-| ------------------------------------ | ------------: | --------: | --------------------------------------------------------------------------------- |
-| Cardiovascular                       |            29 |        22 | ApoB, HDL, HDL_Large, CRP, LDL                                                    |
-| Composição Corporal e Envelhecimento |            52 |        15 | Cortisol, IGF1, BMI, BodyFatPct, FatMass                                          |
-| Hematológico                         |            20 |        20 | NRBC, NRBC_Abs, Hct, Hgb, MCH                                                     |
-| Hepático e Biliar                    |            12 |        12 | ALT, Albumin, Albumin_Globulin_Ratio, AlkalinePhosphatase, AST                    |
-| Imunológico                          |            37 |        37 | ANA_Screen, RheumatoidFactor, AntiCCP, MPO_Antibody, pANCA                        |
-| Metabólico e Endócrino               |            24 |        24 | AntiThyroglobulin, AntiTPO, TSH, T4Free, Thyroglobulin                            |
-| Nutricional e Exposição Ambiental    |            33 |        33 | Lead, Mercury, AA_EPA_Ratio, Calcium, Phosphorus                                  |
-| Oncológico                           |             6 |         6 | AFP, CA125, CEA, CA199, CA153                                                     |
-| Renal e Eletrolítico                 |            33 |        33 | Microalbumin_Urine, ProteinCreatinineRatio_Urine, Urea, BUN, BUN_Creatinine_Ratio |
-| Saúde Reprodutiva                    |            15 |        14 | AMH, DHEAS, Estradiol, Estrone, FSH                                               |
-| **Total**                            |       **260** |   **215** |                                                                                   |
-
-As linhas somam 261 porque 1 biomarcador aparece em duas categorias. O Beta-hCG é marcador tumoral e exame de saúde feminina ao mesmo tempo. O total não conta ninguém duas vezes.
+| Seção                              | Biomarcadores | Com LOINC | Exemplos                                                                    |
+| ---------------------------------- | ------------: | --------: | --------------------------------------------------------------------------- |
+| Bioquímica (`CH`)                  |           126 |       125 | ApoB, HDL, HDL_Large, CRP, LDL                                              |
+| Hematologia (`HM`)                 |            33 |        33 | Basophils, Basophils_Abs, Eosinophils, Eosinophils_Abs, Lymphocytes         |
+| Outros (medida corporal) (`OTH`)   |            28 |        13 | BMI, BodyFatPct, FatMass, LeanMass, FatFreeMass                             |
+| Radiologia (densitometria) (`RAD`) |            22 |         0 | BMC, VATVolume, VATMass, AndroidGynoidRatio, AndroidFatPct                  |
+| Sorologia (`SR`)                   |            18 |        18 | AntiThyroglobulin, AntiTPO, ANA_Screen, RheumatoidFactor, AntiCCP           |
+| Urinálise (`URN`)                  |            17 |        17 | Appearance_Urine, Bacteria_Urine, Bilirubin_Urine, Blood_Urine, Color_Urine |
+| Tomografia (`CT`)                  |             7 |         0 | CAC, CAC_LMA, CAC_LAD, CAC_LCX, CAC_RCA                                     |
+| Toxicologia (`TX`)                 |             4 |         4 | Lead, Mercury, Zinc, Selenium                                               |
+| Banco de sangue (`BLB`)            |             2 |         2 | ABO_Group, Rh_Type                                                          |
+| Imunologia (`IMM`)                 |             2 |         2 | IgE_E1_CatDander, IgE_GX1_Grasses                                           |
+| Genética (`GE`)                    |             1 |         1 | APOE_Genotype                                                               |
+| **Total**                          |       **260** |   **215** |                                                                             |
 
 ### Os 45 sem LOINC, e por quê
 

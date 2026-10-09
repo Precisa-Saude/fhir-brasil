@@ -219,8 +219,7 @@ export function sectionDepsFrom(
   resolve: SectionDeps['resolve'],
 ): SectionDeps {
   const loincByCode = new Map(catalog.map((p) => [p.code, p.loinc]));
-  const isUrine = (p: BiomarkerSearchPattern) =>
-    (Array.isArray(p.category) ? p.category : [p.category]).includes('urina');
+  const isUrine = (p: BiomarkerSearchPattern) => p.section === 'URN';
   return {
     hasValue,
     patterns: [...URINALYSIS_SECTION_NAMES].map(([name, code]) => {

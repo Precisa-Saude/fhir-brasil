@@ -4,7 +4,13 @@
  * Validation functions for FHIR R4 resources.
  */
 
-import type { FHIRDiagnosticReport, FHIRObservation, FHIRQuantity } from './fhir-types';
+import { LOINC_SYSTEM } from './code-systems';
+import type {
+  FHIRCodeableConcept,
+  FHIRDiagnosticReport,
+  FHIRObservation,
+  FHIRQuantity,
+} from './fhir-types';
 import type { ImportError } from './importer';
 import { isUcumCode } from './units';
 
@@ -27,6 +33,31 @@ function ucumErrors(quantity: FHIRQuantity | undefined, where: string): string[]
     return [`${where}: "${quantity.code}" is not a UCUM code`];
   }
   return [];
+}
+
+/**
+ * Um `valueCodeableConcept` precisa dizer alguma coisa: um coding com `code`
+ * ou, pelo menos, o texto. E um coding sob `http://loinc.org` no lugar do
+ * valor é resposta, então o código tem a forma `LA…`; um código de exame ali
+ * (`2514-8`) é o erro de pôr o `code` da Observation no valor.
+ */
+function codedValueErrors(value: FHIRCodeableConcept | undefined): string[] {
+  if (!value) return [];
+  const errors: string[] = [];
+  const codings = value.coding ?? [];
+  if (codings.length === 0 && !value.text) {
+    errors.push('valueCodeableConcept: neither coding nor text');
+  }
+  for (const [i, coding] of codings.entries()) {
+    if (!coding.code) {
+      errors.push(`valueCodeableConcept.coding[${i}]: missing code`);
+    } else if (coding.system === LOINC_SYSTEM && !/^LA\d+-\d$/.test(coding.code)) {
+      errors.push(
+        `valueCodeableConcept.coding[${i}]: "${coding.code}" is not a LOINC answer code (LA…)`,
+      );
+    }
+  }
+  return errors;
 }
 
 /**
@@ -76,9 +107,11 @@ export function validateFHIRObservation(observation: FHIRObservation): string[] 
     errors.push('Missing subject reference');
   }
 
-  if (!observation.valueQuantity && !observation.valueString) {
-    errors.push('Missing value (valueQuantity or valueString)');
+  if (!observation.valueQuantity && !observation.valueString && !observation.valueCodeableConcept) {
+    errors.push('Missing value (valueQuantity, valueString or valueCodeableConcept)');
   }
+
+  errors.push(...codedValueErrors(observation.valueCodeableConcept));
 
   errors.push(...ucumErrors(observation.valueQuantity, 'valueQuantity'));
   for (const [i, range] of (observation.referenceRange ?? []).entries()) {

@@ -67,6 +67,11 @@ export interface FHIRObservation {
   resourceType: 'Observation';
   status: 'registered' | 'preliminary' | 'final' | 'amended' | 'corrected' | 'cancelled';
   subject?: FHIRReference;
+  /**
+   * Resultado ordinal ou nominal codificado (resposta LOINC `LA…`), com o
+   * texto impresso em `text`. Ver `ordinal-answers.ts`.
+   */
+  valueCodeableConcept?: FHIRCodeableConcept;
   valueQuantity?: FHIRQuantity;
   valueString?: string;
 }

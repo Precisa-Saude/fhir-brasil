@@ -71,7 +71,7 @@ describe('validateFHIRObservation', () => {
     expect(errors).toContain('Missing status');
     expect(errors).toContain('Missing or invalid code');
     expect(errors).toContain('Missing subject reference');
-    expect(errors).toContain('Missing value (valueQuantity or valueString)');
+    expect(errors).toContain('Missing value (valueQuantity, valueString or valueCodeableConcept)');
     expect(errors).toHaveLength(5);
   });
 });

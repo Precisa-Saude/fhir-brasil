@@ -239,6 +239,7 @@ proposta. Números escritos à mão em outro lugar não são conferidos por nada
 - **FHIR R4** — Todos os recursos seguem o padrão HL7 FHIR R4
 - **LOINC** — Códigos LOINC verificados para interoperabilidade
 - **SBPC/ML** — Faixas de referência baseadas nas diretrizes brasileiras
+- **SNOMED CT** — Qualificadores para resultado ordinal (Negativo, Traços, ++), ao lado da resposta LOINC
 - **UCUM** — Unidades no formato Unified Code for Units of Measure
 - **TUSS/TISS** — Terminologias ANS para saúde suplementar
 - **CID-10 pt-BR** — Classificação Internacional de Doenças (tradução DATASUS)
@@ -288,6 +289,17 @@ exigido:
 > Identifiers Names and Codes (LOINC) Committee and is available at no cost
 > under the license at http://loinc.org/license. LOINC® is a registered United
 > States trademark of Regenstrief Institute, Inc.
+
+As respostas de resultado ordinal também trazem 12 qualificadores SNOMED CT. O
+Brasil é membro da SNOMED International, e o uso no país não tem custo, mas
+exige registro no centro nacional de distribuição; fora dos países membros,
+depende de licença de afiliado:
+
+> This material includes content from SNOMED Clinical Terms® (SNOMED CT®),
+> which is copyright of the International Health Terminology Standards
+> Development Organisation (IHTSDO), trading as SNOMED International.
+> Implementers must have the appropriate SNOMED CT Affiliate license; see
+> http://www.snomed.org/snomed-ct/get-snomed-ct or contact info@snomed.org.
 
 O nome oficial de cada código fica em
 [`scripts/loinc-snapshot.json`](scripts/loinc-snapshot.json), que a seção 10.3

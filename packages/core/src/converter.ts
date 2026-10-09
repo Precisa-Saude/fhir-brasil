@@ -17,6 +17,7 @@ import type {
   FHIRReferenceRange,
 } from './fhir-types';
 import { getLoincEntry } from './loinc-axes';
+import { ordinalValueFor } from './ordinal-answers';
 import { referenceRangeMeaning } from './reference-ranges';
 import type { Flag, LabObservationData, LabReportData, UserProfileData } from './types';
 import { getDefaultUnit, resolveUcum } from './units';
@@ -222,9 +223,15 @@ export function labObservationToFHIR(
     },
   };
 
-  // Add value based on type (qualitative = string, quantitative = number)
+  // Resultado em texto sai codificado quando a grafia tem resposta LOINC
+  // conferida ("Negativo", "Traços", "++"), com o impresso em `text`. Grafia
+  // sem código ("Raras", "Límpido") continua em `valueString`: um código
+  // aproximado seria pior que o texto exato.
   if (isQualitative) {
-    fhirObs.valueString = String(observation.value);
+    const printed = String(observation.value);
+    const coded = ordinalValueFor(printed, observation.answerCode);
+    if (coded) fhirObs.valueCodeableConcept = coded;
+    else fhirObs.valueString = printed;
   } else {
     fhirObs.valueQuantity = quantity(observation.value as number);
 

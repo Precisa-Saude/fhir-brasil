@@ -1,3 +1,9 @@
+## [0.41.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.41.1...v0.41.2) (2026-10-09)
+
+### Bug Fixes
+
+* **core:** hemácias em milhões por microlitro como M/uL ([#155](https://github.com/Precisa-Saude/fhir-brasil/issues/155)) ([3f0d8a8](https://github.com/Precisa-Saude/fhir-brasil/commit/3f0d8a8502900bf0d953ac15fe2623f0158963cb)), closes [platform#894](https://github.com/Precisa-Saude/platform/issues/894)
+
 ## [0.41.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.41.0...v0.41.1) (2026-10-09)
 
 ### Bug Fixes

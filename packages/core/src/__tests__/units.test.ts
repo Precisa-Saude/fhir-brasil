@@ -464,4 +464,10 @@ describe('hemácias em milhões por microlitro', () => {
   it.each(['milhões/µL', 'milhões/uL', 'milhões/mm³'])('%s vira 10*6/uL', (unit) => {
     expect(resolveUcum(unit, 'RBC')).toBe('10*6/uL');
   });
+
+  // Grafia que o catálogo não conhece fica sem código: um UCUM aproximado
+  // seria afirmar sob o system do UCUM o que ninguém conferiu.
+  it.each(['milhões/dL', 'milhares/µL', ''])('"%s" fica sem UCUM', (unit) => {
+    expect(resolveUcum(unit, 'RBC')).toBeUndefined();
+  });
 });

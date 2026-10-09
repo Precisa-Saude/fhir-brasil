@@ -934,8 +934,7 @@ COMPREHENSIVE METABOLIC PANEL
     const byCode = new Map(getAllSearchPatterns().map((p) => [p.code, p]));
     const wrong = [...URINALYSIS_SECTION_NAMES].filter(([, code]) => {
       const pattern = byCode.get(code);
-      const categories = [pattern?.category ?? []].flat();
-      return !pattern?.loinc || !categories.includes('urina');
+      return !pattern?.loinc || pattern.section !== 'URN';
     });
     expect(wrong).toEqual([]);
   });

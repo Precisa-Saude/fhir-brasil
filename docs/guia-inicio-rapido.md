@@ -111,6 +111,6 @@ npm install @precisa-saude/calculadoras-clinicas
 
 ## Próximos passos
 
-- [Biomarcadores](./biomarcadores.md) — modelo de dados, categorias e consultas
+- [Biomarcadores](./biomarcadores.md) — modelo de dados, seções de serviço e consultas
 - [Calculadoras](./calculadoras.md) — PhenoAge, BrDMrisc e biomarcadores derivados
 - [Contribuindo](./contribuindo.md) — como configurar o ambiente e contribuir

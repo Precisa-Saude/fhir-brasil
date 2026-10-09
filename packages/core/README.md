@@ -112,8 +112,7 @@ import { validateFHIRObservation } from '@precisa-saude/fhir/validators';
 
 | Sub-path            | Descrição                                                                 |
 | ------------------- | ------------------------------------------------------------------------- |
-| `/biomarkers`       | Definições com códigos LOINC, nomes pt/en, sub-categorias                 |
-| `/category-groups`  | Agrupamento de 10 categorias clínicas top-level sobre 20 subcategorias    |
+| `/biomarkers`       | Definições com códigos LOINC e nomes pt/en                                |
 | `/reference-ranges` | Faixas de referência por sexo/idade/gestação (SBPC/ML, SBC, SBD, OMS)     |
 | `/converter`        | Converte dados laboratoriais para FHIR R4 Bundle                          |
 | `/importer`         | Importa FHIR Bundle de volta para estruturas internas                     |

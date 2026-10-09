@@ -23,12 +23,11 @@ import { BIOMARKER_DEFINITIONS } from '../packages/core/src/biomarkers.ts';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const biomarkersWithLoinc = BIOMARKER_DEFINITIONS.filter((b) => b.loinc).sort((a, b) => {
-  const catA = Array.isArray(a.category) ? (a.category[0] ?? '') : a.category;
-  const catB = Array.isArray(b.category) ? (b.category[0] ?? '') : b.category;
-  if (catA !== catB) return catA.localeCompare(catB);
-  return a.code.localeCompare(b.code);
-});
+// Em ordem de código. Até out/2026 vinha agrupado pela categoria clínica, que
+// saiu do catálogo.
+const biomarkersWithLoinc = BIOMARKER_DEFINITIONS.filter((b) => b.loinc).sort((a, b) =>
+  a.code.localeCompare(b.code),
+);
 
 const lines: string[] = [
   'ValueSet: BRLabTestVS',
@@ -38,13 +37,7 @@ const lines: string[] = [
   '',
 ];
 
-let currentCategory = '';
 for (const b of biomarkersWithLoinc) {
-  const cat = Array.isArray(b.category) ? (b.category[0] ?? '') : b.category;
-  if (cat !== currentCategory) {
-    currentCategory = cat;
-    lines.push(`// ${cat}`);
-  }
   const displayName = b.names.pt[0] ?? b.names.en[0] ?? b.code;
   lines.push(`* $LOINC#${b.loinc} "${displayName}"`);
   // As variantes por método também são códigos que o conversor emite.

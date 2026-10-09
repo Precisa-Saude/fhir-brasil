@@ -8,8 +8,14 @@
 import { codeToLoinc, methodVariantOf } from './biomarkers';
 import { type Addressable, entryFullUrl } from './bundle-urls';
 import { BIOMARKER_CODE_SYSTEM, LOINC_SYSTEM } from './code-systems';
+import {
+  DIAGNOSTIC_SECTION_DISPLAY,
+  diagnosticSectionsOfReport,
+  V2_0074_SYSTEM,
+} from './diagnostic-sections';
 import type {
   FHIRBundle,
+  FHIRCodeableConcept,
   FHIRDiagnosticReport,
   FHIRObservation,
   FHIRPatient,
@@ -247,12 +253,31 @@ export function labObservationToFHIR(
 }
 
 /**
+ * `DiagnosticReport.category` pela v2-0074: `LAB` (o que o US Core pede no laudo
+ * de laboratório) seguido da seção de serviço de cada observação. Laudo sem
+ * exame de bancada, como a densitometria, fica com as próprias seções. Sem
+ * código nenhum, `LAB`, como era antes.
+ */
+function reportCategories(biomarkerCodes: readonly string[]): FHIRCodeableConcept[] {
+  const sections = diagnosticSectionsOfReport(biomarkerCodes);
+  return (sections.length > 0 ? sections : (['LAB'] as const)).map((code) => ({
+    coding: [{ code, display: DIAGNOSTIC_SECTION_DISPLAY[code], system: V2_0074_SYSTEM }],
+  }));
+}
+
+/**
  * Convert generic lab report to FHIR DiagnosticReport
  */
 export function labReportToFHIR(
   report: LabReportData,
   patientId: string,
   observationIds: string[],
+  /**
+   * Códigos de biomarcador das observações do laudo. Com eles, a categoria
+   * leva também a seção de serviço de cada uma (`CH`, `HM`, `URN`…); sem eles,
+   * fica só `LAB`.
+   */
+  biomarkerCodes: readonly string[] = [],
 ): Addressable<FHIRDiagnosticReport> {
   // Map processing status to FHIR status
   let status: FHIRDiagnosticReport['status'];
@@ -271,17 +296,7 @@ export function labReportToFHIR(
   }
 
   return {
-    category: [
-      {
-        coding: [
-          {
-            code: 'LAB',
-            display: 'Laboratory',
-            system: 'http://terminology.hl7.org/CodeSystem/v2-0074',
-          },
-        ],
-      },
-    ],
+    category: reportCategories(biomarkerCodes),
     code: {
       coding: [
         {
@@ -401,7 +416,12 @@ export function labResultToFHIRBundle(
   const observationIds = fhirObservations.map((entry) => entry.resource.id);
 
   // Convert report
-  const diagnosticReport = labReportToFHIR(report, patientId, observationIds);
+  const diagnosticReport = labReportToFHIR(
+    report,
+    patientId,
+    observationIds,
+    observations.map((observation) => observation.biomarkerCode),
+  );
 
   // Convert patient
   const fhirPatient = userProfileToFHIR(userProfile);

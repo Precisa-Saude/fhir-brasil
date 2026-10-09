@@ -4,16 +4,16 @@ import {
   getDefinitionByLoinc,
 } from '../../biomarkers.js';
 import { exitWithError, outputJson, outputText } from '../../cli-utils.js';
+import { diagnosticSectionOf } from '../../diagnostic-sections.js';
 
 function displayDefinition(def: BiomarkerDefinition): void {
-  const cat = Array.isArray(def.category) ? def.category.join(', ') : def.category;
   outputText(
     [
       `Biomarcador: ${def.code}`,
       `  LOINC:      ${def.loinc ?? '—'}`,
       `  Nomes (pt): ${def.names.pt.join(', ')}`,
       `  Nomes (en): ${def.names.en.join(', ')}`,
-      `  Categoria:  ${cat}`,
+      `  Seção:      ${diagnosticSectionOf(def.code) ?? '—'}`,
       `  Unidade:    ${def.unit ?? '—'}`,
       `  Sexo:       ${def.sex ?? 'ambos'}`,
       `  Visível:    ${def.hidden ? 'não' : 'sim'}`,

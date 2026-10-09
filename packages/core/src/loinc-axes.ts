@@ -10,6 +10,8 @@ import { LOINC_SNAPSHOT } from './loinc-snapshot.generated';
 
 /** Um código LOINC no snapshot, com os eixos na grafia em que o LOINC os exibe. */
 export interface LoincEntry {
+  /** Classe do LOINC (`CHEM`, `HEM/BC`, `UA`); ver `diagnostic-sections.ts`. */
+  class: string | null;
   component: string | null;
   display: string;
   /** LOINC Groups (`LG…`) a que o código pertence, com o nome de cada um. */

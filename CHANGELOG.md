@@ -1,3 +1,9 @@
+## [0.41.3](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.41.2...v0.41.3) (2026-10-09)
+
+### Bug Fixes
+
+* **core:** massa regional em libras, HOMA-IR em {index} e faixa de resultado em texto ([#156](https://github.com/Precisa-Saude/fhir-brasil/issues/156)) ([6f908b3](https://github.com/Precisa-Saude/fhir-brasil/commit/6f908b331dedaaf27ecc834837bcad23e625ad22))
+
 ## [0.41.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.41.1...v0.41.2) (2026-10-09)
 
 ### Bug Fixes

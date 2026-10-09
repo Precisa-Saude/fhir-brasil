@@ -147,7 +147,7 @@ echo "Hemoglobina 14.5 g/dL Glicose 99 mg/dL" | fhir-ocr codes --json
 
 <!-- catalog:counts:start -->
 
-Medido no `@precisa-saude/fhir@0.41.2`, gerado por `pnpm catalog:counts`.
+Medido no `@precisa-saude/fhir@0.41.3`, gerado por `pnpm catalog:counts`.
 
 - **236 biomarcadores** definidos, dos quais **191 têm código LOINC** (80,9%) e 45 não têm.
 - **204 códigos LOINC aceitos** na busca por código: os 191 canônicos, as variantes por método e os aliases de códigos que o LOINC aposentou.

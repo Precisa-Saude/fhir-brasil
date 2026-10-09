@@ -652,6 +652,14 @@ interface Decisao {
   escolha: string | null;
   probabilidades: Record<string, number> | null;
 }
+// Instrução do Jev. A frase do espécime só entra quando há espécime implícito.
+const INSTRUCAO_BASE =
+  'Escolha o código LOINC cujo componente, propriedade, sistema (espécime), escala e método descrevem exatamente este exame como ele aparece em laudos brasileiros de rotina. Se o laudo imprime um método e um candidato traz esse método (marca "método igual ao impresso no laudo"), esse candidato é o certo. Se o conceito só existe como cálculo (VLDL, globulina, LDL calculado, TFG estimada; marca "conceito que só existe como cálculo"), o código calculado é o certo. Quando o laudo não indica método: para hemograma (classe HEM/BC) a variante padrão é "by Automated count", para urina tipo I (UA) é "by Test strip" (sedimento: microscopia), para coagulação é "by Coagulation assay"; nas demais classes prefira o conceito base sem método. Resultado qualitativo (sem unidade; Negativo, Traços, cruzes) é propriedade [Presence]; resultado com unidade é a propriedade que a unidade implica.';
+const FRASE_ESPECIME =
+  ' Quando o laudo não imprime espécime, vale o espécime implícito do exame (marca "espécime implícito do exame"): bioquímica em soro ou plasma, nunca sangue total; coagulação em plasma pobre em plaquetas.';
+const INSTRUCAO_FIM =
+  ' A marca "mais comum nos laudos" é só informativa e não muda a regra. Evite qualificadores de tempo ou desafio que o laudo não indica. Escolha NONE se nenhum candidato servir.';
+
 const DESCRICAO_ESPECIME: Record<string, string> = {
   Bld: 'sangue total (hemograma)',
   PPP: 'plasma pobre em plaquetas (coagulação)',
@@ -711,8 +719,10 @@ async function escolherComJev(
     questions: {
       resposta: {
         criteria,
-        instructions:
-          'Escolha o código LOINC cujo componente, propriedade, sistema (espécime), escala e método descrevem exatamente este exame como ele aparece em laudos brasileiros de rotina. Se o laudo imprime um método e um candidato traz esse método (marca "método igual ao impresso no laudo"), esse candidato é o certo. Se o conceito só existe como cálculo (VLDL, globulina, LDL calculado, TFG estimada; marca "conceito que só existe como cálculo"), o código calculado é o certo. Quando o laudo não indica método: para hemograma (classe HEM/BC) a variante padrão é "by Automated count", para urina tipo I (UA) é "by Test strip" (sedimento: microscopia), para coagulação é "by Coagulation assay"; nas demais classes prefira o conceito base sem método. Resultado qualitativo (sem unidade; Negativo, Traços, cruzes) é propriedade [Presence]; resultado com unidade é a propriedade que a unidade implica. Quando o laudo não imprime espécime, vale o espécime implícito do exame (marca "espécime implícito do exame"): bioquímica em soro ou plasma, nunca sangue total; coagulação em plasma pobre em plaquetas. A marca "mais comum nos laudos" é só informativa e não muda a regra. Evite qualificadores de tempo ou desafio que o laudo não indica. Escolha NONE se nenhum candidato servir.',
+        // A frase do espécime só entra quando há pista: presente sempre, ela
+        // levava o Jev a abster-se em exames de sangue total sem pista, como a
+        // razão AA/EPA (rodada 14).
+        instructions: `${INSTRUCAO_BASE}${especime ? FRASE_ESPECIME : ''}${INSTRUCAO_FIM}`,
         type: 'choice',
       },
     },

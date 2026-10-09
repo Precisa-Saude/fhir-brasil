@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { BIOMARKER_DEFINITIONS } from '../biomarkers';
 import {
   BIOMARKER_DEFAULT_UNIT,
   BIOMARKER_UNITS,
@@ -469,5 +470,53 @@ describe('hemácias em milhões por microlitro', () => {
   // seria afirmar sob o system do UCUM o que ninguém conferiu.
   it.each(['milhões/dL', 'milhares/µL', ''])('"%s" fica sem UCUM', (unit) => {
     expect(resolveUcum(unit, 'RBC')).toBeUndefined();
+  });
+});
+
+describe('massa corporal impressa em libras', () => {
+  // A densitometria americana imprime a massa de cada região em libras. Sem
+  // configuração, braços, pernas e tronco ficavam em `lbs`, sem conversão e
+  // sem código UCUM.
+  const inKg = BIOMARKER_DEFINITIONS.filter((d) => d.unit === 'kg').map((d) => d.code);
+
+  it('toda massa em kg do catálogo tem configuração de unidade', () => {
+    expect(inKg).toEqual(expect.arrayContaining(['ArmsLeanMass', 'TrunkFatMass', 'MuscleMass']));
+    for (const code of inKg) {
+      expect(BIOMARKER_UNITS[code]?.canonicalUcum, code).toBe('kg');
+      expect(BIOMARKER_UNITS[code]?.aliases.lbs, code).toBe('[lb_av]');
+    }
+  });
+
+  it.each([
+    'ArmsFatMass',
+    'ArmsLeanMass',
+    'LegsFatMass',
+    'LegsLeanMass',
+    'TrunkFatMass',
+    'TrunkLeanMass',
+  ])('%s em kg e em libras tem código UCUM', (code) => {
+    expect(resolveUcum('kg', code)).toBe('kg');
+    expect(resolveUcum('lbs', code)).toBe('[lb_av]');
+    expect(resolveUcum('lb', code)).toBe('[lb_av]');
+  });
+});
+
+describe('grafia de massa que o catálogo não conhece', () => {
+  // Unidade sem tradução fica sem código: um UCUM aproximado seria afirmar sob
+  // o system do UCUM o que ninguém conferiu.
+  it.each(['st', 'oz', 'libras', ''])('"%s" fica sem UCUM em ArmsLeanMass', (unit) => {
+    expect(resolveUcum(unit, 'ArmsLeanMass')).toBeUndefined();
+  });
+});
+
+describe('HOMA-IR adimensional', () => {
+  // A calculadora devolve `index`, o catálogo declara `índice`.
+  it.each(['index', 'índice', 'Index'])('"%s" vira {index}', (unit) => {
+    expect(resolveUcum(unit, 'HOMA_IR')).toBe('{index}');
+  });
+
+  it('a unidade canônica é a que o catálogo declara', () => {
+    const declared = BIOMARKER_DEFINITIONS.find((d) => d.code === 'HOMA_IR')?.unit;
+    expect(getCanonicalUnit('HOMA_IR')).toBe(declared);
   });
 });

@@ -234,11 +234,14 @@ export function labObservationToFHIR(
     else fhirObs.valueString = printed;
   } else {
     fhirObs.valueQuantity = quantity(observation.value as number);
-
-    // Reference range only applies to quantitative values
-    const referenceRange = buildReferenceRanges(observation, quantity);
-    if (referenceRange.length > 0) fhirObs.referenceRange = referenceRange;
   }
+
+  // Resultado em texto também tem faixa quando o laudo a imprime em número: o
+  // sedimento da urina da Quest sai como "WBC  NONE SEEN  < OR = 5 /HPF". A
+  // faixa vai na unidade da linha, a mesma do `quantity` acima. Sem faixa
+  // informada, nada sai, como antes.
+  const referenceRange = buildReferenceRanges(observation, quantity);
+  if (referenceRange.length > 0) fhirObs.referenceRange = referenceRange;
 
   return fhirObs;
 }

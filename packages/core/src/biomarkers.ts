@@ -2576,6 +2576,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Android Region Fat %',
         'Abdominal Fat %',
         'Android % Fat',
+        // A célula da tabela regional da Live Lean: linha "Android", coluna
+        // "Total Fat %". Sem o nome, o "Total Fat %" da citação ancorava
+        // `BodyFatPct`, e a região bloqueava o casamento sem pôr nada no lugar.
+        'Android Total Fat %',
       ],
       pt: [
         'Percentual de Gordura Androide',
@@ -2600,6 +2604,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Gynoid Region Fat %',
         'Hip Fat %',
         'Gynoid % Fat',
+        // A célula da tabela regional da Live Lean: linha "Gynoid", coluna
+        // "Total Fat %". Sem o nome, o "Total Fat %" da citação ancorava
+        // `BodyFatPct`, e a região bloqueava o casamento sem pôr nada no lugar.
+        'Gynoid Total Fat %',
       ],
       pt: [
         'Percentual de Gordura Ginoide',

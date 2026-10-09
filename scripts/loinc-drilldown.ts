@@ -652,15 +652,51 @@ interface Decisao {
   escolha: string | null;
   probabilidades: Record<string, number> | null;
 }
+const DESCRICAO_ESPECIME: Record<string, string> = {
+  Bld: 'sangue total (hemograma)',
+  PPP: 'plasma pobre em plaquetas (coagulação)',
+  RBC: 'hemácias',
+  'Ser/Plas': 'soro ou plasma (bioquímica)',
+  Urine: 'urina',
+};
+// Painéis de ácidos graxos são dosados em sangue total ou hemácia, não em soro.
+const ACIDO_GRAXO = /Fatty acid|ate \(C\d|Omega|Arachidon|Eicosapent|Docosa/i;
+
+// O primeiro sistema da lista que a categoria implica, quando há. Soro/plasma
+// só vira pista quando a lista tem de fato a escolha entre soro/plasma e sangue
+// total para o mesmo componente: as categorias do catálogo são clínicas, não de
+// espécime, e a pista aplicada às cegas mandava HbA1c e ácidos graxos para o
+// soro (rodada 13).
+function especimeImplicito(
+  alvo: Alvo,
+  cands: Candidato[],
+): { descricao: string; sistema: string } | null {
+  const sistema = sistemas(alvo)?.[0];
+  const descricao = sistema ? DESCRICAO_ESPECIME[sistema] : undefined;
+  if (!sistema || !descricao) return null;
+  if (sistema !== 'Ser/Plas') return { descricao, sistema };
+  const emSoro = new Set(cands.filter((c) => c.system === 'Ser/Plas').map((c) => c.component));
+  const escolhaReal = cands.some(
+    (c) => c.system === 'Bld' && emSoro.has(c.component) && !ACIDO_GRAXO.test(c.component ?? ''),
+  );
+  return escolhaReal ? { descricao, sistema } : null;
+}
+
 async function escolherComJev(
   alvo: Alvo,
   cands: Candidato[],
   soCalculados: Set<string> = new Set(),
 ): Promise<Decisao> {
+  // Espécime que o exame implica quando o laudo não imprime um: bioquímica é
+  // soro ou plasma, coagulação é plasma pobre em plaquetas, hemograma é sangue
+  // total. Sem essa pista, o Jev punha glicose e INR em sangue total com
+  // confiança abaixo de 0,65 (rodada 12).
+  const especime = especimeImplicito(alvo, cands);
   const criteria: Record<string, string> = {};
   cands.forEach((c, i) => {
     const tags = [
       casaMetodoImpresso(c.method, alvo.metodoImpresso) ? 'método igual ao impresso no laudo' : '',
+      especime && c.system === especime.sistema ? 'espécime implícito do exame' : '',
       /^Calc/i.test(c.method) && soCalculados.has(c.component)
         ? 'conceito que só existe como cálculo'
         : '',
@@ -676,7 +712,7 @@ async function escolherComJev(
       resposta: {
         criteria,
         instructions:
-          'Escolha o código LOINC cujo componente, propriedade, sistema (espécime), escala e método descrevem exatamente este exame como ele aparece em laudos brasileiros de rotina. Se o laudo imprime um método e um candidato traz esse método (marca "método igual ao impresso no laudo"), esse candidato é o certo. Se o conceito só existe como cálculo (VLDL, globulina, LDL calculado, TFG estimada; marca "conceito que só existe como cálculo"), o código calculado é o certo. Quando o laudo não indica método: para hemograma (classe HEM/BC) a variante padrão é "by Automated count", para urina tipo I (UA) é "by Test strip" (sedimento: microscopia), para coagulação é "by Coagulation assay"; nas demais classes prefira o conceito base sem método. Resultado qualitativo (sem unidade; Negativo, Traços, cruzes) é propriedade [Presence]; resultado com unidade é a propriedade que a unidade implica. A marca "mais comum nos laudos" é só informativa e não muda a regra. Evite qualificadores de tempo ou desafio que o laudo não indica. Escolha NONE se nenhum candidato servir.',
+          'Escolha o código LOINC cujo componente, propriedade, sistema (espécime), escala e método descrevem exatamente este exame como ele aparece em laudos brasileiros de rotina. Se o laudo imprime um método e um candidato traz esse método (marca "método igual ao impresso no laudo"), esse candidato é o certo. Se o conceito só existe como cálculo (VLDL, globulina, LDL calculado, TFG estimada; marca "conceito que só existe como cálculo"), o código calculado é o certo. Quando o laudo não indica método: para hemograma (classe HEM/BC) a variante padrão é "by Automated count", para urina tipo I (UA) é "by Test strip" (sedimento: microscopia), para coagulação é "by Coagulation assay"; nas demais classes prefira o conceito base sem método. Resultado qualitativo (sem unidade; Negativo, Traços, cruzes) é propriedade [Presence]; resultado com unidade é a propriedade que a unidade implica. Quando o laudo não imprime espécime, vale o espécime implícito do exame (marca "espécime implícito do exame"): bioquímica em soro ou plasma, nunca sangue total; coagulação em plasma pobre em plaquetas. A marca "mais comum nos laudos" é só informativa e não muda a regra. Evite qualificadores de tempo ou desafio que o laudo não indica. Escolha NONE se nenhum candidato servir.',
         type: 'choice',
       },
     },
@@ -686,6 +722,7 @@ async function escolherComJev(
       `Nome em inglês: ${alvo.en.join(' / ')}`,
       `Unidade: ${alvo.unit ?? '(sem unidade)'}`,
       `Método impresso: ${alvo.metodoImpresso ?? '(o laudo não imprime método)'}`,
+      `Espécime: ${especime ? `${especime.descricao} (implícito; o laudo não imprime espécime)` : '(sem espécime implícito)'}`,
       `Categoria clínica: ${alvo.category}`,
     ].join('\n'),
   };

@@ -60,6 +60,8 @@ const snapshot = JSON.parse(
 const PROPERTIES_BY_UNIT: Record<string, string[]> = {
   // Fração: massa, substância, número, volume. `DistWidth` é o RDW.
   '%': ['MFr', 'SFr', 'NFr', 'VFr', 'DistWidth'],
+  // Eritroblastos por 100 leucócitos: o LOINC trata como razão.
+  '/100 WBC': ['Ratio'],
   '/HPF': ['Naric'],
   '/LPF': ['Naric'],
   Angstrom: ['EntLen'],

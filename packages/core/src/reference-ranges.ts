@@ -1198,12 +1198,6 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'selhub-homocysteine-1999',
   },
 
-  IGF1: {
-    default: { max: 350, min: 100, optimalMax: 300, optimalMin: 150, unit: 'ng/mL' },
-    kind: 'reference-interval',
-    source: 'tietz-7ed-2015',
-  },
-
   ImmatureGranulocytes: {
     default: { max: 1.0, min: 0, optimalMax: 0.5, optimalMin: 0, unit: '%' },
     kind: 'reference-interval',
@@ -1548,7 +1542,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   NRBC: {
-    default: { max: 0, min: 0, optimalMax: 0, optimalMin: 0, unit: '/100WBC' },
+    default: { max: 0, min: 0, optimalMax: 0, optimalMin: 0, unit: '/100 WBC' },
     kind: 'reference-interval',
     source: 'tietz-7ed-2015',
   },

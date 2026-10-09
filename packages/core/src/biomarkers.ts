@@ -643,6 +643,53 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     category: 'regulacao-imunologica',
+    code: 'ImmatureGranulocytes',
+    // Contagem automatizada, como o resto do leucograma do catálogo.
+    loinc: '71695-1',
+    names: {
+      en: ['Immature Granulocytes', 'Immature Grans', 'IG %'],
+      pt: ['Granulócitos Imaturos', 'Granulócitos Imaturos %'],
+    },
+    unit: '%',
+  },
+  {
+    category: 'regulacao-imunologica',
+    code: 'ImmatureGranulocytes_Abs',
+    hidden: true,
+    loinc: '53115-2',
+    names: {
+      en: [
+        'Absolute Immature Granulocytes',
+        'Immature Grans (Abs)',
+        'Immature Granulocytes, Absolute',
+      ],
+      pt: ['Granulócitos Imaturos Absolutos'],
+    },
+    unit: 'K/uL',
+  },
+  {
+    category: 'sangue',
+    code: 'NRBC',
+    loinc: '58413-6',
+    names: {
+      en: ['NRBC', 'Nucleated RBC', 'Nucleated Red Blood Cells'],
+      pt: ['Eritroblastos', 'Hemácias Nucleadas'],
+    },
+    unit: '/100 WBC',
+  },
+  {
+    category: 'sangue',
+    code: 'NRBC_Abs',
+    hidden: true,
+    loinc: '771-6',
+    names: {
+      en: ['Absolute NRBC', 'NRBC, Absolute', 'Nucleated RBC, Absolute'],
+      pt: ['Eritroblastos Absolutos'],
+    },
+    unit: 'K/uL',
+  },
+  {
+    category: 'regulacao-imunologica',
     code: 'WBC',
     loinc: '6690-2',
     names: {
@@ -950,6 +997,16 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     category: 'metabolico',
+    code: 'CPeptide',
+    loinc: '1986-9',
+    names: {
+      en: ['C-Peptide', 'C Peptide', 'Connecting Peptide'],
+      pt: ['Peptídeo C', 'Peptídeo-C'],
+    },
+    unit: 'ng/mL',
+  },
+  {
+    category: 'metabolico',
     code: 'HOMA_IR',
     loinc: '47214-2',
     names: {
@@ -1047,6 +1104,29 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     category: 'nutrientes',
+    code: 'Phosphorus',
+    loinc: '2777-1',
+    names: {
+      en: ['Phosphorus', 'Phosphate', 'Phosphorus, Serum', 'Inorganic Phosphorus'],
+      pt: ['Fósforo', 'Fosfato', 'Fósforo Sérico', 'Fósforo Inorgânico'],
+    },
+    unit: 'mg/dL',
+  },
+  {
+    category: 'nutrientes',
+    code: 'IonizedCalcium',
+    // 1995-0 é o conceito base em soro ou plasma, em mmol/L, como o laudo
+    // brasileiro imprime. A Quest imprime em mg/dL; a conversão pela massa
+    // molar do cálcio leva o valor para mmol/L antes do Bundle.
+    loinc: '1995-0',
+    names: {
+      en: ['Ionized Calcium', 'Calcium, Ionized', 'Calcium Ionized', 'iCa'],
+      pt: ['Cálcio Iônico', 'Cálcio Ionizado', 'Cálcio Livre'],
+    },
+    unit: 'mmol/L',
+  },
+  {
+    category: 'nutrientes',
     code: 'Ferritin',
     loinc: '2276-4',
     names: {
@@ -1126,6 +1206,16 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       ],
     },
     unit: 'mcg/dL',
+  },
+  {
+    category: 'nutrientes',
+    code: 'Transferrin',
+    loinc: '3034-6',
+    names: {
+      en: ['Transferrin', 'Transferrin, Serum'],
+      pt: ['Transferrina', 'Transferrina Sérica'],
+    },
+    unit: 'mg/dL',
   },
   {
     category: 'nutrientes',
@@ -1380,6 +1470,30 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     category: 'nutrientes',
+    code: 'VitaminD2',
+    // A Quest imprime as frações ao lado do total quando a dosagem é por
+    // LC/MS/MS. O total continua em `VitaminD` (62292-8).
+    loinc: '49054-0',
+    names: {
+      en: ['Vitamin D2', '25-Hydroxyvitamin D2', '25-OH Vitamin D2', 'Vitamin D, 25-OH, D2'],
+      pt: ['Vitamina D2', '25-Hidroxivitamina D2', '25-OH Vitamina D2'],
+    },
+    unit: 'ng/mL',
+  },
+  {
+    category: 'nutrientes',
+    code: 'VitaminD3',
+    // 1989-3 é a fração D3, e não o total: até set/2026 era o código errado
+    // de `VitaminD`.
+    loinc: '1989-3',
+    names: {
+      en: ['Vitamin D3', '25-Hydroxyvitamin D3', '25-OH Vitamin D3', 'Vitamin D, 25-OH, D3'],
+      pt: ['Vitamina D3', '25-Hidroxivitamina D3', '25-OH Vitamina D3'],
+    },
+    unit: 'ng/mL',
+  },
+  {
+    category: 'nutrientes',
     code: 'Zinc',
     // 5763-8 é "Zinc [Mass/volume] in Serum or Plasma", o zinco sérico da
     // rotina brasileira (o nome em inglês já dizia "Serum Zinc"). Até out/2026
@@ -1405,6 +1519,23 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       pt: ['Cortisol'],
     },
     unit: 'mcg/dL',
+  },
+  {
+    category: 'estresse-envelhecimento',
+    code: 'IGF1',
+    loinc: '2484-4',
+    names: {
+      en: [
+        'IGF-1',
+        'IGF-I',
+        'IGF 1',
+        'Insulin-like Growth Factor 1',
+        'Insulin-Like Growth Factor I',
+        'Somatomedin C',
+      ],
+      pt: ['IGF-1', 'IGF-I', 'Fator de Crescimento Semelhante à Insulina 1', 'Somatomedina C'],
+    },
+    unit: 'ng/mL',
   },
 
   // ============================================================================
@@ -1762,6 +1893,25 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'mg/L',
   },
   {
+    category: 'rins',
+    code: 'ProteinCreatinineRatio_Urine',
+    loinc: '2890-2',
+    names: {
+      en: [
+        'Protein/Creatinine Ratio',
+        'Protein/Creatinine Ratio, Urine',
+        'Urine Protein/Creatinine Ratio',
+        'UPCR',
+      ],
+      pt: [
+        'Relação Proteína/Creatinina',
+        'Relação Proteína/Creatinina Urinária',
+        'Relação Proteína Creatinina',
+      ],
+    },
+    unit: 'mg/g',
+  },
+  {
     // LOINC 3091-6 = "Urea [Mass/volume] in Serum or Plasma" (mg/dL).
     // Anteriormente 3094-0 ("Urea nitrogen", BUN), inconsistente com a faixa
     // de referência brasileira (15-50 mg/dL) e com os nomes pt-BR (Ureia).
@@ -1898,6 +2048,18 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     names: {
       en: ['Sodium', 'Na'],
       pt: ['Sódio', 'Na'],
+    },
+    unit: 'mEq/L',
+  },
+  {
+    category: 'rins',
+    code: 'AnionGap',
+    // Conceito base, calculado: o laudo não diz se entrou o potássio. O
+    // painel metabólico americano imprime o resultado; o brasileiro raramente.
+    loinc: '33037-3',
+    names: {
+      en: ['Anion Gap'],
+      pt: ['Ânion Gap', 'Hiato Aniônico', 'Anion Gap'],
     },
     unit: 'mEq/L',
   },

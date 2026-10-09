@@ -75,6 +75,18 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
   AMH: nameOnly('38476-8'),
   Amylase: nameOnly('1798-8'),
   ANA_Screen: nameOnly('8061-4'),
+  AnionGap: {
+    loinc: '33037-3',
+    evidence: ['name'],
+    settledBy: 'name',
+    siblingsRejected: [
+      {
+        loinc: '10466-1',
+        reason: 'Calculated.3Ions: o laudo não diz se o potássio entrou na conta',
+      },
+      { loinc: '1863-0', reason: 'Calculated.4Ions: idem' },
+    ],
+  },
   AntiThyroglobulin: nameOnly('8098-6'),
   AntiTPO: nameOnly('8099-4'),
   ApoA1: nameOnly('1869-7'),
@@ -146,6 +158,12 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
   CO2: nameOnly('2028-9'),
   Color_Urine: nameOnly('5778-6'),
   Cortisol: nameOnly('2143-6'),
+  CPeptide: {
+    loinc: '1986-9',
+    evidence: ['name', 'unit'],
+    settledBy: 'unit',
+    siblingsRejected: [{ loinc: '14633-2', reason: 'pmol/L, molar; o laudo imprime ng/mL' }],
+  },
   Creatinine: nameOnly('2160-0'),
   Creatinine_Urine: nameOnly('2161-8'),
   CRP: nameOnly('1988-5'),
@@ -231,10 +249,48 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
   IgE_E1_CatDander: nameOnly('6833-8'),
   IgE_GX1_Grasses: nameOnly('30189-5'),
   IgE_Total: nameOnly('19113-0'),
+  IGF1: {
+    loinc: '2484-4',
+    evidence: ['name', 'unit'],
+    settledBy: 'unit',
+    siblingsRejected: [{ loinc: '73561-3', reason: 'escore Z, outra grandeza' }],
+  },
   IgG: nameOnly('2465-3'),
   IgM: nameOnly('2472-9'),
+  ImmatureGranulocytes: {
+    loinc: '71695-1',
+    evidence: ['name'],
+    settledBy: 'name',
+    siblingsRejected: [
+      {
+        loinc: '38518-7',
+        reason: 'sem método; o leucograma do catálogo usa a contagem automatizada',
+      },
+    ],
+  },
+  ImmatureGranulocytes_Abs: {
+    loinc: '53115-2',
+    evidence: ['name', 'unit'],
+    settledBy: 'unit',
+    siblingsRejected: [
+      {
+        loinc: '51584-1',
+        reason: 'sem método; o leucograma do catálogo usa a contagem automatizada',
+      },
+    ],
+  },
   INR: nameOnly('6301-6'),
   Insulin: nameOnly('20448-7'),
+  IonizedCalcium: {
+    loinc: '1995-0',
+    evidence: ['name', 'unit'],
+    settledBy: 'unit',
+    siblingsRejected: [
+      { loinc: '1994-3', reason: 'sangue total, da gasometria' },
+      { loinc: '12180-6', reason: 'método ISE, que o laudo não imprime' },
+      { loinc: '38230-9', reason: 'sangue total, em mg/dL' },
+    ],
+  },
   Iron: nameOnly('2498-4'),
   Ketones_Urine: {
     loinc: '2514-8',
@@ -296,6 +352,30 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
   Neutrophils_Abs: nameOnly('751-8'),
   Nitrite_Urine: nameOnly('5802-4'),
   NonHDL_Cholesterol: nameOnly('43396-1'),
+  NRBC: {
+    loinc: '58413-6',
+    evidence: ['name'],
+    settledBy: 'name',
+    siblingsRejected: [
+      {
+        loinc: '19048-8',
+        reason: 'sem método; o hemograma do catálogo usa a contagem automatizada',
+      },
+      { loinc: '18309-5', reason: 'contagem manual' },
+    ],
+  },
+  NRBC_Abs: {
+    loinc: '771-6',
+    evidence: ['name', 'unit'],
+    settledBy: 'unit',
+    siblingsRejected: [
+      {
+        loinc: '30392-5',
+        reason: 'sem método; o hemograma do catálogo usa a contagem automatizada',
+      },
+      { loinc: '772-4', reason: 'contagem manual' },
+    ],
+  },
   NTproBNP: nameOnly('33762-6'),
   Omega3_DHA: {
     loinc: '90914-3',
@@ -361,6 +441,12 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
     siblingsRejected: [],
     note: 'Único código de ângulo de fase; declara razão e o aparelho imprime graus.',
   },
+  Phosphorus: {
+    loinc: '2777-1',
+    evidence: ['name', 'unit'],
+    settledBy: 'unit',
+    siblingsRejected: [{ loinc: '14879-1', reason: 'mmol/L, molar; o laudo imprime mg/dL' }],
+  },
   Platelets: nameOnly('777-3'),
   Potassium: nameOnly('2823-3'),
   Progesterone: nameOnly('2839-9'),
@@ -374,6 +460,15 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
         loinc: '5804-0',
         reason: 'o mesmo exame em mg/dL, e o EAS imprime Negativo, Traços ou cruzes (PrThr)',
       },
+    ],
+  },
+  ProteinCreatinineRatio_Urine: {
+    loinc: '2890-2',
+    evidence: ['name', 'unit'],
+    settledBy: 'unit',
+    siblingsRejected: [
+      { loinc: '34366-5', reason: 'g/mmol, outra grandeza' },
+      { loinc: '13801-6', reason: 'urina de 24 horas' },
     ],
   },
   ProthrombinTime: nameOnly('5902-2'),
@@ -425,6 +520,7 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
   },
   TotalMass: nameOnly('29463-7'),
   TotalProtein: nameOnly('2885-2'),
+  Transferrin: nameOnly('3034-6'),
   TransferrinSaturation: nameOnly('2502-3'),
   Triglycerides: nameOnly('2571-8'),
   TroponinI: {
@@ -471,6 +567,8 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
       { loinc: '1989-3', reason: 'só a fração D3; os imunoensaios reportam D2 + D3' },
     ],
   },
+  VitaminD2: nameOnly('49054-0'),
+  VitaminD3: nameOnly('1989-3'),
   VLDL: nameOnly('13458-5'),
   WaistCircumference: nameOnly('8280-0'),
   WBC: nameOnly('6690-2'),

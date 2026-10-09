@@ -1,7 +1,7 @@
 ValueSet: BRLabTestVS
 Id: br-lab-test-vs
 Title: "BR Lab Test ValueSet"
-Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-brasil. Gerado automaticamente a partir de 191 biomarcadores com código LOINC no pacote core."
+Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-brasil. Gerado automaticamente a partir de 204 biomarcadores com código LOINC no pacote core."
 
 // autoimunidade
 * $LOINC#8061-4 "Triagem de Anticorpos Antinucleares"
@@ -58,6 +58,7 @@ Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-bras
 * $LOINC#2028-9 "Dióxido de Carbono"
 // estresse-envelhecimento
 * $LOINC#2143-6 "Cortisol"
+* $LOINC#2484-4 "IGF-1"
 // figado
 * $LOINC#1751-7 "Albumina"
 * $LOINC#1759-0 "Razão Albumina / Globulina"
@@ -83,6 +84,7 @@ Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-bras
 // metabolico
 * $LOINC#47828-9 "Adiponectina"
 * $LOINC#2157-6 "Creatina Quinase"
+* $LOINC#1986-9 "Peptídeo C"
 * $LOINC#27353-2 "Glicemia Média Estimada"
 * $LOINC#2345-7 "Glicose"
 * $LOINC#1558-6 "Glicemia de Jejum"
@@ -98,6 +100,7 @@ Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-bras
 * $LOINC#2276-4 "Ferritina"
 * $LOINC#2284-8 "Folato"
 * $LOINC#13965-9 "Homocisteína"
+* $LOINC#1995-0 "Cálcio Iônico"
 * $LOINC#2498-4 "Ferro"
 * $LOINC#19123-9 "Magnésio"
 * $LOINC#26746-8 "Magnésio RBC"
@@ -110,13 +113,17 @@ Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-bras
 * $LOINC#90917-6 "Ômega-6: Ácido Linoleico"
 * $LOINC#90910-1 "Razão Ômega-6 / Ômega-3"
 * $LOINC#99621-5 "Ômega-6 Total"
+* $LOINC#2777-1 "Fósforo"
 * $LOINC#5724-0 "Selênio"
 * $LOINC#2500-7 "Capacidade de Ligação do Ferro"
+* $LOINC#3034-6 "Transferrina"
 * $LOINC#2502-3 "Saturação de Ferro"
 * $LOINC#2923-1 "Vitamina A"
 * $LOINC#2132-9 "Vitamina B12"
 * $LOINC#1903-4 "Vitamina C"
 * $LOINC#62292-8 "Vitamina D"
+* $LOINC#49054-0 "Vitamina D2"
+* $LOINC#1989-3 "Vitamina D3"
 * $LOINC#5763-8 "Zinco"
 // pancreas
 * $LOINC#1798-8 "Amilase"
@@ -132,6 +139,8 @@ Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-bras
 * $LOINC#30189-5 "IgE GX1 Gramíneas"
 * $LOINC#19113-0 "IgE Total"
 * $LOINC#2465-3 "Imunoglobulina G"
+* $LOINC#71695-1 "Granulócitos Imaturos"
+* $LOINC#53115-2 "Granulócitos Imaturos Absolutos"
 * $LOINC#736-9 "Linfócitos"
 * $LOINC#731-0 "Linfócitos Absolutos"
 * $LOINC#5905-5 "Monócitos"
@@ -141,6 +150,7 @@ Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-bras
 * $LOINC#6690-2 "Contagem de Leucócitos"
 // rins
 * $LOINC#9318-7 "Razão Albumina/Creatinina"
+* $LOINC#33037-3 "Ânion Gap"
 * $LOINC#3094-0 "Nitrogênio Ureico"
 * $LOINC#3097-3 "Razão BUN / Creatinina"
 * $LOINC#2160-0 "Creatinina"
@@ -149,6 +159,7 @@ Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-bras
 * $LOINC#98979-8 "Taxa de Filtração Glomerular Estimada"
 * $LOINC#14957-5 "Albumina Urinária"
 * $LOINC#2823-3 "Potássio"
+* $LOINC#2890-2 "Relação Proteína/Creatinina"
 * $LOINC#2951-2 "Sódio"
 * $LOINC#3091-6 "Ureia"
 * $LOINC#56997-0 "Razão Ureia / Creatinina"
@@ -164,6 +175,8 @@ Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-bras
 * $LOINC#786-4 "Concentração de Hemoglobina Corpuscular Média"
 * $LOINC#787-2 "Volume Corpuscular Médio"
 * $LOINC#32623-1 "Volume Plaquetário Médio"
+* $LOINC#58413-6 "Eritroblastos"
+* $LOINC#771-6 "Eritroblastos Absolutos"
 * $LOINC#777-3 "Contagem de Plaquetas"
 * $LOINC#5902-2 "Tempo de Protrombina"
 * $LOINC#789-8 "Contagem de Hemácias"

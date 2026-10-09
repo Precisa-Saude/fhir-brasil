@@ -1,6 +1,6 @@
 {
-  "acceptedLoincCodes": 204,
-  "biomarkers": 236,
+  "acceptedLoincCodes": 217,
+  "biomarkers": 249,
   "byCategory": [
     {
       "count": 29,
@@ -9,16 +9,16 @@
       "withLoinc": 22
     },
     {
-      "count": 51,
-      "examples": ["Cortisol", "BMI", "BodyFatPct", "FatMass", "LeanMass"],
+      "count": 52,
+      "examples": ["Cortisol", "IGF1", "BMI", "BodyFatPct", "FatMass"],
       "pt": "Composição Corporal e Envelhecimento",
-      "withLoinc": 14
+      "withLoinc": 15
     },
     {
-      "count": 17,
-      "examples": ["Hct", "Hgb", "MCH", "MCHC", "MCV"],
+      "count": 19,
+      "examples": ["NRBC", "NRBC_Abs", "Hct", "Hgb", "MCH"],
       "pt": "Hematológico",
-      "withLoinc": 17
+      "withLoinc": 19
     },
     {
       "count": 12,
@@ -27,22 +27,22 @@
       "withLoinc": 12
     },
     {
-      "count": 25,
+      "count": 27,
       "examples": ["ANA_Screen", "RheumatoidFactor", "Basophils", "Basophils_Abs", "Eosinophils"],
       "pt": "Imunológico",
-      "withLoinc": 25
+      "withLoinc": 27
     },
     {
-      "count": 23,
+      "count": 24,
       "examples": ["AntiThyroglobulin", "AntiTPO", "TSH", "T4Free", "Thyroglobulin"],
       "pt": "Metabólico e Endócrino",
-      "withLoinc": 23
+      "withLoinc": 24
     },
     {
-      "count": 28,
-      "examples": ["Lead", "Mercury", "AA_EPA_Ratio", "Calcium", "Ferritin"],
+      "count": 33,
+      "examples": ["Lead", "Mercury", "AA_EPA_Ratio", "Calcium", "Phosphorus"],
       "pt": "Nutricional e Exposição Ambiental",
-      "withLoinc": 28
+      "withLoinc": 33
     },
     {
       "count": 6,
@@ -51,16 +51,16 @@
       "withLoinc": 6
     },
     {
-      "count": 31,
+      "count": 33,
       "examples": [
         "Microalbumin_Urine",
+        "ProteinCreatinineRatio_Urine",
         "Urea",
         "BUN",
-        "BUN_Creatinine_Ratio",
-        "Urea_Creatinine_Ratio"
+        "BUN_Creatinine_Ratio"
       ],
       "pt": "Renal e Eletrolítico",
-      "withLoinc": 31
+      "withLoinc": 33
     },
     {
       "count": 15,
@@ -70,12 +70,12 @@
     }
   ],
   "categoryGroups": 10,
-  "decisions": { "nameOnly": 170, "reviewed": 0, "withEvidence": 21 },
-  "loincCoveragePct": 80.9,
-  "referenceRanges": 204,
+  "decisions": { "nameOnly": 176, "reviewed": 0, "withEvidence": 28 },
+  "loincCoveragePct": 81.9,
+  "referenceRanges": 203,
   "subcategories": 20,
   "version": "0.41.3",
-  "withLoinc": 191,
+  "withLoinc": 204,
   "withoutLoinc": 45,
   "withoutLoincByReason": { "ambiguous": 1, "no-concept": 30, "pending-review": 14 }
 }

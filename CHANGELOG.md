@@ -1,3 +1,9 @@
+## [1.1.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v1.0.0...v1.1.0) (2026-10-09)
+
+### Features
+
+* **core:** estrona, massa livre de gordura e densidade óssea por DXA com LOINC ([#160](https://github.com/Precisa-Saude/fhir-brasil/issues/160)) ([fe7080f](https://github.com/Precisa-Saude/fhir-brasil/commit/fe7080fd150d4f7d04954482f097444a48c9f583))
+
 ## [1.0.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.43.0...v1.0.0) (2026-10-09)
 
 ### ⚠ BREAKING CHANGES

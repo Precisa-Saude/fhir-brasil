@@ -184,6 +184,41 @@ describe('labObservationToFHIR', () => {
     expect(fhirObs.valueString).toBe('Negative');
   });
 
+  // O sedimento da urina da Quest imprime "WBC  NONE SEEN  < OR = 5 /HPF": o
+  // resultado é texto e a referência é número, na unidade da linha.
+  it('emite a faixa impressa de resultado em texto, na unidade da linha', () => {
+    const fhirObs = labObservationToFHIR(
+      {
+        ...sampleLabObservation,
+        biomarkerCode: 'Leukocytes_Urine',
+        isQualitative: true,
+        referenceMax: 5,
+        referenceMin: undefined,
+        unit: '/HPF',
+        value: 'NONE SEEN',
+      },
+      'patient-1',
+    );
+    expect(fhirObs.valueString).toBe('NONE SEEN');
+    expect(fhirObs.referenceRange).toEqual([
+      { high: { code: '/[HPF]', system: 'http://unitsofmeasure.org', unit: '/HPF', value: 5 } },
+    ]);
+  });
+
+  it('resultado em texto sem faixa continua sem referenceRange', () => {
+    const fhirObs = labObservationToFHIR(
+      {
+        ...sampleLabObservation,
+        isQualitative: true,
+        referenceMax: undefined,
+        referenceMin: undefined,
+        value: 'Negative',
+      },
+      'patient-1',
+    );
+    expect(fhirObs.referenceRange).toBeUndefined();
+  });
+
   it('should include reference range for quantitative', () => {
     const fhirObs = labObservationToFHIR(sampleLabObservation, 'patient-1');
     expect(fhirObs.referenceRange?.[0]?.low?.value).toBe(70);

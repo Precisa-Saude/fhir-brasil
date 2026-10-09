@@ -684,6 +684,16 @@ describe('findBiomarkersInText: "Total Fat" e "Total Lean" da densitometria', ()
     expect(codes).not.toContain('FatMass');
   });
 
+  // A célula "linha Android, coluna Total Fat %" é o percentual da região, e não
+  // ficava sem código: o "Total Fat %" de dentro dela era barrado pela região, e
+  // nada ancorava no lugar.
+  it.each([
+    ['Android Total Fat % 14.0%', 'AndroidFatPct'],
+    ['Gynoid Total Fat % 14.4%', 'GynoidFatPct'],
+  ])('anchors the regional percentage in the cell %s', (cell, code) => {
+    expect(codesOf(cell)).toEqual([code]);
+  });
+
   it('keeps the guards of #127 working with the new names', () => {
     expect(codesOf('Arms Total Fat Mass 5.1 lbs')).toEqual(['ArmsFatMass']);
     expect(codesOf('Legs Total Lean Mass 52.3 lbs')).toEqual(['LegsLeanMass']);

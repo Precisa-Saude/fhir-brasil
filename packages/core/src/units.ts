@@ -61,6 +61,9 @@ export const UNIT_TO_UCUM: Record<string, string> = {
   'kg/m²': 'kg/m2',
   'kU/L': 'k[IU]/L',
   L: 'L',
+  // Libra avoirdupois: a massa da densitometria americana.
+  lb: '[lb_av]',
+  lbs: '[lb_av]',
   'M/uL': '10*6/uL',
   'mcg/dL': 'ug/dL',
   'mcg/L': 'ug/L',
@@ -370,6 +373,11 @@ const CBC_DIFF: Omit<BiomarkerUnitConfig, 'aliases'> = {
   siUcum: '10*3/uL',
   siUnit: 'K/uL',
 };
+/**
+ * Massa corporal em kg: densitometria (total e por região) e bioimpedância.
+ * Laudo americano imprime em libras, e sem esta entrada a massa regional
+ * ficava em `lbs`, sem conversão e sem código UCUM no Bundle.
+ */
 const DEXA_KG_ALIASES: Record<string, string> = {
   kg: 'kg',
   lb: '[lb_av]',
@@ -497,6 +505,8 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'mg/dL',
     siUnit: 'mg/dL',
   },
+  ArmsFatMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
+  ArmsLeanMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
   AST: { aliases: ENZYME_ALIASES, ...ENZYME },
   Basophils: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   Basophils_Abs: { aliases: CBC_DIFF_ALIASES, ...CBC_DIFF },
@@ -722,6 +732,15 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'g/L',
     siUnit: 'g/L',
   },
+  // Adimensional. A calculadora devolve `index` e o catálogo declara
+  // `índice`: os dois são o `{index}` do UCUM.
+  HOMA_IR: {
+    aliases: { index: 'índice', índice: 'índice' },
+    canonicalUcum: '{index}',
+    canonicalUnit: 'índice',
+    siUcum: '{index}',
+    siUnit: 'índice',
+  },
   Homocysteine: {
     aliases: { 'umol/l': 'µmol/L', 'µmol/l': 'µmol/L' },
     canonicalUcum: 'umol/L',
@@ -804,6 +823,8 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUnit: 'µmol/L',
   },
   LeanMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
+  LegsFatMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
+  LegsLeanMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
   Leptin: {
     aliases: { 'ng/ml': 'ng/mL' },
     canonicalUcum: 'ng/mL',
@@ -879,6 +900,7 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'fL',
     siUnit: 'fL',
   },
+  MuscleMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
   Myeloperoxidase: {
     aliases: { 'pmol/l': 'pmol/L' },
     canonicalUcum: 'pmol/L',
@@ -978,6 +1000,7 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   },
   RBC_Urine: { aliases: URINE_SEDIMENT_ALIASES, ...URINE_SEDIMENT },
   RDW: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
+  ResidualMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
   Reticulocytes: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   RheumatoidFactor: {
     aliases: { 'iu/ml': 'IU/mL', 'ui/ml': 'IU/mL' },
@@ -1090,6 +1113,8 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'ng/L',
     siUnit: 'ng/L',
   },
+  TrunkFatMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
+  TrunkLeanMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
   TSH: {
     aliases: {
       'miu/l': 'uIU/mL',

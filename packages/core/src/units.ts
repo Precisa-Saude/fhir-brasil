@@ -963,6 +963,11 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
       'm/ul': 'M/uL',
       'milhões/mm3': 'M/uL',
       'milhões/mm³': 'M/uL',
+      // O mesmo milhão por microlitro, com o µL no lugar do mm³. Um laudo do
+      // Cachoeirinha sai assim, e sem o alias a unidade não convertia nem
+      // virava UCUM.
+      'milhões/ul': 'M/uL',
+      'milhões/µl': 'M/uL',
       'million/ul': 'M/uL',
       'x10e6/ul': 'M/uL',
     },

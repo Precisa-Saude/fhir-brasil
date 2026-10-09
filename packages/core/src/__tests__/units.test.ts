@@ -459,3 +459,9 @@ describe('contagem escrita por extenso no laudo americano', () => {
     expect(resolveUcum(unit, code)).toBe(ucum);
   });
 });
+
+describe('hemácias em milhões por microlitro', () => {
+  it.each(['milhões/µL', 'milhões/uL', 'milhões/mm³'])('%s vira 10*6/uL', (unit) => {
+    expect(resolveUcum(unit, 'RBC')).toBe('10*6/uL');
+  });
+});

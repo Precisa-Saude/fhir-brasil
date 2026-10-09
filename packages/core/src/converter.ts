@@ -5,7 +5,7 @@
  * See: https://hl7.org/fhir/diagnosticreport.html
  */
 
-import { codeToLoinc, methodVariantOf } from './biomarkers';
+import { codeToLoinc, getDefinitionByCode, methodVariantOf } from './biomarkers';
 import { type Addressable, entryFullUrl } from './bundle-urls';
 import { BIOMARKER_CODE_SYSTEM, LOINC_SYSTEM } from './code-systems';
 import {
@@ -23,7 +23,7 @@ import type {
   FHIRReferenceRange,
 } from './fhir-types';
 import { getLoincEntry } from './loinc-axes';
-import { ordinalValueFor } from './ordinal-answers';
+import { ordinalValueFor, SNOMED_SYSTEM } from './ordinal-answers';
 import { referenceRangeMeaning } from './reference-ranges';
 import type { Flag, LabObservationData, LabReportData, UserProfileData } from './types';
 import { getDefaultUnit, resolveUcum } from './units';
@@ -136,6 +136,16 @@ const buildReferenceRanges = (
 /**
  * Convert generic lab observation to FHIR Observation
  */
+/**
+ * `Observation.bodySite` da região que o código LOINC não diz (densidade óssea
+ * por DXA no 46383-6). O FHIR prevê o elemento para quando o sítio não está
+ * implícito no código.
+ */
+function bodySiteOf(biomarkerCode: string): Pick<FHIRObservation, 'bodySite'> {
+  const site = getDefinitionByCode(biomarkerCode)?.bodySite;
+  return site ? { bodySite: { coding: [{ ...site, system: SNOMED_SYSTEM }] } } : {};
+}
+
 export function labObservationToFHIR(
   observation: LabObservationData,
   patientId: string,
@@ -208,6 +218,7 @@ export function labObservationToFHIR(
       ],
       text: observation.biomarkerName,
     },
+    ...bodySiteOf(observation.biomarkerCode),
     effectiveDateTime: observation.collectionDate,
     id: `${observation.reportId}-${observation.biomarkerCode}`,
     interpretation: [

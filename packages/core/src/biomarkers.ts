@@ -37,6 +37,13 @@ export interface MethodVariant {
 }
 
 export interface BiomarkerDefinition {
+  /**
+   * Região do corpo (SNOMED CT) que vai em `Observation.bodySite`, quando o
+   * código LOINC não diz o sítio. A densidade óssea por DXA usa o 46383-6, cujo
+   * sistema é `XXX>Bone` (osso, sítio não especificado), para as oito regiões
+   * do corpo inteiro; a região sai aqui. Ver PRE-494.
+   */
+  bodySite?: { code: string; display: string };
   code: string;
   codeAliases?: string[];
   hidden?: boolean; // If true, biomarker is extracted but not shown in UI
@@ -872,16 +879,14 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     code: 'Estrone',
-    // Sem loinc de propósito. Em soro/massa-volume a LOINC só tem a forma
-    // "unconjugated" (2261-6) e razões; não há conceito de estrona total
-    // sérica. Atribuir a não-conjugada a um laudo de estrona total mediria
-    // outra fração — o mesmo tipo de erro que descartou candidatos nas 22
-    // primeiras. Entra sem código, política já usada em FatFreeMass e BMC.
+    // https://loinc.org/2258-2: estrona em soro/plasma, massa/volume,
+    // sem fração ou método especificado. Conferido no LOINC 2.83 em
+    // 09/10/2026. O 2261-6 é específico da fração não conjugada.
+    loinc: '2258-2',
     names: {
       en: ['Estrone', 'E1'],
       pt: ['Estrona', 'E1'],
     },
-    section: 'CH',
     unit: 'pg/mL',
   },
   {
@@ -2556,11 +2561,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // ósseo, incluindo órgãos, água e tecido conjuntivo. Massa muscular é um
   // subconjunto dela.
   //
-  // O campo sai em bundle FHIR, então a aproximação não ficava só aqui — um
-  // consumidor externo leria massa muscular onde escrevemos massa magra. Não
-  // há LOINC para massa magra (busca por "lean body mass" só devolve códigos
-  // de urina ajustados por LBM), então o certo é não ter código, como já se
-  // faz com FatFreeMass. Quem quer massa muscular usa MuscleMass, abaixo.
+  // O 91557-9 representa peso menos gordura, incluindo BMC, e pertence a
+  // FatFreeMass. O laudo DXA GE Lunar Prodigy separa esse total do tecido
+  // magro sem mineral ósseo; ver a auditoria de 09/10/2026.
+  // Quem quer massa muscular usa MuscleMass, abaixo.
   {
     code: 'LeanMass',
     names: {
@@ -2583,7 +2587,8 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     code: 'BMC',
-    // No official LOINC code exists for total body BMC from DEXA
+    // 101685-6 (Body bone mass) é candidato, mas não explicita mineral ósseo.
+    // A equivalência com BMC de DXA permanece em revisão.
     names: {
       en: [
         'Bone Mineral Content',
@@ -2605,12 +2610,14 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     code: 'FatFreeMass',
-    // No official LOINC code exists for fat-free mass from DEXA
+    // O laudo DXA define Fat Free como Lean Tissue + BMC, equivalente ao
+    // peso total menos gordura. O mesmo componente LOINC aparece na fórmula
+    // de 88334-8; 91557-9 preserva a entrada genérica sem afirmar método.
+    loinc: '91557-9',
     names: {
       en: ['Fat-Free Mass', 'Fat Free Mass', 'Fat Free', 'FFM', 'Non-Fat Mass'],
       pt: ['Massa Livre de Gordura', 'Massa Isenta de Gordura', 'MLG'],
     },
-    section: 'OTH',
     unit: 'kg',
   },
   {
@@ -2916,9 +2923,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     section: 'OTH',
     unit: '',
   },
-  // Compartimentos de água. Sem LOINC: busca por "extracellular water" e
-  // "intracellular water" não devolve nada, ao contrário de "body water",
-  // que rendeu os dois códigos usados acima.
+  // Compartimentos de água: buscar "fluid" encontra 73706-4 (Measured)
+  // e 73705-6 (Estimated). A entrada genérica não declara esses métodos;
+  // a adoção depende do laudo/manual, conforme NO_LOINC_DECISIONS.
   {
     code: 'ExtracellularWater',
     names: {
@@ -3299,7 +3306,8 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // ============================================================================
   {
     code: 'BMD_Total',
-    // No official LOINC code exists for total body BMD (only site-specific)
+    bodySite: { code: '38266002', display: 'Entire body as a whole' },
+    loinc: '46383-6',
     names: {
       en: [
         'Total Body BMD',
@@ -3368,8 +3376,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // coluna lombar (L1-L4) do exame de coluna e quadril, que é outro exame.
   {
     code: 'BMD_Arms',
-    // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
+    bodySite: { code: '371195002', display: 'Bone structure of upper limb' },
     hidden: true,
+    loinc: '46383-6',
     names: {
       en: ['Arms BMD', 'BMD Arms', 'Arms Bone Mineral Density', 'Arms Bone Density'],
       pt: ['DMO Braços', 'Densidade Mineral Óssea Braços', 'Densidade Óssea Braços'],
@@ -3379,8 +3388,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     code: 'BMD_Head',
-    // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
+    bodySite: { code: '69536005', display: 'Head structure' },
     hidden: true,
+    loinc: '46383-6',
     names: {
       en: ['Head BMD', 'BMD Head', 'Head Bone Mineral Density', 'Head Bone Density'],
       pt: ['DMO Cabeça', 'Densidade Mineral Óssea Cabeça', 'Densidade Óssea Cabeça'],
@@ -3390,8 +3400,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     code: 'BMD_Legs',
-    // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
+    bodySite: { code: '72001000', display: 'Bone structure of lower limb' },
     hidden: true,
+    loinc: '46383-6',
     names: {
       en: ['Legs BMD', 'BMD Legs', 'Legs Bone Mineral Density', 'Legs Bone Density'],
       pt: ['DMO Pernas', 'Densidade Mineral Óssea Pernas', 'Densidade Óssea Pernas'],
@@ -3401,8 +3412,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     code: 'BMD_Pelvis',
-    // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
+    bodySite: { code: '118645006', display: 'Bone structure of pelvis' },
     hidden: true,
+    loinc: '46383-6',
     names: {
       en: ['Pelvis BMD', 'BMD Pelvis', 'Pelvis Bone Mineral Density', 'Pelvis Bone Density'],
       pt: ['DMO Pelve', 'Densidade Mineral Óssea Pelve', 'Densidade Óssea Pelve'],
@@ -3412,8 +3424,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     code: 'BMD_Ribs',
-    // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
+    bodySite: { code: '113197003', display: 'Bone structure of rib' },
     hidden: true,
+    loinc: '46383-6',
     names: {
       en: ['Ribs BMD', 'BMD Ribs', 'Ribs Bone Mineral Density', 'Ribs Bone Density'],
       pt: ['DMO Costelas', 'Densidade Mineral Óssea Costelas', 'Densidade Óssea Costelas'],
@@ -3423,8 +3436,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     code: 'BMD_Spine',
-    // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
+    bodySite: { code: '51282000', display: 'Bone structure of spine' },
     hidden: true,
+    loinc: '46383-6',
     names: {
       en: ['Spine BMD', 'BMD Spine', 'Spine Bone Mineral Density', 'Spine Bone Density'],
       pt: ['DMO Coluna', 'Densidade Mineral Óssea Coluna', 'Densidade Óssea Coluna'],
@@ -3434,8 +3448,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     code: 'BMD_Trunk',
-    // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
+    bodySite: { code: '312763008', display: 'Bone structure of trunk' },
     hidden: true,
+    loinc: '46383-6',
     names: {
       en: ['Trunk BMD', 'BMD Trunk', 'Trunk Bone Mineral Density', 'Trunk Bone Density'],
       pt: ['DMO Tronco', 'Densidade Mineral Óssea Tronco', 'Densidade Óssea Tronco'],
@@ -3688,6 +3703,9 @@ const codeToDefinitionMap = new Map<string, BiomarkerDefinition>();
 /** Set of all valid LOINC codes */
 const validLoincSet = new Set<string>();
 
+/** LOINC sem sítio, compartilhado por entradas que se distinguem pela região. */
+const bodySiteLoincs = new Map<string, BiomarkerDefinition[]>();
+
 /** Map code alias to canonical code */
 const codeAliasToCanonicalMap = new Map<string, string>();
 
@@ -3698,7 +3716,14 @@ const validCodeSet = new Set<string>();
 for (const def of BIOMARKER_DEFINITIONS) {
   // Only add to LOINC maps if loinc is defined
   if (def.loinc) {
-    loincToCodeMap.set(def.loinc, def.code);
+    // Um LOINC sem sítio, compartilhado por regiões diferentes (a densidade
+    // óssea por DXA), não entra no mapa reverso: o código sozinho não diz a
+    // região. Ver `loincToCodeAt`.
+    if (def.bodySite) {
+      bodySiteLoincs.set(def.loinc, [...(bodySiteLoincs.get(def.loinc) ?? []), def]);
+    } else {
+      loincToCodeMap.set(def.loinc, def.code);
+    }
     codeToLoincMap.set(def.code, def.loinc);
     validLoincSet.add(def.loinc);
   }
@@ -3741,6 +3766,19 @@ for (const def of BIOMARKER_DEFINITIONS) {
  */
 export function loincToCode(loinc: string): string | undefined {
   return loincToCodeMap.get(loinc);
+}
+
+/**
+ * O biomarcador de um LOINC com a região do corpo (código SNOMED CT do
+ * `Observation.bodySite`). Para LOINC que já diz o sítio, a região não muda
+ * nada. Para o compartilhado entre regiões (46383-6, densidade óssea por DXA),
+ * sem região ou com região que nenhuma entrada declara, devolve `undefined`:
+ * nunca escolhe uma região por conta própria.
+ */
+export function loincToCodeAt(loinc: string, bodySiteCode?: string): string | undefined {
+  const shared = bodySiteLoincs.get(loinc);
+  if (!shared) return loincToCodeMap.get(loinc);
+  return bodySiteCode ? shared.find((d) => d.bodySite?.code === bodySiteCode)?.code : undefined;
 }
 
 /**

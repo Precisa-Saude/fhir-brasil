@@ -64,6 +64,17 @@
       "system": "Ser/Plas",
       "time": "Pt"
     },
+    "104938-6": {
+      "class": "RAD",
+      "component": "Views for bone density",
+      "display": "DXA Spine [T-score] Bone density",
+      "method": "DXA",
+      "property": "Tscore",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Spine",
+      "time": "Pt"
+    },
     "10501-5": {
       "class": "CHEM",
       "component": "Lutropin",
@@ -403,6 +414,17 @@
       },
       "method": null,
       "property": "ACnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas",
+      "time": "Pt"
+    },
+    "15355-1": {
+      "class": "CHEM",
+      "component": "Estrone sulfate",
+      "display": "Estrone sulfate [Mass/volume] in Serum or Plasma",
+      "method": null,
+      "property": "MCnc",
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Ser/Plas",
@@ -1119,6 +1141,45 @@
       "system": "Ser/Plas",
       "time": "Pt"
     },
+    "2258-2": {
+      "class": "CHEM",
+      "component": "Estrone",
+      "display": "Estrone (E1) [Mass/volume] in Serum or Plasma",
+      "groups": {
+        "LG44384-2": "Estrone|Pt|Ser/Plas|270.372 g/mole"
+      },
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas",
+      "time": "Pt"
+    },
+    "2261-6": {
+      "class": "CHEM",
+      "component": "Estrone.unconjugated",
+      "display": "Estrone (E1).unconjugated [Mass/volume] in Serum or Plasma",
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas",
+      "time": "Pt"
+    },
+    "22663-9": {
+      "class": "CHEM",
+      "component": "Estrone",
+      "display": "Estrone (E1) [Moles/volume] in Serum or Plasma",
+      "groups": {
+        "LG44384-2": "Estrone|Pt|Ser/Plas|270.372 g/mole"
+      },
+      "method": null,
+      "property": "SCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas",
+      "time": "Pt"
+    },
     "2276-4": {
       "class": "CHEM",
       "component": "Ferritin",
@@ -1234,6 +1295,21 @@
       "system": "Ser/Plas",
       "time": "Pt"
     },
+    "24701-5": {
+      "class": "RAD",
+      "component": "Views for bone density",
+      "display": "DXA Femur [Mass/Area] Bone density",
+      "groups": {
+        "LG37947-5": "DXA|Femur|Views for bone density|Laterality:ANY",
+        "LG41849-7": "Region imaged: Lower extremity"
+      },
+      "method": "DXA",
+      "property": "ArMass",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Lower extremity>Femur",
+      "time": "Pt"
+    },
     "2472-9": {
       "class": "CHEM",
       "component": "IgM",
@@ -1262,6 +1338,35 @@
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Ser/Plas",
+      "time": "Pt"
+    },
+    "24890-6": {
+      "class": "RAD",
+      "component": "Views for bone density",
+      "display": "DXA Radius and Ulna [Mass/Area] Bone density",
+      "groups": {
+        "LG37761-0": "DXA|Radius+Ulna|Views for bone density|Laterality:ANY",
+        "LG41850-5": "Region imaged: Upper extremity"
+      },
+      "method": "DXA",
+      "property": "ArMass",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Upper extremity>Radius+Ulna",
+      "time": "Pt"
+    },
+    "24966-4": {
+      "class": "RAD",
+      "component": "Views for bone density",
+      "display": "DXA Lumbar spine [Mass/Area] Bone density",
+      "groups": {
+        "LG41823-2": "Region imaged: Abdomen"
+      },
+      "method": "DXA",
+      "property": "ArMass",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Abdomen>Spine.lumbar",
       "time": "Pt"
     },
     "2498-4": {
@@ -2126,6 +2231,35 @@
       "system": "Bld",
       "time": "Pt"
     },
+    "38261-4": {
+      "class": "RAD",
+      "component": "Views for bone density",
+      "display": "DXA Hip [Mass/Area] Bone density",
+      "groups": {
+        "LG38258-6": "DXA|Hip|Views for bone density|Laterality:ANY",
+        "LG41849-7": "Region imaged: Lower extremity"
+      },
+      "method": "DXA",
+      "property": "ArMass",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Lower extremity>Hip",
+      "time": "Pt"
+    },
+    "38268-9": {
+      "class": "RAD",
+      "component": "Views for bone density",
+      "display": "DXA Skeletal system Views for bone density",
+      "groups": {
+        "LG41852-1": "Region imaged: Whole body"
+      },
+      "method": "DXA",
+      "property": "Find",
+      "scale": "Doc",
+      "status": "ACTIVE",
+      "system": "Whole body>Skeletal system",
+      "time": "Pt"
+    },
     "38476-8": {
       "class": "CHEM",
       "component": "Mullerian inhibiting substance",
@@ -2283,6 +2417,20 @@
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Bld",
+      "time": "Pt"
+    },
+    "46383-6": {
+      "class": "RAD",
+      "component": "Views for bone density",
+      "display": "DXA Bone [Mass/Area] Bone density",
+      "groups": {
+        "LG41853-9": "Region imaged: Unspecified (XXX)"
+      },
+      "method": "DXA",
+      "property": "ArMass",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "XXX>Bone",
       "time": "Pt"
     },
     "4679-7": {
@@ -3375,6 +3523,21 @@
       "system": "Waist",
       "time": "Pt"
     },
+    "85385-3": {
+      "class": "RAD",
+      "component": "Views for bone density",
+      "display": "DXA Humerus [Mass/Area] Bone density",
+      "groups": {
+        "LG38531-6": "DXA|Humerus|Views for bone density|Laterality:ANY",
+        "LG41850-5": "Region imaged: Upper extremity"
+      },
+      "method": "DXA",
+      "property": "ArMass",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Upper extremity>Humerus",
+      "time": "Pt"
+    },
     "883-9": {
       "class": "BLDBK",
       "component": "ABO group",
@@ -3384,6 +3547,17 @@
       "scale": "Nom",
       "status": "ACTIVE",
       "system": "Bld",
+      "time": "Pt"
+    },
+    "88334-8": {
+      "class": "BDYWGT.MOLEC",
+      "component": "Lean body weight",
+      "display": "Lean body weight Calculated",
+      "method": "Calculated",
+      "property": "Mass",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "^Patient",
       "time": "Pt"
     },
     "90908-5": {
@@ -3483,6 +3657,17 @@
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Bld",
+      "time": "Pt"
+    },
+    "91557-9": {
+      "class": "BDYWGT.ATOM",
+      "component": "Lean body weight",
+      "display": "Lean body weight",
+      "method": null,
+      "property": "Mass",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "^Patient",
       "time": "Pt"
     },
     "9318-7": {

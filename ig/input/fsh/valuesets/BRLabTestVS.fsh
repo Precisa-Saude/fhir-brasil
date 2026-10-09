@@ -1,7 +1,7 @@
 ValueSet: BRLabTestVS
 Id: br-lab-test-vs
 Title: "BR Lab Test ValueSet"
-Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-brasil. Gerado automaticamente a partir de 215 biomarcadores com código LOINC no pacote core."
+Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-brasil. Gerado automaticamente a partir de 225 biomarcadores com código LOINC no pacote core."
 
 * $LOINC#90909-3 "Razão Ácido Araquidônico/EPA"
 * $LOINC#883-9 "Grupo ABO"
@@ -42,6 +42,14 @@ Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-bras
 * $LOINC#1971-1 "Bilirrubina Indireta"
 * $LOINC#1975-2 "Bilirrubina Total"
 * $LOINC#5794-3 "Sangue Oculto na Urina"
+* $LOINC#46383-6 "DMO Braços"
+* $LOINC#46383-6 "DMO Cabeça"
+* $LOINC#46383-6 "DMO Pernas"
+* $LOINC#46383-6 "DMO Pelve"
+* $LOINC#46383-6 "DMO Costelas"
+* $LOINC#46383-6 "DMO Coluna"
+* $LOINC#46383-6 "DMO Corpo Total"
+* $LOINC#46383-6 "DMO Tronco"
 * $LOINC#39156-5 "Índice de Massa Corporal"
 * $LOINC#30934-4 "BNP"
 * $LOINC#41982-0 "Percentual de Gordura Corporal"
@@ -78,6 +86,8 @@ Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-bras
 * $LOINC#90911-9 "Ômega-3: EPA+DPA+DHA"
 * $LOINC#30341-2 "Velocidade de Hemossedimentação"
 * $LOINC#2243-4 "Estradiol"
+* $LOINC#2258-2 "Estrona"
+* $LOINC#91557-9 "Massa Livre de Gordura"
 * $LOINC#73708-0 "Massa de Gordura"
 * $LOINC#2276-4 "Ferritina"
 * $LOINC#3255-7 "Fibrinogênio"

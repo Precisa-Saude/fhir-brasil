@@ -67,6 +67,8 @@ const PROPERTIES_BY_UNIT: Record<string, string[]> = {
   Angstrom: ['EntLen'],
   // Unidades arbitrárias por volume, dos imunoensaios.
   'IU/mL': ['ACnc'],
+  // Densidade mineral óssea: massa por área.
+  'g/cm²': ['ArMass'],
   // Índice de anticorpo dos painéis de autoanticorpos, e o título.
   AI: ['ACnc'],
   titer: ['Titr'],
@@ -147,6 +149,9 @@ const ALLOWED_SYSTEMS = new Set([
   'Thigh',
   'Triceps',
   'Waist',
+  // Densidade óssea por DXA no 46383-6: osso, sítio não especificado no código
+  // e informado em Observation.bodySite (PRE-494).
+  'XXX>Bone',
 ]);
 
 /** Biomarcadores de urina cujo código não termina em `_Urine`. */

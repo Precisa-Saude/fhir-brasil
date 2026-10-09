@@ -73,6 +73,8 @@ describe('cobertura das classes', () => {
     'Thigh',
     'Triceps',
     'Waist',
+    // Densidade óssea por DXA: osso, sítio em Observation.bodySite (PRE-494).
+    'XXX>Bone',
   ]);
 
   it('todo sistema do catálogo tem classe ou está declarado sem classe', () => {

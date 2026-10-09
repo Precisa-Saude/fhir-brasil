@@ -9,13 +9,13 @@ import {
   codeToLoinc,
   getDefinitionByCode,
   isValidCode,
-  loincToCode,
+  loincToCodeAt,
   methodVariantOf,
   normalizeCode,
 } from './biomarkers';
 import { BIOMARKER_CODE_SYSTEM, LOINC_SYSTEM } from './code-systems';
 import type { FHIRBundle, FHIRObservation } from './fhir-types';
-import { ordinalAnswerByCode } from './ordinal-answers';
+import { ordinalAnswerByCode, SNOMED_SYSTEM } from './ordinal-answers';
 import { validateFHIRImportBundle } from './validators';
 
 export interface ImportedObservation {
@@ -117,7 +117,8 @@ function resolveBiomarkerCode(observation: FHIRObservation): {
     reason = 'No code found in observation coding';
   }
 
-  const fromLoinc = loincCode ? loincToCode(loincCode) : undefined;
+  const bodySite = observation.bodySite?.coding?.find((c) => c.system === SNOMED_SYSTEM)?.code;
+  const fromLoinc = loincCode ? loincToCodeAt(loincCode, bodySite) : undefined;
   if (fromLoinc) return { internalCode: fromLoinc, loincCode, reason };
 
   if (declaredCode && isValidCode(declaredCode)) {

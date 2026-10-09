@@ -43,10 +43,23 @@ describe('BIOMARKER_DEFINITIONS', () => {
     }
   });
 
+  // Um LOINC só se repete quando o código não diz o sítio e cada entrada
+  // declara uma região diferente (densidade óssea por DXA, PRE-494).
   it('should have unique LOINC codes (for biomarkers that have them)', () => {
-    const loincCodes = BIOMARKER_DEFINITIONS.filter((d) => d.loinc).map((d) => d.loinc);
+    const loincCodes = BIOMARKER_DEFINITIONS.filter((d) => d.loinc && !d.bodySite).map(
+      (d) => d.loinc,
+    );
     const uniqueCodes = new Set(loincCodes);
     expect(uniqueCodes.size).toBe(loincCodes.length);
+    const sited = BIOMARKER_DEFINITIONS.filter((d) => d.loinc && d.bodySite);
+    const sitesByLoinc = new Map<string, string[]>();
+    for (const d of sited) {
+      sitesByLoinc.set(d.loinc!, [...(sitesByLoinc.get(d.loinc!) ?? []), d.bodySite!.code]);
+    }
+    for (const [loinc, sites] of sitesByLoinc) {
+      expect(new Set(sites).size, loinc).toBe(sites.length);
+      expect(uniqueCodes.has(loinc), loinc).toBe(false);
+    }
   });
 
   // Todo código LOINC termina em dígito verificador Mod 10 ("double-add-double").

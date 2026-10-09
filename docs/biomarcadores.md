@@ -18,6 +18,7 @@ interface BiomarkerDefinition {
     en: string[]; // Nomes em inglês
   };
   section?: DiagnosticSection; // Seção v2-0074, só onde a classe do LOINC não a dá
+  bodySite?: { code: string; display: string }; // Região (SNOMED CT) quando o LOINC não diz o sítio
   unit?: string; // Unidade padrão (ex: "mg/dL")
   sex?: 'male' | 'female' | 'both'; // Relevância por sexo
   hidden?: boolean; // Se true, extraído mas não exibido na UI
@@ -25,6 +26,12 @@ interface BiomarkerDefinition {
 ```
 
 O campo `code` é a chave canônica usada em todo o sistema. Os campos `codeAliases` e `loincAliases` permitem mapear variações encontradas em diferentes laboratórios.
+
+### LOINC sem sítio e a região do corpo
+
+A densidade óssea por DXA das oito regiões do corpo inteiro (`BMD_Total`, `BMD_Head`, `BMD_Arms`, `BMD_Legs`, `BMD_Trunk`, `BMD_Ribs`, `BMD_Pelvis`, `BMD_Spine`) usa o mesmo LOINC, [46383-6](https://loinc.org/46383-6), cujo sistema é `XXX>Bone` (osso, sítio não especificado). A região vai em `Observation.bodySite`, em SNOMED CT, como o FHIR prevê quando o sítio não está implícito no código.
+
+O código sozinho não escolhe a região: `loincToCode('46383-6')` devolve `undefined`, e `loincToCodeAt('46383-6', '371195002')` devolve `BMD_Arms`. O importador usa o código do catálogo quando ele vem no `coding`, senão o LOINC com a região; sem nenhum dos dois, a observação é descartada em vez de cair numa região qualquer.
 
 ### Código LOINC por método
 
@@ -51,7 +58,7 @@ O catálogo guarda a conclusão; `mapping-decisions.ts` guarda o porquê. Cada b
 
 A maioria dos registros é só nome: o código foi escolhido pelo nome do exame, sem outra evidência registrada. É o registro honesto do que existe, e a revisão independente vai preenchendo o resto. O registro repete o `loinc` do catálogo, e um teste falha quando os dois divergem: trocar o código sem atualizar o registro não passa.
 
-Entrada sem LOINC tem um motivo em `NO_LOINC_DECISIONS`: `no-concept` (procurado, e o LOINC não tem), `ambiguous` (há candidatos, e nenhum é a mesma grandeza), `pending-review` (ninguém registrou a busca) ou `not-lab`. A lista está no README, gerada por `pnpm catalog:counts`.
+Entrada sem LOINC tem um motivo em `NO_LOINC_DECISIONS`: `no-concept` (nenhum conceito equivalente encontrado nas buscas registradas), `ambiguous` (há candidatos, mas a equivalência não está estabelecida), `pending-review` (ninguém registrou a busca) ou `not-lab`. A lista está no README, gerada por `pnpm catalog:counts`. A [auditoria de 09/10/2026](development/loinc-gaps-2026-10-09.md) registra as buscas das 45 lacunas originais, os candidatos e o que falta para resolver cada uma. Resultado vazio de busca não prova ausência de conceito no LOINC.
 
 `fhir-bio decision <código ou LOINC>` imprime a ficha no formato da planilha de um mapeador: nome local, unidade, material, método, candidatos com os seis eixos, escolhido, rejeitados, grupos LOINC, revisor e versão. Os eixos e os grupos vêm de uma cópia do snapshot publicada no pacote (`LOINC_SNAPSHOT`, com o aviso da licença do LOINC), e `getMappingSheet()` devolve a mesma ficha como objeto.
 

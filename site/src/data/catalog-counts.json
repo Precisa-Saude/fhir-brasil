@@ -1,5 +1,5 @@
 {
-  "acceptedLoincCodes": 228,
+  "acceptedLoincCodes": 231,
   "biomarkers": 260,
   "bySection": [
     {
@@ -7,7 +7,7 @@
       "examples": ["ApoB", "HDL", "HDL_Large", "CRP", "LDL"],
       "pt": "Bioquímica",
       "section": "CH",
-      "withLoinc": 125
+      "withLoinc": 126
     },
     {
       "count": 33,
@@ -21,14 +21,14 @@
       "examples": ["BMI", "BodyFatPct", "FatMass", "LeanMass", "FatFreeMass"],
       "pt": "Outros (medida corporal)",
       "section": "OTH",
-      "withLoinc": 13
+      "withLoinc": 14
     },
     {
       "count": 22,
       "examples": ["BMC", "VATVolume", "VATMass", "AndroidGynoidRatio", "AndroidFatPct"],
       "pt": "Radiologia (densitometria)",
       "section": "RAD",
-      "withLoinc": 0
+      "withLoinc": 8
     },
     {
       "count": 18,
@@ -80,12 +80,12 @@
     },
     { "count": 1, "examples": ["APOE_Genotype"], "pt": "Genética", "section": "GE", "withLoinc": 1 }
   ],
-  "decisions": { "nameOnly": 176, "reviewed": 0, "withEvidence": 39 },
-  "loincCoveragePct": 82.7,
+  "decisions": { "nameOnly": 176, "reviewed": 0, "withEvidence": 49 },
+  "loincCoveragePct": 86.5,
   "referenceRanges": 203,
   "sections": 11,
   "version": "1.0.0",
-  "withLoinc": 215,
-  "withoutLoinc": 45,
-  "withoutLoincByReason": { "ambiguous": 1, "no-concept": 30, "pending-review": 14 }
+  "withLoinc": 225,
+  "withoutLoinc": 35,
+  "withoutLoincByReason": { "ambiguous": 4, "no-concept": 31 }
 }

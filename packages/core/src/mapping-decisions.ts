@@ -45,8 +45,8 @@ export interface MappingDecision {
 /**
  * Por que uma entrada não tem LOINC.
  *
- * - `no-concept`: procurado, e o LOINC não tem o conceito.
- * - `ambiguous`: há candidatos, e nenhum é a mesma grandeza.
+ * - `no-concept`: nenhum conceito equivalente encontrado nas buscas registradas.
+ * - `ambiguous`: há candidatos, mas a equivalência não está estabelecida.
  * - `pending-review`: ninguém registrou a busca.
  * - `not-lab`: fora do escopo de exame laboratorial.
  */
@@ -212,6 +212,78 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
   BilirubinIndirect: nameOnly('1971-1'),
   BilirubinTotal: nameOnly('1975-2'),
   Blood_Urine: nameOnly('5794-3'),
+  BMD_Arms: {
+    evidence: ['name', 'unit'],
+    loinc: '46383-6',
+    note: 'DXA Bone [Mass/Area] Bone density, sistema XXX>Bone (sítio não especificado). A região vai em Observation.bodySite, SNOMED CT 371195002 (Bone structure of upper limb), e o importador só resolve o código com ela. Proposto na auditoria de 09/10/2026 (PRE-494); sem revisão independente.',
+    settledBy: 'name',
+    siblingsRejected: [
+      {
+        loinc: '85385-3',
+        reason: 'úmero, um osso só; a região dos braços no DXA de corpo inteiro é maior',
+      },
+      { loinc: '24890-6', reason: 'rádio e ulna' },
+    ],
+  },
+  BMD_Head: {
+    evidence: ['name', 'unit'],
+    loinc: '46383-6',
+    note: 'DXA Bone [Mass/Area] Bone density, sistema XXX>Bone (sítio não especificado). A região vai em Observation.bodySite, SNOMED CT 69536005 (Head structure), e o importador só resolve o código com ela. Proposto na auditoria de 09/10/2026 (PRE-494); sem revisão independente.',
+    settledBy: 'name',
+    siblingsRejected: [],
+  },
+  BMD_Legs: {
+    evidence: ['name', 'unit'],
+    loinc: '46383-6',
+    note: 'DXA Bone [Mass/Area] Bone density, sistema XXX>Bone (sítio não especificado). A região vai em Observation.bodySite, SNOMED CT 72001000 (Bone structure of lower limb), e o importador só resolve o código com ela. Proposto na auditoria de 09/10/2026 (PRE-494); sem revisão independente.',
+    settledBy: 'name',
+    siblingsRejected: [
+      { loinc: '24701-5', reason: 'fêmur, um osso só; a região das pernas é maior' },
+    ],
+  },
+  BMD_Pelvis: {
+    evidence: ['name', 'unit'],
+    loinc: '46383-6',
+    note: 'DXA Bone [Mass/Area] Bone density, sistema XXX>Bone (sítio não especificado). A região vai em Observation.bodySite, SNOMED CT 118645006 (Bone structure of pelvis), e o importador só resolve o código com ela. Proposto na auditoria de 09/10/2026 (PRE-494); sem revisão independente.',
+    settledBy: 'name',
+    siblingsRejected: [
+      {
+        loinc: '38261-4',
+        reason: 'quadril, sítio da densitometria de fêmur proximal, não a pelve do corpo inteiro',
+      },
+    ],
+  },
+  BMD_Ribs: {
+    evidence: ['name', 'unit'],
+    loinc: '46383-6',
+    note: 'DXA Bone [Mass/Area] Bone density, sistema XXX>Bone (sítio não especificado). A região vai em Observation.bodySite, SNOMED CT 113197003 (Bone structure of rib), e o importador só resolve o código com ela. Proposto na auditoria de 09/10/2026 (PRE-494); sem revisão independente.',
+    settledBy: 'name',
+    siblingsRejected: [],
+  },
+  BMD_Spine: {
+    evidence: ['name', 'unit'],
+    loinc: '46383-6',
+    note: 'DXA Bone [Mass/Area] Bone density, sistema XXX>Bone (sítio não especificado). A região vai em Observation.bodySite, SNOMED CT 51282000 (Bone structure of spine), e o importador só resolve o código com ela. Proposto na auditoria de 09/10/2026 (PRE-494); sem revisão independente.',
+    settledBy: 'name',
+    siblingsRejected: [
+      { loinc: '24966-4', reason: 'só a coluna lombar' },
+      { loinc: '104938-6', reason: 'T-score, outra grandeza' },
+    ],
+  },
+  BMD_Total: {
+    evidence: ['name', 'unit'],
+    loinc: '46383-6',
+    note: 'DXA Bone [Mass/Area] Bone density, sistema XXX>Bone (sítio não especificado). A região vai em Observation.bodySite, SNOMED CT 38266002 (Entire body as a whole), e o importador só resolve o código com ela. Proposto na auditoria de 09/10/2026 (PRE-494); sem revisão independente.',
+    settledBy: 'name',
+    siblingsRejected: [{ loinc: '38268-9', reason: 'documento, não medida' }],
+  },
+  BMD_Trunk: {
+    evidence: ['name', 'unit'],
+    loinc: '46383-6',
+    note: 'DXA Bone [Mass/Area] Bone density, sistema XXX>Bone (sítio não especificado). A região vai em Observation.bodySite, SNOMED CT 312763008 (Bone structure of trunk), e o importador só resolve o código com ela. Proposto na auditoria de 09/10/2026 (PRE-494); sem revisão independente.',
+    settledBy: 'name',
+    siblingsRejected: [],
+  },
   BMI: nameOnly('39156-5'),
   BNP: nameOnly('30934-4'),
   BodyFatPct: nameOnly('41982-0'),
@@ -287,6 +359,29 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
   },
   ESR: nameOnly('30341-2'),
   Estradiol: nameOnly('2243-4'),
+  Estrone: {
+    evidence: ['name', 'unit'],
+    loinc: '2258-2',
+    note: 'Estrona em pg/mL: Estrone:MCnc:Pt:Ser/Plas:Qn, sem fração ou método especificado. Fonte: https://loinc.org/2258-2 e serviço oficial, LOINC 2.83, consulta em 09/10/2026. Corrige a busca anterior, que só havia registrado 2261-6. A consulta terminológica não constitui revisão independente.',
+    settledBy: 'unit',
+    siblingsRejected: [
+      { loinc: '2261-6', reason: 'fração não conjugada, que o nome local não especifica' },
+      { loinc: '22663-9', reason: 'moles/volume; o catálogo declara pg/mL' },
+      { loinc: '15355-1', reason: 'sulfato de estrona, outro componente' },
+    ],
+  },
+  FatFreeMass: {
+    evidence: ['name', 'unit', 'method-line'],
+    loinc: '91557-9',
+    note: 'O modelo de laudo DXA GE Lunar Prodigy define Fat Free como Lean Tissue + BMC e Total Mass como Fat + Lean + BMC. Isso corresponde ao peso menos gordura da fórmula oficial de 88334-8, que compartilha o componente LP94922-9 com 91557-9. A evidência method-line registra essa definição do cálculo; o código canônico não especifica método. Fonte: https://loinc.org/91557-9 e https://loinc.org/88334-8, LOINC 2.83; auditoria de 09/10/2026 em docs/development/loinc-gaps-2026-10-09.md. Não representa tecido magro sem mineral ósseo nem revisão independente.',
+    settledBy: 'method-line',
+    siblingsRejected: [
+      {
+        loinc: '88334-8',
+        reason: 'método Calculated; a entrada genérica não exige esse método em todos os laudos',
+      },
+    ],
+  },
   FatMass: nameOnly('73708-0'),
   Ferritin: nameOnly('2276-4'),
   Fibrinogen: nameOnly('3255-7'),
@@ -686,168 +781,147 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
   },
 };
 
+/** Buscas oficiais de 09/10/2026 (LOINC 2.83): docs/development/loinc-gaps-2026-10-09.json. */
 export const NO_LOINC_DECISIONS: Record<string, NoLoincDecision> = {
   AndroidFatPct: {
     reason: 'no-concept',
-    note: 'DEXA: o LOINC não tem o conceito para corpo inteiro ou região.',
+    note: 'Nenhum resultado regional androide/ginoide encontrado; 41982-0 é percentual corporal total.',
   },
   AndroidGynoidRatio: {
     reason: 'no-concept',
-    note: 'DEXA: o LOINC não tem o conceito para corpo inteiro ou região.',
+    note: 'Nenhum resultado regional androide/ginoide encontrado; 41982-0 é percentual corporal total.',
   },
   AorticValveCalcium: {
-    reason: 'pending-review',
-    note: 'Escore de cálcio por tomografia; nenhuma busca registrada.',
+    reason: 'no-concept',
+    note: '89927-8 é um exame de coração/raiz aórtica (Doc), não o escore numérico da valva aórtica.',
   },
   ArmsFatMass: {
     reason: 'no-concept',
-    note: 'DEXA: o LOINC não tem o conceito para corpo inteiro ou região.',
+    note: 'Nenhuma massa de gordura regional encontrada; 73708-0 é gordura corporal total.',
   },
   ArmsLeanMass: {
     reason: 'no-concept',
-    note: 'DEXA: o LOINC não tem o conceito para corpo inteiro ou região.',
-  },
-  BMC: {
-    reason: 'no-concept',
-    note: 'DEXA: o LOINC não tem o conceito para corpo inteiro ou região.',
-  },
-  BMD_Arms: {
-    reason: 'pending-review',
-    note: 'Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada.',
-  },
-  BMD_Head: {
-    reason: 'pending-review',
-    note: 'Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada.',
-  },
-  BMD_Legs: {
-    reason: 'pending-review',
-    note: 'Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada.',
-  },
-  BMD_Pelvis: {
-    reason: 'pending-review',
-    note: 'Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada.',
-  },
-  BMD_Ribs: {
-    reason: 'pending-review',
-    note: 'Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada.',
-  },
-  BMD_Spine: {
-    reason: 'pending-review',
-    note: 'Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada.',
-  },
-  BMD_Total: {
-    reason: 'no-concept',
-    note: 'O LOINC só tem densitometria por sítio, não corpo inteiro.',
-  },
-  BMD_Trunk: {
-    reason: 'pending-review',
-    note: 'Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada.',
+    note: 'Nenhuma massa de tecido magro regional encontrada; 91557-9 é peso magro corporal total.',
   },
   BasalMetabolicRate: {
     reason: 'ambiguous',
-    note: 'Candidatos são índice (50042-1) ou RMR medido ou previsto (82278-3, 82286-6), e o aparelho estima TMB.',
+    note: '50042-1 é índice; 69429-9, 82278-3 e 82286-6 descrevem metabolismo de repouso. TMB estimada exige confirmar protocolo e fórmula.',
+  },
+  BMC: {
+    reason: 'ambiguous',
+    note: 'O laudo DXA define BMC como conteúdo mineral ósseo separado do tecido magro. 101685-6 não esclarece se Body bone mass inclui matriz orgânica; 101686-4 é percentual por BIA.',
   },
   CAC: {
-    reason: 'pending-review',
-    note: 'Escore de cálcio por tomografia; nenhuma busca registrada.',
+    reason: 'no-concept',
+    note: '79087-3 e 83289-9 descrevem o exame (escala Doc), não o resultado numérico de Agatston.',
   },
   CAC_LAD: {
-    reason: 'pending-review',
-    note: 'Escore de cálcio por tomografia; nenhuma busca registrada.',
+    reason: 'no-concept',
+    note: '79087-3 e 83289-9 descrevem o exame (escala Doc), não o resultado numérico de Agatston.',
   },
   CAC_LCX: {
-    reason: 'pending-review',
-    note: 'Escore de cálcio por tomografia; nenhuma busca registrada.',
+    reason: 'no-concept',
+    note: '79087-3 e 83289-9 descrevem o exame (escala Doc), não o resultado numérico de Agatston.',
   },
   CAC_LMA: {
-    reason: 'pending-review',
-    note: 'Escore de cálcio por tomografia; nenhuma busca registrada.',
+    reason: 'no-concept',
+    note: '79087-3 e 83289-9 descrevem o exame (escala Doc), não o resultado numérico de Agatston.',
   },
   CAC_Percentile: {
-    reason: 'pending-review',
-    note: 'Escore de cálcio por tomografia; nenhuma busca registrada.',
+    reason: 'no-concept',
+    note: 'Nenhum percentil de Agatston encontrado; o código do exame 79087-3 não representa um percentil.',
   },
   CAC_RCA: {
-    reason: 'pending-review',
-    note: 'Escore de cálcio por tomografia; nenhuma busca registrada.',
-  },
-  ConicityIndex: { reason: 'no-concept', note: 'Índice derivado, sem conceito próprio.' },
-  ECWToTBWRatio: { reason: 'no-concept', note: 'Razão derivada, sem conceito próprio.' },
-  Estrone: {
     reason: 'no-concept',
-    note: 'Em soro só há a fração não conjugada (2261-6); não há estrona total.',
+    note: '79087-3 e 83289-9 descrevem o exame (escala Doc), não o resultado numérico de Agatston.',
   },
-  ExtracellularWater: { reason: 'no-concept', note: '"extracellular water" não devolve código.' },
-  FatFreeMass: {
+  ConicityIndex: {
     reason: 'no-concept',
-    note: 'DEXA: o LOINC não tem o conceito para corpo inteiro ou região.',
+    note: 'Nenhum índice de conicidade encontrado nas buscas registradas.',
+  },
+  ECWToTBWRatio: {
+    reason: 'no-concept',
+    note: 'Sem razão ECW/TBW encontrada; 101684-9 é percentual de água no corpo, com outro denominador.',
+  },
+  ExtracellularWater: {
+    reason: 'ambiguous',
+    note: '73706-4 existe como volume de fluido extracelular, método Measured. A entrada genérica não declara medição versus estimativa por BIA.',
   },
   GynoidFatPct: {
     reason: 'no-concept',
-    note: 'DEXA: o LOINC não tem o conceito para corpo inteiro ou região.',
+    note: 'Nenhum resultado regional androide/ginoide encontrado; 41982-0 é percentual corporal total.',
   },
-  IntracellularWater: { reason: 'no-concept', note: '"intracellular water" não devolve código.' },
+  IntracellularWater: {
+    reason: 'ambiguous',
+    note: '73705-6 estima fluido intracelular por água total menos extracelular. Falta confirmar esse método na entrada genérica.',
+  },
   LeanMass: {
     reason: 'no-concept',
-    note: 'Massa magra não é massa muscular (73964-9); não há LOINC para massa magra.',
+    note: 'O laudo DXA GE Lunar Prodigy confirma tecido magro separado de BMC. 91557-9 e 88334-8 incluem esse mineral no peso sem gordura; 73964-9 mede massa muscular. Nenhum equivalente de tecido magro sem BMC encontrado nas buscas registradas.',
   },
   LegsFatMass: {
     reason: 'no-concept',
-    note: 'DEXA: o LOINC não tem o conceito para corpo inteiro ou região.',
+    note: 'Nenhuma massa de gordura regional encontrada; 73708-0 é gordura corporal total.',
   },
   LegsLeanMass: {
     reason: 'no-concept',
-    note: 'DEXA: o LOINC não tem o conceito para corpo inteiro ou região.',
+    note: 'Nenhuma massa de tecido magro regional encontrada; 91557-9 é peso magro corporal total.',
   },
   MuscleMassIndex: {
     reason: 'no-concept',
-    note: 'Índice derivado de massa muscular total; os cortes publicados são sobre massa apendicular.',
+    note: 'Os candidatos medem massa muscular ou sua fração do peso; não massa por altura ao quadrado.',
   },
   ResidualMass: {
     reason: 'no-concept',
-    note: 'Conceito de fracionamento antropométrico, sem código.',
+    note: 'Nenhuma massa residual antropométrica encontrada nas buscas registradas.',
   },
-  SkinfoldChest: { reason: 'no-concept', note: 'O LOINC só tem dobra de tríceps, coxa e cintura.' },
+  SkinfoldChest: {
+    reason: 'no-concept',
+    note: 'Só foram encontradas dobras de coxa, tríceps e cintura; nenhum termo do sítio anatômico desta entrada.',
+  },
   SkinfoldMidaxillary: {
     reason: 'no-concept',
-    note: 'O LOINC só tem dobra de tríceps, coxa e cintura.',
+    note: 'Só foram encontradas dobras de coxa, tríceps e cintura; nenhum termo do sítio anatômico desta entrada.',
   },
   SkinfoldSubscapular: {
     reason: 'no-concept',
-    note: 'O LOINC só tem dobra de tríceps, coxa e cintura.',
+    note: 'Só foram encontradas dobras de coxa, tríceps e cintura; nenhum termo do sítio anatômico desta entrada.',
   },
   SkinfoldSuprailiac: {
     reason: 'no-concept',
-    note: 'O LOINC só tem dobra de tríceps, coxa e cintura.',
-  },
-  TScore_Total: {
-    reason: 'no-concept',
-    note: 'O LOINC só tem densitometria por sítio, não corpo inteiro.',
+    note: 'Só foram encontradas dobras de coxa, tríceps e cintura; nenhum termo do sítio anatômico desta entrada.',
   },
   TrunkFatMass: {
     reason: 'no-concept',
-    note: 'DEXA: o LOINC não tem o conceito para corpo inteiro ou região.',
+    note: 'Nenhuma massa de gordura regional encontrada; 73708-0 é gordura corporal total.',
   },
   TrunkLeanMass: {
     reason: 'no-concept',
-    note: 'DEXA: o LOINC não tem o conceito para corpo inteiro ou região.',
+    note: 'Nenhuma massa de tecido magro regional encontrada; 91557-9 é peso magro corporal total.',
+  },
+  TScore_Total: {
+    reason: 'no-concept',
+    note: 'Os T-scores encontrados são por sítio (fêmur, quadril ou coluna), não corpo inteiro.',
   },
   VATMass: {
     reason: 'no-concept',
-    note: 'DEXA: o LOINC não tem o conceito para corpo inteiro ou região.',
+    note: '73707-2 mede área de gordura visceral; não equivale a massa, volume ou índice do aparelho.',
   },
   VATVolume: {
     reason: 'no-concept',
-    note: 'DEXA: o LOINC não tem o conceito para corpo inteiro ou região.',
+    note: '73707-2 mede área de gordura visceral; não equivale a massa, volume ou índice do aparelho.',
   },
   VisceralFatLevel: {
     reason: 'no-concept',
-    note: 'Índice de 1 a 20; 73707-2 é área, outra grandeza.',
+    note: '73707-2 mede área de gordura visceral; não equivale a massa, volume ou índice do aparelho.',
   },
-  WaistToHeightRatio: { reason: 'no-concept', note: '"waist to height" não devolve código.' },
+  WaistToHeightRatio: {
+    reason: 'no-concept',
+    note: 'Nenhuma razão cintura/altura encontrada; 8280-0 mede só a circunferência da cintura.',
+  },
   ZScore_Total: {
     reason: 'no-concept',
-    note: 'O LOINC só tem densitometria por sítio, não corpo inteiro.',
+    note: 'Os Z-scores encontrados são por sítio (fêmur, quadril ou coluna lombar), não corpo inteiro.',
   },
 };
 

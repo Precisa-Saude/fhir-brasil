@@ -150,10 +150,10 @@ echo "Hemoglobina 14.5 g/dL Glicose 99 mg/dL" | fhir-ocr codes --json
 Medido no `@precisa-saude/fhir@0.39.0`, gerado por `pnpm catalog:counts`.
 
 - **229 biomarcadores** definidos, dos quais **191 têm código LOINC** (83,4%) e 38 não têm.
-- **201 códigos LOINC aceitos** na busca por código: os 191 canônicos, as variantes por método e os aliases de códigos que o LOINC aposentou.
+- **204 códigos LOINC aceitos** na busca por código: os 191 canônicos, as variantes por método e os aliases de códigos que o LOINC aposentou.
 - **204 faixas de referência**, com variantes por sexo e idade.
 - **10 categorias clínicas** de primeiro nível sobre 20 subcategorias.
-- **Registro de decisão** dos 191 mapeamentos: 18 com evidência além do nome (unidade, material, método ou bula), 173 escolhidos só pelo nome, 0 com revisão independente. A ficha de cada um sai em `fhir-bio decision <código>`.
+- **Registro de decisão** dos 191 mapeamentos: 21 com evidência além do nome (unidade, material, método ou bula), 170 escolhidos só pelo nome, 0 com revisão independente. A ficha de cada um sai em `fhir-bio decision <código>`.
 
 | Categoria                            | Biomarcadores | Com LOINC | Exemplos                                                                   |
 | ------------------------------------ | ------------: | --------: | -------------------------------------------------------------------------- |

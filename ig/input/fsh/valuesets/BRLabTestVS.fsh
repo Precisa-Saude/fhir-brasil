@@ -1,15 +1,25 @@
 ValueSet: BRLabTestVS
 Id: br-lab-test-vs
 Title: "BR Lab Test ValueSet"
-Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-brasil. Gerado automaticamente a partir de 204 biomarcadores com código LOINC no pacote core."
+Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-brasil. Gerado automaticamente a partir de 215 biomarcadores com código LOINC no pacote core."
 
 // autoimunidade
 * $LOINC#8061-4 "Triagem de Anticorpos Antinucleares"
+* $LOINC#33935-8 "Anti-CCP"
+* $LOINC#5130-0 "Anti-DNA Nativo"
+* $LOINC#11565-9 "Anti-Jo-1"
+* $LOINC#29374-6 "Anti-RNP"
+* $LOINC#27416-7 "Anti-Scl-70"
+* $LOINC#11090-8 "Anti-Sm"
+* $LOINC#17792-3 "Anti-SSA"
+* $LOINC#17791-5 "Anti-SSB"
 * $LOINC#4485-9 "Complemento C3"
 * $LOINC#4498-2 "Complemento C4"
 * $LOINC#63453-5 "Anticorpos Anti-Gliadina Deamidada IgA"
 * $LOINC#63459-2 "Anticorpos Anti-Gliadina Deamidada IgG"
 * $LOINC#2472-9 "Imunoglobulina M"
+* $LOINC#6969-0 "Anticorpo Antimieloperoxidase"
+* $LOINC#32787-4 "p-ANCA"
 * $LOINC#11572-5 "Fator Reumatoide"
 * $LOINC#31017-7 "Transglutaminase Tecidual IgA"
 * $LOINC#32998-7 "Transglutaminase Tecidual IgG"
@@ -165,6 +175,7 @@ Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-bras
 * $LOINC#56997-0 "Razão Ureia / Creatinina"
 // sangue
 * $LOINC#883-9 "Grupo ABO"
+* $LOINC#14979-9 "TTPA"
 * $LOINC#48065-7 "Dímero-D"
 * $LOINC#30341-2 "Velocidade de Hemossedimentação"
 * $LOINC#3255-7 "Fibrinogênio"

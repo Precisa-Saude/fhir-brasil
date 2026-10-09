@@ -33,6 +33,8 @@ export const UNIT_TO_UCUM: Record<string, string> = {
 
   '/100 WBC': '/100{WBCs}',
   '/HPF': '/[HPF]',
+  AI: '{AI}',
+  titer: '{titer}',
   '/LPF': '/[LPF]',
   '/µL': '/uL',
   // Percentage
@@ -451,6 +453,15 @@ const NMOL_L: Omit<BiomarkerUnitConfig, 'aliases'> = {
   siUnit: 'nmol/L',
 };
 
+/** Índice de anticorpo (AI), adimensional: a unidade dos painéis de autoanticorpos. */
+const ANTIBODY_INDEX_ALIASES: Record<string, string> = { ai: 'AI' };
+const ANTIBODY_INDEX: Omit<BiomarkerUnitConfig, 'aliases'> = {
+  canonicalUcum: '{AI}',
+  canonicalUnit: 'AI',
+  siUcum: '{AI}',
+  siUnit: 'AI',
+};
+
 export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   AFP: {
     aliases: { 'ng/ml': 'ng/mL' },
@@ -478,6 +489,26 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   },
   Amylase: { aliases: ENZYME_ALIASES, ...ENZYME },
   AnionGap: { aliases: ELECTROLYTE_MONO_ALIASES, ...ELECTROLYTE_MONO },
+  AntiCCP: {
+    aliases: { 'u/ml': 'U/mL', units: 'U/mL' },
+    canonicalUcum: 'U/mL',
+    canonicalUnit: 'U/mL',
+    siUcum: 'U/mL',
+    siUnit: 'U/mL',
+  },
+  AntiDsDNA: {
+    aliases: { 'iu/ml': 'IU/mL' },
+    canonicalUcum: '[IU]/mL',
+    canonicalUnit: 'IU/mL',
+    siUcum: '[IU]/mL',
+    siUnit: 'IU/mL',
+  },
+  AntiJo1: { aliases: ANTIBODY_INDEX_ALIASES, ...ANTIBODY_INDEX },
+  AntiRNP: { aliases: ANTIBODY_INDEX_ALIASES, ...ANTIBODY_INDEX },
+  AntiScl70: { aliases: ANTIBODY_INDEX_ALIASES, ...ANTIBODY_INDEX },
+  AntiSm: { aliases: ANTIBODY_INDEX_ALIASES, ...ANTIBODY_INDEX },
+  AntiSSA: { aliases: ANTIBODY_INDEX_ALIASES, ...ANTIBODY_INDEX },
+  AntiSSB: { aliases: ANTIBODY_INDEX_ALIASES, ...ANTIBODY_INDEX },
   AntiThyroglobulin: {
     aliases: { 'iu/ml': 'IU/mL', 'ui/ml': 'IU/mL' },
     canonicalUcum: '[iU]/mL',
@@ -506,6 +537,13 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     canonicalUnit: 'mg/dL',
     siUcum: 'mg/dL',
     siUnit: 'mg/dL',
+  },
+  APTT: {
+    aliases: { s: 's', sec: 's', seconds: 's' },
+    canonicalUcum: 's',
+    canonicalUnit: 's',
+    siUcum: 's',
+    siUnit: 's',
   },
   ArmsFatMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
   ArmsLeanMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
@@ -921,6 +959,7 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   MMA: { aliases: NMOL_L_ALIASES, ...NMOL_L },
   Monocytes: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   Monocytes_Abs: { aliases: CBC_DIFF_ALIASES, ...CBC_DIFF },
+  MPO_Antibody: { aliases: ANTIBODY_INDEX_ALIASES, ...ANTIBODY_INDEX },
   MPV: {
     aliases: { fl: 'fL' },
     canonicalUcum: 'fL',
@@ -971,6 +1010,13 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   Omega6_AA: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   Omega6_LA: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   Omega6_Total: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
+  pANCA: {
+    aliases: { titer: 'titer', titre: 'titer' },
+    canonicalUcum: '{titer}',
+    canonicalUnit: 'titer',
+    siUcum: '{titer}',
+    siUnit: 'titer',
+  },
   Phosphorus: {
     aliases: { 'mg/dl': 'mg/dL', 'mmol/l': 'mmol/L' },
     canonicalUcum: 'mg/dL',

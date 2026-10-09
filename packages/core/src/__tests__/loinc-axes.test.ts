@@ -67,6 +67,9 @@ const PROPERTIES_BY_UNIT: Record<string, string[]> = {
   Angstrom: ['EntLen'],
   // Unidades arbitrárias por volume, dos imunoensaios.
   'IU/mL': ['ACnc'],
+  // Índice de anticorpo dos painéis de autoanticorpos, e o título.
+  AI: ['ACnc'],
+  titer: ['Titr'],
   'K/uL': ['NCnc'],
   'kU/L': ['ACnc'],
   L: ['Vol'],
@@ -105,6 +108,7 @@ const PROPERTIES_BY_UNIT: Record<string, string[]> = {
   índice: ['ACnc', 'Ratio'],
   // INR é tempo relativo (RelTime) no LOINC, e não razão de massa.
   razão: ['MRto', 'SRto', 'Ratio', 'RelTime'],
+  s: ['Time'],
   segundos: ['Time'],
   'µg/L': ['MCnc'],
 };

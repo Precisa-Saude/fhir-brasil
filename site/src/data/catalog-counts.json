@@ -1,6 +1,6 @@
 {
-  "acceptedLoincCodes": 217,
-  "biomarkers": 249,
+  "acceptedLoincCodes": 228,
+  "biomarkers": 260,
   "byCategory": [
     {
       "count": 29,
@@ -15,10 +15,10 @@
       "withLoinc": 15
     },
     {
-      "count": 19,
+      "count": 20,
       "examples": ["NRBC", "NRBC_Abs", "Hct", "Hgb", "MCH"],
       "pt": "Hematológico",
-      "withLoinc": 19
+      "withLoinc": 20
     },
     {
       "count": 12,
@@ -27,10 +27,10 @@
       "withLoinc": 12
     },
     {
-      "count": 27,
-      "examples": ["ANA_Screen", "RheumatoidFactor", "Basophils", "Basophils_Abs", "Eosinophils"],
+      "count": 37,
+      "examples": ["ANA_Screen", "RheumatoidFactor", "AntiCCP", "MPO_Antibody", "pANCA"],
       "pt": "Imunológico",
-      "withLoinc": 27
+      "withLoinc": 37
     },
     {
       "count": 24,
@@ -70,12 +70,12 @@
     }
   ],
   "categoryGroups": 10,
-  "decisions": { "nameOnly": 176, "reviewed": 0, "withEvidence": 28 },
-  "loincCoveragePct": 81.9,
+  "decisions": { "nameOnly": 176, "reviewed": 0, "withEvidence": 39 },
+  "loincCoveragePct": 82.7,
   "referenceRanges": 203,
   "subcategories": 20,
   "version": "0.42.0",
-  "withLoinc": 204,
+  "withLoinc": 215,
   "withoutLoinc": 45,
   "withoutLoincByReason": { "ambiguous": 1, "no-concept": 30, "pending-review": 14 }
 }

@@ -33,6 +33,9 @@ export * from './converter';
 // Export FHIR intervention converter
 export * from './intervention-converter';
 
+// Export LOINC answer codes for ordinal results (Negativo, Traços, ++)
+export * from './ordinal-answers';
+
 // Export FHIR importer
 export * from './importer';
 

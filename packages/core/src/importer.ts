@@ -15,9 +15,16 @@ import {
 } from './biomarkers';
 import { BIOMARKER_CODE_SYSTEM, LOINC_SYSTEM } from './code-systems';
 import type { FHIRBundle, FHIRObservation } from './fhir-types';
+import { ordinalAnswerByCode } from './ordinal-answers';
 import { validateFHIRImportBundle } from './validators';
 
 export interface ImportedObservation {
+  /**
+   * Código LOINC de resposta (`LA…`) lido de `valueCodeableConcept`, quando o
+   * Bundle traz o resultado codificado, traduzido do SNOMED CT quando o
+   * Bundle só traz ele. O `value` fica com o texto.
+   */
+  answerCode?: string;
   biomarkerCode: string;
   biomarkerName: string;
   collectionDate: string;
@@ -131,6 +138,34 @@ function resolveBiomarkerCode(observation: FHIRObservation): {
 }
 
 /**
+ * Lê o resultado de um `valueCodeableConcept`.
+ *
+ * O texto vem de `text`, que é o que o laudo imprimiu; sem ele, do `display`
+ * de um coding e, por último, do próprio código, para o resultado não sumir.
+ *
+ * `answerCode` guarda sempre o código LOINC de resposta, que é o que o
+ * conversor lê. Um Bundle que só traz o SNOMED CT tem o código traduzido
+ * quando ele é uma das respostas conferidas; um código local ou SNOMED
+ * desconhecido não vira `answerCode`, e o resultado segue pelo texto.
+ */
+function readCodedValue(
+  observation: FHIRObservation,
+): { answerCode?: string; text: string } | undefined {
+  const concept = observation.valueCodeableConcept;
+  if (!concept) return undefined;
+  const codings = concept.coding ?? [];
+  const text =
+    concept.text || codings.find((c) => c.display)?.display || codings.find((c) => c.code)?.code;
+  if (!text) return undefined;
+  const answerCode =
+    codings.find((c) => c.system === LOINC_SYSTEM && c.code)?.code ??
+    codings
+      .map((c) => (c.code && c.system ? ordinalAnswerByCode(c.code, c.system) : undefined))
+      .find((answer) => answer !== undefined)?.loinc.code;
+  return { ...(answerCode && { answerCode }), text };
+}
+
+/**
  * Extract interpretation flag from Observation
  */
 function extractFlag(observation: FHIRObservation): 'H' | 'L' | '' {
@@ -194,6 +229,8 @@ export function mapFHIRObservationToInternal(
   let value: number | string;
   let unit = '';
   let isQualitative = false;
+  let answerCode: string | undefined;
+  const codedValue = readCodedValue(observation);
 
   if (observation.valueQuantity?.value !== undefined) {
     value = observation.valueQuantity.value;
@@ -201,12 +238,16 @@ export function mapFHIRObservationToInternal(
   } else if (observation.valueString) {
     value = observation.valueString;
     isQualitative = true;
+  } else if (codedValue) {
+    value = codedValue.text;
+    answerCode = codedValue.answerCode;
+    isQualitative = true;
   } else {
     return {
       skipped: {
         index,
         loincCode,
-        reason: 'Observation has no value (valueQuantity or valueString)',
+        reason: 'Observation has no value (valueQuantity, valueString or valueCodeableConcept)',
         resourceType: 'Observation',
       },
     };
@@ -240,6 +281,7 @@ export function mapFHIRObservationToInternal(
   }
 
   const imported: ImportedObservation = {
+    ...(answerCode && { answerCode }),
     biomarkerCode: internalCode,
     biomarkerName:
       definition?.names.pt[0] || definition?.names.en[0] || observation.code.text || internalCode,

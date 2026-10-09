@@ -24,7 +24,7 @@ node ig/scripts/build-package-tgz.js
 ### Perfis
 
 - **BRPatient** — Restringe `Patient` para o contexto do SUS: exige nome, data de nascimento, sexo e pelo menos um identificador brasileiro, CPF ou CNS, conferido por invariante.
-- **BRLabObservation** — Perfil para resultados de exames laboratoriais brasileiros. Restringe `Observation` com código LOINC obrigatório, valor numérico com unidade UCUM ou resultado em texto, faixa de referência e extensões para dado extraído de documento.
+- **BRLabObservation** — Perfil para resultados de exames laboratoriais brasileiros. Restringe `Observation` com código LOINC obrigatório, valor numérico com unidade UCUM, resultado ordinal codificado (`valueCodeableConcept` com resposta LOINC e SNOMED CT, ligado ao BROrdinalResultVS) ou resultado em texto, faixa de referência e extensões para dado extraído de documento.
 - **BRDiagnosticReport** — Restringe `DiagnosticReport` para laudos laboratoriais: categoria `LAB` obrigatória, status limitado a `final`, `amended` ou `corrected`, sujeito em `BRPatient` e resultados em `BRLabObservation`.
 
 ### Extensões
@@ -49,6 +49,7 @@ node ig/scripts/build-package-tgz.js
 ### ValueSets
 
 - **BRLabTestVS** — Códigos LOINC para exames laboratoriais suportados. Gerado por `pnpm valueset:generate` a partir do catálogo do core, e o número fica na `Description` do arquivo `.fsh`, não aqui, para não congelar de novo.
+- **BROrdinalResultVS** — Respostas para resultado ordinal ou nominal impresso no laudo (Negativo, Não reagente, Traços, Positivo, Reagente, + a ++++, Normal, Ausente, Presente), cada uma como resposta LOINC (`LA…`) e qualificador SNOMED CT. Binding `extensible` em `valueCodeableConcept` do BRLabObservation; o texto impresso fica em `valueCodeableConcept.text`. Mantido igual a `ORDINAL_ANSWERS` do pacote core, conferido por teste.
 - **BRLabObservationStatusVS** — Status permitidos para resultados laboratoriais (`final`, `amended`, `corrected`).
 - **BRSUSRacaCorVS** — Todos os valores de raça/cor do SUS.
 - **BRTISSGuiasVS** — Tipos de guia TISS.
@@ -63,6 +64,7 @@ node ig/scripts/build-package-tgz.js
 - Glicose extraída de laudo digitalizado, com conversão de unidade e as extensões de extração
 - Laudo e glicose lidos da tabela de histórico (`reprintedIn`)
 - VLDL calculado dos triglicerídeos, com `derivedFrom` apontando para eles
+- Corpos cetônicos na urina por fita, "Traços" codificado em LOINC e SNOMED CT
 - Células epiteliais na urina em texto, com a unidade em `text-value-unit`
 - Densidade da urina impressa sem unidade, com a unidade do catálogo e o `as-printed` sem `unit`
 

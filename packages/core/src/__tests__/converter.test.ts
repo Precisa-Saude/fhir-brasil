@@ -575,7 +575,7 @@ describe('validateFHIRObservation', () => {
     };
 
     const errors = validateFHIRObservation(obsNoValue);
-    expect(errors).toContain('Missing value (valueQuantity or valueString)');
+    expect(errors).toContain('Missing value (valueQuantity, valueString or valueCodeableConcept)');
   });
 
   it('should detect invalid resourceType', () => {

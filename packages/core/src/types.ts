@@ -44,6 +44,13 @@ export interface PrintedReferenceRange {
 }
 
 export interface LabObservationData {
+  /**
+   * Código LOINC de resposta (`LA…`) de um resultado em texto, quando quem
+   * chama já o tem, como no Bundle que o importador leu. Só sai se for uma das
+   * respostas conferidas em `ORDINAL_ANSWERS`; sem ele, o conversor procura a
+   * resposta pela grafia impressa.
+   */
+  answerCode?: string;
   biomarkerCode: string;
   biomarkerName: string;
   collectionDate?: string;

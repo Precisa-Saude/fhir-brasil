@@ -33,6 +33,34 @@ const bundle = labResultToFHIRBundle(report, observations, userProfile);
 // Retorna um FHIR Bundle com DiagnosticReport, Observations e Patient
 ```
 
+### Resultado ordinal codificado
+
+Resultado em texto que tem resposta conhecida ("Negativo", "Não reagente",
+"Traços", "Positivo", "Reagente", "+" a "++++", "Normal", "Ausente",
+"Presente") sai em `valueCodeableConcept` com dois codings, a resposta LOINC
+(`LA…`) e o qualificador SNOMED CT, e o texto impresso em `text`. Grafia sem
+resposta conhecida ("Raras") continua em `valueString`.
+
+```ts
+import { labObservationToFHIR, ordinalAnswerFor } from '@precisa-saude/fhir';
+
+labObservationToFHIR({ ...obs, value: 'Traços' }, patientId).valueCodeableConcept;
+// {
+//   coding: [
+//     { system: 'http://loinc.org', code: 'LA11832-5', display: 'Trace' },
+//     { system: 'http://snomed.info/sct', code: '260405006', display: 'Trace' },
+//   ],
+//   text: 'Traços',
+// }
+
+ordinalAnswerFor('++'); // { loinc: { code: 'LA11842-4', ... }, snomed: { code: '260348001', ... } }
+```
+
+O importador lê `valueCodeableConcept` de volta: o texto vai para `value` e o
+código LOINC de resposta para `answerCode`, traduzido do SNOMED CT quando o
+Bundle só traz ele. Passar `answerCode` ao conversor mantém o código numa ida
+e volta mesmo com grafia fora da tabela.
+
 ### Normalizar códigos de biomarcadores
 
 ```ts
@@ -129,3 +157,17 @@ custo, mas com aviso exigido:
 > Identifiers Names and Codes (LOINC) Committee and is available at no cost
 > under the license at http://loinc.org/license. LOINC® is a registered United
 > States trademark of Regenstrief Institute, Inc.
+
+### Conteúdo SNOMED CT
+
+As respostas codificadas (`ORDINAL_ANSWERS`) trazem, ao lado do LOINC, 12
+qualificadores SNOMED CT (identificador e termo preferido). O Brasil é membro
+da SNOMED International, e o uso no país não tem custo, mas a SNOMED pede o
+registro do uso no centro nacional de distribuição. Fora dos países membros, o
+uso depende de licença de afiliado.
+
+> This material includes content from SNOMED Clinical Terms® (SNOMED CT®),
+> which is copyright of the International Health Terminology Standards
+> Development Organisation (IHTSDO), trading as SNOMED International.
+> Implementers must have the appropriate SNOMED CT Affiliate license; see
+> http://www.snomed.org/snomed-ct/get-snomed-ct or contact info@snomed.org.

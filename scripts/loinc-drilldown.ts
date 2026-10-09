@@ -75,6 +75,14 @@ const COM_ALIASES = flag('--com-aliases');
 const CONCORRENCIA = Number(opt('--concorrencia') ?? 2);
 /** Pares de rótulo de eixo pt-BR → en aprendidos em corridas anteriores; lido e regravado. */
 const ROTULOS = opt('--rotulos');
+/**
+ * Saída de uma corrida anterior cujas listas de candidatos são reaproveitadas
+ * no lugar da busca: isola a variância do escolhedor da variância da Search
+ * API, cuja ordem no corte de linhas não é estável.
+ */
+const REPLAY = opt('--replay');
+/** Quantas vezes perguntar ao Jev sobre a mesma lista (consistência da escolha). */
+const REPETIR = Math.max(1, Number(opt('--repetir') ?? 1));
 
 const SEARCH = 'https://loinc.regenstrief.org/searchapi/loincs';
 const PARTS = 'https://loinc.regenstrief.org/searchapi/parts';
@@ -90,6 +98,8 @@ interface Candidato {
   /** Irmã mais usada do grupo pelo COMMON_TEST_RANK; informativo (PRE-473). */
   maisComum?: string;
   method: string;
+  /** Vem gravado numa corrida anterior (`--replay`), onde a classe não é salva. */
+  padraoDaClasse?: boolean;
   property: string;
   propertyDesconhecida?: boolean;
   rank: number;
@@ -109,6 +119,8 @@ interface Alvo {
   code: string;
   en: string[];
   loinc: string;
+  /** Método impresso no laudo ("Quimioluminescência"), quando há. */
+  metodoImpresso?: string;
   /** Nome impresso no laudo, quando o alvo vem de `--testes-locais`. */
   nomeImpresso?: string;
   ocorrencias?: Ocorrencia[];
@@ -121,6 +133,7 @@ interface TesteLocal {
   biomarkerCode: string;
   laboratory: string;
   loincCode: string;
+  method: string;
   observations: number;
   printedName: string;
   specimen: string;
@@ -307,7 +320,12 @@ function sistemas(alvo: Alvo): string[] | null {
     return ['Urine', 'Urine sed', 'Urine+Ser/Plas'];
   }
   // "Magnésio eritrocitário" é dosagem na hemácia; "Eritrócitos" é contagem no sangue.
-  if (/_rbc$/i.test(alvo.code) || /\brbc\b|eritrocit[aá]ri/.test(nome)) {
+  // "RBC" sozinho é a contagem de hemácias, não um analito dosado na hemácia.
+  if (
+    /_rbc$/i.test(alvo.code) ||
+    /eritrocit[aá]ri/.test(nome) ||
+    (/\brbc\b/.test(nome) && !/^rbc$|count|contagem/.test(nome.trim()))
+  ) {
     return ['RBC', 'RBC.lysate'];
   }
   // Coagulação é dosada em plasma pobre em plaquetas; o sangue total vem depois.
@@ -329,6 +347,9 @@ function sistemas(alvo: Alvo): string[] | null {
 function metodoPadrao(c: Candidato): string | null {
   if (/^HEM\/BC/.test(c.cls)) return 'Automated count';
   if (/^UA/.test(c.cls)) return /sed/i.test(c.system) ? 'Microscopy.light.HPF' : 'Test strip';
+  // Analito de tira fora da classe UA (cetonas é CHEM no LOINC): mesma regra.
+  if (c.system === 'Urine' && c.property === 'PrThr' && /^Test strip/.test(c.method))
+    return 'Test strip';
   if (/^COAG/.test(c.cls)) return 'Coag';
   return null;
 }
@@ -354,26 +375,90 @@ function marcarMaisComum(cands: Candidato[]): void {
 }
 
 function ehPadraoDaClasse(c: Candidato): boolean {
+  if (c.padraoDaClasse !== undefined) return c.padraoDaClasse;
   const d = metodoPadrao(c);
   return d !== null && Boolean(c.method?.startsWith(d));
 }
 
-// `ordemSistema`: posição de cada sistema na lista que a categoria implica
-// (soro: Ser/Plas antes de Bld). Sem isso, "Glucose in Blood" ganhava de
-// "Glucose in Serum or Plasma" só por ter o nome mais curto.
-function pontuacao(c: Candidato, ordemSistema?: Map<string, number>): number {
+// Método impresso no laudo, em português de bancada, casado com o METHOD_TYP
+// do LOINC. Só os pares que aparecem nos laudos auditados; grafia sem par não
+// pontua e segue só no estado do escolhedor.
+const METODO_IMPRESSO: [RegExp, RegExp][] = [
+  [/c[aá]lcul/i, /^Calc/i],
+  [/hplc|cromatografia l[ií]quida/i, /HPLC/i],
+  [/icp|espectrometria de massas/i, /ICP|\bMS\b/i],
+  [
+    /quimioluminesc|eletroquimio|imunoens|elisa|cmia|eclia|imunom[eé]tric/i,
+    /^IA\b|Immunoassay|Chemilum/i,
+  ],
+  [/turbidim/i, /turbidim/i],
+  [/nefelom/i, /Nephelometry/i],
+  [/imunofluoresc|\bifi\b|\bifa\b/i, /Immunofluorescence|^IF\b/i],
+  [/westergren/i, /Westergren/i],
+  [/contagem autom|automatizad/i, /^Automated count/i],
+  [/tira|fita/i, /^Test strip/i],
+];
+function casaMetodoImpresso(metodoLoinc: string, impresso: string | undefined): boolean {
+  if (!impresso || !metodoLoinc) return false;
+  return METODO_IMPRESSO.some(([pt, en]) => pt.test(impresso) && en.test(metodoLoinc));
+}
+
+interface ContextoDePontuacao {
+  /** Método impresso no laudo: candidato com esse método vence. */
+  metodoImpresso?: string;
+  /** Posição de cada sistema na lista que a categoria implica (soro: Ser/Plas antes de Bld). */
+  ordemSistema?: Map<string, number>;
+  /** Resultado sem unidade em urina tipo I: a propriedade é [Presence] (PrThr). */
+  qualitativo?: boolean;
+  /** Componentes que só existem com método "Calculated" na lista: o cálculo não é penalizado. */
+  soCalculados?: Set<string>;
+}
+
+// Sem `ordemSistema`, "Glucose in Blood" ganhava de "Glucose in Serum or
+// Plasma" só por ter o nome mais curto. Sem `soCalculados`, VLDL e TFG
+// estimada caíam para o fim da lista pela penalidade de método, embora o
+// conceito não exista sem cálculo (PRE-473, rodada 11).
+function pontuacao(c: Candidato, ctx: ContextoDePontuacao = {}): number {
   const d = c.display;
   let s = 0;
   if (/--/.test(d)) s += 100;
   if (/\^/.test(d)) s += 50;
   const padrao = metodoPadrao(c);
-  if (padrao) s += ehPadraoDaClasse(c) ? -25 : c.method ? 20 : 0;
+  const calculoObrigatorio = /^Calc/i.test(c.method) && ctx.soCalculados?.has(c.component);
+  if (casaMetodoImpresso(c.method, ctx.metodoImpresso)) s -= 40;
+  else if (calculoObrigatorio) s -= 25;
+  else if (ctx.soCalculados?.has(c.component) && !c.method) s += 20;
+  else if (ctx.qualitativo && /^(MCnc|SCnc|ACnc)$/.test(c.property) && /^Urine$/.test(c.system))
+    s += 25;
+  else if (padrao) s += ehPadraoDaClasse(c) ? -25 : c.method ? 20 : 0;
   else if (c.method) s += 20;
   if (/panel|study|maximum|minimum|mean|goal|father|mother|fetal|cord/i.test(d)) s += 30;
   s += c.rank > 0 ? Math.min(c.rank, 5000) / 1000 : 10;
   if (c.systemDesconhecido || c.propertyDesconhecida) s += 15;
-  if (ordemSistema?.size) s += 3 * (ordemSistema.get(c.system) ?? ordemSistema.size);
+  if (ctx.ordemSistema?.size) {
+    s += 3 * (ctx.ordemSistema.get(c.system) ?? ctx.ordemSistema.size);
+  }
   return s + d.length / 10;
+}
+
+// Componentes cuja lista só tem variantes calculadas (nenhuma irmã sem método).
+// Conceitos que o laboratório de rotina só obtém por cálculo, mesmo quando o
+// LOINC também tem a variante medida (VLDL por ultracentrifugação existe, mas
+// nenhum laudo de rotina a faz). Lista explícita: a presença ou ausência da
+// irmã base no pool não diz nada sobre como o laudo chegou ao número.
+const CALCULO_OBRIGATORIO: [RegExp, RegExp][] = [
+  [/^Cholesterol\.in VLDL$/i, /vldl/i],
+  [/^Glomerular filtration rate/i, /\b(e?gfr|tfg|rfg)\b|filtra[cç][aã]o glomerular|glomerular/i],
+];
+// Só vale quando o próprio alvo é o conceito calculado: o VLDL calculado não
+// pode subir na lista do LDL.
+function componentesSoCalculados(cands: Candidato[], alvo: Alvo): Set<string> {
+  const nomes = [...alvo.en, ...alvo.pt, alvo.nomeImpresso ?? ''].join(' ');
+  return new Set(
+    cands
+      .map((c) => c.component)
+      .filter((comp) => CALCULO_OBRIGATORIO.some(([c, n]) => c.test(comp ?? '') && n.test(nomes))),
+  );
 }
 
 // Rótulos de eixo que a busca em português devolve traduzidos ("SgTotal",
@@ -567,10 +652,54 @@ interface Decisao {
   escolha: string | null;
   probabilidades: Record<string, number> | null;
 }
-async function escolherComJev(alvo: Alvo, cands: Candidato[]): Promise<Decisao> {
+const DESCRICAO_ESPECIME: Record<string, string> = {
+  Bld: 'sangue total (hemograma)',
+  PPP: 'plasma pobre em plaquetas (coagulação)',
+  RBC: 'hemácias',
+  'Ser/Plas': 'soro ou plasma (bioquímica)',
+  Urine: 'urina',
+};
+// Painéis de ácidos graxos são dosados em sangue total ou hemácia, não em soro.
+const ACIDO_GRAXO = /Fatty acid|ate \(C\d|Omega|Arachidon|Eicosapent|Docosa/i;
+
+// O primeiro sistema da lista que a categoria implica, quando há. Soro/plasma
+// só vira pista quando a lista tem de fato a escolha entre soro/plasma e sangue
+// total para o mesmo componente: as categorias do catálogo são clínicas, não de
+// espécime, e a pista aplicada às cegas mandava HbA1c e ácidos graxos para o
+// soro (rodada 13).
+function especimeImplicito(
+  alvo: Alvo,
+  cands: Candidato[],
+): { descricao: string; sistema: string } | null {
+  const sistema = sistemas(alvo)?.[0];
+  const descricao = sistema ? DESCRICAO_ESPECIME[sistema] : undefined;
+  if (!sistema || !descricao) return null;
+  if (sistema !== 'Ser/Plas') return { descricao, sistema };
+  const emSoro = new Set(cands.filter((c) => c.system === 'Ser/Plas').map((c) => c.component));
+  const escolhaReal = cands.some(
+    (c) => c.system === 'Bld' && emSoro.has(c.component) && !ACIDO_GRAXO.test(c.component ?? ''),
+  );
+  return escolhaReal ? { descricao, sistema } : null;
+}
+
+async function escolherComJev(
+  alvo: Alvo,
+  cands: Candidato[],
+  soCalculados: Set<string> = new Set(),
+): Promise<Decisao> {
+  // Espécime que o exame implica quando o laudo não imprime um: bioquímica é
+  // soro ou plasma, coagulação é plasma pobre em plaquetas, hemograma é sangue
+  // total. Sem essa pista, o Jev punha glicose e INR em sangue total com
+  // confiança abaixo de 0,65 (rodada 12).
+  const especime = especimeImplicito(alvo, cands);
   const criteria: Record<string, string> = {};
   cands.forEach((c, i) => {
     const tags = [
+      casaMetodoImpresso(c.method, alvo.metodoImpresso) ? 'método igual ao impresso no laudo' : '',
+      especime && c.system === especime.sistema ? 'espécime implícito do exame' : '',
+      /^Calc/i.test(c.method) && soCalculados.has(c.component)
+        ? 'conceito que só existe como cálculo'
+        : '',
       ehPadraoDaClasse(c) ? 'padrão da classe quando o laudo não imprime método' : '',
       c.maisComum ?? '',
     ].filter(Boolean);
@@ -583,7 +712,7 @@ async function escolherComJev(alvo: Alvo, cands: Candidato[]): Promise<Decisao> 
       resposta: {
         criteria,
         instructions:
-          'Escolha o código LOINC cujo componente, propriedade, sistema (espécime), escala e método descrevem exatamente este exame como ele aparece em laudos brasileiros de rotina. Quando o laudo não indica método: para hemograma (classe HEM/BC) a variante padrão é "by Automated count", para urina tipo I (UA) é "by Test strip" (sedimento: microscopia), para coagulação é "by Coagulation assay"; nas demais classes prefira o conceito base sem método. A marca "mais comum nos laudos" é só informativa e não muda a regra. Evite qualificadores de tempo ou desafio que o laudo não indica. Escolha NONE se nenhum candidato servir.',
+          'Escolha o código LOINC cujo componente, propriedade, sistema (espécime), escala e método descrevem exatamente este exame como ele aparece em laudos brasileiros de rotina. Se o laudo imprime um método e um candidato traz esse método (marca "método igual ao impresso no laudo"), esse candidato é o certo. Se o conceito só existe como cálculo (VLDL, globulina, LDL calculado, TFG estimada; marca "conceito que só existe como cálculo"), o código calculado é o certo. Quando o laudo não indica método: para hemograma (classe HEM/BC) a variante padrão é "by Automated count", para urina tipo I (UA) é "by Test strip" (sedimento: microscopia), para coagulação é "by Coagulation assay"; nas demais classes prefira o conceito base sem método. Resultado qualitativo (sem unidade; Negativo, Traços, cruzes) é propriedade [Presence]; resultado com unidade é a propriedade que a unidade implica. Quando o laudo não imprime espécime, vale o espécime implícito do exame (marca "espécime implícito do exame"): bioquímica em soro ou plasma, nunca sangue total; coagulação em plasma pobre em plaquetas. A marca "mais comum nos laudos" é só informativa e não muda a regra. Evite qualificadores de tempo ou desafio que o laudo não indica. Escolha NONE se nenhum candidato servir.',
         type: 'choice',
       },
     },
@@ -592,6 +721,8 @@ async function escolherComJev(alvo: Alvo, cands: Candidato[]): Promise<Decisao> 
       `Nome no laudo: ${alvo.pt.join(' / ')}`,
       `Nome em inglês: ${alvo.en.join(' / ')}`,
       `Unidade: ${alvo.unit ?? '(sem unidade)'}`,
+      `Método impresso: ${alvo.metodoImpresso ?? '(o laudo não imprime método)'}`,
+      `Espécime: ${especime ? `${especime.descricao} (implícito; o laudo não imprime espécime)` : '(sem espécime implícito)'}`,
       `Categoria clínica: ${alvo.category}`,
     ].join('\n'),
   };
@@ -654,7 +785,10 @@ function alvosDosTestesLocais(arquivo: string): Alvo[] {
     const nome = t.printedName.trim();
     const unidade = t.unit.trim() || null;
     const especime = t.specimen.trim();
-    const chave = [nome, unidade ?? '', especime, t.loincCode].join('|').toLowerCase();
+    const metodo = (t.method ?? '').trim() || undefined;
+    const chave = [nome, unidade ?? '', especime, metodo ?? '', t.loincCode]
+      .join('|')
+      .toLowerCase();
     let alvo = grupos.get(chave);
     if (!alvo) {
       const def = COM_ALIASES
@@ -665,6 +799,7 @@ function alvosDosTestesLocais(arquivo: string): Alvo[] {
         code: def?.code ?? nome,
         en: def?.names.en ?? [],
         loinc: t.loincCode,
+        metodoImpresso: metodo,
         nomeImpresso: nome,
         ocorrencias: [],
         pt: variantesDoNome(nome),
@@ -697,21 +832,109 @@ const alvos: Alvo[] = (
 ).slice(0, LIMITE);
 console.error(`${alvos.length} alvos${TESTES_LOCAIS ? ` de ${TESTES_LOCAIS}` : ' do catálogo'}`);
 
+// Listas de candidatos gravadas por uma corrida anterior, indexadas pela chave
+// do alvo (nome impresso, unidade e código nos testes locais; código do
+// biomarcador no catálogo).
+interface ItemGravado {
+  biomarcador: string;
+  candidatos: (Omit<Candidato, 'cls' | 'lang' | 'status'> & { maisComum: string | null })[];
+  loinc: string;
+  nomeImpresso: string | null;
+  posicaoNoPool: number;
+  unidade: string | null;
+}
+const chaveDoAlvo = (a: {
+  code?: string;
+  biomarcador?: string;
+  loinc: string;
+  nomeImpresso?: string | null;
+  unit?: string | null;
+  unidade?: string | null;
+}) =>
+  a.nomeImpresso
+    ? `${a.nomeImpresso}|${a.unit ?? a.unidade ?? ''}|${a.loinc}`.toLowerCase()
+    : `${a.code ?? a.biomarcador}|${a.loinc}`;
+const GRAVADOS = new Map<string, ItemGravado>();
+if (REPLAY) {
+  const g = JSON.parse(readFileSync(REPLAY, 'utf8')) as { itens: ItemGravado[] };
+  for (const it of g.itens) if (it.candidatos) GRAVADOS.set(chaveDoAlvo(it), it);
+  console.error(`${GRAVADOS.size} listas gravadas em ${REPLAY}`);
+}
+
+async function recuperarOuReproduzir(
+  alvo: Alvo,
+): Promise<{ candidatos: Candidato[]; passos: string[]; posicaoBruta: number }> {
+  const gravado = REPLAY ? GRAVADOS.get(chaveDoAlvo(alvo)) : undefined;
+  if (!gravado) return recuperar(alvo);
+  return {
+    candidatos: gravado.candidatos.map((c) => ({
+      ...c,
+      cls: '',
+      lang: 'en' as const,
+      maisComum: c.maisComum ?? undefined,
+      status: 'ACTIVE',
+    })),
+    passos: [`replay de ${REPLAY}`],
+    posicaoBruta: gravado.posicaoNoPool,
+  };
+}
+
+// Pergunta REPETIR vezes sobre a mesma lista e resume: a escolha mais
+// frequente (moda), a fração de repetições que concordam com ela e a faixa de
+// confiança. O primeiro resultado continua sendo "a" decisão, como antes.
+async function escolherRepetindo(
+  alvo: Alvo,
+  cands: Candidato[],
+  soCalculados: Set<string>,
+): Promise<{ primeira: Decisao; repeticoes: Decisao[] }> {
+  const repeticoes: Decisao[] = [];
+  for (let i = 0; i < REPETIR; i++) {
+    repeticoes.push(await escolherComJev(alvo, cands, soCalculados));
+  }
+  return { primeira: repeticoes[0]!, repeticoes };
+}
+function resumoDasRepeticoes(reps: Decisao[]) {
+  const contagem = new Map<string, number>();
+  for (const r of reps) {
+    const k = r.escolha === 'NONE' ? 'NONE' : (r.codigo ?? '?');
+    contagem.set(k, (contagem.get(k) ?? 0) + 1);
+  }
+  const [moda, n] = [...contagem.entries()].sort((a, b) => b[1] - a[1])[0] ?? ['?', 0];
+  const confs = reps.map((r) => r.confianca ?? 0);
+  return {
+    confiancaMax: Math.max(...confs),
+    confiancaMin: Math.min(...confs),
+    consistencia: n / Math.max(reps.length, 1),
+    distribuicao: Object.fromEntries(contagem),
+    moda,
+  };
+}
+
 const saida: Record<string, unknown>[] = [];
 let proximo = 0;
 async function trabalhador(): Promise<void> {
   while (proximo < alvos.length) {
     const alvo = alvos[proximo++]!;
     try {
-      const r = await recuperar(alvo);
-      marcarMaisComum(r.candidatos);
-      const ordem = new Map((sistemas(alvo) ?? []).map((s, i) => [s, i] as const));
-      const cands = [...r.candidatos]
-        .sort((a, b) => pontuacao(a, ordem) - pontuacao(b, ordem))
-        .slice(0, 15);
+      const r = await recuperarOuReproduzir(alvo);
+      if (!REPLAY) marcarMaisComum(r.candidatos);
+      const ctx: ContextoDePontuacao = {
+        metodoImpresso: alvo.metodoImpresso,
+        ordemSistema: new Map((sistemas(alvo) ?? []).map((s, i) => [s, i] as const)),
+        qualitativo: !alvo.unit && alvo.category === 'urina',
+        soCalculados: componentesSoCalculados(r.candidatos, alvo),
+      };
+      const cands = REPLAY
+        ? r.candidatos
+        : [...r.candidatos].sort((a, b) => pontuacao(a, ctx) - pontuacao(b, ctx)).slice(0, 15);
       const posicao = cands.findIndex((c) => c.code === alvo.loinc) + 1;
       const regra = cands[0]?.code ?? null;
-      const jev = OPENROUTER_API_KEY && cands.length ? await escolherComJev(alvo, cands) : null;
+      const decisao =
+        OPENROUTER_API_KEY && cands.length
+          ? await escolherRepetindo(alvo, cands, ctx.soCalculados!)
+          : null;
+      const jev = decisao?.primeira ?? null;
+      const reps = decisao && REPETIR > 1 ? resumoDasRepeticoes(decisao.repeticoes) : null;
       saida.push({
         biomarcador: alvo.ocorrencias
           ? uniq(alvo.ocorrencias.map((o) => o.biomarcador)).join(',')
@@ -732,7 +955,13 @@ async function trabalhador(): Promise<void> {
         jevAcertou: jev ? jev.codigo === alvo.loinc : null,
         jevCodigo: jev?.codigo ?? null,
         jevConfianca: jev?.confianca ?? null,
-        jevCustoUsd: jev?.custoUsd ?? null,
+        jevConfiancaMax: reps?.confiancaMax ?? null,
+        jevConfiancaMin: reps?.confiancaMin ?? null,
+        jevConsistencia: reps?.consistencia ?? null,
+        jevCustoUsd: decisao ? decisao.repeticoes.reduce((a, d) => a + (d.custoUsd ?? 0), 0) : null,
+        jevDistribuicao: reps?.distribuicao ?? null,
+        jevModa: reps?.moda ?? null,
+        jevModaAcertou: reps ? reps.moda === alvo.loinc : null,
         jevProbabilidades: jev?.probabilidades ?? null,
         laboratorios: alvo.ocorrencias
           ? uniq(alvo.ocorrencias.map((o) => o.laboratorio)).length
@@ -801,5 +1030,24 @@ if (OPENROUTER_API_KEY) {
   console.log(
     `custo Jev: US$ ${ok.reduce((a, o) => a + Number(o.jevCustoUsd ?? 0), 0).toFixed(4)}`,
   );
+  if (REPETIR > 1) {
+    const comReps = ok.filter((o) => o.jevConsistencia !== null);
+    const unanimes = comReps.filter((o) => o.jevConsistencia === 1);
+    console.log(
+      `repetições: ${REPETIR} por alvo | escolha unânime em ${pct(unanimes.length, comReps.length)} | moda acerta: ${pct(comReps.filter((o) => o.jevModaAcertou).length, comReps.length)} (primeira: ${pct(comReps.filter((o) => o.jevAcertou).length, comReps.length)})`,
+    );
+    for (const [lo, hi] of [
+      [0.95, 1.01],
+      [0.85, 0.95],
+      [0, 0.85],
+    ] as const) {
+      const f = comReps.filter(
+        (o) => o.jev !== 'NONE' && Number(o.jevConfianca) >= lo && Number(o.jevConfianca) < hi,
+      );
+      console.log(
+        `  primeira confiança em [${lo}, ${hi}): ${f.length} alvos, unânimes ${pct(f.filter((o) => o.jevConsistencia === 1).length, f.length)}, consistência média ${(f.reduce((a, o) => a + Number(o.jevConsistencia), 0) / Math.max(f.length, 1)).toFixed(3)}`,
+      );
+    }
+  }
 }
 console.log(`resultados em ${SAIDA}`);

@@ -1,5 +1,5 @@
 {
-  "acceptedLoincCodes": 201,
+  "acceptedLoincCodes": 204,
   "biomarkers": 229,
   "byCategory": [
     {
@@ -70,7 +70,7 @@
     }
   ],
   "categoryGroups": 10,
-  "decisions": { "nameOnly": 173, "reviewed": 0, "withEvidence": 18 },
+  "decisions": { "nameOnly": 170, "reviewed": 0, "withEvidence": 21 },
   "loincCoveragePct": 83.4,
   "referenceRanges": 204,
   "subcategories": 20,

@@ -332,6 +332,67 @@ Resultado por alvo em `experimento-loinc-drilldown.testes-locais-aliases.json`.
   O caminho de proposta serve ao exame sem âncora que tem nome de bancada;
   para DEXA e bioimpedância, o catálogo precisa de aliases antes.
 
+## Consistência do escolhedor e rodada 12 (09/10/2026)
+
+**Repetições sobre a lista fixa.** Para separar a variância do Jev da
+variância da Search API (cuja ordem no corte de linhas não é estável), o
+script ganhou `--replay`, que reaproveita as listas de candidatos de uma
+corrida anterior, e `--repetir N`, que pergunta N vezes sobre a mesma lista.
+Dez repetições por alvo, sobre as listas da rodada de 08/10 no conjunto-ouro e
+da rodada 11 nos testes locais:
+
+| Confiança da primeira resposta | Ouro: alvos, unânimes 10/10 | Produção: alvos, unânimes 10/10 | Produção: primeira bate com o guardado |
+| ------------------------------ | --------------------------- | ------------------------------- | -------------------------------------- |
+| >= 0,95                        | 82, 100%                    | 319, 100%                       | 99,1%                                  |
+| 0,85 a 0,95                    | 41, 100%                    | 158, 100%                       | 94,3%                                  |
+| 0,60 a 0,85                    | 35, 100%                    | 97, 100%                        | 62,9%                                  |
+| < 0,60                         | 23, 73,9%                   | 94, 74,5%                       | 58,5%                                  |
+
+Acima de 0,60 a escolha é estável, certa ou errada; a moda das repetições
+corrigiu 0 de 20 erros no ouro e 3 de 77 na produção. Votação por maioria não
+acrescenta nada: o sinal de roteamento é a confiança, e abaixo de 0,60 o
+modelo está de fato indeciso (Lp(a) e glicose na urina dividem cinco a cinco).
+A faixa de 0,60 a 0,85 na produção é baixa por dado guardado defasado: as 16
+grafias de vitamina D guardadas como 1989-3, onde o Jev escolhe 62292-8 por
+unanimidade, que é o que o catálogo já usa.
+
+**Mudanças da rodada 12.**
+
+- **Urina tipo I qualitativa.** Cetonas, glicose e proteína na urina passam a
+  `[Presence] by Test strip` (2514-8, 25428-4, 20454-5): o EAS brasileiro
+  imprime Negativo, Traços ou cruzes, resultado ordinal. Os códigos em massa
+  por volume (5797-6, 5792-7, 5804-0) ficam como alias para laudo que imprima
+  o número. Registro de decisão e snapshot atualizados.
+- **Método impresso é vinculante.** O método que o laudo imprime vai ao
+  estado do escolhedor, e um candidato com esse método vence na regra e no
+  prompt. Na produção, 28 testes locais trazem método; com ele, o Jev escolhe
+  HbA1c por HPLC (17856-6) e LDL calculado (13457-7) em confiança >= 0,99,
+  contra os códigos sem método que o catálogo guarda.
+- **Conceito que só existe como cálculo.** VLDL e TFG estimada ficam com o
+  código calculado mesmo quando o LOINC tem a variante medida, desde que o
+  próprio alvo seja esse conceito (o VLDL calculado não sobe na lista do LDL).
+- **"RBC" sozinho é contagem de hemácias**, não analito dosado na hemácia; o
+  filtro de sistema tirava 789-8 da lista em 13 testes.
+
+| Rodada 12                               | Ouro (191) | Produção, alvos com código (705, 1.756 testes) |
+| --------------------------------------- | ---------- | ---------------------------------------------- |
+| Código no pool                          | 99,0%      | 98,6%                                          |
+| Código entre os 15                      | 97,4%      | 94,2%                                          |
+| Regra acerta (@1)                       | 83,2%      | 81,4%                                          |
+| Jev bate com o guardado ou o catálogo   | 87,4%      | 85,1% dos alvos, 91,2% dos testes              |
+| Propostas com confiança >= 0,95, exatas | 98 de 98   | 363 de 367                                     |
+| Escolha unânime em três repetições      | 97,4%      | 98,7%                                          |
+
+Na produção o acerto é medido contra o código guardado ou o código atual do
+catálogo, porque vitamina D e as tiras de urina mudaram de código depois que
+as observações foram gravadas. O que sobra é, na maior parte, decisão de
+política (Lp(a), urobilinogênio, tempo de protrombina, ácidos graxos, método
+impresso contra código do catálogo), âncora errada para
+[PRE-486](https://linear.app/precisa-saude/issue/PRE-486) e falta de alias
+(DEXA, bioimpedância, RDW por extenso). A dica de espécime para glicose e INR,
+que o Jev ainda põe em sangue total com confiança abaixo de 0,65, não entrou
+nesta rodada.
+
 ## Consequências para o pipeline
 
 - **Nada muda na extração por laudo.** OCR, ancoragem determinística na tabela

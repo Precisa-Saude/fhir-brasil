@@ -1,3 +1,9 @@
+## [0.42.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.41.3...v0.42.0) (2026-10-09)
+
+### Features
+
+* **core:** fósforo, cálcio iônico, IGF-1 e mais 10 entradas dos painéis americanos ([#157](https://github.com/Precisa-Saude/fhir-brasil/issues/157)) ([0ee7613](https://github.com/Precisa-Saude/fhir-brasil/commit/0ee7613a8ab96f87f490bd8725e13bdfb40fcd0f))
+
 ## [0.41.3](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.41.2...v0.41.3) (2026-10-09)
 
 ### Bug Fixes

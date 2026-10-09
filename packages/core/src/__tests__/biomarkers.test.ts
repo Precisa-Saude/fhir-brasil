@@ -518,7 +518,7 @@ describe('referência LLM para biomarcadores sem LOINC (PRE-391)', () => {
     const lines = generateLLMReference().split('\n');
     const index = lines.findIndex((l) => l.startsWith('- Code: SkinfoldSubscapular'));
     expect(index).toBeGreaterThan(-1);
-    // A linha seguinte já é outro biomarcador ou o fim da categoria.
+    // A linha seguinte já é outro biomarcador ou o fim do grupo da seção.
     expect(lines[index + 1]).not.toMatch(STANDALONE_NAME_LINE);
   });
 

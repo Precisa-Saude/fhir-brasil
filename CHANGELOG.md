@@ -1,3 +1,9 @@
+## [0.43.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.42.0...v0.43.0) (2026-10-09)
+
+### Features
+
+* **core:** TTPA e painel de autoanticorpos pelo fluxo de decisão do LOINC ([#158](https://github.com/Precisa-Saude/fhir-brasil/issues/158)) ([ea384a6](https://github.com/Precisa-Saude/fhir-brasil/commit/ea384a6354bea0ccde4ba6dded2d50065b8d7338))
+
 ## [0.42.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.41.3...v0.42.0) (2026-10-09)
 
 ### Features

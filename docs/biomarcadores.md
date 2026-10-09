@@ -18,6 +18,7 @@ interface BiomarkerDefinition {
     en: string[]; // Nomes em inglês
   };
   section?: DiagnosticSection; // Seção v2-0074, só onde a classe do LOINC não a dá
+  bodySite?: { code: string; display: string }; // Região (SNOMED CT) quando o LOINC não diz o sítio
   unit?: string; // Unidade padrão (ex: "mg/dL")
   sex?: 'male' | 'female' | 'both'; // Relevância por sexo
   hidden?: boolean; // Se true, extraído mas não exibido na UI
@@ -25,6 +26,12 @@ interface BiomarkerDefinition {
 ```
 
 O campo `code` é a chave canônica usada em todo o sistema. Os campos `codeAliases` e `loincAliases` permitem mapear variações encontradas em diferentes laboratórios.
+
+### LOINC sem sítio e a região do corpo
+
+A densidade óssea por DXA das oito regiões do corpo inteiro (`BMD_Total`, `BMD_Head`, `BMD_Arms`, `BMD_Legs`, `BMD_Trunk`, `BMD_Ribs`, `BMD_Pelvis`, `BMD_Spine`) usa o mesmo LOINC, [46383-6](https://loinc.org/46383-6), cujo sistema é `XXX>Bone` (osso, sítio não especificado). A região vai em `Observation.bodySite`, em SNOMED CT, como o FHIR prevê quando o sítio não está implícito no código.
+
+O código sozinho não escolhe a região: `loincToCode('46383-6')` devolve `undefined`, e `loincToCodeAt('46383-6', '371195002')` devolve `BMD_Arms`. O importador usa o código do catálogo quando ele vem no `coding`, senão o LOINC com a região; sem nenhum dos dois, a observação é descartada em vez de cair numa região qualquer.
 
 ### Código LOINC por método
 

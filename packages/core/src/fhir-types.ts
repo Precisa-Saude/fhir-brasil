@@ -54,6 +54,7 @@ export interface FHIRPeriod {
 }
 
 export interface FHIRObservation {
+  bodySite?: FHIRCodeableConcept;
   category?: FHIRCodeableConcept[];
   code: FHIRCodeableConcept;
   effectiveDateTime?: string;

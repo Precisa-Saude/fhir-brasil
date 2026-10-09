@@ -212,6 +212,78 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
   BilirubinIndirect: nameOnly('1971-1'),
   BilirubinTotal: nameOnly('1975-2'),
   Blood_Urine: nameOnly('5794-3'),
+  BMD_Arms: {
+    evidence: ['name', 'unit'],
+    loinc: '46383-6',
+    note: 'DXA Bone [Mass/Area] Bone density, sistema XXX>Bone (sítio não especificado). A região vai em Observation.bodySite, SNOMED CT 371195002 (Bone structure of upper limb), e o importador só resolve o código com ela. Proposto na auditoria de 09/10/2026 (PRE-494); sem revisão independente.',
+    settledBy: 'name',
+    siblingsRejected: [
+      {
+        loinc: '85385-3',
+        reason: 'úmero, um osso só; a região dos braços no DXA de corpo inteiro é maior',
+      },
+      { loinc: '24890-6', reason: 'rádio e ulna' },
+    ],
+  },
+  BMD_Head: {
+    evidence: ['name', 'unit'],
+    loinc: '46383-6',
+    note: 'DXA Bone [Mass/Area] Bone density, sistema XXX>Bone (sítio não especificado). A região vai em Observation.bodySite, SNOMED CT 69536005 (Head structure), e o importador só resolve o código com ela. Proposto na auditoria de 09/10/2026 (PRE-494); sem revisão independente.',
+    settledBy: 'name',
+    siblingsRejected: [],
+  },
+  BMD_Legs: {
+    evidence: ['name', 'unit'],
+    loinc: '46383-6',
+    note: 'DXA Bone [Mass/Area] Bone density, sistema XXX>Bone (sítio não especificado). A região vai em Observation.bodySite, SNOMED CT 72001000 (Bone structure of lower limb), e o importador só resolve o código com ela. Proposto na auditoria de 09/10/2026 (PRE-494); sem revisão independente.',
+    settledBy: 'name',
+    siblingsRejected: [
+      { loinc: '24701-5', reason: 'fêmur, um osso só; a região das pernas é maior' },
+    ],
+  },
+  BMD_Pelvis: {
+    evidence: ['name', 'unit'],
+    loinc: '46383-6',
+    note: 'DXA Bone [Mass/Area] Bone density, sistema XXX>Bone (sítio não especificado). A região vai em Observation.bodySite, SNOMED CT 118645006 (Bone structure of pelvis), e o importador só resolve o código com ela. Proposto na auditoria de 09/10/2026 (PRE-494); sem revisão independente.',
+    settledBy: 'name',
+    siblingsRejected: [
+      {
+        loinc: '38261-4',
+        reason: 'quadril, sítio da densitometria de fêmur proximal, não a pelve do corpo inteiro',
+      },
+    ],
+  },
+  BMD_Ribs: {
+    evidence: ['name', 'unit'],
+    loinc: '46383-6',
+    note: 'DXA Bone [Mass/Area] Bone density, sistema XXX>Bone (sítio não especificado). A região vai em Observation.bodySite, SNOMED CT 113197003 (Bone structure of rib), e o importador só resolve o código com ela. Proposto na auditoria de 09/10/2026 (PRE-494); sem revisão independente.',
+    settledBy: 'name',
+    siblingsRejected: [],
+  },
+  BMD_Spine: {
+    evidence: ['name', 'unit'],
+    loinc: '46383-6',
+    note: 'DXA Bone [Mass/Area] Bone density, sistema XXX>Bone (sítio não especificado). A região vai em Observation.bodySite, SNOMED CT 51282000 (Bone structure of spine), e o importador só resolve o código com ela. Proposto na auditoria de 09/10/2026 (PRE-494); sem revisão independente.',
+    settledBy: 'name',
+    siblingsRejected: [
+      { loinc: '24966-4', reason: 'só a coluna lombar' },
+      { loinc: '104938-6', reason: 'T-score, outra grandeza' },
+    ],
+  },
+  BMD_Total: {
+    evidence: ['name', 'unit'],
+    loinc: '46383-6',
+    note: 'DXA Bone [Mass/Area] Bone density, sistema XXX>Bone (sítio não especificado). A região vai em Observation.bodySite, SNOMED CT 38266002 (Entire body as a whole), e o importador só resolve o código com ela. Proposto na auditoria de 09/10/2026 (PRE-494); sem revisão independente.',
+    settledBy: 'name',
+    siblingsRejected: [{ loinc: '38268-9', reason: 'documento, não medida' }],
+  },
+  BMD_Trunk: {
+    evidence: ['name', 'unit'],
+    loinc: '46383-6',
+    note: 'DXA Bone [Mass/Area] Bone density, sistema XXX>Bone (sítio não especificado). A região vai em Observation.bodySite, SNOMED CT 312763008 (Bone structure of trunk), e o importador só resolve o código com ela. Proposto na auditoria de 09/10/2026 (PRE-494); sem revisão independente.',
+    settledBy: 'name',
+    siblingsRejected: [],
+  },
   BMI: nameOnly('39156-5'),
   BNP: nameOnly('30934-4'),
   BodyFatPct: nameOnly('41982-0'),
@@ -738,38 +810,6 @@ export const NO_LOINC_DECISIONS: Record<string, NoLoincDecision> = {
   BMC: {
     reason: 'ambiguous',
     note: 'O laudo DXA define BMC como conteúdo mineral ósseo separado do tecido magro. 101685-6 não esclarece se Body bone mass inclui matriz orgânica; 101686-4 é percentual por BIA.',
-  },
-  BMD_Arms: {
-    reason: 'no-concept',
-    note: 'Úmero (85385-3) e rádio/ulna (24890-6) não equivalem à região dos braços no DXA de corpo inteiro.',
-  },
-  BMD_Head: {
-    reason: 'no-concept',
-    note: 'Nenhum código quantitativo específico da região encontrado; 46383-6 não informa o sítio (XXX>Bone).',
-  },
-  BMD_Legs: {
-    reason: 'no-concept',
-    note: 'Fêmur (24701-5) não equivale à região das pernas no DXA de corpo inteiro.',
-  },
-  BMD_Pelvis: {
-    reason: 'no-concept',
-    note: 'Quadril (38261-4) não equivale à região da pelve no DXA de corpo inteiro.',
-  },
-  BMD_Ribs: {
-    reason: 'no-concept',
-    note: 'Nenhum código quantitativo específico da região encontrado; 46383-6 não informa o sítio (XXX>Bone).',
-  },
-  BMD_Spine: {
-    reason: 'no-concept',
-    note: '24966-4 restringe a coluna à lombar; 104938-6 é T-score. Nenhum equivalente da região Spine em g/cm² encontrado.',
-  },
-  BMD_Total: {
-    reason: 'no-concept',
-    note: '46383-6 não especifica sítio (XXX>Bone); 38268-9 é documento. Nenhum código quantitativo explícito de corpo inteiro encontrado.',
-  },
-  BMD_Trunk: {
-    reason: 'no-concept',
-    note: 'Nenhum código quantitativo específico da região encontrado; 46383-6 não informa o sítio (XXX>Bone).',
   },
   CAC: {
     reason: 'no-concept',

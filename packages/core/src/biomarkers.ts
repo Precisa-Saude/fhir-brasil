@@ -37,6 +37,13 @@ export interface MethodVariant {
 }
 
 export interface BiomarkerDefinition {
+  /**
+   * Região do corpo (SNOMED CT) que vai em `Observation.bodySite`, quando o
+   * código LOINC não diz o sítio. A densidade óssea por DXA usa o 46383-6, cujo
+   * sistema é `XXX>Bone` (osso, sítio não especificado), para as oito regiões
+   * do corpo inteiro; a região sai aqui. Ver PRE-494.
+   */
+  bodySite?: { code: string; display: string };
   code: string;
   codeAliases?: string[];
   hidden?: boolean; // If true, biomarker is extracted but not shown in UI
@@ -3299,7 +3306,8 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // ============================================================================
   {
     code: 'BMD_Total',
-    // No official LOINC code exists for total body BMD (only site-specific)
+    bodySite: { code: '38266002', display: 'Entire body as a whole' },
+    loinc: '46383-6',
     names: {
       en: [
         'Total Body BMD',
@@ -3368,8 +3376,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // coluna lombar (L1-L4) do exame de coluna e quadril, que é outro exame.
   {
     code: 'BMD_Arms',
-    // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
+    bodySite: { code: '371195002', display: 'Bone structure of upper limb' },
     hidden: true,
+    loinc: '46383-6',
     names: {
       en: ['Arms BMD', 'BMD Arms', 'Arms Bone Mineral Density', 'Arms Bone Density'],
       pt: ['DMO Braços', 'Densidade Mineral Óssea Braços', 'Densidade Óssea Braços'],
@@ -3379,8 +3388,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     code: 'BMD_Head',
-    // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
+    bodySite: { code: '69536005', display: 'Head structure' },
     hidden: true,
+    loinc: '46383-6',
     names: {
       en: ['Head BMD', 'BMD Head', 'Head Bone Mineral Density', 'Head Bone Density'],
       pt: ['DMO Cabeça', 'Densidade Mineral Óssea Cabeça', 'Densidade Óssea Cabeça'],
@@ -3390,8 +3400,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     code: 'BMD_Legs',
-    // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
+    bodySite: { code: '72001000', display: 'Bone structure of lower limb' },
     hidden: true,
+    loinc: '46383-6',
     names: {
       en: ['Legs BMD', 'BMD Legs', 'Legs Bone Mineral Density', 'Legs Bone Density'],
       pt: ['DMO Pernas', 'Densidade Mineral Óssea Pernas', 'Densidade Óssea Pernas'],
@@ -3401,8 +3412,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     code: 'BMD_Pelvis',
-    // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
+    bodySite: { code: '118645006', display: 'Bone structure of pelvis' },
     hidden: true,
+    loinc: '46383-6',
     names: {
       en: ['Pelvis BMD', 'BMD Pelvis', 'Pelvis Bone Mineral Density', 'Pelvis Bone Density'],
       pt: ['DMO Pelve', 'Densidade Mineral Óssea Pelve', 'Densidade Óssea Pelve'],
@@ -3412,8 +3424,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     code: 'BMD_Ribs',
-    // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
+    bodySite: { code: '113197003', display: 'Bone structure of rib' },
     hidden: true,
+    loinc: '46383-6',
     names: {
       en: ['Ribs BMD', 'BMD Ribs', 'Ribs Bone Mineral Density', 'Ribs Bone Density'],
       pt: ['DMO Costelas', 'Densidade Mineral Óssea Costelas', 'Densidade Óssea Costelas'],
@@ -3423,8 +3436,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     code: 'BMD_Spine',
-    // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
+    bodySite: { code: '51282000', display: 'Bone structure of spine' },
     hidden: true,
+    loinc: '46383-6',
     names: {
       en: ['Spine BMD', 'BMD Spine', 'Spine Bone Mineral Density', 'Spine Bone Density'],
       pt: ['DMO Coluna', 'Densidade Mineral Óssea Coluna', 'Densidade Óssea Coluna'],
@@ -3434,8 +3448,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     code: 'BMD_Trunk',
-    // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
+    bodySite: { code: '312763008', display: 'Bone structure of trunk' },
     hidden: true,
+    loinc: '46383-6',
     names: {
       en: ['Trunk BMD', 'BMD Trunk', 'Trunk Bone Mineral Density', 'Trunk Bone Density'],
       pt: ['DMO Tronco', 'Densidade Mineral Óssea Tronco', 'Densidade Óssea Tronco'],
@@ -3688,6 +3703,9 @@ const codeToDefinitionMap = new Map<string, BiomarkerDefinition>();
 /** Set of all valid LOINC codes */
 const validLoincSet = new Set<string>();
 
+/** LOINC sem sítio, compartilhado por entradas que se distinguem pela região. */
+const bodySiteLoincs = new Map<string, BiomarkerDefinition[]>();
+
 /** Map code alias to canonical code */
 const codeAliasToCanonicalMap = new Map<string, string>();
 
@@ -3698,7 +3716,14 @@ const validCodeSet = new Set<string>();
 for (const def of BIOMARKER_DEFINITIONS) {
   // Only add to LOINC maps if loinc is defined
   if (def.loinc) {
-    loincToCodeMap.set(def.loinc, def.code);
+    // Um LOINC sem sítio, compartilhado por regiões diferentes (a densidade
+    // óssea por DXA), não entra no mapa reverso: o código sozinho não diz a
+    // região. Ver `loincToCodeAt`.
+    if (def.bodySite) {
+      bodySiteLoincs.set(def.loinc, [...(bodySiteLoincs.get(def.loinc) ?? []), def]);
+    } else {
+      loincToCodeMap.set(def.loinc, def.code);
+    }
     codeToLoincMap.set(def.code, def.loinc);
     validLoincSet.add(def.loinc);
   }
@@ -3741,6 +3766,19 @@ for (const def of BIOMARKER_DEFINITIONS) {
  */
 export function loincToCode(loinc: string): string | undefined {
   return loincToCodeMap.get(loinc);
+}
+
+/**
+ * O biomarcador de um LOINC com a região do corpo (código SNOMED CT do
+ * `Observation.bodySite`). Para LOINC que já diz o sítio, a região não muda
+ * nada. Para o compartilhado entre regiões (46383-6, densidade óssea por DXA),
+ * sem região ou com região que nenhuma entrada declara, devolve `undefined`:
+ * nunca escolhe uma região por conta própria.
+ */
+export function loincToCodeAt(loinc: string, bodySiteCode?: string): string | undefined {
+  const shared = bodySiteLoincs.get(loinc);
+  if (!shared) return loincToCodeMap.get(loinc);
+  return bodySiteCode ? shared.find((d) => d.bodySite?.code === bodySiteCode)?.code : undefined;
 }
 
 /**

@@ -149,18 +149,18 @@ echo "Hemoglobina 14.5 g/dL Glicose 99 mg/dL" | fhir-ocr codes --json
 
 Medido no `@precisa-saude/fhir@1.0.0`, gerado por `pnpm catalog:counts`.
 
-- **260 biomarcadores** definidos, dos quais **217 têm código LOINC** (83,5%) e 43 não têm.
-- **230 códigos LOINC aceitos** na busca por código: os 217 canônicos, as variantes por método e os aliases de códigos que o LOINC aposentou.
+- **260 biomarcadores** definidos, dos quais **225 têm código LOINC** (86,5%) e 35 não têm.
+- **231 códigos LOINC aceitos** na busca por código: os 225 canônicos, as variantes por método e os aliases de códigos que o LOINC aposentou.
 - **203 faixas de referência**, com variantes por sexo e idade.
 - **11 seções de serviço** (HL7 v2-0074), a categoria que sai no `DiagnosticReport`: da classe do LOINC, ou declarada no exame sem LOINC.
-- **Registro de decisão** dos 217 mapeamentos: 41 com evidência além do nome (unidade, material, método ou bula), 176 escolhidos só pelo nome, 0 com revisão independente. A ficha de cada um sai em `fhir-bio decision <código>`.
+- **Registro de decisão** dos 225 mapeamentos: 49 com evidência além do nome (unidade, material, método ou bula), 176 escolhidos só pelo nome, 0 com revisão independente. A ficha de cada um sai em `fhir-bio decision <código>`.
 
 | Seção                              | Biomarcadores | Com LOINC | Exemplos                                                                    |
 | ---------------------------------- | ------------: | --------: | --------------------------------------------------------------------------- |
 | Bioquímica (`CH`)                  |           126 |       126 | ApoB, HDL, HDL_Large, CRP, LDL                                              |
 | Hematologia (`HM`)                 |            33 |        33 | Basophils, Basophils_Abs, Eosinophils, Eosinophils_Abs, Lymphocytes         |
 | Outros (medida corporal) (`OTH`)   |            28 |        14 | BMI, BodyFatPct, FatMass, LeanMass, FatFreeMass                             |
-| Radiologia (densitometria) (`RAD`) |            22 |         0 | BMC, VATVolume, VATMass, AndroidGynoidRatio, AndroidFatPct                  |
+| Radiologia (densitometria) (`RAD`) |            22 |         8 | BMC, VATVolume, VATMass, AndroidGynoidRatio, AndroidFatPct                  |
 | Sorologia (`SR`)                   |            18 |        18 | AntiThyroglobulin, AntiTPO, ANA_Screen, RheumatoidFactor, AntiCCP           |
 | Urinálise (`URN`)                  |            17 |        17 | Appearance_Urine, Bacteria_Urine, Bilirubin_Urine, Blood_Urine, Color_Urine |
 | Tomografia (`CT`)                  |             7 |         0 | CAC, CAC_LMA, CAC_LAD, CAC_LCX, CAC_RCA                                     |
@@ -168,9 +168,9 @@ Medido no `@precisa-saude/fhir@1.0.0`, gerado por `pnpm catalog:counts`.
 | Banco de sangue (`BLB`)            |             2 |         2 | ABO_Group, Rh_Type                                                          |
 | Imunologia (`IMM`)                 |             2 |         2 | IgE_E1_CatDander, IgE_GX1_Grasses                                           |
 | Genética (`GE`)                    |             1 |         1 | APOE_Genotype                                                               |
-| **Total**                          |       **260** |   **217** |                                                                             |
+| **Total**                          |       **260** |   **225** |                                                                             |
 
-### Os 43 sem LOINC, e por quê
+### Os 35 sem LOINC, e por quê
 
 **ambiguous** (4): há candidatos, mas a equivalência não está estabelecida.
 
@@ -181,7 +181,7 @@ Medido no `@precisa-saude/fhir@1.0.0`, gerado por `pnpm catalog:counts`.
 | `IntracellularWater` | 73705-6 estima fluido intracelular por água total menos extracelular. Falta confirmar esse método na entrada genérica.                                                       |
 | `BasalMetabolicRate` | 50042-1 é índice; 69429-9, 82278-3 e 82286-6 descrevem metabolismo de repouso. TMB estimada exige confirmar protocolo e fórmula.                                             |
 
-**no-concept** (39): nenhum conceito equivalente encontrado nas buscas registradas.
+**no-concept** (31): nenhum conceito equivalente encontrado nas buscas registradas.
 
 | Biomarcador           | Motivo                                                                                                                                                                                                                                     |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -214,16 +214,8 @@ Medido no `@precisa-saude/fhir@1.0.0`, gerado por `pnpm catalog:counts`.
 | `LegsFatMass`         | Nenhuma massa de gordura regional encontrada; 73708-0 é gordura corporal total.                                                                                                                                                            |
 | `TrunkLeanMass`       | Nenhuma massa de tecido magro regional encontrada; 91557-9 é peso magro corporal total.                                                                                                                                                    |
 | `TrunkFatMass`        | Nenhuma massa de gordura regional encontrada; 73708-0 é gordura corporal total.                                                                                                                                                            |
-| `BMD_Total`           | 46383-6 não especifica sítio (XXX>Bone); 38268-9 é documento. Nenhum código quantitativo explícito de corpo inteiro encontrado.                                                                                                            |
 | `TScore_Total`        | Os T-scores encontrados são por sítio (fêmur, quadril ou coluna), não corpo inteiro.                                                                                                                                                       |
 | `ZScore_Total`        | Os Z-scores encontrados são por sítio (fêmur, quadril ou coluna lombar), não corpo inteiro.                                                                                                                                                |
-| `BMD_Arms`            | Úmero (85385-3) e rádio/ulna (24890-6) não equivalem à região dos braços no DXA de corpo inteiro.                                                                                                                                          |
-| `BMD_Head`            | Nenhum código quantitativo específico da região encontrado; 46383-6 não informa o sítio (XXX>Bone).                                                                                                                                        |
-| `BMD_Legs`            | Fêmur (24701-5) não equivale à região das pernas no DXA de corpo inteiro.                                                                                                                                                                  |
-| `BMD_Pelvis`          | Quadril (38261-4) não equivale à região da pelve no DXA de corpo inteiro.                                                                                                                                                                  |
-| `BMD_Ribs`            | Nenhum código quantitativo específico da região encontrado; 46383-6 não informa o sítio (XXX>Bone).                                                                                                                                        |
-| `BMD_Spine`           | 24966-4 restringe a coluna à lombar; 104938-6 é T-score. Nenhum equivalente da região Spine em g/cm² encontrado.                                                                                                                           |
-| `BMD_Trunk`           | Nenhum código quantitativo específico da região encontrado; 46383-6 não informa o sítio (XXX>Bone).                                                                                                                                        |
 
 <!-- catalog:counts:end -->
 

@@ -82,6 +82,7 @@ const SECTION_BY_LOINC_CLASS: Readonly<Record<string, DiagnosticSection>> = {
   'HEM/BC': 'HM',
   MICRO: 'MB',
   'MOLPATH.MUT': 'GE',
+  RAD: 'RAD',
   SERO: 'SR',
   UA: 'URN',
 };

@@ -402,10 +402,10 @@ describe('convertUnit', () => {
   });
 
   it('converts VitaminD ng/mL → nmol/L', () => {
-    // 30 ng/mL × 1000 / 384.64 ≈ 78.0
+    // 30 ng/mL × 1000 / 400.64 ≈ 74.9 (o fator 2,496 da 25(OH)D)
     const result = convertUnit(30, 'ng/mL', 'nmol/L', 'VitaminD');
     expect(result).not.toBeNull();
-    expect(result!.value).toBeCloseTo(78.0, 0);
+    expect(result!.value).toBeCloseTo(74.9, 1);
   });
 
   it('converts TestosteroneFree pg/mL → pmol/L', () => {

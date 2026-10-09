@@ -31,6 +31,7 @@ export const UNIT_TO_UCUM: Record<string, string> = {
   '{score}': '{score}',
   '{specific gravity}': '{specific gravity}',
 
+  '/100 WBC': '/100{WBCs}',
   '/HPF': '/[HPF]',
   '/LPF': '/[LPF]',
   '/µL': '/uL',
@@ -476,6 +477,7 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUnit: 'pmol/L',
   },
   Amylase: { aliases: ENZYME_ALIASES, ...ENZYME },
+  AnionGap: { aliases: ELECTROLYTE_MONO_ALIASES, ...ELECTROLYTE_MONO },
   AntiThyroglobulin: {
     aliases: { 'iu/ml': 'IU/mL', 'ui/ml': 'IU/mL' },
     canonicalUcum: '[iU]/mL',
@@ -604,6 +606,13 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     molecularWeight: 362.46,
     siUcum: 'nmol/L',
     siUnit: 'nmol/L',
+  },
+  CPeptide: {
+    aliases: { 'ng/ml': 'ng/mL' },
+    canonicalUcum: 'ng/mL',
+    canonicalUnit: 'ng/mL',
+    siUcum: 'ng/mL',
+    siUnit: 'ng/mL',
   },
   Creatinine: {
     aliases: { 'mg/dl': 'mg/dL', 'umol/l': 'µmol/L', 'µmol/l': 'µmol/L' },
@@ -758,6 +767,13 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'g/L',
     siUnit: 'g/L',
   },
+  IGF1: {
+    aliases: { 'ng/ml': 'ng/mL' },
+    canonicalUcum: 'ng/mL',
+    canonicalUnit: 'ng/mL',
+    siUcum: 'ng/mL',
+    siUnit: 'ng/mL',
+  },
   IgG: {
     aliases: { 'g/l': 'g/L', 'mg/dl': 'mg/dL' },
     canonicalUcum: 'mg/dL',
@@ -765,6 +781,8 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'g/L',
     siUnit: 'g/L',
   },
+  ImmatureGranulocytes: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
+  ImmatureGranulocytes_Abs: { aliases: CBC_DIFF_ALIASES, ...CBC_DIFF },
   INR: {
     aliases: { '{ratio}': '{ratio}' },
     canonicalUcum: '{ratio}',
@@ -783,6 +801,16 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     canonicalUnit: 'uIU/mL',
     siUcum: 'pmol/L',
     siUnit: 'pmol/L',
+  },
+  // Massa molar do cálcio, como em `Calcium`: a Quest imprime em mg/dL, e o
+  // código do catálogo (1995-0) é molar.
+  IonizedCalcium: {
+    aliases: { 'mg/dl': 'mg/dL', 'mmol/l': 'mmol/L' },
+    canonicalUcum: 'mmol/L',
+    canonicalUnit: 'mmol/L',
+    molecularWeight: 40.08,
+    siUcum: 'mmol/L',
+    siUnit: 'mmol/L',
   },
   Iron: {
     aliases: {
@@ -920,6 +948,15 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'mmol/L',
     siUnit: 'mmol/L',
   },
+  // A Quest imprime "/100 WBC"; o hemograma que imprime % dá o mesmo número.
+  NRBC: {
+    aliases: { '%': '/100 WBC', '/100 wbc': '/100 WBC', '/100wbc': '/100 WBC' },
+    canonicalUcum: '/100{WBCs}',
+    canonicalUnit: '/100 WBC',
+    siUcum: '/100{WBCs}',
+    siUnit: '/100 WBC',
+  },
+  NRBC_Abs: { aliases: CBC_DIFF_ALIASES, ...CBC_DIFF },
   NTproBNP: {
     aliases: { 'pg/ml': 'pg/mL' },
     canonicalUcum: 'pg/mL',
@@ -934,6 +971,14 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   Omega6_AA: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   Omega6_LA: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   Omega6_Total: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
+  Phosphorus: {
+    aliases: { 'mg/dl': 'mg/dL', 'mmol/l': 'mmol/L' },
+    canonicalUcum: 'mg/dL',
+    canonicalUnit: 'mg/dL',
+    molecularWeight: 30.97,
+    siUcum: 'mmol/L',
+    siUnit: 'mmol/L',
+  },
   Platelets: { aliases: CBC_DIFF_ALIASES, ...CBC_DIFF },
   Potassium: { aliases: ELECTROLYTE_MONO_ALIASES, ...ELECTROLYTE_MONO },
   Progesterone: {
@@ -954,6 +999,13 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     canonicalUnit: 'ng/mL',
     siUcum: 'ug/L',
     siUnit: 'µg/L',
+  },
+  ProteinCreatinineRatio_Urine: {
+    aliases: { 'mg/g': 'mg/g', 'mg/g creat': 'mg/g', 'mg/g{creat}': 'mg/g' },
+    canonicalUcum: 'mg/g{creat}',
+    canonicalUnit: 'mg/g',
+    siUcum: 'mg/g{creat}',
+    siUnit: 'mg/g',
   },
   ProthrombinTime: {
     aliases: { s: 's', sec: 's' },
@@ -1079,6 +1131,13 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'g/L',
     siUnit: 'g/L',
   },
+  Transferrin: {
+    aliases: { 'g/l': 'g/L', 'mg/dl': 'mg/dL' },
+    canonicalUcum: 'mg/dL',
+    canonicalUnit: 'mg/dL',
+    siUcum: 'g/L',
+    siUnit: 'g/L',
+  },
   Triglycerides: {
     aliases: { 'mg/dl': 'mg/dL', 'mmol/l': 'mmol/L' },
     canonicalUcum: 'mg/dL',
@@ -1158,13 +1217,30 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'pmol/L',
     siUnit: 'pmol/L',
   },
+  // 400,64 é a 25-hidroxivitamina D3 (calcifediol, C27H44O2, PubChem CID
+  // 5283731), o que o laudo dosa. Até out/2026 era 384,64, a do colecalciferol
+  // (C27H44O, CID 5280795), e o resultado em nmol/L saía 4% acima.
   VitaminD: {
     aliases: { 'ng/ml': 'ng/mL', 'nmol/l': 'nmol/L' },
     canonicalUcum: 'ng/mL',
     canonicalUnit: 'ng/mL',
-    molecularWeight: 384.64,
+    molecularWeight: 400.64,
     siUcum: 'nmol/L',
     siUnit: 'nmol/L',
+  },
+  VitaminD2: {
+    aliases: { 'ng/ml': 'ng/mL' },
+    canonicalUcum: 'ng/mL',
+    canonicalUnit: 'ng/mL',
+    siUcum: 'ng/mL',
+    siUnit: 'ng/mL',
+  },
+  VitaminD3: {
+    aliases: { 'ng/ml': 'ng/mL' },
+    canonicalUcum: 'ng/mL',
+    canonicalUnit: 'ng/mL',
+    siUcum: 'ng/mL',
+    siUnit: 'ng/mL',
   },
   VLDL: {
     aliases: { 'mg/dl': 'mg/dL', 'mmol/l': 'mmol/L' },

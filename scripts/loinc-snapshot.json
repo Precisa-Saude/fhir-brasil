@@ -1,5 +1,5 @@
 {
-  "_checkedAt": "2026-10-08",
+  "_checkedAt": "2026-10-09",
   "_loincVersion": "2.83",
   "_notice": "This material contains content from LOINC (http://loinc.org). LOINC is copyright © Regenstrief Institute, Inc. and the Logical Observation Identifiers Names and Codes (LOINC) Committee and is available at no cost under the license at http://loinc.org/license. LOINC® is a registered United States trademark of Regenstrief Institute, Inc.",
   "codes": {
@@ -41,6 +41,19 @@
       },
       "method": null,
       "property": "ACnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas",
+      "time": "Pt"
+    },
+    "10466-1": {
+      "component": "Anion gap",
+      "display": "Anion gap in Serum or Plasma by Calculated.3Ions",
+      "groups": {
+        "LG13614-9": "Anion gap|SCnc|Pt|ANYBldSerPl"
+      },
+      "method": "Calculated.3Ions",
+      "property": "SCnc",
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Ser/Plas",
@@ -132,6 +145,20 @@
       "system": "Ser/Plas",
       "time": "Pt"
     },
+    "12180-6": {
+      "component": "Calcium.ionized",
+      "display": "Calcium.ionized [Moles/volume] in Serum or Plasma by Ion-selective membrane electrode (ISE)",
+      "groups": {
+        "LG42926-2": "Calcium.ionized|Pt|Ser/Plas|ISE",
+        "LG655-7": "Calcium.ionized|SCnc|Pt|ANYBldSerPl"
+      },
+      "method": "ISE",
+      "property": "SCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas",
+      "time": "Pt"
+    },
     "12841-3": {
       "component": "Prostate specific Ag.free/Prostate specific Ag.total",
       "display": "Prostate Specific Ag Free/Prostate specific Ag.total in Serum or Plasma",
@@ -170,6 +197,19 @@
       "status": "ACTIVE",
       "system": "Ser/Plas",
       "time": "Pt"
+    },
+    "13801-6": {
+      "component": "Protein/Creatinine",
+      "display": "Protein/Creatinine [Mass Ratio] in 24 hour Urine",
+      "groups": {
+        "LG34791-0": "Protein/Creatinine|MRto|Urine"
+      },
+      "method": null,
+      "property": "MRto",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Urine",
+      "time": "24H"
     },
     "13945-1": {
       "component": "Erythrocytes",
@@ -223,11 +263,38 @@
       "system": "Ser/Plas",
       "time": "Pt"
     },
+    "14633-2": {
+      "component": "C peptide",
+      "display": "C peptide [Moles/volume] in Serum or Plasma",
+      "groups": {
+        "LG43451-0": "C peptide|Pt|Ser/Plas"
+      },
+      "method": null,
+      "property": "SCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas",
+      "time": "Pt"
+    },
     "14804-9": {
       "component": "Lactate dehydrogenase",
       "display": "Lactate dehydrogenase [Enzymatic activity/volume] in Serum or Plasma by Lactate to pyruvate reaction",
       "method": "Reaction: lactate to pyruvate",
       "property": "CCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas",
+      "time": "Pt"
+    },
+    "14879-1": {
+      "component": "Phosphate",
+      "display": "Phosphate [Moles/volume] in Serum or Plasma",
+      "groups": {
+        "LG2670-0": "Phosphate|SCnc|Pt|ANYBldSerPl",
+        "LG49949-7": "Phosphate|Pt|Ser/Plas|94.97 g/mole"
+      },
+      "method": null,
+      "property": "SCnc",
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Ser/Plas",
@@ -363,6 +430,16 @@
       "system": "Ser/Plas",
       "time": "Pt"
     },
+    "18309-5": {
+      "component": "Erythrocytes.nucleated/Leukocytes",
+      "display": "Nucleated erythrocytes/Leukocytes [Ratio] in Blood by Manual count",
+      "method": "Manual count",
+      "property": "Ratio",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld",
+      "time": "Pt"
+    },
     "1834-1": {
       "component": "Alpha-1-Fetoprotein",
       "display": "Alpha-1-Fetoprotein [Mass/volume] in Serum or Plasma",
@@ -386,6 +463,19 @@
       },
       "method": null,
       "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas",
+      "time": "Pt"
+    },
+    "1863-0": {
+      "component": "Anion gap",
+      "display": "Anion gap in Serum or Plasma by Calculated.4Ions",
+      "groups": {
+        "LG13614-9": "Anion gap|SCnc|Pt|ANYBldSerPl"
+      },
+      "method": "Calculated.4Ions",
+      "property": "SCnc",
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Ser/Plas",
@@ -430,6 +520,16 @@
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Ser/Plas",
+      "time": "Pt"
+    },
+    "19048-8": {
+      "component": "Erythrocytes.nucleated/Leukocytes",
+      "display": "Nucleated erythrocytes/Leukocytes [Ratio] in Blood",
+      "method": null,
+      "property": "Ratio",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld",
       "time": "Pt"
     },
     "19080-1": {
@@ -527,6 +627,20 @@
       "system": "Ser/Plas",
       "time": "Pt"
     },
+    "1986-9": {
+      "component": "C peptide",
+      "display": "C peptide [Mass/volume] in Serum or Plasma",
+      "groups": {
+        "LG43451-0": "C peptide|Pt|Ser/Plas",
+        "LG6210-1": "C peptide|MCnc|Pt|ANYBldSerPl"
+      },
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas",
+      "time": "Pt"
+    },
     "1988-5": {
       "component": "C reactive protein",
       "display": "C reactive protein [Mass/volume] in Serum or Plasma",
@@ -551,6 +665,34 @@
       },
       "method": null,
       "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas",
+      "time": "Pt"
+    },
+    "1994-3": {
+      "component": "Calcium.ionized",
+      "display": "Calcium.ionized [Moles/volume] in Blood",
+      "groups": {
+        "LG42928-8": "Calcium.ionized|Pt|Bld",
+        "LG655-7": "Calcium.ionized|SCnc|Pt|ANYBldSerPl"
+      },
+      "method": null,
+      "property": "SCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld",
+      "time": "Pt"
+    },
+    "1995-0": {
+      "component": "Calcium.ionized",
+      "display": "Calcium.ionized [Moles/volume] in Serum or Plasma",
+      "groups": {
+        "LG42927-0": "Calcium.ionized|Pt|Ser/Plas",
+        "LG655-7": "Calcium.ionized|SCnc|Pt|ANYBldSerPl"
+      },
+      "method": null,
+      "property": "SCnc",
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Ser/Plas",
@@ -914,6 +1056,20 @@
       "system": "Ser/Plas",
       "time": "Pt"
     },
+    "2484-4": {
+      "component": "Insulin-like growth factor-I",
+      "display": "Insulin-like growth factor-I [Mass/volume] in Serum or Plasma",
+      "groups": {
+        "LG48857-3": "Insulin-like growth factor-I|Pt|Ser/Plas",
+        "LG9153-0": "Insulin-like growth factor-I|MCnc|Pt|ANYBldSerPl"
+      },
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas",
+      "time": "Pt"
+    },
     "2498-4": {
       "component": "Iron",
       "display": "Iron [Mass/volume] in Serum or Plasma",
@@ -1032,6 +1188,20 @@
       "system": "Bld",
       "time": "Pt"
     },
+    "2777-1": {
+      "component": "Phosphate",
+      "display": "Phosphate [Mass/volume] in Serum or Plasma",
+      "groups": {
+        "LG49949-7": "Phosphate|Pt|Ser/Plas|94.97 g/mole",
+        "LG6426-3": "Phosphate|MCnc|Pt|ANYBldSerPl"
+      },
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas",
+      "time": "Pt"
+    },
     "2823-3": {
       "component": "Potassium",
       "display": "Potassium [Moles/volume] in Serum or Plasma",
@@ -1099,6 +1269,19 @@
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Ser/Plas",
+      "time": "Pt"
+    },
+    "2890-2": {
+      "component": "Protein/Creatinine",
+      "display": "Protein/Creatinine [Mass Ratio] in Urine",
+      "groups": {
+        "LG34791-0": "Protein/Creatinine|MRto|Urine"
+      },
+      "method": null,
+      "property": "MRto",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Urine",
       "time": "Pt"
     },
     "2923-1": {
@@ -1234,11 +1417,38 @@
       "system": "Ser/Plas",
       "time": "Pt"
     },
+    "3034-6": {
+      "component": "Transferrin",
+      "display": "Transferrin [Mass/volume] in Serum or Plasma",
+      "groups": {
+        "LG49697-2": "Transferrin|Pt|Ser/Plas",
+        "LG51311-5": "Transferrin|MCnc|Pt|ANYBldSerPl"
+      },
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas",
+      "time": "Pt"
+    },
     "30341-2": {
       "component": "Erythrocyte",
       "display": "Erythrocyte [Sedimentation Rate] in Blood",
       "method": null,
       "property": "Sedimentation Rate",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld",
+      "time": "Pt"
+    },
+    "30392-5": {
+      "component": "Erythrocytes.nucleated",
+      "display": "Nucleated erythrocytes [#/volume] in Blood",
+      "groups": {
+        "LG32999-1": "Erythrocytes.nucleated|NCnc|Pt|Bld"
+      },
+      "method": null,
+      "property": "NCnc",
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Bld",
@@ -1402,6 +1612,16 @@
       "system": "Ser",
       "time": "Pt"
     },
+    "33037-3": {
+      "component": "Anion gap",
+      "display": "Anion gap in Serum or Plasma by calculation",
+      "method": "Calculated",
+      "property": "SCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas",
+      "time": "Pt"
+    },
     "33762-6": {
       "component": "Natriuretic peptide.B prohormone N-Terminal",
       "display": "Natriuretic peptide.B prohormone N-Terminal [Mass/volume] in Serum or Plasma",
@@ -1427,6 +1647,19 @@
       "system": "Ser/Plas",
       "time": "Pt"
     },
+    "34366-5": {
+      "component": "Protein/Creatinine",
+      "display": "Protein/Creatinine [Ratio] in Urine",
+      "groups": {
+        "LG36198-6": "Protein/Creatinine|Ratio|Urine"
+      },
+      "method": null,
+      "property": "Ratio",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Urine",
+      "time": "Pt"
+    },
     "35177-5": {
       "component": "Fatty acids.polyunsaturated",
       "display": "Polyunsaturated fatty acids [Moles/volume] in Serum or Plasma",
@@ -1447,6 +1680,20 @@
       "system": "Ser/Plas",
       "time": "Pt"
     },
+    "38230-9": {
+      "component": "Calcium.ionized",
+      "display": "Calcium.ionized [Mass/volume] in Blood",
+      "groups": {
+        "LG42928-8": "Calcium.ionized|Pt|Bld",
+        "LG7250-6": "Calcium.ionized|MCnc|Pt|ANYBldSerPl"
+      },
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld",
+      "time": "Pt"
+    },
     "38476-8": {
       "component": "Mullerian inhibiting substance",
       "display": "Mullerian inhibiting substance [Mass/volume] in Serum or Plasma",
@@ -1461,6 +1708,16 @@
       "system": "Ser/Plas",
       "time": "Pt"
     },
+    "38518-7": {
+      "component": "Granulocytes.immature/Leukocytes",
+      "display": "Immature granulocytes/Leukocytes in Blood",
+      "method": null,
+      "property": "NFr",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld",
+      "time": "Pt"
+    },
     "39156-5": {
       "component": "Body mass index",
       "display": "Body mass index (BMI) [Ratio]",
@@ -1469,6 +1726,16 @@
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "^Patient",
+      "time": "Pt"
+    },
+    "41276-7": {
+      "component": "Anion gap",
+      "display": "Anion gap in Blood by calculation",
+      "method": "Calculated",
+      "property": "SCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld",
       "time": "Pt"
     },
     "41982-0": {
@@ -1629,6 +1896,20 @@
       "system": "PPP",
       "time": "Pt"
     },
+    "49054-0": {
+      "component": "Ercalcidiol",
+      "display": "25-hydroxyvitamin D2 [Mass/volume] in Serum or Plasma",
+      "groups": {
+        "LG41903-2": "Ercalcidiol|Pt|Ser/Plas",
+        "LG51031-9": "Ercalcidiol|MCnc|Pt|ANYBldSerPl"
+      },
+      "method": null,
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas",
+      "time": "Pt"
+    },
     "49563-0": {
       "component": "Troponin I.cardiac",
       "display": "Troponin I.cardiac [Mass/volume] in Serum or Plasma by Detection limit <= 0.01 ng/mL",
@@ -1639,6 +1920,19 @@
       "system": "Ser/Plas",
       "time": "Pt"
     },
+    "51584-1": {
+      "component": "Granulocytes.immature",
+      "display": "Immature granulocytes [#/volume] in Blood",
+      "groups": {
+        "LG33011-4": "Granulocytes.immature|NCnc|Pt|Bld"
+      },
+      "method": null,
+      "property": "NCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld",
+      "time": "Pt"
+    },
     "53060-0": {
       "component": "Butyrylcarnitine (C4)",
       "display": "Butyrylcarnitine (C4) [Moles/volume] in Amniotic fluid",
@@ -1647,6 +1941,19 @@
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Amnio fld",
+      "time": "Pt"
+    },
+    "53115-2": {
+      "component": "Granulocytes.immature",
+      "display": "Immature granulocytes [#/volume] in Blood by Automated count",
+      "groups": {
+        "LG33011-4": "Granulocytes.immature|NCnc|Pt|Bld"
+      },
+      "method": "Automated count",
+      "property": "NCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld",
       "time": "Pt"
     },
     "54434-6": {
@@ -1914,6 +2221,16 @@
       "system": "Urine sed",
       "time": "Pt"
     },
+    "58413-6": {
+      "component": "Erythrocytes.nucleated/Leukocytes",
+      "display": "Nucleated erythrocytes/Leukocytes [Ratio] in Blood by Automated count",
+      "method": "Automated count",
+      "property": "Ratio",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld",
+      "time": "Pt"
+    },
     "5902-2": {
       "component": "Coagulation",
       "display": "Prothrombin time (PT)",
@@ -2120,6 +2437,16 @@
       "system": "Bld",
       "time": "Pt"
     },
+    "71695-1": {
+      "component": "Granulocytes.immature/Leukocytes",
+      "display": "Immature granulocytes/Leukocytes in Blood by Automated count",
+      "method": "Automated count",
+      "property": "NFr",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld",
+      "time": "Pt"
+    },
     "718-7": {
       "component": "Hemoglobin",
       "display": "Hemoglobin [Mass/volume] in Blood",
@@ -2144,6 +2471,16 @@
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Bld",
+      "time": "Pt"
+    },
+    "73561-3": {
+      "component": "Insulin-like growth factor-I",
+      "display": "Insulin-like growth factor-I [Z-score] in Serum or Plasma",
+      "method": null,
+      "property": "Zscore",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser/Plas",
       "time": "Pt"
     },
     "736-9": {
@@ -2207,6 +2544,32 @@
       "display": "Neutrophils/Leukocytes in Blood by Automated count",
       "method": "Automated count",
       "property": "NFr",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld",
+      "time": "Pt"
+    },
+    "771-6": {
+      "component": "Erythrocytes.nucleated",
+      "display": "Nucleated erythrocytes [#/volume] in Blood by Automated count",
+      "groups": {
+        "LG32999-1": "Erythrocytes.nucleated|NCnc|Pt|Bld"
+      },
+      "method": "Automated count",
+      "property": "NCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Bld",
+      "time": "Pt"
+    },
+    "772-4": {
+      "component": "Erythrocytes.nucleated",
+      "display": "Nucleated erythrocytes [#/volume] in Blood by Manual count",
+      "groups": {
+        "LG32999-1": "Erythrocytes.nucleated|NCnc|Pt|Bld"
+      },
+      "method": "Manual count",
+      "property": "NCnc",
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Bld",

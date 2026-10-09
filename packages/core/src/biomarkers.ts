@@ -96,7 +96,14 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     code: 'CRP',
     loinc: '1988-5',
     names: {
-      en: ['C-Reactive Protein', 'CRP', 'hs-CRP', 'High-Sensitivity CRP'],
+      en: [
+        'C-Reactive Protein',
+        'CRP',
+        'hs-CRP',
+        'High-Sensitivity CRP',
+        'HS CRP',
+        'CRP High Sensitivity',
+      ],
       pt: ['Proteína C-Reativa', 'PCR', 'PCR-as', 'PCR Ultrassensível'],
     },
     unit: 'mg/L',
@@ -221,7 +228,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     code: 'Cholesterol',
     loinc: '2093-3',
     names: {
-      en: ['Total Cholesterol', 'Cholesterol'],
+      en: ['Total Cholesterol', 'Cholesterol', 'Cholesterol, Total'],
       pt: ['Colesterol Total', 'Colesterol'],
     },
     unit: 'mg/dL',
@@ -521,12 +528,15 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // ============================================================================
   // IMMUNE REGULATION / REGULACAO-IMUNOLOGICA
   // ============================================================================
+  // "Basos", "Eos" e "Lymphs", com "(Absolute)" para o absoluto, são como o
+  // laudo em colunas da Labcorp imprime o diferencial. Sem eles a âncora não
+  // achava a linha e a leitura do modelo era recusada como alucinação.
   {
     category: 'regulacao-imunologica',
     code: 'Basophils',
     loinc: '706-2',
     names: {
-      en: ['Basophils', 'Basophils %'],
+      en: ['Basophils', 'Basophils %', 'Basos'],
       pt: ['Basófilos', 'Basófilos %'],
     },
     unit: '%',
@@ -537,7 +547,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     hidden: true,
     loinc: '704-7',
     names: {
-      en: ['Absolute Basophils', 'Basophils Absolute'],
+      en: ['Absolute Basophils', 'Basophils Absolute', 'Baso (Absolute)', 'Basos (Absolute)'],
       pt: ['Basófilos Absolutos'],
     },
     unit: 'K/uL',
@@ -547,7 +557,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     code: 'Eosinophils',
     loinc: '713-8',
     names: {
-      en: ['Eosinophils', 'Eosinophils %'],
+      en: ['Eosinophils', 'Eosinophils %', 'Eos'],
       pt: ['Eosinófilos', 'Eosinófilos %'],
     },
     unit: '%',
@@ -558,7 +568,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     hidden: true,
     loinc: '711-2',
     names: {
-      en: ['Absolute Eosinophils', 'Eosinophils Absolute'],
+      en: ['Absolute Eosinophils', 'Eosinophils Absolute', 'Eos (Absolute)'],
       pt: ['Eosinófilos Absolutos'],
     },
     unit: 'K/uL',
@@ -568,7 +578,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     code: 'Lymphocytes',
     loinc: '736-9',
     names: {
-      en: ['Lymphocytes', 'Lymphocytes %'],
+      en: ['Lymphocytes', 'Lymphocytes %', 'Lymphs'],
       pt: ['Linfócitos', 'Linfócitos %'],
     },
     unit: '%',
@@ -579,7 +589,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     hidden: true,
     loinc: '731-0',
     names: {
-      en: ['Absolute Lymphocytes', 'Lymphocytes Absolute'],
+      en: ['Absolute Lymphocytes', 'Lymphocytes Absolute', 'Lymphs (Absolute)'],
       pt: ['Linfócitos Absolutos'],
     },
     unit: 'K/uL',
@@ -600,7 +610,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     hidden: true,
     loinc: '742-7',
     names: {
-      en: ['Absolute Monocytes', 'Monocytes Absolute'],
+      en: ['Absolute Monocytes', 'Monocytes Absolute', 'Monocytes (Absolute)'],
       pt: ['Monócitos Absolutos'],
     },
     unit: 'K/uL',
@@ -626,7 +636,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     hidden: true,
     loinc: '751-8',
     names: {
-      en: ['Absolute Neutrophils', 'Neutrophils Absolute'],
+      en: ['Absolute Neutrophils', 'Neutrophils Absolute', 'Neutrophils (Absolute)'],
       pt: ['Neutrófilos Absolutos'],
     },
     unit: 'K/uL',
@@ -1354,6 +1364,8 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         '25-OH Vitamin D',
         'Vitamin D, 25-Hydroxy',
         '25-Hydroxy Vitamin D, Total',
+        'Vitamin D, 25-OH, Total',
+        'Vitamin D, 25-OH, Total, IA',
       ],
       pt: [
         'Vitamina D',
@@ -3214,6 +3226,86 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     },
     unit: 'score',
   },
+  // Densidade por região da densitometria de corpo inteiro, a tabela "Region /
+  // BMD" do relatório. A coluna aqui é a região do corpo inteiro, e não a
+  // coluna lombar (L1-L4) do exame de coluna e quadril, que é outro exame.
+  {
+    category: 'densidade-ossea',
+    code: 'BMD_Arms',
+    // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
+    hidden: true,
+    names: {
+      en: ['Arms BMD', 'BMD Arms', 'Arms Bone Mineral Density', 'Arms Bone Density'],
+      pt: ['DMO Braços', 'Densidade Mineral Óssea Braços', 'Densidade Óssea Braços'],
+    },
+    unit: 'g/cm²',
+  },
+  {
+    category: 'densidade-ossea',
+    code: 'BMD_Head',
+    // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
+    hidden: true,
+    names: {
+      en: ['Head BMD', 'BMD Head', 'Head Bone Mineral Density', 'Head Bone Density'],
+      pt: ['DMO Cabeça', 'Densidade Mineral Óssea Cabeça', 'Densidade Óssea Cabeça'],
+    },
+    unit: 'g/cm²',
+  },
+  {
+    category: 'densidade-ossea',
+    code: 'BMD_Legs',
+    // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
+    hidden: true,
+    names: {
+      en: ['Legs BMD', 'BMD Legs', 'Legs Bone Mineral Density', 'Legs Bone Density'],
+      pt: ['DMO Pernas', 'Densidade Mineral Óssea Pernas', 'Densidade Óssea Pernas'],
+    },
+    unit: 'g/cm²',
+  },
+  {
+    category: 'densidade-ossea',
+    code: 'BMD_Pelvis',
+    // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
+    hidden: true,
+    names: {
+      en: ['Pelvis BMD', 'BMD Pelvis', 'Pelvis Bone Mineral Density', 'Pelvis Bone Density'],
+      pt: ['DMO Pelve', 'Densidade Mineral Óssea Pelve', 'Densidade Óssea Pelve'],
+    },
+    unit: 'g/cm²',
+  },
+  {
+    category: 'densidade-ossea',
+    code: 'BMD_Ribs',
+    // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
+    hidden: true,
+    names: {
+      en: ['Ribs BMD', 'BMD Ribs', 'Ribs Bone Mineral Density', 'Ribs Bone Density'],
+      pt: ['DMO Costelas', 'Densidade Mineral Óssea Costelas', 'Densidade Óssea Costelas'],
+    },
+    unit: 'g/cm²',
+  },
+  {
+    category: 'densidade-ossea',
+    code: 'BMD_Spine',
+    // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
+    hidden: true,
+    names: {
+      en: ['Spine BMD', 'BMD Spine', 'Spine Bone Mineral Density', 'Spine Bone Density'],
+      pt: ['DMO Coluna', 'Densidade Mineral Óssea Coluna', 'Densidade Óssea Coluna'],
+    },
+    unit: 'g/cm²',
+  },
+  {
+    category: 'densidade-ossea',
+    code: 'BMD_Trunk',
+    // Sem LOINC: nenhuma busca registrada (ver mapping-decisions.ts)
+    hidden: true,
+    names: {
+      en: ['Trunk BMD', 'BMD Trunk', 'Trunk Bone Mineral Density', 'Trunk Bone Density'],
+      pt: ['DMO Tronco', 'Densidade Mineral Óssea Tronco', 'Densidade Óssea Tronco'],
+    },
+    unit: 'g/cm²',
+  },
 
   // ============================================================================
   // CARDIOVASCULAR MARKERS — Insuficiência cardíaca e dano miocárdico
@@ -3956,9 +4048,15 @@ const normalizedNameToCodeMap = new Map<string, string>();
 // fica `null`: a busca devolve nada em vez de escolher um pela ordem do
 // catálogo.
 const foldedNameToCodeMap = new Map<string, string | null>();
+// Todos os donos de cada nome. O mapa de cima guarda um só, o último do
+// catálogo, e "A/G Ratio" é nome da razão albumina/globulina e da razão
+// androide/ginoide da densitometria.
+const nameOwners = new Map<string, Set<string>>();
 for (const def of BIOMARKER_DEFINITIONS) {
   for (const name of [...def.names.en, ...def.names.pt]) {
     normalizedNameToCodeMap.set(normalizeText(name), def.code);
+    const owners = nameOwners.get(normalizeText(name)) ?? new Set<string>();
+    nameOwners.set(normalizeText(name), owners.add(def.code));
     const folded = foldText(name);
     const owner = foldedNameToCodeMap.get(folded);
     foldedNameToCodeMap.set(folded, owner === undefined || owner === def.code ? def.code : null);
@@ -4007,6 +4105,13 @@ export function validateLoincNameMatch(
 
   // If LOINC maps to a code, check if it matches the name-based code
   if (loincCode && nameCode && loincCode !== nameCode) {
+    // O nome é de mais de um exame, e o do LOINC é um deles: os dois
+    // concordam. Num laudo bioquímico, "A/G Ratio" com 1759-0 é a razão
+    // albumina/globulina, e trocar pelo outro dono do nome punha o código da
+    // densitometria num laudo de sangue.
+    if (nameOwners.get(normalizeText(name))?.has(loincCode)) {
+      return { code: loincCode, corrected: false };
+    }
     // LOINC and name disagree - trust the name since it's what the LLM saw in the document
     return { code: nameCode, corrected: true };
   }

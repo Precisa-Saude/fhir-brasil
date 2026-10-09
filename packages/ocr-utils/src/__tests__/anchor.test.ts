@@ -1112,3 +1112,20 @@ describe('findBiomarkersInText: urinálise em português e sedimento (PRE-486)',
     expect(codesOf('Densidade 1015')).not.toContain('SpecificGravity_Urine');
   });
 });
+
+describe('findBiomarkersInText: diferencial abreviado do laudo em colunas (Labcorp)', () => {
+  const codesOf = (text: string) => findBiomarkersInText(text).matches.map((m) => m.code);
+
+  // Sem as abreviações no catálogo, a âncora não achava a linha, e a leitura
+  // certa do modelo era recusada como alucinação.
+  it.each([
+    ['Lymphs 31 % 14-46', 'Lymphocytes'],
+    ['Eos 3 % 0-7', 'Eosinophils'],
+    ['Basos 1 % 0-3', 'Basophils'],
+    ['Lymphs (Absolute) 2.6 x10E3/uL 0.7-3.1', 'Lymphocytes_Abs'],
+    ['Eos (Absolute) 0.2 x10E3/uL 0.0-0.4', 'Eosinophils_Abs'],
+    ['Baso (Absolute) 0.1 x10E3/uL 0.0-0.2', 'Basophils_Abs'],
+  ])('ancora "%s" em %s', (line, code) => {
+    expect(codesOf(line)).toContain(code);
+  });
+});

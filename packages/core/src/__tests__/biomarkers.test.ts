@@ -1023,3 +1023,60 @@ describe('T3 total e T3 livre', () => {
     expect(findCodeByName(grafia)).toBe(esperado);
   });
 });
+
+describe('nomes do laudo americano em colunas e do monoespaçado', () => {
+  // Grafias medidas nos 34 laudos sintéticos americanos da plataforma: o
+  // diferencial abreviado da Labcorp, o total com vírgula e as duas leituras
+  // da proteína C-reativa ultrassensível e da vitamina D da Quest.
+  it.each([
+    ['Lymphs', 'Lymphocytes'],
+    ['Lymphs (Absolute)', 'Lymphocytes_Abs'],
+    ['Eos', 'Eosinophils'],
+    ['Eos (Absolute)', 'Eosinophils_Abs'],
+    ['Basos', 'Basophils'],
+    ['Baso (Absolute)', 'Basophils_Abs'],
+    ['Monocytes (Absolute)', 'Monocytes_Abs'],
+    ['Neutrophils (Absolute)', 'Neutrophils_Abs'],
+    ['Cholesterol, Total', 'Cholesterol'],
+    ['HS CRP', 'CRP'],
+    ['CRP High Sensitivity', 'CRP'],
+    ['Vitamin D, 25-OH, Total', 'VitaminD'],
+    ['VITAMIN D,25-OH,TOTAL,IA', 'VitaminD'],
+  ])('resolve %s para %s', (printed, expected) => {
+    expect(findCodeByName(printed)).toBe(expected);
+  });
+});
+
+describe('validateLoincNameMatch com nome de mais de um exame', () => {
+  // "A/G Ratio" é nome da razão albumina/globulina e da razão
+  // androide/ginoide. O LOINC 1759-0 diz qual das duas a linha é.
+  it('mantém o código do LOINC quando ele também é dono do nome', () => {
+    expect(validateLoincNameMatch('1759-0', 'A/G Ratio')).toEqual({
+      code: 'Albumin_Globulin_Ratio',
+      corrected: false,
+    });
+  });
+
+  it('continua corrigindo o LOINC de outro exame', () => {
+    expect(validateLoincNameMatch('1759-0', 'Android/Gynoid Ratio')).toEqual({
+      code: 'AndroidGynoidRatio',
+      corrected: true,
+    });
+  });
+});
+
+describe('densidade óssea por região da densitometria de corpo inteiro', () => {
+  it.each([
+    ['Arms Bone Mineral Density', 'BMD_Arms'],
+    ['Legs BMD', 'BMD_Legs'],
+    ['Trunk Bone Mineral Density', 'BMD_Trunk'],
+    ['Spine Bone Mineral Density', 'BMD_Spine'],
+    ['DMO Pelve', 'BMD_Pelvis'],
+  ])('resolve %s para %s', (printed, expected) => {
+    expect(findCodeByName(printed)).toBe(expected);
+  });
+
+  it('a densidade do corpo inteiro continua BMD_Total', () => {
+    expect(findCodeByName('Total BMD')).toBe('BMD_Total');
+  });
+});

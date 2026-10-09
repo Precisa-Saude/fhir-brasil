@@ -509,9 +509,37 @@ export const NO_LOINC_DECISIONS: Record<string, NoLoincDecision> = {
     reason: 'no-concept',
     note: 'DEXA: o LOINC não tem o conceito para corpo inteiro ou região.',
   },
+  BMD_Arms: {
+    reason: 'pending-review',
+    note: 'Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada.',
+  },
+  BMD_Head: {
+    reason: 'pending-review',
+    note: 'Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada.',
+  },
+  BMD_Legs: {
+    reason: 'pending-review',
+    note: 'Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada.',
+  },
+  BMD_Pelvis: {
+    reason: 'pending-review',
+    note: 'Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada.',
+  },
+  BMD_Ribs: {
+    reason: 'pending-review',
+    note: 'Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada.',
+  },
+  BMD_Spine: {
+    reason: 'pending-review',
+    note: 'Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada.',
+  },
   BMD_Total: {
     reason: 'no-concept',
     note: 'O LOINC só tem densitometria por sítio, não corpo inteiro.',
+  },
+  BMD_Trunk: {
+    reason: 'pending-review',
+    note: 'Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada.',
   },
   BasalMetabolicRate: {
     reason: 'ambiguous',

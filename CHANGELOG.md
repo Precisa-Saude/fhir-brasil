@@ -1,3 +1,9 @@
+## [0.41.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.40.0...v0.41.0) (2026-10-09)
+
+### Features
+
+* **core:** tira qualitativa na urina, método impresso e conceitos calculados no drill-down ([#151](https://github.com/Precisa-Saude/fhir-brasil/issues/151)) ([32b072a](https://github.com/Precisa-Saude/fhir-brasil/commit/32b072aedb88437f9d6f330a309aacceb4805b5a))
+
 ## [0.40.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.39.0...v0.40.0) (2026-10-09)
 
 ### Features

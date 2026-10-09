@@ -1739,6 +1739,16 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       system: '^Patient',
       time: 'Pt',
     },
+    '41276-7': {
+      component: 'Anion gap',
+      display: 'Anion gap in Blood by calculation',
+      method: 'Calculated',
+      property: 'SCnc',
+      scale: 'Qn',
+      status: 'ACTIVE',
+      system: 'Bld',
+      time: 'Pt',
+    },
     '41982-0': {
       component: 'Body fat percentage',
       display: 'Percentage of body fat Measured',

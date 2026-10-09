@@ -85,6 +85,7 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
         reason: 'Calculated.3Ions: o laudo não diz se o potássio entrou na conta',
       },
       { loinc: '1863-0', reason: 'Calculated.4Ions: idem' },
+      { loinc: '41276-7', reason: 'sangue total, da gasometria' },
     ],
   },
   AntiThyroglobulin: nameOnly('8098-6'),

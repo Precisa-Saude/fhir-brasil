@@ -1198,6 +1198,10 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'selhub-homocysteine-1999',
   },
 
+  // IGF1 fica sem faixa de propósito. O IGF-1 cai com a idade, e uma faixa
+  // adulta única marcaria baixo quem é só mais velho; vale a faixa por idade
+  // que o laboratório imprime (PRE-479).
+
   ImmatureGranulocytes: {
     default: { max: 1.0, min: 0, optimalMax: 0.5, optimalMin: 0, unit: '%' },
     kind: 'reference-interval',

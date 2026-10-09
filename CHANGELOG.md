@@ -1,3 +1,14 @@
+## [0.40.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.39.0...v0.40.0) (2026-10-09)
+
+### Features
+
+* **core:** loinc-drilldown lê os testes locais da auditoria e roda só pelo nome impresso ([#149](https://github.com/Precisa-Saude/fhir-brasil/issues/149)) ([2f669f9](https://github.com/Precisa-Saude/fhir-brasil/commit/2f669f91b85cf453a74ece6b20d9bdb44d5a6530))
+* **core:** resultado ordinal codificado em LOINC e SNOMED CT ([#152](https://github.com/Precisa-Saude/fhir-brasil/issues/152)) ([30cb0a1](https://github.com/Precisa-Saude/fhir-brasil/commit/30cb0a1ed57f40d03eb623bfd0bca24c525a4029))
+
+### Documentation
+
+* **core:** rodada 11 roda os testes locais pelo caminho de produção, com aliases da âncora e Jev ([#150](https://github.com/Precisa-Saude/fhir-brasil/issues/150)) ([c19ea01](https://github.com/Precisa-Saude/fhir-brasil/commit/c19ea01a9b76f0c8a913c84b4f8841f337cfb384))
+
 ## [0.39.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v0.38.4...v0.39.0) (2026-10-08)
 
 ### Features

@@ -455,7 +455,7 @@ describe('cli: decision', () => {
 
   it('entrada sem LOINC imprime o motivo', async () => {
     const { decision } = await import('../../cli/commands/decision');
-    await decision(['Estrone'], false);
+    await decision(['VATMass'], false);
     expect(stdoutOutput).toContain('Sem LOINC:    no-concept');
   });
 

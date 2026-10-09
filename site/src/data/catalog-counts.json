@@ -1,5 +1,5 @@
 {
-  "acceptedLoincCodes": 228,
+  "acceptedLoincCodes": 230,
   "biomarkers": 260,
   "byCategory": [
     {
@@ -12,7 +12,7 @@
       "count": 52,
       "examples": ["Cortisol", "IGF1", "BMI", "BodyFatPct", "FatMass"],
       "pt": "Composição Corporal e Envelhecimento",
-      "withLoinc": 15
+      "withLoinc": 16
     },
     {
       "count": 20,
@@ -66,16 +66,16 @@
       "count": 15,
       "examples": ["AMH", "DHEAS", "Estradiol", "Estrone", "FSH"],
       "pt": "Saúde Reprodutiva",
-      "withLoinc": 14
+      "withLoinc": 15
     }
   ],
   "categoryGroups": 10,
-  "decisions": { "nameOnly": 176, "reviewed": 0, "withEvidence": 39 },
-  "loincCoveragePct": 82.7,
+  "decisions": { "nameOnly": 176, "reviewed": 0, "withEvidence": 41 },
+  "loincCoveragePct": 83.5,
   "referenceRanges": 203,
   "subcategories": 20,
   "version": "0.43.0",
-  "withLoinc": 215,
-  "withoutLoinc": 45,
-  "withoutLoincByReason": { "ambiguous": 1, "no-concept": 30, "pending-review": 14 }
+  "withLoinc": 217,
+  "withoutLoinc": 43,
+  "withoutLoincByReason": { "ambiguous": 4, "no-concept": 39 }
 }

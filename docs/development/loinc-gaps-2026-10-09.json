@@ -1,0 +1,1459 @@
+{
+  "_checkedAt": "2026-10-09",
+  "_loincVersion": "2.83",
+  "_notice": "This material contains content from LOINC (http://loinc.org). LOINC is copyright © Regenstrief Institute, Inc. and the Logical Observation Identifiers Names and Codes (LOINC) Committee and is available at no cost under the license at http://loinc.org/license. LOINC® is a registered United States trademark of Regenstrief Institute, Inc.",
+  "source": "https://loinc.regenstrief.org/searchapi/loincs",
+  "scope": "45 entradas sem LOINC no commit 32047d3. A classificação refere-se à busca de equivalência com um código individual; não prova ausência de representação por código + região/método, painel ou outro sistema. Não constitui revisão clínica independente.",
+  "searches": [
+    {
+      "query": "Agatston",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=Agatston&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "Agatston percentile",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=Agatston+percentile&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "android",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=android&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 5,
+      "rowsReturned": 5,
+      "truncated": false
+    },
+    {
+      "query": "android gynoid",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=android+gynoid&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "aortic calcium",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=aortic+calcium&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 1,
+      "rowsReturned": 1,
+      "truncated": false
+    },
+    {
+      "query": "arms fat",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=arms+fat&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "arms lean",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=arms+lean&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "basal metabolic",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=basal+metabolic&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 27,
+      "rowsReturned": 27,
+      "truncated": false
+    },
+    {
+      "query": "body water",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=body+water&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 2,
+      "rowsReturned": 2,
+      "truncated": false
+    },
+    {
+      "query": "bone density",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=bone+density&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 88,
+      "rowsReturned": 88,
+      "truncated": false
+    },
+    {
+      "query": "bone mass",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=bone+mass&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 32,
+      "rowsReturned": 32,
+      "truncated": false
+    },
+    {
+      "query": "bone mineral",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=bone+mineral&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "bone mineral content",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=bone+mineral+content&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "calcification",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=calcification&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "calcium score",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=calcium+score&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 5,
+      "rowsReturned": 5,
+      "truncated": false
+    },
+    {
+      "query": "calcium scoring",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=calcium+scoring&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 5,
+      "rowsReturned": 5,
+      "truncated": false
+    },
+    {
+      "query": "component:\"Extracellular fluid\"",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=component%3A%22Extracellular+fluid%22&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 1,
+      "rowsReturned": 1,
+      "truncated": false
+    },
+    {
+      "query": "component:\"Intracellular fluid\"",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=component%3A%22Intracellular+fluid%22&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 1,
+      "rowsReturned": 1,
+      "truncated": false
+    },
+    {
+      "query": "conicity",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=conicity&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "conicity index",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=conicity+index&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "coronary calcification",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=coronary+calcification&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "coronary calcium",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=coronary+calcium&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 2,
+      "rowsReturned": 2,
+      "truncated": false
+    },
+    {
+      "query": "ECF TBW",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=ECF+TBW&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "ECW",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=ECW&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "ECW TBW",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=ECW+TBW&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "estrone",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=estrone&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 58,
+      "rowsReturned": 58,
+      "truncated": false
+    },
+    {
+      "query": "extracellular",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=extracellular&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 5,
+      "rowsReturned": 5,
+      "truncated": false
+    },
+    {
+      "query": "extracellular fluid",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=extracellular+fluid&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 3,
+      "rowsReturned": 3,
+      "truncated": false
+    },
+    {
+      "query": "extracellular water",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=extracellular+water&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "fat free mass",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=fat+free+mass&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "fat mass",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=fat+mass&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 33,
+      "rowsReturned": 33,
+      "truncated": false
+    },
+    {
+      "query": "fat-free",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=fat-free&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "fluid body",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=fluid+body&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 1582,
+      "rowsReturned": 200,
+      "truncated": true
+    },
+    {
+      "query": "gynoid",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=gynoid&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "ICW",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=ICW&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "intracellular",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=intracellular&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 4,
+      "rowsReturned": 4,
+      "truncated": false
+    },
+    {
+      "query": "intracellular fluid",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=intracellular+fluid&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 1,
+      "rowsReturned": 1,
+      "truncated": false
+    },
+    {
+      "query": "intracellular water",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=intracellular+water&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "lean",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=lean&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 14,
+      "rowsReturned": 14,
+      "truncated": false
+    },
+    {
+      "query": "lean mass",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=lean+mass&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 12,
+      "rowsReturned": 12,
+      "truncated": false
+    },
+    {
+      "query": "lean tissue",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=lean+tissue&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "legs fat",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=legs+fat&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "legs lean",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=legs+lean&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "MESA",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=MESA&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 2,
+      "rowsReturned": 2,
+      "truncated": false
+    },
+    {
+      "query": "midaxillary",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=midaxillary&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "muscle mass",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=muscle+mass&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 6,
+      "rowsReturned": 6,
+      "truncated": false
+    },
+    {
+      "query": "muscle mass index",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=muscle+mass+index&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "nonfat",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=nonfat&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "pectoral skinfold",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=pectoral+skinfold&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "residual mass",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=residual+mass&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "residual weight",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=residual+weight&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "resting metabolic",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=resting+metabolic&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 24,
+      "rowsReturned": 24,
+      "truncated": false
+    },
+    {
+      "query": "skinfold",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=skinfold&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 3,
+      "rowsReturned": 3,
+      "truncated": false
+    },
+    {
+      "query": "skinfold OR skin fold",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=skinfold+OR+skin+fold&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 10,
+      "rowsReturned": 10,
+      "truncated": false
+    },
+    {
+      "query": "subscapular",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=subscapular&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "suprailiac",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=suprailiac&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "trunk fat",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=trunk+fat&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "trunk lean",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=trunk+lean&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "visceral adipose",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=visceral+adipose&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    },
+    {
+      "query": "visceral fat",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=visceral+fat&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 1,
+      "rowsReturned": 1,
+      "truncated": false
+    },
+    {
+      "query": "waist",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=waist&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 10,
+      "rowsReturned": 10,
+      "truncated": false
+    },
+    {
+      "query": "waist height",
+      "url": "https://loinc.regenstrief.org/searchapi/loincs?query=waist+height&rows=200",
+      "loincVersion": "2.83",
+      "recordsFound": 0,
+      "rowsReturned": 0,
+      "truncated": false
+    }
+  ],
+  "candidates": {
+    "101684-9": {
+      "display": "Percentage of body water",
+      "component": "Body water",
+      "property": "MFr",
+      "time": "Pt",
+      "system": "^Patient",
+      "scale": "Qn",
+      "method": "Measured",
+      "status": "ACTIVE"
+    },
+    "101685-6": {
+      "display": "Body bone mass",
+      "component": "Body bone",
+      "property": "Mass",
+      "time": "Pt",
+      "system": "^Patient",
+      "scale": "Qn",
+      "method": "Measured",
+      "status": "ACTIVE"
+    },
+    "101686-4": {
+      "display": "Body bone percentage",
+      "component": "Body bone",
+      "property": "MFr",
+      "time": "Pt",
+      "system": "^Patient",
+      "scale": "Qn",
+      "method": "BIA",
+      "status": "ACTIVE"
+    },
+    "104938-6": {
+      "display": "DXA Spine [T-score] Bone density",
+      "component": "Views for bone density",
+      "property": "Tscore",
+      "time": "Pt",
+      "system": "Spine",
+      "scale": "Qn",
+      "method": "DXA",
+      "status": "ACTIVE"
+    },
+    "15355-1": {
+      "display": "Estrone sulfate [Mass/volume] in Serum or Plasma",
+      "component": "Estrone sulfate",
+      "property": "MCnc",
+      "time": "Pt",
+      "system": "Ser/Plas",
+      "scale": "Qn",
+      "method": null,
+      "status": "ACTIVE"
+    },
+    "2258-2": {
+      "display": "Estrone (E1) [Mass/volume] in Serum or Plasma",
+      "component": "Estrone",
+      "property": "MCnc",
+      "time": "Pt",
+      "system": "Ser/Plas",
+      "scale": "Qn",
+      "method": null,
+      "status": "ACTIVE"
+    },
+    "2261-6": {
+      "display": "Estrone (E1).unconjugated [Mass/volume] in Serum or Plasma",
+      "component": "Estrone.unconjugated",
+      "property": "MCnc",
+      "time": "Pt",
+      "system": "Ser/Plas",
+      "scale": "Qn",
+      "method": null,
+      "status": "ACTIVE"
+    },
+    "22663-9": {
+      "display": "Estrone (E1) [Moles/volume] in Serum or Plasma",
+      "component": "Estrone",
+      "property": "SCnc",
+      "time": "Pt",
+      "system": "Ser/Plas",
+      "scale": "Qn",
+      "method": null,
+      "status": "ACTIVE"
+    },
+    "24701-5": {
+      "display": "DXA Femur [Mass/Area] Bone density",
+      "component": "Views for bone density",
+      "property": "ArMass",
+      "time": "Pt",
+      "system": "Lower extremity>Femur",
+      "scale": "Qn",
+      "method": "DXA",
+      "status": "ACTIVE"
+    },
+    "24890-6": {
+      "display": "DXA Radius and Ulna [Mass/Area] Bone density",
+      "component": "Views for bone density",
+      "property": "ArMass",
+      "time": "Pt",
+      "system": "Upper extremity>Radius+Ulna",
+      "scale": "Qn",
+      "method": "DXA",
+      "status": "ACTIVE"
+    },
+    "24966-4": {
+      "display": "DXA Lumbar spine [Mass/Area] Bone density",
+      "component": "Views for bone density",
+      "property": "ArMass",
+      "time": "Pt",
+      "system": "Abdomen>Spine.lumbar",
+      "scale": "Qn",
+      "method": "DXA",
+      "status": "ACTIVE"
+    },
+    "38261-4": {
+      "display": "DXA Hip [Mass/Area] Bone density",
+      "component": "Views for bone density",
+      "property": "ArMass",
+      "time": "Pt",
+      "system": "Lower extremity>Hip",
+      "scale": "Qn",
+      "method": "DXA",
+      "status": "ACTIVE"
+    },
+    "38263-0": {
+      "display": "DXA Femur [T-score] Bone density",
+      "component": "Views for bone density",
+      "property": "Tscore",
+      "time": "Pt",
+      "system": "Lower extremity>Femur",
+      "scale": "Qn",
+      "method": "DXA",
+      "status": "ACTIVE"
+    },
+    "38264-8": {
+      "display": "DXA Hip [T-score] Bone density",
+      "component": "Views for bone density",
+      "property": "Tscore",
+      "time": "Pt",
+      "system": "Lower extremity>Hip",
+      "scale": "Qn",
+      "method": "DXA",
+      "status": "ACTIVE"
+    },
+    "38267-1": {
+      "display": "DXA Lumbar spine [T-score] Bone density",
+      "component": "Views for bone density",
+      "property": "Tscore",
+      "time": "Pt",
+      "system": "Abdomen>Spine.lumbar",
+      "scale": "Qn",
+      "method": "DXA",
+      "status": "ACTIVE"
+    },
+    "38268-9": {
+      "display": "DXA Skeletal system Views for bone density",
+      "component": "Views for bone density",
+      "property": "Find",
+      "time": "Pt",
+      "system": "Whole body>Skeletal system",
+      "scale": "Doc",
+      "method": "DXA",
+      "status": "ACTIVE"
+    },
+    "41982-0": {
+      "display": "Percentage of body fat Measured",
+      "component": "Body fat percentage",
+      "property": "MFr",
+      "time": "Pt",
+      "system": "^Patient",
+      "scale": "Qn",
+      "method": "Measured",
+      "status": "ACTIVE"
+    },
+    "46383-6": {
+      "display": "DXA Bone [Mass/Area] Bone density",
+      "component": "Views for bone density",
+      "property": "ArMass",
+      "time": "Pt",
+      "system": "XXX>Bone",
+      "scale": "Qn",
+      "method": "DXA",
+      "status": "ACTIVE"
+    },
+    "50042-1": {
+      "display": "Basal metabolic rate index",
+      "component": "Basal metabolic rate index",
+      "property": "ACnc",
+      "time": "Pt",
+      "system": "^Patient",
+      "scale": "Qn",
+      "method": null,
+      "status": "ACTIVE"
+    },
+    "69429-9": {
+      "display": "Metabolic rate --resting",
+      "component": "Metabolic rate^resting",
+      "property": "EngRat",
+      "time": "Pt",
+      "system": "^Patient",
+      "scale": "Qn",
+      "method": null,
+      "status": "ACTIVE"
+    },
+    "73705-6": {
+      "display": "Intracellular fluid [Volume] Estimated",
+      "component": "Intracellular fluid",
+      "property": "Vol",
+      "time": "Pt",
+      "system": "^Patient",
+      "scale": "Qn",
+      "method": "Estimated",
+      "status": "ACTIVE"
+    },
+    "73706-4": {
+      "display": "Extracellular fluid [Volume] Measured",
+      "component": "Extracellular fluid",
+      "property": "Vol",
+      "time": "Pt",
+      "system": "^Patient",
+      "scale": "Qn",
+      "method": "Measured",
+      "status": "ACTIVE"
+    },
+    "73707-2": {
+      "display": "Visceral fat [Area] Measured",
+      "component": "Visceral fat",
+      "property": "Area",
+      "time": "Pt",
+      "system": "^Patient",
+      "scale": "Qn",
+      "method": "Measured",
+      "status": "ACTIVE"
+    },
+    "73708-0": {
+      "display": "Body fat [Mass] Calculated",
+      "component": "Body fat mass",
+      "property": "Mass",
+      "time": "Pt",
+      "system": "^Patient",
+      "scale": "Qn",
+      "method": "Calculated",
+      "status": "ACTIVE"
+    },
+    "73964-9": {
+      "display": "Body muscle mass Calculated",
+      "component": "Body muscle mass",
+      "property": "Mass",
+      "time": "Pt",
+      "system": "^Patient",
+      "scale": "Qn",
+      "method": "Calculated",
+      "status": "ACTIVE"
+    },
+    "73965-6": {
+      "display": "Body muscle mass/Body weight Measured",
+      "component": "Body muscle mass/body weight",
+      "property": "MFr",
+      "time": "Pt",
+      "system": "^Patient",
+      "scale": "Qn",
+      "method": "Measured",
+      "status": "ACTIVE"
+    },
+    "79087-3": {
+      "display": "CT Heart and Coronary arteries for calcium scoring WO contrast",
+      "component": "Multisection for calcium score^WO contrast",
+      "property": "Find",
+      "time": "Pt",
+      "system": "Chest>Heart+Coronary arteries",
+      "scale": "Doc",
+      "method": "CT",
+      "status": "ACTIVE"
+    },
+    "80933-5": {
+      "display": "DXA Hip [Z-score] Bone density",
+      "component": "Views for bone density",
+      "property": "Zscore",
+      "time": "Pt",
+      "system": "Lower extremity>Hip",
+      "scale": "Qn",
+      "method": "DXA",
+      "status": "ACTIVE"
+    },
+    "80934-3": {
+      "display": "DXA Femur [Z-score] Bone density",
+      "component": "Views for bone density",
+      "property": "Zscore",
+      "time": "Pt",
+      "system": "Lower extremity>Femur",
+      "scale": "Qn",
+      "method": "DXA",
+      "status": "ACTIVE"
+    },
+    "82278-3": {
+      "display": "Measured RMR",
+      "component": "Metabolic rate^resting",
+      "property": "EngRat",
+      "time": "1M^mean",
+      "system": "^Patient",
+      "scale": "Qn",
+      "method": "Measured",
+      "status": "ACTIVE"
+    },
+    "82286-6": {
+      "display": "Predicted RMR",
+      "component": "Predicted resting metabolic rate",
+      "property": "EngRat",
+      "time": "1M^mean",
+      "system": "^Patient",
+      "scale": "Qn",
+      "method": null,
+      "status": "ACTIVE"
+    },
+    "8280-0": {
+      "display": "Waist Circumference at umbilicus by Tape measure",
+      "component": "Circumference.at umbilicus",
+      "property": "Len",
+      "time": "Pt",
+      "system": "Abdomen.mid",
+      "scale": "Qn",
+      "method": "Tape measure",
+      "status": "ACTIVE"
+    },
+    "83289-9": {
+      "display": "CT for calcium scoring WO contrast and CTA W contrast IV Heart and coronary arteries",
+      "component": "Multisection for calcium score^WO contrast && Multisection^W contrast IV",
+      "property": "Find",
+      "time": "Pt",
+      "system": "Chest>Heart+Coronary arteries",
+      "scale": "Doc",
+      "method": "CT && CT.angio",
+      "status": "ACTIVE"
+    },
+    "8353-5": {
+      "display": "Skin fold thickness Thigh",
+      "component": "Skin fold thickness",
+      "property": "Len",
+      "time": "Pt",
+      "system": "Thigh",
+      "scale": "Qn",
+      "method": null,
+      "status": "ACTIVE"
+    },
+    "8354-3": {
+      "display": "Skin fold thickness Triceps",
+      "component": "Skin fold thickness",
+      "property": "Len",
+      "time": "Pt",
+      "system": "Triceps",
+      "scale": "Qn",
+      "method": null,
+      "status": "ACTIVE"
+    },
+    "8355-0": {
+      "display": "Skin fold thickness Waist",
+      "component": "Skin fold thickness",
+      "property": "Len",
+      "time": "Pt",
+      "system": "Waist",
+      "scale": "Qn",
+      "method": null,
+      "status": "ACTIVE"
+    },
+    "85385-3": {
+      "display": "DXA Humerus [Mass/Area] Bone density",
+      "component": "Views for bone density",
+      "property": "ArMass",
+      "time": "Pt",
+      "system": "Upper extremity>Humerus",
+      "scale": "Qn",
+      "method": "DXA",
+      "status": "ACTIVE"
+    },
+    "85394-5": {
+      "display": "DXA Lumbar spine [Z-score] Bone density",
+      "component": "Views for bone density",
+      "property": "Zscore",
+      "time": "Pt",
+      "system": "Abdomen>Spine.lumbar",
+      "scale": "Qn",
+      "method": "DXA",
+      "status": "ACTIVE"
+    },
+    "88334-8": {
+      "display": "Lean body weight Calculated",
+      "component": "Lean body weight",
+      "property": "Mass",
+      "time": "Pt",
+      "system": "^Patient",
+      "scale": "Qn",
+      "method": "Calculated",
+      "status": "ACTIVE"
+    },
+    "89927-8": {
+      "display": "CT Heart and aortic root WO contrast for calcium scoring + CTA W contrast IV",
+      "component": "Multisection for calcium score^WO contrast && Multisection^W contrast IV",
+      "property": "Find",
+      "time": "Pt",
+      "system": "Chest>Heart+Aortic root",
+      "scale": "Doc",
+      "method": "CT && CT.angio",
+      "status": "ACTIVE"
+    },
+    "91557-9": {
+      "display": "Lean body weight",
+      "component": "Lean body weight",
+      "property": "Mass",
+      "time": "Pt",
+      "system": "^Patient",
+      "scale": "Qn",
+      "method": null,
+      "status": "ACTIVE"
+    }
+  },
+  "entries": [
+    {
+      "code": "CAC",
+      "name": "Escore de Cálcio Coronariano",
+      "unit": "AU",
+      "reason": "no-concept",
+      "queries": ["Agatston", "calcium score", "coronary calcium", "coronary calcification"],
+      "candidates": ["79087-3", "83289-9"],
+      "note": "79087-3 e 83289-9 descrevem o exame (escala Doc), não o resultado numérico de Agatston.",
+      "nextStep": "Avaliar SNOMED 450360000 com método DICOM 112055 e sítio anatômico; para LOINC, solicitar o conceito quantitativo."
+    },
+    {
+      "code": "CAC_LMA",
+      "name": "Cálcio Tronco Coronária Esquerda",
+      "unit": "AU",
+      "reason": "no-concept",
+      "queries": ["Agatston", "calcium score", "coronary calcium", "coronary calcification"],
+      "candidates": ["79087-3", "83289-9"],
+      "note": "79087-3 e 83289-9 descrevem o exame (escala Doc), não o resultado numérico de Agatston.",
+      "nextStep": "Avaliar SNOMED 450360000 com método DICOM 112055 e sítio anatômico; para LOINC, solicitar o conceito quantitativo."
+    },
+    {
+      "code": "CAC_LAD",
+      "name": "Cálcio Descendente Anterior Esquerda",
+      "unit": "AU",
+      "reason": "no-concept",
+      "queries": ["Agatston", "calcium score", "coronary calcium", "coronary calcification"],
+      "candidates": ["79087-3", "83289-9"],
+      "note": "79087-3 e 83289-9 descrevem o exame (escala Doc), não o resultado numérico de Agatston.",
+      "nextStep": "Avaliar SNOMED 450360000 com método DICOM 112055 e sítio anatômico; para LOINC, solicitar o conceito quantitativo."
+    },
+    {
+      "code": "CAC_LCX",
+      "name": "Cálcio Circunflexa",
+      "unit": "AU",
+      "reason": "no-concept",
+      "queries": ["Agatston", "calcium score", "coronary calcium", "coronary calcification"],
+      "candidates": ["79087-3", "83289-9"],
+      "note": "79087-3 e 83289-9 descrevem o exame (escala Doc), não o resultado numérico de Agatston.",
+      "nextStep": "Avaliar SNOMED 450360000 com método DICOM 112055 e sítio anatômico; para LOINC, solicitar o conceito quantitativo."
+    },
+    {
+      "code": "CAC_RCA",
+      "name": "Cálcio Coronária Direita",
+      "unit": "AU",
+      "reason": "no-concept",
+      "queries": ["Agatston", "calcium score", "coronary calcium", "coronary calcification"],
+      "candidates": ["79087-3", "83289-9"],
+      "note": "79087-3 e 83289-9 descrevem o exame (escala Doc), não o resultado numérico de Agatston.",
+      "nextStep": "Avaliar SNOMED 450360000 com método DICOM 112055 e sítio anatômico; para LOINC, solicitar o conceito quantitativo."
+    },
+    {
+      "code": "CAC_Percentile",
+      "name": "Percentil CAC",
+      "unit": "%",
+      "reason": "no-concept",
+      "queries": ["Agatston percentile", "MESA", "calcium score"],
+      "candidates": ["79087-3"],
+      "note": "Nenhum percentil de Agatston encontrado; o código do exame 79087-3 não representa um percentil.",
+      "nextStep": "Documentar população de referência e algoritmo do percentil, além do laudo, antes de solicitar termo."
+    },
+    {
+      "code": "AorticValveCalcium",
+      "name": "Cálcio Valva Aórtica",
+      "unit": "AU",
+      "reason": "no-concept",
+      "queries": ["aortic calcium", "calcium scoring"],
+      "candidates": ["89927-8"],
+      "note": "89927-8 é um exame de coração/raiz aórtica (Doc), não o escore numérico da valva aórtica.",
+      "nextStep": "Preparar solicitação de termo com laudo anonimizado, definição da grandeza, região, unidade e método do equipamento."
+    },
+    {
+      "code": "Estrone",
+      "name": "Estrona",
+      "unit": "pg/mL",
+      "reason": "mapped",
+      "queries": ["estrone"],
+      "candidates": ["2258-2", "2261-6", "22663-9", "15355-1"],
+      "note": "2258-2 corresponde à estrona em soro/plasma, em massa/volume, sem fração ou método especificado.",
+      "nextStep": "Aplicar 2258-2 ao catálogo e conferir exportação/importação FHIR."
+    },
+    {
+      "code": "LeanMass",
+      "name": "Massa Magra",
+      "unit": "kg",
+      "reason": "no-concept",
+      "queries": ["lean mass", "lean tissue", "lean"],
+      "candidates": ["91557-9", "88334-8", "73964-9"],
+      "note": "O laudo confirma tecido magro separado de BMC. 91557-9 e 88334-8 incluem esse mineral no peso sem gordura; 73964-9 mede massa muscular. Nenhum equivalente de tecido magro sem BMC encontrado nas buscas registradas.",
+      "nextStep": "Preparar solicitação de termo para tecido magro DXA sem BMC; incluir a definição dos compartimentos.",
+      "localEvidence": ["dxa-ge-lunar-prodigy"]
+    },
+    {
+      "code": "BMC",
+      "name": "Conteúdo Mineral Ósseo",
+      "unit": "kg",
+      "reason": "ambiguous",
+      "queries": ["bone mineral content", "bone mineral", "bone mass"],
+      "candidates": ["101685-6", "101686-4"],
+      "note": "O laudo define BMC como conteúdo mineral ósseo separado do tecido magro. 101685-6 não esclarece se Body bone mass inclui matriz orgânica; 101686-4 é percentual por BIA.",
+      "nextStep": "Pedir esclarecimento terminológico sobre o componente Body bone antes de equiparar 101685-6 a conteúdo mineral ósseo.",
+      "localEvidence": ["dxa-ge-lunar-prodigy"]
+    },
+    {
+      "code": "FatFreeMass",
+      "name": "Massa Livre de Gordura",
+      "unit": "kg",
+      "reason": "mapped",
+      "queries": ["fat free mass", "fat-free", "nonfat", "lean mass"],
+      "candidates": ["91557-9", "88334-8"],
+      "note": "O laudo define Fat Free como tecido magro + BMC, equivalente ao peso total menos gordura da fórmula de 88334-8. 91557-9 compartilha o componente LP94922-9 sem impor método. Não equivale a LeanMass sem BMC.",
+      "nextStep": "Mapeamento aplicado com regressão FHIR e snapshot oficial; revisão independente continua pendente.",
+      "loinc": "91557-9",
+      "localEvidence": ["dxa-ge-lunar-prodigy"]
+    },
+    {
+      "code": "VATVolume",
+      "name": "Volume de Gordura Visceral",
+      "unit": "cm³",
+      "reason": "no-concept",
+      "queries": ["visceral fat", "visceral adipose"],
+      "candidates": ["73707-2"],
+      "note": "73707-2 mede área de gordura visceral; não equivale a massa, volume ou índice do aparelho.",
+      "nextStep": "Preparar solicitação de termo com laudo anonimizado, definição da grandeza, região, unidade e método do equipamento.",
+      "localEvidence": ["dxa-ge-lunar-prodigy"]
+    },
+    {
+      "code": "VATMass",
+      "name": "Massa de Gordura Visceral",
+      "unit": "kg",
+      "reason": "no-concept",
+      "queries": ["visceral fat", "visceral adipose"],
+      "candidates": ["73707-2"],
+      "note": "73707-2 mede área de gordura visceral; não equivale a massa, volume ou índice do aparelho.",
+      "nextStep": "Preparar solicitação de termo com laudo anonimizado, definição da grandeza, região, unidade e método do equipamento.",
+      "localEvidence": ["dxa-ge-lunar-prodigy"]
+    },
+    {
+      "code": "AndroidGynoidRatio",
+      "name": "Razão Androide/Ginoide",
+      "unit": "razão",
+      "reason": "no-concept",
+      "queries": ["android", "gynoid", "android gynoid", "fat mass"],
+      "candidates": ["41982-0"],
+      "note": "Nenhum resultado regional androide/ginoide encontrado; 41982-0 é percentual corporal total.",
+      "nextStep": "Preparar solicitação de termo com laudo anonimizado, definição da grandeza, região, unidade e método do equipamento."
+    },
+    {
+      "code": "AndroidFatPct",
+      "name": "Percentual de Gordura Androide",
+      "unit": "%",
+      "reason": "no-concept",
+      "queries": ["android", "gynoid", "android gynoid", "fat mass"],
+      "candidates": ["41982-0"],
+      "note": "Nenhum resultado regional androide/ginoide encontrado; 41982-0 é percentual corporal total.",
+      "nextStep": "Preparar solicitação de termo com laudo anonimizado, definição da grandeza, região, unidade e método do equipamento."
+    },
+    {
+      "code": "GynoidFatPct",
+      "name": "Percentual de Gordura Ginoide",
+      "unit": "%",
+      "reason": "no-concept",
+      "queries": ["android", "gynoid", "android gynoid", "fat mass"],
+      "candidates": ["41982-0"],
+      "note": "Nenhum resultado regional androide/ginoide encontrado; 41982-0 é percentual corporal total.",
+      "nextStep": "Preparar solicitação de termo com laudo anonimizado, definição da grandeza, região, unidade e método do equipamento."
+    },
+    {
+      "code": "MuscleMassIndex",
+      "name": "Índice de Massa Muscular",
+      "unit": "kg/m2",
+      "reason": "no-concept",
+      "queries": ["muscle mass index", "muscle mass"],
+      "candidates": ["73964-9", "73965-6"],
+      "note": "Os candidatos medem massa muscular ou sua fração do peso; não massa por altura ao quadrado.",
+      "nextStep": "Documentar massa muscular total versus apendicular e o denominador antes de solicitar termo."
+    },
+    {
+      "code": "VisceralFatLevel",
+      "name": "Nível de Gordura Visceral",
+      "unit": "",
+      "reason": "no-concept",
+      "queries": ["visceral fat", "visceral adipose"],
+      "candidates": ["73707-2"],
+      "note": "73707-2 mede área de gordura visceral; não equivale a massa, volume ou índice do aparelho.",
+      "nextStep": "Preparar solicitação de termo com laudo anonimizado, definição da grandeza, região, unidade e método do equipamento."
+    },
+    {
+      "code": "ExtracellularWater",
+      "name": "Água Extracelular",
+      "unit": "L",
+      "reason": "ambiguous",
+      "queries": [
+        "extracellular water",
+        "extracellular fluid",
+        "component:\"Extracellular fluid\"",
+        "ECW"
+      ],
+      "candidates": ["73706-4"],
+      "note": "73706-4 existe como volume de fluido extracelular, método Measured. A entrada genérica não declara medição versus estimativa por BIA.",
+      "nextStep": "Confirmar método no laudo/manual; solicitar variante Estimated/BIA se a medição não corresponder a Measured."
+    },
+    {
+      "code": "IntracellularWater",
+      "name": "Água Intracelular",
+      "unit": "L",
+      "reason": "ambiguous",
+      "queries": [
+        "intracellular water",
+        "intracellular fluid",
+        "component:\"Intracellular fluid\"",
+        "ICW"
+      ],
+      "candidates": ["73705-6"],
+      "note": "73705-6 estima fluido intracelular por água total menos extracelular. Falta confirmar esse método na entrada genérica.",
+      "nextStep": "Confirmar no manual/laudo que ICW é estimada como TBW menos ECW antes de adotar 73705-6."
+    },
+    {
+      "code": "ECWToTBWRatio",
+      "name": "Relação AEC/ACT",
+      "unit": "",
+      "reason": "no-concept",
+      "queries": ["ECW TBW", "ECF TBW", "body water"],
+      "candidates": ["101684-9", "73706-4"],
+      "note": "Sem razão ECW/TBW encontrada; 101684-9 é percentual de água no corpo, com outro denominador.",
+      "nextStep": "Preparar solicitação de termo com laudo anonimizado, definição da grandeza, região, unidade e método do equipamento."
+    },
+    {
+      "code": "ResidualMass",
+      "name": "Massa Residual",
+      "unit": "kg",
+      "reason": "no-concept",
+      "queries": ["residual mass", "residual weight"],
+      "candidates": [],
+      "note": "Nenhuma massa residual antropométrica encontrada nas buscas registradas.",
+      "nextStep": "Preparar solicitação de termo com laudo anonimizado, definição da grandeza, região, unidade e método do equipamento."
+    },
+    {
+      "code": "BasalMetabolicRate",
+      "name": "Taxa Metabólica Basal",
+      "unit": "kcal/d",
+      "reason": "ambiguous",
+      "queries": ["basal metabolic", "resting metabolic"],
+      "candidates": ["50042-1", "69429-9", "82278-3", "82286-6"],
+      "note": "50042-1 é índice; 69429-9, 82278-3 e 82286-6 descrevem metabolismo de repouso. TMB estimada exige confirmar protocolo e fórmula.",
+      "nextStep": "Identificar fórmula e condições de medição do equipamento; separar TMB de RMR antes de escolher um código."
+    },
+    {
+      "code": "WaistToHeightRatio",
+      "name": "Razão Cintura-Altura",
+      "unit": "",
+      "reason": "no-concept",
+      "queries": ["waist height", "waist"],
+      "candidates": ["8280-0"],
+      "note": "Nenhuma razão cintura/altura encontrada; 8280-0 mede só a circunferência da cintura.",
+      "nextStep": "Preparar solicitação de termo com laudo anonimizado, definição da grandeza, região, unidade e método do equipamento."
+    },
+    {
+      "code": "ConicityIndex",
+      "name": "Índice de Conicidade",
+      "unit": "",
+      "reason": "no-concept",
+      "queries": ["conicity", "conicity index"],
+      "candidates": [],
+      "note": "Nenhum índice de conicidade encontrado nas buscas registradas.",
+      "nextStep": "Preparar solicitação de termo com laudo anonimizado, definição da grandeza, região, unidade e método do equipamento."
+    },
+    {
+      "code": "SkinfoldSubscapular",
+      "name": "Dobra Subescapular",
+      "unit": "mm",
+      "reason": "no-concept",
+      "queries": ["skinfold", "skinfold OR skin fold", "subscapular"],
+      "candidates": ["8353-5", "8354-3", "8355-0"],
+      "note": "Só foram encontradas dobras de coxa, tríceps e cintura; nenhum termo do sítio anatômico desta entrada.",
+      "nextStep": "Preparar solicitação de termo com laudo anonimizado, definição da grandeza, região, unidade e método do equipamento."
+    },
+    {
+      "code": "SkinfoldSuprailiac",
+      "name": "Dobra Supra-ilíaca",
+      "unit": "mm",
+      "reason": "no-concept",
+      "queries": ["skinfold", "skinfold OR skin fold", "suprailiac"],
+      "candidates": ["8353-5", "8354-3", "8355-0"],
+      "note": "Só foram encontradas dobras de coxa, tríceps e cintura; nenhum termo do sítio anatômico desta entrada.",
+      "nextStep": "Preparar solicitação de termo com laudo anonimizado, definição da grandeza, região, unidade e método do equipamento."
+    },
+    {
+      "code": "SkinfoldChest",
+      "name": "Dobra Peitoral",
+      "unit": "mm",
+      "reason": "no-concept",
+      "queries": ["skinfold", "skinfold OR skin fold", "pectoral skinfold"],
+      "candidates": ["8353-5", "8354-3", "8355-0"],
+      "note": "Só foram encontradas dobras de coxa, tríceps e cintura; nenhum termo do sítio anatômico desta entrada.",
+      "nextStep": "Preparar solicitação de termo com laudo anonimizado, definição da grandeza, região, unidade e método do equipamento."
+    },
+    {
+      "code": "SkinfoldMidaxillary",
+      "name": "Dobra Axilar Média",
+      "unit": "mm",
+      "reason": "no-concept",
+      "queries": ["skinfold", "skinfold OR skin fold", "midaxillary"],
+      "candidates": ["8353-5", "8354-3", "8355-0"],
+      "note": "Só foram encontradas dobras de coxa, tríceps e cintura; nenhum termo do sítio anatômico desta entrada.",
+      "nextStep": "Preparar solicitação de termo com laudo anonimizado, definição da grandeza, região, unidade e método do equipamento."
+    },
+    {
+      "code": "ArmsLeanMass",
+      "name": "Massa Magra Braços",
+      "unit": "kg",
+      "reason": "no-concept",
+      "queries": ["lean tissue", "arms lean", "legs lean", "trunk lean"],
+      "candidates": ["91557-9"],
+      "note": "Nenhuma massa de tecido magro regional encontrada; 91557-9 é peso magro corporal total.",
+      "nextStep": "Preparar solicitação de termo com laudo anonimizado, definição da grandeza, região, unidade e método do equipamento.",
+      "localEvidence": ["dxa-ge-lunar-prodigy"]
+    },
+    {
+      "code": "ArmsFatMass",
+      "name": "Massa de Gordura Braços",
+      "unit": "kg",
+      "reason": "no-concept",
+      "queries": ["fat mass", "arms fat", "legs fat", "trunk fat"],
+      "candidates": ["73708-0"],
+      "note": "Nenhuma massa de gordura regional encontrada; 73708-0 é gordura corporal total.",
+      "nextStep": "Preparar solicitação de termo com laudo anonimizado, definição da grandeza, região, unidade e método do equipamento.",
+      "localEvidence": ["dxa-ge-lunar-prodigy"]
+    },
+    {
+      "code": "LegsLeanMass",
+      "name": "Massa Magra Pernas",
+      "unit": "kg",
+      "reason": "no-concept",
+      "queries": ["lean tissue", "arms lean", "legs lean", "trunk lean"],
+      "candidates": ["91557-9"],
+      "note": "Nenhuma massa de tecido magro regional encontrada; 91557-9 é peso magro corporal total.",
+      "nextStep": "Preparar solicitação de termo com laudo anonimizado, definição da grandeza, região, unidade e método do equipamento.",
+      "localEvidence": ["dxa-ge-lunar-prodigy"]
+    },
+    {
+      "code": "LegsFatMass",
+      "name": "Massa de Gordura Pernas",
+      "unit": "kg",
+      "reason": "no-concept",
+      "queries": ["fat mass", "arms fat", "legs fat", "trunk fat"],
+      "candidates": ["73708-0"],
+      "note": "Nenhuma massa de gordura regional encontrada; 73708-0 é gordura corporal total.",
+      "nextStep": "Preparar solicitação de termo com laudo anonimizado, definição da grandeza, região, unidade e método do equipamento.",
+      "localEvidence": ["dxa-ge-lunar-prodigy"]
+    },
+    {
+      "code": "TrunkLeanMass",
+      "name": "Massa Magra Tronco",
+      "unit": "kg",
+      "reason": "no-concept",
+      "queries": ["lean tissue", "arms lean", "legs lean", "trunk lean"],
+      "candidates": ["91557-9"],
+      "note": "Nenhuma massa de tecido magro regional encontrada; 91557-9 é peso magro corporal total.",
+      "nextStep": "Preparar solicitação de termo com laudo anonimizado, definição da grandeza, região, unidade e método do equipamento.",
+      "localEvidence": ["dxa-ge-lunar-prodigy"]
+    },
+    {
+      "code": "TrunkFatMass",
+      "name": "Massa de Gordura Tronco",
+      "unit": "kg",
+      "reason": "no-concept",
+      "queries": ["fat mass", "arms fat", "legs fat", "trunk fat"],
+      "candidates": ["73708-0"],
+      "note": "Nenhuma massa de gordura regional encontrada; 73708-0 é gordura corporal total.",
+      "nextStep": "Preparar solicitação de termo com laudo anonimizado, definição da grandeza, região, unidade e método do equipamento.",
+      "localEvidence": ["dxa-ge-lunar-prodigy"]
+    },
+    {
+      "code": "BMD_Total",
+      "name": "DMO Corpo Total",
+      "unit": "g/cm²",
+      "reason": "no-concept",
+      "queries": ["bone density"],
+      "candidates": ["46383-6", "38268-9"],
+      "note": "46383-6 não especifica sítio (XXX>Bone); 38268-9 é documento. Nenhum código quantitativo explícito de corpo inteiro encontrado.",
+      "nextStep": "Avaliar 46383-6 com bodySite explícito em perfil FHIR; conferir os códigos e regiões GELUNAR quando houver origem GE. Validar antes de solicitar novo termo ou alterar a resolução por código.",
+      "localEvidence": ["dxa-ge-lunar-prodigy"]
+    },
+    {
+      "code": "TScore_Total",
+      "name": "T-Score Corpo Total",
+      "unit": "score",
+      "reason": "no-concept",
+      "queries": ["bone density"],
+      "candidates": ["38263-0", "38264-8", "38267-1", "104938-6"],
+      "note": "Os T-scores encontrados são por sítio (fêmur, quadril ou coluna), não corpo inteiro.",
+      "nextStep": "Preparar solicitação de termo com laudo anonimizado, definição da grandeza, região, unidade e método do equipamento.",
+      "localEvidence": ["dxa-ge-lunar-prodigy"]
+    },
+    {
+      "code": "ZScore_Total",
+      "name": "Z-Score Corpo Total",
+      "unit": "score",
+      "reason": "no-concept",
+      "queries": ["bone density"],
+      "candidates": ["80934-3", "80933-5", "85394-5"],
+      "note": "Os Z-scores encontrados são por sítio (fêmur, quadril ou coluna lombar), não corpo inteiro.",
+      "nextStep": "Preparar solicitação de termo com laudo anonimizado, definição da grandeza, região, unidade e método do equipamento.",
+      "localEvidence": ["dxa-ge-lunar-prodigy"]
+    },
+    {
+      "code": "BMD_Arms",
+      "name": "DMO Braços",
+      "unit": "g/cm²",
+      "reason": "no-concept",
+      "queries": ["bone density"],
+      "candidates": ["85385-3", "24890-6"],
+      "note": "Úmero (85385-3) e rádio/ulna (24890-6) não equivalem à região dos braços no DXA de corpo inteiro.",
+      "nextStep": "Avaliar 46383-6 com bodySite explícito em perfil FHIR; conferir os códigos e regiões GELUNAR quando houver origem GE. Validar antes de solicitar novo termo ou alterar a resolução por código.",
+      "localEvidence": ["dxa-ge-lunar-prodigy"]
+    },
+    {
+      "code": "BMD_Head",
+      "name": "DMO Cabeça",
+      "unit": "g/cm²",
+      "reason": "no-concept",
+      "queries": ["bone density"],
+      "candidates": ["46383-6"],
+      "note": "Nenhum código quantitativo específico da região encontrado; 46383-6 não informa o sítio (XXX>Bone).",
+      "nextStep": "Avaliar 46383-6 com bodySite explícito em perfil FHIR; conferir os códigos e regiões GELUNAR quando houver origem GE. Validar antes de solicitar novo termo ou alterar a resolução por código.",
+      "localEvidence": ["dxa-ge-lunar-prodigy"]
+    },
+    {
+      "code": "BMD_Legs",
+      "name": "DMO Pernas",
+      "unit": "g/cm²",
+      "reason": "no-concept",
+      "queries": ["bone density"],
+      "candidates": ["24701-5"],
+      "note": "Fêmur (24701-5) não equivale à região das pernas no DXA de corpo inteiro.",
+      "nextStep": "Avaliar 46383-6 com bodySite explícito em perfil FHIR; conferir os códigos e regiões GELUNAR quando houver origem GE. Validar antes de solicitar novo termo ou alterar a resolução por código.",
+      "localEvidence": ["dxa-ge-lunar-prodigy"]
+    },
+    {
+      "code": "BMD_Pelvis",
+      "name": "DMO Pelve",
+      "unit": "g/cm²",
+      "reason": "no-concept",
+      "queries": ["bone density"],
+      "candidates": ["38261-4"],
+      "note": "Quadril (38261-4) não equivale à região da pelve no DXA de corpo inteiro.",
+      "nextStep": "Avaliar 46383-6 com bodySite explícito em perfil FHIR; conferir os códigos e regiões GELUNAR quando houver origem GE. Validar antes de solicitar novo termo ou alterar a resolução por código.",
+      "localEvidence": ["dxa-ge-lunar-prodigy"]
+    },
+    {
+      "code": "BMD_Ribs",
+      "name": "DMO Costelas",
+      "unit": "g/cm²",
+      "reason": "no-concept",
+      "queries": ["bone density"],
+      "candidates": ["46383-6"],
+      "note": "Nenhum código quantitativo específico da região encontrado; 46383-6 não informa o sítio (XXX>Bone).",
+      "nextStep": "Avaliar 46383-6 com bodySite explícito em perfil FHIR; conferir os códigos e regiões GELUNAR quando houver origem GE. Validar antes de solicitar novo termo ou alterar a resolução por código.",
+      "localEvidence": ["dxa-ge-lunar-prodigy"]
+    },
+    {
+      "code": "BMD_Spine",
+      "name": "DMO Coluna",
+      "unit": "g/cm²",
+      "reason": "no-concept",
+      "queries": ["bone density"],
+      "candidates": ["24966-4", "104938-6"],
+      "note": "24966-4 restringe a coluna à lombar; 104938-6 é T-score. Nenhum equivalente da região Spine em g/cm² encontrado.",
+      "nextStep": "Avaliar 46383-6 com bodySite explícito em perfil FHIR; conferir os códigos e regiões GELUNAR quando houver origem GE. Validar antes de solicitar novo termo ou alterar a resolução por código.",
+      "localEvidence": ["dxa-ge-lunar-prodigy"]
+    },
+    {
+      "code": "BMD_Trunk",
+      "name": "DMO Tronco",
+      "unit": "g/cm²",
+      "reason": "no-concept",
+      "queries": ["bone density"],
+      "candidates": ["46383-6"],
+      "note": "Nenhum código quantitativo específico da região encontrado; 46383-6 não informa o sítio (XXX>Bone).",
+      "nextStep": "Avaliar 46383-6 com bodySite explícito em perfil FHIR; conferir os códigos e regiões GELUNAR quando houver origem GE. Validar antes de solicitar novo termo ou alterar a resolução por código.",
+      "localEvidence": ["dxa-ge-lunar-prodigy"]
+    }
+  ],
+  "localEvidence": [
+    {
+      "id": "dxa-ge-lunar-prodigy",
+      "source": "Modelo de laudo DXA GE Healthcare Lunar Prodigy fornecido para a auditoria; software 16 [SP 2]. Documento privado, não versionado.",
+      "definitions": {
+        "page1": "Total Mass = Fat + Lean + BMC; Fat Free = Lean Tissue + BMC. BMC significa Bone Mineral Content. Massas apresentadas em lb, dimensionalmente compatíveis com kg.",
+        "page3": "CoreScan estima VAT na região androide; massa e volume são resultados distintos, em lb e in³.",
+        "page5": "BMD em g/cm² para Head, Arms, Legs, Trunk, Ribs, Spine, Pelvis e Total. T-score e Z-score aparecem na linha Total. A região Spine não é definida como lombar.",
+        "pages6and8": "Os campos de composição e tendência mantêm Lean Mass/Total Lean como tecido magro. O título Muscle Mass Balance não redefine essa grandeza como massa muscular."
+      },
+      "absentMeasurements": ["ExtracellularWater", "IntracellularWater", "BasalMetabolicRate"],
+      "privacy": "Somente definições e identificação do modelo do equipamento. Sem resultados, identificadores pessoais, número de série ou cópia do documento."
+    }
+  ],
+  "supportingSources": [
+    {
+      "url": "https://loinc.org/88334-8",
+      "note": "A fórmula subtrai a gordura do peso total. O componente LP94922-9 também aparece em 91557-9; confirmado no $lookup oficial 2.83."
+    },
+    {
+      "url": "https://loinc.org/91557-9",
+      "note": "Lean body weight:Mass:Pt:^Patient:Qn, sem método."
+    }
+  ],
+  "structuredRepresentationResearch": {
+    "checkedAt": "2026-10-09",
+    "status": "Caminhos identificados; nenhum novo mapeamento aplicado.",
+    "sources": [
+      {
+        "url": "https://loinc.org/83311-1",
+        "finding": "Painel DXA quantitativo ativo, classificado como Order; não substitui os códigos dos resultados."
+      },
+      {
+        "url": "https://loinc.org/63520-1",
+        "finding": "Painel PhenX DXA DISCOURAGED, com metadados de equipamento/imagem."
+      },
+      {
+        "url": "https://hl7.org/fhir/R4/diagnosticreport-example-dxa.json.html",
+        "finding": "Exemplo de relatório DXA com LOINC 38269-7 e referência à observação."
+      },
+      {
+        "url": "https://hl7.org/fhir/R4/observation-example-bmd.html",
+        "finding": "Exemplo de medida LOINC com bodySite SNOMED CT."
+      },
+      {
+        "url": "https://hl7.org/fhir/R4/observation-definitions.html#Observation.bodySite",
+        "finding": "bodySite informa anatomia não implícita no código."
+      },
+      {
+        "url": "https://s7d9.scene7.com/is/content/gehealthcare/gech-dicom-conformance-rev71-br-enpdf",
+        "finding": "Seções 10.5 e 10.6 documentam template DXA e códigos privados GELUNAR, incluindo BMC, tecido magro, VAT e regiões. Os códigos de região dependem do contexto do exame."
+      },
+      {
+        "url": "https://www.jmir.org/2025/1/e68750",
+        "finding": "BOA usa FHIR/SNOMED CT/RadLex para CT; precedente de modelagem, não equivalência com DXA."
+      }
+    ]
+  }
+}

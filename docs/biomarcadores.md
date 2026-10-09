@@ -51,7 +51,7 @@ O catálogo guarda a conclusão; `mapping-decisions.ts` guarda o porquê. Cada b
 
 A maioria dos registros é só nome: o código foi escolhido pelo nome do exame, sem outra evidência registrada. É o registro honesto do que existe, e a revisão independente vai preenchendo o resto. O registro repete o `loinc` do catálogo, e um teste falha quando os dois divergem: trocar o código sem atualizar o registro não passa.
 
-Entrada sem LOINC tem um motivo em `NO_LOINC_DECISIONS`: `no-concept` (procurado, e o LOINC não tem), `ambiguous` (há candidatos, e nenhum é a mesma grandeza), `pending-review` (ninguém registrou a busca) ou `not-lab`. A lista está no README, gerada por `pnpm catalog:counts`.
+Entrada sem LOINC tem um motivo em `NO_LOINC_DECISIONS`: `no-concept` (nenhum conceito equivalente encontrado nas buscas registradas), `ambiguous` (há candidatos, mas a equivalência não está estabelecida), `pending-review` (ninguém registrou a busca) ou `not-lab`. A lista está no README, gerada por `pnpm catalog:counts`. A [auditoria de 09/10/2026](development/loinc-gaps-2026-10-09.md) registra as buscas das 45 lacunas originais, os candidatos e o que falta para resolver cada uma. Resultado vazio de busca não prova ausência de conceito no LOINC.
 
 `fhir-bio decision <código ou LOINC>` imprime a ficha no formato da planilha de um mapeador: nome local, unidade, material, método, candidatos com os seis eixos, escolhido, rejeitados, grupos LOINC, revisor e versão. Os eixos e os grupos vêm de uma cópia do snapshot publicada no pacote (`LOINC_SNAPSHOT`, com o aviso da licença do LOINC), e `getMappingSheet()` devolve a mesma ficha como objeto.
 

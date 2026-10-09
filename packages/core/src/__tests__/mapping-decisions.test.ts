@@ -150,7 +150,7 @@ describe('ficha de decisão', () => {
   });
 
   it('entrada sem LOINC traz o motivo em vez de candidatos', () => {
-    const ficha = getMappingSheet('Estrone');
+    const ficha = getMappingSheet('VATMass');
     expect(ficha?.noLoinc?.reason).toBe('no-concept');
     expect(ficha?.candidates).toEqual([]);
   });

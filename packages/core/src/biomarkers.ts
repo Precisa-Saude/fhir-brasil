@@ -925,11 +925,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: ['saude-feminina', 'saude-masculina'],
     code: 'Estrone',
-    // Sem loinc de propósito. Em soro/massa-volume a LOINC só tem a forma
-    // "unconjugated" (2261-6) e razões; não há conceito de estrona total
-    // sérica. Atribuir a não-conjugada a um laudo de estrona total mediria
-    // outra fração — o mesmo tipo de erro que descartou candidatos nas 22
-    // primeiras. Entra sem código, política já usada em FatFreeMass e BMC.
+    // https://loinc.org/2258-2: estrona em soro/plasma, massa/volume,
+    // sem fração ou método especificado. Conferido no LOINC 2.83 em
+    // 09/10/2026. O 2261-6 é específico da fração não conjugada.
+    loinc: '2258-2',
     names: {
       en: ['Estrone', 'E1'],
       pt: ['Estrona', 'E1'],
@@ -2733,11 +2732,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // ósseo, incluindo órgãos, água e tecido conjuntivo. Massa muscular é um
   // subconjunto dela.
   //
-  // O campo sai em bundle FHIR, então a aproximação não ficava só aqui — um
-  // consumidor externo leria massa muscular onde escrevemos massa magra. Não
-  // há LOINC para massa magra (busca por "lean body mass" só devolve códigos
-  // de urina ajustados por LBM), então o certo é não ter código, como já se
-  // faz com FatFreeMass. Quem quer massa muscular usa MuscleMass, abaixo.
+  // O 91557-9 representa peso menos gordura, incluindo BMC, e pertence a
+  // FatFreeMass. O laudo DXA GE Lunar Prodigy separa esse total do tecido
+  // magro sem mineral ósseo; ver a auditoria de 09/10/2026.
+  // Quem quer massa muscular usa MuscleMass, abaixo.
   {
     category: 'composicao-corporal',
     code: 'LeanMass',
@@ -2761,7 +2759,8 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'composicao-corporal',
     code: 'BMC',
-    // No official LOINC code exists for total body BMC from DEXA
+    // 101685-6 (Body bone mass) é candidato, mas não explicita mineral ósseo.
+    // A equivalência com BMC de DXA permanece em revisão.
     names: {
       en: [
         'Bone Mineral Content',
@@ -2783,7 +2782,10 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'composicao-corporal',
     code: 'FatFreeMass',
-    // No official LOINC code exists for fat-free mass from DEXA
+    // O laudo DXA define Fat Free como Lean Tissue + BMC, equivalente ao
+    // peso total menos gordura. O mesmo componente LOINC aparece na fórmula
+    // de 88334-8; 91557-9 preserva a entrada genérica sem afirmar método.
+    loinc: '91557-9',
     names: {
       en: ['Fat-Free Mass', 'Fat Free Mass', 'Fat Free', 'FFM', 'Non-Fat Mass'],
       pt: ['Massa Livre de Gordura', 'Massa Isenta de Gordura', 'MLG'],
@@ -3098,9 +3100,9 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     },
     unit: '',
   },
-  // Compartimentos de água. Sem LOINC: busca por "extracellular water" e
-  // "intracellular water" não devolve nada, ao contrário de "body water",
-  // que rendeu os dois códigos usados acima.
+  // Compartimentos de água: buscar "fluid" encontra 73706-4 (Measured)
+  // e 73705-6 (Estimated). A entrada genérica não declara esses métodos;
+  // a adoção depende do laudo/manual, conforme NO_LOINC_DECISIONS.
   {
     category: 'composicao-corporal',
     code: 'ExtracellularWater',

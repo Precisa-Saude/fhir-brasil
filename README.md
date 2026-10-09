@@ -149,16 +149,16 @@ echo "Hemoglobina 14.5 g/dL Glicose 99 mg/dL" | fhir-ocr codes --json
 
 Medido no `@precisa-saude/fhir@0.43.0`, gerado por `pnpm catalog:counts`.
 
-- **260 biomarcadores** definidos, dos quais **215 têm código LOINC** (82,7%) e 45 não têm.
-- **228 códigos LOINC aceitos** na busca por código: os 215 canônicos, as variantes por método e os aliases de códigos que o LOINC aposentou.
+- **260 biomarcadores** definidos, dos quais **217 têm código LOINC** (83,5%) e 43 não têm.
+- **230 códigos LOINC aceitos** na busca por código: os 217 canônicos, as variantes por método e os aliases de códigos que o LOINC aposentou.
 - **203 faixas de referência**, com variantes por sexo e idade.
 - **10 categorias clínicas** de primeiro nível sobre 20 subcategorias.
-- **Registro de decisão** dos 215 mapeamentos: 39 com evidência além do nome (unidade, material, método ou bula), 176 escolhidos só pelo nome, 0 com revisão independente. A ficha de cada um sai em `fhir-bio decision <código>`.
+- **Registro de decisão** dos 217 mapeamentos: 41 com evidência além do nome (unidade, material, método ou bula), 176 escolhidos só pelo nome, 0 com revisão independente. A ficha de cada um sai em `fhir-bio decision <código>`.
 
 | Categoria                            | Biomarcadores | Com LOINC | Exemplos                                                                          |
 | ------------------------------------ | ------------: | --------: | --------------------------------------------------------------------------------- |
 | Cardiovascular                       |            29 |        22 | ApoB, HDL, HDL_Large, CRP, LDL                                                    |
-| Composição Corporal e Envelhecimento |            52 |        15 | Cortisol, IGF1, BMI, BodyFatPct, FatMass                                          |
+| Composição Corporal e Envelhecimento |            52 |        16 | Cortisol, IGF1, BMI, BodyFatPct, FatMass                                          |
 | Hematológico                         |            20 |        20 | NRBC, NRBC_Abs, Hct, Hgb, MCH                                                     |
 | Hepático e Biliar                    |            12 |        12 | ALT, Albumin, Albumin_Globulin_Ratio, AlkalinePhosphatase, AST                    |
 | Imunológico                          |            37 |        37 | ANA_Screen, RheumatoidFactor, AntiCCP, MPO_Antibody, pANCA                        |
@@ -166,74 +166,70 @@ Medido no `@precisa-saude/fhir@0.43.0`, gerado por `pnpm catalog:counts`.
 | Nutricional e Exposição Ambiental    |            33 |        33 | Lead, Mercury, AA_EPA_Ratio, Calcium, Phosphorus                                  |
 | Oncológico                           |             6 |         6 | AFP, CA125, CEA, CA199, CA153                                                     |
 | Renal e Eletrolítico                 |            33 |        33 | Microalbumin_Urine, ProteinCreatinineRatio_Urine, Urea, BUN, BUN_Creatinine_Ratio |
-| Saúde Reprodutiva                    |            15 |        14 | AMH, DHEAS, Estradiol, Estrone, FSH                                               |
-| **Total**                            |       **260** |   **215** |                                                                                   |
+| Saúde Reprodutiva                    |            15 |        15 | AMH, DHEAS, Estradiol, Estrone, FSH                                               |
+| **Total**                            |       **260** |   **217** |                                                                                   |
 
 As linhas somam 261 porque 1 biomarcador aparece em duas categorias. O Beta-hCG é marcador tumoral e exame de saúde feminina ao mesmo tempo. O total não conta ninguém duas vezes.
 
-### Os 45 sem LOINC, e por quê
+### Os 43 sem LOINC, e por quê
 
-**ambiguous** (1): há candidatos, e nenhum é a mesma grandeza.
+**ambiguous** (4): há candidatos, mas a equivalência não está estabelecida.
 
-| Biomarcador          | Motivo                                                                                                 |
-| -------------------- | ------------------------------------------------------------------------------------------------------ |
-| `BasalMetabolicRate` | Candidatos são índice (50042-1) ou RMR medido ou previsto (82278-3, 82286-6), e o aparelho estima TMB. |
+| Biomarcador          | Motivo                                                                                                                                                                       |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `BMC`                | O laudo DXA define BMC como conteúdo mineral ósseo separado do tecido magro. 101685-6 não esclarece se Body bone mass inclui matriz orgânica; 101686-4 é percentual por BIA. |
+| `ExtracellularWater` | 73706-4 existe como volume de fluido extracelular, método Measured. A entrada genérica não declara medição versus estimativa por BIA.                                        |
+| `IntracellularWater` | 73705-6 estima fluido intracelular por água total menos extracelular. Falta confirmar esse método na entrada genérica.                                                       |
+| `BasalMetabolicRate` | 50042-1 é índice; 69429-9, 82278-3 e 82286-6 descrevem metabolismo de repouso. TMB estimada exige confirmar protocolo e fórmula.                                             |
 
-**no-concept** (30): procurado, e o LOINC não tem o conceito.
+**no-concept** (39): nenhum conceito equivalente encontrado nas buscas registradas.
 
-| Biomarcador           | Motivo                                                                                     |
-| --------------------- | ------------------------------------------------------------------------------------------ |
-| `Estrone`             | Em soro só há a fração não conjugada (2261-6); não há estrona total.                       |
-| `LeanMass`            | Massa magra não é massa muscular (73964-9); não há LOINC para massa magra.                 |
-| `BMC`                 | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
-| `FatFreeMass`         | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
-| `VATVolume`           | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
-| `VATMass`             | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
-| `AndroidGynoidRatio`  | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
-| `AndroidFatPct`       | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
-| `GynoidFatPct`        | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
-| `MuscleMassIndex`     | Índice derivado de massa muscular total; os cortes publicados são sobre massa apendicular. |
-| `VisceralFatLevel`    | Índice de 1 a 20; 73707-2 é área, outra grandeza.                                          |
-| `ExtracellularWater`  | "extracellular water" não devolve código.                                                  |
-| `IntracellularWater`  | "intracellular water" não devolve código.                                                  |
-| `ECWToTBWRatio`       | Razão derivada, sem conceito próprio.                                                      |
-| `ResidualMass`        | Conceito de fracionamento antropométrico, sem código.                                      |
-| `WaistToHeightRatio`  | "waist to height" não devolve código.                                                      |
-| `ConicityIndex`       | Índice derivado, sem conceito próprio.                                                     |
-| `SkinfoldSubscapular` | O LOINC só tem dobra de tríceps, coxa e cintura.                                           |
-| `SkinfoldSuprailiac`  | O LOINC só tem dobra de tríceps, coxa e cintura.                                           |
-| `SkinfoldChest`       | O LOINC só tem dobra de tríceps, coxa e cintura.                                           |
-| `SkinfoldMidaxillary` | O LOINC só tem dobra de tríceps, coxa e cintura.                                           |
-| `ArmsLeanMass`        | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
-| `ArmsFatMass`         | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
-| `LegsLeanMass`        | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
-| `LegsFatMass`         | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
-| `TrunkLeanMass`       | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
-| `TrunkFatMass`        | DEXA: o LOINC não tem o conceito para corpo inteiro ou região.                             |
-| `BMD_Total`           | O LOINC só tem densitometria por sítio, não corpo inteiro.                                 |
-| `TScore_Total`        | O LOINC só tem densitometria por sítio, não corpo inteiro.                                 |
-| `ZScore_Total`        | O LOINC só tem densitometria por sítio, não corpo inteiro.                                 |
-
-**pending-review** (14): ninguém registrou a busca.
-
-| Biomarcador          | Motivo                                                                            |
-| -------------------- | --------------------------------------------------------------------------------- |
-| `CAC`                | Escore de cálcio por tomografia; nenhuma busca registrada.                        |
-| `CAC_LMA`            | Escore de cálcio por tomografia; nenhuma busca registrada.                        |
-| `CAC_LAD`            | Escore de cálcio por tomografia; nenhuma busca registrada.                        |
-| `CAC_LCX`            | Escore de cálcio por tomografia; nenhuma busca registrada.                        |
-| `CAC_RCA`            | Escore de cálcio por tomografia; nenhuma busca registrada.                        |
-| `CAC_Percentile`     | Escore de cálcio por tomografia; nenhuma busca registrada.                        |
-| `AorticValveCalcium` | Escore de cálcio por tomografia; nenhuma busca registrada.                        |
-| `BMD_Arms`           | Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada. |
-| `BMD_Head`           | Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada. |
-| `BMD_Legs`           | Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada. |
-| `BMD_Pelvis`         | Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada. |
-| `BMD_Ribs`           | Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada. |
-| `BMD_Spine`          | Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada. |
-| `BMD_Trunk`          | Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada. |
+| Biomarcador           | Motivo                                                                                                                                                                                                                                     |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `CAC`                 | 79087-3 e 83289-9 descrevem o exame (escala Doc), não o resultado numérico de Agatston.                                                                                                                                                    |
+| `CAC_LMA`             | 79087-3 e 83289-9 descrevem o exame (escala Doc), não o resultado numérico de Agatston.                                                                                                                                                    |
+| `CAC_LAD`             | 79087-3 e 83289-9 descrevem o exame (escala Doc), não o resultado numérico de Agatston.                                                                                                                                                    |
+| `CAC_LCX`             | 79087-3 e 83289-9 descrevem o exame (escala Doc), não o resultado numérico de Agatston.                                                                                                                                                    |
+| `CAC_RCA`             | 79087-3 e 83289-9 descrevem o exame (escala Doc), não o resultado numérico de Agatston.                                                                                                                                                    |
+| `CAC_Percentile`      | Nenhum percentil de Agatston encontrado; o código do exame 79087-3 não representa um percentil.                                                                                                                                            |
+| `AorticValveCalcium`  | 89927-8 é um exame de coração/raiz aórtica (Doc), não o escore numérico da valva aórtica.                                                                                                                                                  |
+| `LeanMass`            | O laudo DXA GE Lunar Prodigy confirma tecido magro separado de BMC. 91557-9 e 88334-8 incluem esse mineral no peso sem gordura; 73964-9 mede massa muscular. Nenhum equivalente de tecido magro sem BMC encontrado nas buscas registradas. |
+| `VATVolume`           | 73707-2 mede área de gordura visceral; não equivale a massa, volume ou índice do aparelho.                                                                                                                                                 |
+| `VATMass`             | 73707-2 mede área de gordura visceral; não equivale a massa, volume ou índice do aparelho.                                                                                                                                                 |
+| `AndroidGynoidRatio`  | Nenhum resultado regional androide/ginoide encontrado; 41982-0 é percentual corporal total.                                                                                                                                                |
+| `AndroidFatPct`       | Nenhum resultado regional androide/ginoide encontrado; 41982-0 é percentual corporal total.                                                                                                                                                |
+| `GynoidFatPct`        | Nenhum resultado regional androide/ginoide encontrado; 41982-0 é percentual corporal total.                                                                                                                                                |
+| `MuscleMassIndex`     | Os candidatos medem massa muscular ou sua fração do peso; não massa por altura ao quadrado.                                                                                                                                                |
+| `VisceralFatLevel`    | 73707-2 mede área de gordura visceral; não equivale a massa, volume ou índice do aparelho.                                                                                                                                                 |
+| `ECWToTBWRatio`       | Sem razão ECW/TBW encontrada; 101684-9 é percentual de água no corpo, com outro denominador.                                                                                                                                               |
+| `ResidualMass`        | Nenhuma massa residual antropométrica encontrada nas buscas registradas.                                                                                                                                                                   |
+| `WaistToHeightRatio`  | Nenhuma razão cintura/altura encontrada; 8280-0 mede só a circunferência da cintura.                                                                                                                                                       |
+| `ConicityIndex`       | Nenhum índice de conicidade encontrado nas buscas registradas.                                                                                                                                                                             |
+| `SkinfoldSubscapular` | Só foram encontradas dobras de coxa, tríceps e cintura; nenhum termo do sítio anatômico desta entrada.                                                                                                                                     |
+| `SkinfoldSuprailiac`  | Só foram encontradas dobras de coxa, tríceps e cintura; nenhum termo do sítio anatômico desta entrada.                                                                                                                                     |
+| `SkinfoldChest`       | Só foram encontradas dobras de coxa, tríceps e cintura; nenhum termo do sítio anatômico desta entrada.                                                                                                                                     |
+| `SkinfoldMidaxillary` | Só foram encontradas dobras de coxa, tríceps e cintura; nenhum termo do sítio anatômico desta entrada.                                                                                                                                     |
+| `ArmsLeanMass`        | Nenhuma massa de tecido magro regional encontrada; 91557-9 é peso magro corporal total.                                                                                                                                                    |
+| `ArmsFatMass`         | Nenhuma massa de gordura regional encontrada; 73708-0 é gordura corporal total.                                                                                                                                                            |
+| `LegsLeanMass`        | Nenhuma massa de tecido magro regional encontrada; 91557-9 é peso magro corporal total.                                                                                                                                                    |
+| `LegsFatMass`         | Nenhuma massa de gordura regional encontrada; 73708-0 é gordura corporal total.                                                                                                                                                            |
+| `TrunkLeanMass`       | Nenhuma massa de tecido magro regional encontrada; 91557-9 é peso magro corporal total.                                                                                                                                                    |
+| `TrunkFatMass`        | Nenhuma massa de gordura regional encontrada; 73708-0 é gordura corporal total.                                                                                                                                                            |
+| `BMD_Total`           | 46383-6 não especifica sítio (XXX>Bone); 38268-9 é documento. Nenhum código quantitativo explícito de corpo inteiro encontrado.                                                                                                            |
+| `TScore_Total`        | Os T-scores encontrados são por sítio (fêmur, quadril ou coluna), não corpo inteiro.                                                                                                                                                       |
+| `ZScore_Total`        | Os Z-scores encontrados são por sítio (fêmur, quadril ou coluna lombar), não corpo inteiro.                                                                                                                                                |
+| `BMD_Arms`            | Úmero (85385-3) e rádio/ulna (24890-6) não equivalem à região dos braços no DXA de corpo inteiro.                                                                                                                                          |
+| `BMD_Head`            | Nenhum código quantitativo específico da região encontrado; 46383-6 não informa o sítio (XXX>Bone).                                                                                                                                        |
+| `BMD_Legs`            | Fêmur (24701-5) não equivale à região das pernas no DXA de corpo inteiro.                                                                                                                                                                  |
+| `BMD_Pelvis`          | Quadril (38261-4) não equivale à região da pelve no DXA de corpo inteiro.                                                                                                                                                                  |
+| `BMD_Ribs`            | Nenhum código quantitativo específico da região encontrado; 46383-6 não informa o sítio (XXX>Bone).                                                                                                                                        |
+| `BMD_Spine`           | 24966-4 restringe a coluna à lombar; 104938-6 é T-score. Nenhum equivalente da região Spine em g/cm² encontrado.                                                                                                                           |
+| `BMD_Trunk`           | Nenhum código quantitativo específico da região encontrado; 46383-6 não informa o sítio (XXX>Bone).                                                                                                                                        |
 
 <!-- catalog:counts:end -->
+
+As buscas, candidatos e próximos passos das 45 lacunas originais estão na
+[auditoria LOINC de 09/10/2026](docs/development/loinc-gaps-2026-10-09.md).
 
 O CI roda `pnpm catalog:check` e reprova quando o catálogo anda sem o texto
 acompanhar. Por isso esta é a formulação para citar em apresentação, artigo ou

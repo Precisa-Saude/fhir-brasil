@@ -92,8 +92,8 @@ const withEvidence = decisions.length - nameOnly;
 const reviewed = decisions.filter((d) => d.reviewer).length;
 
 const NO_LOINC_LABEL: Record<string, string> = {
-  ambiguous: 'há candidatos, e nenhum é a mesma grandeza',
-  'no-concept': 'procurado, e o LOINC não tem o conceito',
+  ambiguous: 'há candidatos, mas a equivalência não está estabelecida',
+  'no-concept': 'nenhum conceito equivalente encontrado nas buscas registradas',
   'not-lab': 'fora do escopo de exame laboratorial',
   'pending-review': 'ninguém registrou a busca',
 };

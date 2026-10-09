@@ -2032,7 +2032,12 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'urina',
     code: 'Glucose_Urine',
-    loinc: '5792-7',
+    // 25428-4 é "Glucose [Presence] in Urine by Test strip": o EAS brasileiro
+    // imprime glicose como Negativo, Traços ou cruzes, resultado qualitativo,
+    // propriedade PrThr. Até out/2026 apontava para 5792-7, o mesmo exame em
+    // massa/volume (mg/dL), que fica como alias para laudo que imprima o número.
+    loinc: '25428-4',
+    loincAliases: ['5792-7'],
     names: {
       en: ['Urine Glucose', 'Glucose Urine', 'Glucose, Urine'],
       pt: ['Glicose na Urina', 'Glicose Urina'],
@@ -2053,7 +2058,11 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     category: 'urina',
     code: 'Ketones_Urine',
     codeAliases: ['UrineKetones'],
-    loinc: '5797-6',
+    // 2514-8 é "Ketones [Presence] in Urine by Test strip": o EAS imprime
+    // Negativo ou cruzes, propriedade PrThr. Até out/2026 apontava para 5797-6,
+    // o mesmo exame em mg/dL, que fica como alias (PRE-473, rodada 11).
+    loinc: '2514-8',
+    loincAliases: ['5797-6'],
     names: {
       en: ['Urine Ketones', 'Ketones Urine', 'Ketones, Urine', 'Ketones'],
       pt: ['Cetonas na Urina', 'Cetonas'],
@@ -2102,7 +2111,11 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     category: 'urina',
     code: 'Protein_Urine',
-    loinc: '5804-0',
+    // 20454-5 é "Protein [Presence] in Urine by Test strip": o EAS imprime
+    // Negativo, Traços ou cruzes, propriedade PrThr. Até out/2026 apontava para
+    // 5804-0, o mesmo exame em mg/dL, que fica como alias (PRE-473, rodada 11).
+    loinc: '20454-5',
+    loincAliases: ['5804-0'],
     names: {
       en: ['Urine Protein', 'Protein Urine', 'Protein, Urine', 'Protein'],
       pt: ['Proteína na Urina', 'Proteína'],

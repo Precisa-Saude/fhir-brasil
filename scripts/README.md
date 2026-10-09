@@ -142,6 +142,7 @@ pnpm loinc:drilldown -- --sem-jev --limite 20          # só busca e regra
 pnpm loinc:drilldown -- --saida /tmp/drilldown.json
 pnpm loinc:drilldown -- --testes-locais testes.json --rotulos rotulos.json --sem-jev
 pnpm loinc:drilldown -- --testes-locais testes.json --com-aliases
+pnpm loinc:drilldown -- --replay resultados-anteriores.json --repetir 10
 ```
 
 Com `--testes-locais`, a entrada é a saída agregada de
@@ -155,6 +156,14 @@ aponta um JSON com os pares de rótulo de eixo pt-BR → en (sistema e método)
 aprendidos em corridas anteriores; o arquivo é lido no início e regravado no
 fim com o que a corrida aprendeu. `--concorrencia N` muda o número de
 trabalhadores (padrão 2).
+
+`--replay <saída anterior>` reaproveita as listas de candidatos gravadas por
+uma corrida anterior em vez de buscar de novo, para isolar a variância do
+escolhedor da variância da Search API (a ordem no corte de linhas não é
+estável). `--repetir N` pergunta ao Jev N vezes sobre a mesma lista e grava a
+distribuição das escolhas, a moda, a consistência (fração que concorda com a
+moda) e a faixa de confiança; a primeira resposta continua sendo a decisão
+registrada.
 
 Precisa de `LOINC_USER` e `LOINC_PASSWORD`; `OPENROUTER_API_KEY` só para o Jev.
 Envia ao LOINC e ao OpenRouter apenas nomes e unidades do catálogo ou do laudo.

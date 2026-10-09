@@ -208,7 +208,17 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
     settledBy: 'name',
     siblingsRejected: [{ loinc: '2345-7', reason: 'não afirma jejum, e a grafia declara' }],
   },
-  Glucose_Urine: nameOnly('5792-7'),
+  Glucose_Urine: {
+    loinc: '25428-4',
+    evidence: ['name', 'unit'],
+    settledBy: 'unit',
+    siblingsRejected: [
+      {
+        loinc: '5792-7',
+        reason: 'o mesmo exame em mg/dL, e o EAS imprime Negativo, Traços ou cruzes (PrThr)',
+      },
+    ],
+  },
   HbA1c: nameOnly('4548-4'),
   Hct: nameOnly('4544-3'),
   HDL: nameOnly('2085-9'),
@@ -226,7 +236,17 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
   INR: nameOnly('6301-6'),
   Insulin: nameOnly('20448-7'),
   Iron: nameOnly('2498-4'),
-  Ketones_Urine: nameOnly('5797-6'),
+  Ketones_Urine: {
+    loinc: '2514-8',
+    evidence: ['name', 'unit'],
+    settledBy: 'unit',
+    siblingsRejected: [
+      {
+        loinc: '5797-6',
+        reason: 'o mesmo exame em mg/dL, e o EAS imprime Negativo ou cruzes (PrThr)',
+      },
+    ],
+  },
   LDH: nameOnly('14804-9'),
   LDL: {
     loinc: '2089-1',
@@ -345,7 +365,17 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
   Potassium: nameOnly('2823-3'),
   Progesterone: nameOnly('2839-9'),
   Prolactin: nameOnly('2842-3'),
-  Protein_Urine: nameOnly('5804-0'),
+  Protein_Urine: {
+    loinc: '20454-5',
+    evidence: ['name', 'unit'],
+    settledBy: 'unit',
+    siblingsRejected: [
+      {
+        loinc: '5804-0',
+        reason: 'o mesmo exame em mg/dL, e o EAS imprime Negativo, Traços ou cruzes (PrThr)',
+      },
+    ],
+  },
   ProthrombinTime: nameOnly('5902-2'),
   PSA: nameOnly('2857-1'),
   PSA_Free: nameOnly('10886-0'),

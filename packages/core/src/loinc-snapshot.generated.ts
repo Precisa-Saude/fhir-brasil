@@ -3,7 +3,7 @@
 import type { LoincSnapshot } from './loinc-axes';
 
 export const LOINC_SNAPSHOT: LoincSnapshot = {
-  _checkedAt: '2026-10-06',
+  _checkedAt: '2026-10-08',
   _loincVersion: '2.83',
   _notice:
     'This material contains content from LOINC (http://loinc.org). LOINC is copyright © Regenstrief Institute, Inc. and the Logical Observation Identifiers Names and Codes (LOINC) Committee and is available at no cost under the license at http://loinc.org/license. LOINC® is a registered United States trademark of Regenstrief Institute, Inc.',
@@ -615,6 +615,20 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       system: 'Ser/Plas',
       time: 'Pt',
     },
+    '20454-5': {
+      component: 'Protein',
+      display: 'Protein [Presence] in Urine by Test strip',
+      groups: {
+        'LG35161-5': 'Protein|PrThr|Urine',
+        'LG40870-4': 'Protein|Urine/Urine sed',
+      },
+      method: 'Test strip',
+      property: 'PrThr',
+      scale: 'Ord',
+      status: 'ACTIVE',
+      system: 'Urine',
+      time: 'Pt',
+    },
     '2075-0': {
       component: 'Chloride',
       display: 'Chloride [Moles/volume] in Serum or Plasma',
@@ -942,6 +956,34 @@ export const LOINC_SNAPSHOT: LoincSnapshot = {
       scale: 'Qn',
       status: 'ACTIVE',
       system: 'Ser/Plas',
+      time: 'Pt',
+    },
+    '2514-8': {
+      component: 'Ketones',
+      display: 'Ketones [Presence] in Urine by Test strip',
+      groups: {
+        'LG35342-1': 'Ketones|PrThr|Urine',
+        'LG8878-3': 'Ketones|PrThr|Pt|ANYUrine',
+      },
+      method: 'Test strip',
+      property: 'PrThr',
+      scale: 'Ord',
+      status: 'ACTIVE',
+      system: 'Urine',
+      time: 'Pt',
+    },
+    '25428-4': {
+      component: 'Glucose',
+      display: 'Glucose [Presence] in Urine by Test strip',
+      groups: {
+        'LG35248-0': 'Glucose|PrThr|Urine',
+        'LG40865-4': 'Glucose|Urine/Urine sed',
+      },
+      method: 'Test strip',
+      property: 'PrThr',
+      scale: 'Ord',
+      status: 'ACTIVE',
+      system: 'Urine',
       time: 'Pt',
     },
     '2571-8': {

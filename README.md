@@ -149,7 +149,7 @@ echo "Hemoglobina 14.5 g/dL Glicose 99 mg/dL" | fhir-ocr codes --json
 
 Medido no `@precisa-saude/fhir@0.41.0`, gerado por `pnpm catalog:counts`.
 
-- **229 biomarcadores** definidos, dos quais **191 têm código LOINC** (83,4%) e 38 não têm.
+- **236 biomarcadores** definidos, dos quais **191 têm código LOINC** (80,9%) e 45 não têm.
 - **204 códigos LOINC aceitos** na busca por código: os 191 canônicos, as variantes por método e os aliases de códigos que o LOINC aposentou.
 - **204 faixas de referência**, com variantes por sexo e idade.
 - **10 categorias clínicas** de primeiro nível sobre 20 subcategorias.
@@ -158,7 +158,7 @@ Medido no `@precisa-saude/fhir@0.41.0`, gerado por `pnpm catalog:counts`.
 | Categoria                            | Biomarcadores | Com LOINC | Exemplos                                                                   |
 | ------------------------------------ | ------------: | --------: | -------------------------------------------------------------------------- |
 | Cardiovascular                       |            29 |        22 | ApoB, HDL, HDL_Large, CRP, LDL                                             |
-| Composição Corporal e Envelhecimento |            44 |        14 | Cortisol, BMI, BodyFatPct, FatMass, LeanMass                               |
+| Composição Corporal e Envelhecimento |            51 |        14 | Cortisol, BMI, BodyFatPct, FatMass, LeanMass                               |
 | Hematológico                         |            17 |        17 | Hct, Hgb, MCH, MCHC, MCV                                                   |
 | Hepático e Biliar                    |            12 |        12 | ALT, Albumin, Albumin_Globulin_Ratio, AlkalinePhosphatase, AST             |
 | Imunológico                          |            25 |        25 | ANA_Screen, RheumatoidFactor, Basophils, Basophils_Abs, Eosinophils        |
@@ -167,11 +167,11 @@ Medido no `@precisa-saude/fhir@0.41.0`, gerado por `pnpm catalog:counts`.
 | Oncológico                           |             6 |         6 | AFP, CA125, CEA, CA199, CA153                                              |
 | Renal e Eletrolítico                 |            31 |        31 | Microalbumin_Urine, Urea, BUN, BUN_Creatinine_Ratio, Urea_Creatinine_Ratio |
 | Saúde Reprodutiva                    |            15 |        14 | AMH, DHEAS, Estradiol, Estrone, FSH                                        |
-| **Total**                            |       **229** |   **191** |                                                                            |
+| **Total**                            |       **236** |   **191** |                                                                            |
 
-As linhas somam 230 porque 1 biomarcador aparece em duas categorias. O Beta-hCG é marcador tumoral e exame de saúde feminina ao mesmo tempo. O total não conta ninguém duas vezes.
+As linhas somam 237 porque 1 biomarcador aparece em duas categorias. O Beta-hCG é marcador tumoral e exame de saúde feminina ao mesmo tempo. O total não conta ninguém duas vezes.
 
-### Os 38 sem LOINC, e por quê
+### Os 45 sem LOINC, e por quê
 
 **ambiguous** (1): há candidatos, e nenhum é a mesma grandeza.
 
@@ -214,17 +214,24 @@ As linhas somam 230 porque 1 biomarcador aparece em duas categorias. O Beta-hCG 
 | `TScore_Total`        | O LOINC só tem densitometria por sítio, não corpo inteiro.                                 |
 | `ZScore_Total`        | O LOINC só tem densitometria por sítio, não corpo inteiro.                                 |
 
-**pending-review** (7): ninguém registrou a busca.
+**pending-review** (14): ninguém registrou a busca.
 
-| Biomarcador          | Motivo                                                     |
-| -------------------- | ---------------------------------------------------------- |
-| `CAC`                | Escore de cálcio por tomografia; nenhuma busca registrada. |
-| `CAC_LMA`            | Escore de cálcio por tomografia; nenhuma busca registrada. |
-| `CAC_LAD`            | Escore de cálcio por tomografia; nenhuma busca registrada. |
-| `CAC_LCX`            | Escore de cálcio por tomografia; nenhuma busca registrada. |
-| `CAC_RCA`            | Escore de cálcio por tomografia; nenhuma busca registrada. |
-| `CAC_Percentile`     | Escore de cálcio por tomografia; nenhuma busca registrada. |
-| `AorticValveCalcium` | Escore de cálcio por tomografia; nenhuma busca registrada. |
+| Biomarcador          | Motivo                                                                            |
+| -------------------- | --------------------------------------------------------------------------------- |
+| `CAC`                | Escore de cálcio por tomografia; nenhuma busca registrada.                        |
+| `CAC_LMA`            | Escore de cálcio por tomografia; nenhuma busca registrada.                        |
+| `CAC_LAD`            | Escore de cálcio por tomografia; nenhuma busca registrada.                        |
+| `CAC_LCX`            | Escore de cálcio por tomografia; nenhuma busca registrada.                        |
+| `CAC_RCA`            | Escore de cálcio por tomografia; nenhuma busca registrada.                        |
+| `CAC_Percentile`     | Escore de cálcio por tomografia; nenhuma busca registrada.                        |
+| `AorticValveCalcium` | Escore de cálcio por tomografia; nenhuma busca registrada.                        |
+| `BMD_Arms`           | Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada. |
+| `BMD_Head`           | Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada. |
+| `BMD_Legs`           | Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada. |
+| `BMD_Pelvis`         | Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada. |
+| `BMD_Ribs`           | Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada. |
+| `BMD_Spine`          | Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada. |
+| `BMD_Trunk`          | Densidade por região da densitometria de corpo inteiro; nenhuma busca registrada. |
 
 <!-- catalog:counts:end -->
 

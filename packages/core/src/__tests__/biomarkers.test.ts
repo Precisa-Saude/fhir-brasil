@@ -1023,3 +1023,106 @@ describe('T3 total e T3 livre', () => {
     expect(findCodeByName(grafia)).toBe(esperado);
   });
 });
+
+describe('nomes do laudo americano em colunas e do monoespaçado', () => {
+  // Grafias medidas nos 34 laudos sintéticos americanos da plataforma: o
+  // diferencial abreviado da Labcorp, o total com vírgula e as duas leituras
+  // da proteína C-reativa ultrassensível e da vitamina D da Quest.
+  it.each([
+    ['Lymphs', 'Lymphocytes'],
+    ['Lymphs (Absolute)', 'Lymphocytes_Abs'],
+    ['Eos', 'Eosinophils'],
+    ['Eos (Absolute)', 'Eosinophils_Abs'],
+    ['Basos', 'Basophils'],
+    ['Baso (Absolute)', 'Basophils_Abs'],
+    ['Monocytes (Absolute)', 'Monocytes_Abs'],
+    ['Neutrophils (Absolute)', 'Neutrophils_Abs'],
+    ['Cholesterol, Total', 'Cholesterol'],
+    ['HS CRP', 'CRP'],
+    ['CRP High Sensitivity', 'CRP'],
+    ['Vitamin D, 25-OH, Total', 'VitaminD'],
+    ['VITAMIN D,25-OH,TOTAL,IA', 'VitaminD'],
+  ])('resolve %s para %s', (printed, expected) => {
+    expect(findCodeByName(printed)).toBe(expected);
+  });
+
+  // Nome novo que já fosse de outro exame trocaria a leitura dele sem aviso: o
+  // índice de nomes guarda um dono só.
+  it('nenhuma grafia nova é nome de outro exame', () => {
+    const key = (name: string) =>
+      name
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '');
+    const added = [
+      'Lymphs',
+      'Lymphs (Absolute)',
+      'Eos',
+      'Eos (Absolute)',
+      'Basos',
+      'Baso (Absolute)',
+      'Basos (Absolute)',
+      'Monocytes (Absolute)',
+      'Neutrophils (Absolute)',
+      'Cholesterol, Total',
+      'HS CRP',
+      'CRP High Sensitivity',
+      'Vitamin D, 25-OH, Total',
+      'Vitamin D, 25-OH, Total, IA',
+    ];
+    for (const name of added) {
+      const owners = BIOMARKER_DEFINITIONS.filter((d) =>
+        [...d.names.en, ...d.names.pt].some((n) => key(n) === key(name)),
+      );
+      expect(
+        owners.map((d) => d.code),
+        name,
+      ).toHaveLength(1);
+    }
+  });
+});
+
+describe('validateLoincNameMatch com nome de mais de um exame', () => {
+  // "A/G Ratio" é nome da razão albumina/globulina e da razão
+  // androide/ginoide. O LOINC 1759-0 diz qual das duas a linha é.
+  it('mantém o código do LOINC quando ele também é dono do nome', () => {
+    expect(validateLoincNameMatch('1759-0', 'A/G Ratio')).toEqual({
+      code: 'Albumin_Globulin_Ratio',
+      corrected: false,
+    });
+  });
+
+  it('continua corrigindo o LOINC de outro exame', () => {
+    expect(validateLoincNameMatch('1759-0', 'Android/Gynoid Ratio')).toEqual({
+      code: 'AndroidGynoidRatio',
+      corrected: true,
+    });
+  });
+});
+
+describe('densidade óssea por região da densitometria de corpo inteiro', () => {
+  it.each([
+    ['Arms Bone Mineral Density', 'BMD_Arms'],
+    ['Legs BMD', 'BMD_Legs'],
+    ['Trunk Bone Mineral Density', 'BMD_Trunk'],
+    ['Spine Bone Mineral Density', 'BMD_Spine'],
+    ['DMO Pelve', 'BMD_Pelvis'],
+  ])('resolve %s para %s', (printed, expected) => {
+    expect(findCodeByName(printed)).toBe(expected);
+  });
+
+  it('nenhum nome de região é de outro exame', () => {
+    const regional = BIOMARKER_DEFINITIONS.filter((d) => /^BMD_(?!Total)/.test(d.code));
+    expect(regional).toHaveLength(7);
+    for (const region of regional) {
+      for (const name of [...region.names.en, ...region.names.pt]) {
+        expect(findCodeByName(name), name).toBe(region.code);
+      }
+    }
+  });
+
+  it('a densidade do corpo inteiro continua BMD_Total', () => {
+    expect(findCodeByName('Total BMD')).toBe('BMD_Total');
+  });
+});

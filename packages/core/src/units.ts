@@ -1217,11 +1217,14 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'pmol/L',
     siUnit: 'pmol/L',
   },
+  // 400,64 é a 25-hidroxivitamina D3 (calcifediol, C27H44O2, PubChem CID
+  // 5283731), o que o laudo dosa. Até out/2026 era 384,64, a do colecalciferol
+  // (C27H44O, CID 5280795), e o resultado em nmol/L saía 4% acima.
   VitaminD: {
     aliases: { 'ng/ml': 'ng/mL', 'nmol/l': 'nmol/L' },
     canonicalUcum: 'ng/mL',
     canonicalUnit: 'ng/mL',
-    molecularWeight: 384.64,
+    molecularWeight: 400.64,
     siUcum: 'nmol/L',
     siUnit: 'nmol/L',
   },

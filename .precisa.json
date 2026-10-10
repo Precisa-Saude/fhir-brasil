@@ -16,10 +16,10 @@
   "publishPackages": [
     "packages/core",
     "packages/ocr-utils",
+    "packages/pdf",
     "packages/rnds",
     "packages/rnds-sandbox"
   ],
   "siteFilter": "@fhir-brasil/site",
-  "siteProjectName": "fhir-brasil",
-  "ignoreTemplates": [".commitlintrc.cjs", ".github/workflows/_checks.yml", "eslint.config.js"]
+  "siteProjectName": "fhir-brasil"
 }

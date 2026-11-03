@@ -278,6 +278,7 @@ describe('getDefaultUnit', () => {
 describe('BIOMARKER_UNITS', () => {
   it('contains expected biomarker codes', () => {
     expect(BIOMARKER_UNITS).toHaveProperty('Glucose');
+    expect(BIOMARKER_UNITS).toHaveProperty('Glucose_Fasting');
     expect(BIOMARKER_UNITS).toHaveProperty('LDL_Peak_Size');
     expect(BIOMARKER_UNITS).toHaveProperty('Albumin');
     expect(BIOMARKER_UNITS).toHaveProperty('Creatinine');
@@ -375,6 +376,13 @@ describe('convertUnit', () => {
   it('converts Glucose mg/dL → mmol/L', () => {
     // 100 mg/dL × 10 / 180.156 ≈ 5.551
     const result = convertUnit(100, 'mg/dL', 'mmol/L', 'Glucose');
+    expect(result).not.toBeNull();
+    expect(result!.unit).toBe('mmol/L');
+    expect(result!.value).toBeCloseTo(5.551, 2);
+  });
+
+  it('converts Glucose_Fasting with the same molecular weight as Glucose', () => {
+    const result = convertUnit(100, 'mg/dL', 'mmol/L', 'Glucose_Fasting');
     expect(result).not.toBeNull();
     expect(result!.unit).toBe('mmol/L');
     expect(result!.value).toBeCloseTo(5.551, 2);

@@ -147,6 +147,13 @@ export type RangeDirection = 'range' | 'higher-better' | 'lower-better';
 export interface BiomarkerRangeDefinition {
   default: BiomarkerReferenceRange;
   /**
+   * `true` quando a faixa padrão é o envelope das variantes (menor piso e
+   * maior teto entre elas) e por isso serve de resposta quando o contexto não
+   * traz o sexo ou a idade. Sem isso, `getReferenceRange` devolve `undefined`
+   * nesse caso, porque a padrão de vários marcadores é a faixa de um dos sexos.
+   */
+  defaultIsEnvelope?: boolean;
+  /**
    * Para que lado o marcador melhora. Serve à cor e ao gauge.
    *
    * Não decide flag: se um limite é corte clínico é o `minKind`/`maxKind` da
@@ -425,6 +432,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   // Tabela 2 da PNS 2019. Ver o comentário em `Neutrophils_Abs`.
   Basophils_Abs: {
     default: { max: 0.072, min: 0, unit: 'K/uL' },
+    defaultIsEnvelope: true,
     kind: 'reference-interval',
     source: 'pns-hemograma-2019',
     variants: [
@@ -815,6 +823,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   // Tabela 2 da PNS 2019. Ver o comentário em `Neutrophils_Abs`.
   Eosinophils_Abs: {
     default: { max: 0.66, min: 0, unit: 'K/uL' },
+    defaultIsEnvelope: true,
     kind: 'reference-interval',
     source: 'pns-hemograma-2019',
     variants: [
@@ -1414,6 +1423,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   // Tabela 2 da PNS 2019. Ver o comentário em `Neutrophils_Abs`.
   Lymphocytes_Abs: {
     default: { max: 3.414, min: 0.72, unit: 'K/uL' },
+    defaultIsEnvelope: true,
     kind: 'reference-interval',
     source: 'pns-hemograma-2019',
     variants: [
@@ -1474,6 +1484,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   // Tabela 2 da PNS 2019. Ver o comentário em `Neutrophils_Abs`.
   Monocytes_Abs: {
     default: { max: 0.812, min: 0.011, unit: 'K/uL' },
+    defaultIsEnvelope: true,
     kind: 'reference-interval',
     source: 'pns-hemograma-2019',
     variants: [
@@ -1517,9 +1528,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   // cada limite foi dividido por 1.000 sem arredondar (62/mm³ = 0,062 K/uL).
   // O artigo não publica faixa ótima, por isso não há optimalMin/optimalMax.
   // Quando o sexo não é informado, o default é a união das duas faixas
-  // (menor mínimo e maior máximo entre homens e mulheres).
+  // (menor mínimo e maior máximo entre homens e mulheres), e
+  // `defaultIsEnvelope` diz ao `getReferenceRange` que ela pode ser devolvida
+  // nesse caso.
   Neutrophils_Abs: {
     default: { max: 6.474, min: 0.576, unit: 'K/uL' },
+    defaultIsEnvelope: true,
     kind: 'reference-interval',
     source: 'pns-hemograma-2019',
     variants: [
@@ -2738,6 +2752,13 @@ export const defaultReferenceRanges: Record<string, BiomarkerReferenceRange> = O
  * @param testCode - The biomarker code (e.g., "HDL", "Testosterone")
  * @param context - Optional user context for personalized ranges
  * @returns Reference range or undefined if not found
+ *
+ * Sem `context`, devolve a faixa padrão da definição. Com `context`, se o
+ * marcador tem variantes por sexo ou idade e o contexto não traz o dado de que
+ * uma variante precisava, devolve `undefined` em vez da faixa padrão: o
+ * consumidor decide se pede o dado ou mostra o marcador sem veredito. Um
+ * contexto completo que não casa com variante nenhuma continua recebendo a
+ * faixa padrão.
  */
 export function getReferenceRange(
   testCode: string,
@@ -2782,6 +2803,12 @@ export function getReferenceRange(
   // recebe a faixa padrão da população geral.
   const hasPregnancyVariant = definition.variants.some((v) => v.pregnant === true);
 
+  // Alguma variante deixou de casar porque o contexto não trouxe o sexo ou a
+  // idade de que ela precisava. Nesse caso a faixa padrão não é resposta: para
+  // vários marcadores ela é a faixa de um dos sexos, e devolvê-la em silêncio
+  // classificaria a pessoa pela faixa errada.
+  let variantSkippedForMissingField = false;
+
   // Find matching variant (first match wins — more specific variants must be
   // listed first). Ordem obrigatória quando há variantes gestacionais:
   //   1. variantes trimestre-específicas (pregnant=true + pregnancyTrimester=N)
@@ -2809,21 +2836,28 @@ export function getReferenceRange(
 
     // Check sex match ('all' matches everyone)
     if (variant.sex !== 'all' && variant.sex !== biologicalSex) {
+      if (biologicalSex === undefined) variantSkippedForMissingField = true;
       continue;
     }
 
     // Check age range
-    if (variant.ageMin !== undefined && (age === undefined || age < variant.ageMin)) {
-      continue;
-    }
-    if (variant.ageMax !== undefined && (age === undefined || age > variant.ageMax)) {
-      continue;
+    if (variant.ageMin !== undefined || variant.ageMax !== undefined) {
+      if (age === undefined) {
+        variantSkippedForMissingField = true;
+        continue;
+      }
+      if (variant.ageMin !== undefined && age < variant.ageMin) continue;
+      if (variant.ageMax !== undefined && age > variant.ageMax) continue;
     }
 
     return withSource(variant.range, variant.kind ?? definition.kind);
   }
 
-  // No matching variant found - return default
+  // Sem variante que case. Se foi por falta de sexo ou idade no contexto, só
+  // há faixa a devolver quando a padrão é o envelope das variantes; se o
+  // contexto estava completo e nenhuma variante se aplica (uma criança num
+  // catálogo de adultos, por exemplo), vale o padrão.
+  if (variantSkippedForMissingField && !definition.defaultIsEnvelope) return undefined;
   return withSource(definition.default);
 }
 

@@ -220,10 +220,53 @@ describe('getReferenceRange', () => {
       expect(range?.min).toBe(50);
     });
 
-    it('should return default when sex not provided', () => {
-      const context: ReferenceRangeContext = { age: 30 };
-      const range = getReferenceRange('HDL', context);
-      expect(range).toEqual(expectedDefault('HDL'));
+    it('sem sexo no contexto, marcador com variante por sexo fica sem faixa', () => {
+      // A faixa padrão do HDL é a masculina (piso 40). Devolvê-la para quem não
+      // informou o sexo classificaria uma mulher com 45 mg/dL como normal.
+      expect(getReferenceRange('HDL', { age: 30 })).toBeUndefined();
+      expect(getReferenceRange('HDL', {})).toBeUndefined();
+    });
+
+    it('sem contexto nenhum, a faixa padrão continua valendo', () => {
+      expect(getReferenceRange('HDL')).toEqual(expectedDefault('HDL'));
+    });
+
+    it('contexto completo que não casa com variante nenhuma recebe a faixa padrão', () => {
+      // Hgb só tem variantes adultas (ageMin 18); uma criança com sexo e idade
+      // informados cai no padrão, porque nada faltou no contexto.
+      const range = getReferenceRange('Hgb', { age: 10, biologicalSex: 'M' });
+      expect(range).toEqual(expectedDefault('Hgb'));
+    });
+
+    it('gestante sem sexo informado fica sem faixa quando as variantes exigem sexo', () => {
+      expect(getReferenceRange('Hgb', { age: 30, pregnant: true })).toBeUndefined();
+    });
+
+    it('flagAgainstCatalogRange não sinaliza quando falta o dado da variante', () => {
+      expect(flagAgainstCatalogRange('HDL', 45, { age: 30 })).toBe('');
+    });
+
+    it('definição com padrão envelope devolve o padrão quando falta o dado', () => {
+      // O diferencial absoluto da PNS declara `defaultIsEnvelope`: o padrão é a
+      // união das faixas dos dois sexos e serve a quem não informou o sexo.
+      expect(biomarkerRangeDefinitions.Neutrophils_Abs.defaultIsEnvelope).toBe(true);
+      expect(getReferenceRange('Neutrophils_Abs', { age: 40 })).toEqual(
+        expectedDefault('Neutrophils_Abs'),
+      );
+    });
+
+    it('só o diferencial absoluto da PNS declara padrão envelope', () => {
+      const flagged = Object.entries(biomarkerRangeDefinitions)
+        .filter(([, def]) => def.defaultIsEnvelope)
+        .map(([code]) => code)
+        .sort();
+      expect(flagged).toEqual([
+        'Basophils_Abs',
+        'Eosinophils_Abs',
+        'Lymphocytes_Abs',
+        'Monocytes_Abs',
+        'Neutrophils_Abs',
+      ]);
     });
 
     it('HDL has no false upper bound at 60 mg/dL (SBC 2025)', () => {
@@ -278,7 +321,15 @@ describe('getReferenceRange', () => {
       expect(youngRange?.max).toBeGreaterThan(olderRange?.max || 0);
     });
 
-    it('should return default when age not provided', () => {
+    it('sem idade no contexto, marcador com variante por idade fica sem faixa', () => {
+      // As variantes adultas da Hgb têm ageMin 18; sem idade não dá para saber
+      // se alguma se aplica.
+      expect(getReferenceRange('Hgb', { biologicalSex: 'M' })).toBeUndefined();
+    });
+
+    it('variante pulada por sexo diferente não conta como dado faltando', () => {
+      // Todas as variantes da AMH são femininas. Um homem sem idade não deixou
+      // de casar por falta de idade, e sim por sexo; vale a faixa padrão.
       const context: ReferenceRangeContext = { biologicalSex: 'M' };
       const range = getReferenceRange('AMH', context);
       expect(range).toEqual(expectedDefault('AMH'));

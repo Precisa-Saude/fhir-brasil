@@ -761,6 +761,14 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'mmol/L',
     siUnit: 'mmol/L',
   },
+  Glucose_Fasting: {
+    aliases: { 'mg/dl': 'mg/dL', 'mmol/l': 'mmol/L' },
+    canonicalUcum: 'mg/dL',
+    canonicalUnit: 'mg/dL',
+    molecularWeight: 180.156,
+    siUcum: 'mmol/L',
+    siUnit: 'mmol/L',
+  },
   HbA1c: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   Hct: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   HDL: {

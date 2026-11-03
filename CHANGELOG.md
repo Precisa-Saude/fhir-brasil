@@ -1,3 +1,9 @@
+## [1.1.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v1.1.1...v1.1.2) (2026-11-03)
+
+### Bug Fixes
+
+* **core:** sem sexo ou idade no contexto, a faixa por variante fica indefinida ([#163](https://github.com/Precisa-Saude/fhir-brasil/issues/163)) ([42152d2](https://github.com/Precisa-Saude/fhir-brasil/commit/42152d2c5a0a1ef2059ee65c03a3cdca2647174a))
+
 ## [1.1.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v1.1.0...v1.1.1) (2026-11-03)
 
 ### Bug Fixes

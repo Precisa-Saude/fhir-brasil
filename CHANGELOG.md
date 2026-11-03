@@ -1,3 +1,14 @@
+## [1.1.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v1.1.0...v1.1.1) (2026-11-03)
+
+### Bug Fixes
+
+* **core:** confere pela fonte as onze faixas que não batiam com ela ([#164](https://github.com/Precisa-Saude/fhir-brasil/issues/164)) ([d4cd242](https://github.com/Precisa-Saude/fhir-brasil/commit/d4cd24207186aaa06e295bac2922a67860b27589))
+
+### CI/CD
+
+* adotar tooling v3 versionado com política de revisão ([#161](https://github.com/Precisa-Saude/fhir-brasil/issues/161)) ([f5cfc1a](https://github.com/Precisa-Saude/fhir-brasil/commit/f5cfc1a7faff750a92805302f3b344ae13100d3b))
+* definir política explícita para revisão externa ([#162](https://github.com/Precisa-Saude/fhir-brasil/issues/162)) ([3f7bee7](https://github.com/Precisa-Saude/fhir-brasil/commit/3f7bee77496fb43225c7167b6c66d8c216c24627))
+
 ## [1.1.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v1.0.0...v1.1.0) (2026-10-09)
 
 ### Features

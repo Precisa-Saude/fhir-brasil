@@ -82,7 +82,7 @@
   ],
   "decisions": { "nameOnly": 176, "reviewed": 0, "withEvidence": 49 },
   "loincCoveragePct": 86.5,
-  "referenceRanges": 203,
+  "referenceRanges": 198,
   "sections": 11,
   "version": "1.1.0",
   "withLoinc": 225,

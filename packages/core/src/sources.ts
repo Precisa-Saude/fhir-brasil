@@ -258,6 +258,13 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     url: 'https://pubmed.ncbi.nlm.nih.gov/31596381/',
   },
 
+  'righini-adjust-pe-2014': {
+    abnt: 'RIGHINI, M. et al. Age-adjusted D-dimer cutoff levels to rule out pulmonary embolism: the ADJUST-PE study. JAMA, v. 311, n. 11, p. 1117-1124, 2014.',
+    doi: '10.1001/jama.2014.2135',
+    key: 'righini-adjust-pe-2014',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/24643601/',
+  },
+
   'rumberger-cac-1999': {
     abnt: 'RUMBERGER, J. A. et al. Electron beam computed tomographic coronary calcium scanning: a review and guidelines for use in asymptomatic persons. Mayo Clinic Proceedings, v. 74, n. 3, p. 243-252, 1999.',
     doi: '10.4065/74.3.243',
@@ -382,16 +389,6 @@ export const SOURCE_REGISTRY: Record<string, SourceReference> = {
     key: 'torrissen-omega3-dbs-2025',
     url: 'https://pubmed.ncbi.nlm.nih.gov/40783537/',
   },
-  // ---------------------------------------------------------------------------
-  // Fontes internacionais — Coagulação
-  // ---------------------------------------------------------------------------
-  'wells-ddimer-2003': {
-    abnt: 'WELLS, P. S. et al. Evaluation of D-dimer in the diagnosis of suspected deep-vein thrombosis. New England Journal of Medicine, v. 349, p. 1227-1235, 2003.',
-    doi: '10.1056/NEJMoa023153',
-    key: 'wells-ddimer-2003',
-    url: 'https://pubmed.ncbi.nlm.nih.gov/14507948/',
-  },
-
   // ---------------------------------------------------------------------------
   // Fontes internacionais — OMS
   // ---------------------------------------------------------------------------

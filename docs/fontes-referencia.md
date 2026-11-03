@@ -14,24 +14,24 @@ Consulte [docs/development/verificacao-citacoes.md](development/verificacao-cita
 
 Cada definição declara em `kind` que tipo de afirmação a faixa faz (ver [biomarcadores.md](biomarcadores.md#tipo-da-faixa)). A classificação é por fonte, com exceções por marcador quando o número vem de outra natureza que o resto da fonte. Onde a classificação foi conferida pelo resumo no PubMed, e não pelo texto completo, a coluna diz.
 
-| Fonte                                                                                                                                                                                                                                                        | Tipo                      | Por quê                                                                                                                                        |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `tietz-7ed-2015`                                                                                                                                                                                                                                             | intervalo de referência   | Livro-texto de química clínica; intervalos de ensaio. Exceções abaixo                                                                          |
-| `pns-hemograma-2019`, `pns-bioquimica-2019`                                                                                                                                                                                                                  | intervalo de referência   | Os dois artigos excluem quem tinha doença prévia e os valores extremos antes de calcular os limites (resumo)                                   |
-| `caulfield-ionmobility-2008`                                                                                                                                                                                                                                 | intervalo de referência   | O artigo descreve o método; os números são a referência do ensaio de mobilidade iônica do laboratório que o desenvolveu (comentário no código) |
-| `selhub-homocysteine-1999`                                                                                                                                                                                                                                   | intervalo de referência   | Percentis 5 e 95 de participantes do NHANES com folato e B12 adequados e creatinina normal (resumo)                                            |
-| `schumann-ifcc-ldh-2002`                                                                                                                                                                                                                                     | intervalo de referência   | Limite superior como percentil 97,5 de um coletivo de referência (resumo)                                                                      |
-| `keller-tni-2013`, `giannitsis-hstnt-2010`                                                                                                                                                                                                                   | intervalo de referência   | Percentil 99 de população de referência, que é o limite superior de referência das troponinas (resumo)                                         |
-| `contois-apoa1-1996`, `schwedhelm-sdma-2011`, `nemeth-adma-2017`, `klee-bhb-2020`, `kalaria-ck-ri-2026`                                                                                                                                                      | intervalo de referência   | O título de cada um declara intervalo ou limite de referência; não conferido no texto                                                          |
-| `sbem-thyroid-2013`                                                                                                                                                                                                                                          | intervalo de referência   | O consenso adota o intervalo de referência do TSH; o limiar de tratamento dele é outro (10 mU/L)                                               |
-| `sbpc-ml-2021`                                                                                                                                                                                                                                               | intervalo de referência   | Recomendação de boas práticas de laboratório                                                                                                   |
-| `hosten-clinical-methods-1990`                                                                                                                                                                                                                               | intervalo de referência   | O capítulo publica o intervalo normal do BUN em sangue ou soro (texto completo)                                                                |
-| `sturgeon-nacb-2008`                                                                                                                                                                                                                                         | intervalo de referência   | Limites superiores convencionais dos ensaios de marcador tumoral. Exceção: `PSA_FreeRatio`                                                     |
-| `kelly-dxa-2009`                                                                                                                                                                                                                                             | distribuição populacional | Valores de referência da amostra de base populacional do NHANES, sem filtro de saúde (resumo)                                                  |
-| `ofenheimer-vat-2020`                                                                                                                                                                                                                                        | distribuição populacional | Curvas de referência da coorte de base populacional LEAD (resumo)                                                                              |
-| `torrissen-omega3-dbs-2025`                                                                                                                                                                                                                                  | distribuição populacional | Distribuição global de mais de 500 mil amostras, sem população de referência (resumo)                                                          |
-| `sbc-lipids-2025`, `kdigo-ckd-2024`, `sbd-diabetes-2024`, `sbc-ic-2018`, `who-obesity-2000`, `who-osteoporosis-1994`, `who-iron-2020`, `ferreira-vitd-2017`, `ewgsop2-2019`, `nr7-pcmso-2020`                                                                | limiar de decisão         | Diretriz, consenso ou norma que define corte para conduta ou classificação                                                                     |
-| `harris-omega3-2004`, `simopoulos-omega-ratio-2002`, `rumberger-cac-1999`, `castelli-ratio-1992`, `wells-ddimer-2003`, `geloneze-brams-2009`, `gallagher-bodyfat-2000`, `browning-ashwell-2010`, `meuwese-mpo-2007`, `khetarpal-apociii-2016`, `ge-corescan` | limiar de decisão         | Corte de risco, de diagnóstico ou recomendação derivada de estudo; nenhum descreve intervalo de população saudável                             |
+| Fonte                                                                                                                                                                                                                                                             | Tipo                      | Por quê                                                                                                                                        |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tietz-7ed-2015`                                                                                                                                                                                                                                                  | intervalo de referência   | Livro-texto de química clínica; intervalos de ensaio. Exceções abaixo                                                                          |
+| `pns-hemograma-2019`, `pns-bioquimica-2019`                                                                                                                                                                                                                       | intervalo de referência   | Os dois artigos excluem quem tinha doença prévia e os valores extremos antes de calcular os limites (resumo)                                   |
+| `caulfield-ionmobility-2008`                                                                                                                                                                                                                                      | intervalo de referência   | O artigo descreve o método; os números são a referência do ensaio de mobilidade iônica do laboratório que o desenvolveu (comentário no código) |
+| `selhub-homocysteine-1999`                                                                                                                                                                                                                                        | intervalo de referência   | Percentis 5 e 95 de participantes do NHANES com folato e B12 adequados e creatinina normal (resumo)                                            |
+| `schumann-ifcc-ldh-2002`                                                                                                                                                                                                                                          | intervalo de referência   | Limite superior como percentil 97,5 de um coletivo de referência (resumo)                                                                      |
+| `keller-tni-2013`, `giannitsis-hstnt-2010`                                                                                                                                                                                                                        | intervalo de referência   | Percentil 99 de população de referência, que é o limite superior de referência das troponinas (resumo)                                         |
+| `contois-apoa1-1996`, `schwedhelm-sdma-2011`, `nemeth-adma-2017`, `klee-bhb-2020`, `kalaria-ck-ri-2026`                                                                                                                                                           | intervalo de referência   | O título de cada um declara intervalo ou limite de referência; não conferido no texto                                                          |
+| `sbem-thyroid-2013`                                                                                                                                                                                                                                               | intervalo de referência   | O consenso adota o intervalo de referência do TSH; o limiar de tratamento dele é outro (10 mU/L)                                               |
+| `sbpc-ml-2021`                                                                                                                                                                                                                                                    | intervalo de referência   | Recomendação de boas práticas de laboratório                                                                                                   |
+| `hosten-clinical-methods-1990`                                                                                                                                                                                                                                    | intervalo de referência   | O capítulo publica o intervalo normal do BUN em sangue ou soro (texto completo)                                                                |
+| `sturgeon-nacb-2008`                                                                                                                                                                                                                                              | intervalo de referência   | Limites superiores convencionais dos ensaios de marcador tumoral. Exceção: `PSA_FreeRatio`                                                     |
+| `kelly-dxa-2009`                                                                                                                                                                                                                                                  | distribuição populacional | Valores de referência da amostra de base populacional do NHANES, sem filtro de saúde (resumo)                                                  |
+| `ofenheimer-vat-2020`                                                                                                                                                                                                                                             | distribuição populacional | Curvas de referência da coorte de base populacional LEAD (resumo)                                                                              |
+| `torrissen-omega3-dbs-2025`                                                                                                                                                                                                                                       | distribuição populacional | Distribuição global de mais de 500 mil amostras, sem população de referência (resumo)                                                          |
+| `sbc-lipids-2025`, `kdigo-ckd-2024`, `sbd-diabetes-2024`, `sbc-ic-2018`, `who-obesity-2000`, `who-osteoporosis-1994`, `who-iron-2020`, `ferreira-vitd-2017`, `ewgsop2-2019`, `nr7-pcmso-2020`                                                                     | limiar de decisão         | Diretriz, consenso ou norma que define corte para conduta ou classificação                                                                     |
+| `harris-omega3-2004`, `simopoulos-omega-ratio-2002`, `rumberger-cac-1999`, `castelli-ratio-1992`, `righini-adjust-pe-2014`, `geloneze-brams-2009`, `gallagher-bodyfat-2000`, `browning-ashwell-2010`, `meuwese-mpo-2007`, `khetarpal-apociii-2016`, `ge-corescan` | limiar de decisão         | Corte de risco, de diagnóstico ou recomendação derivada de estudo; nenhum descreve intervalo de população saudável                             |
 
 Exceções por marcador, de fonte classificada como intervalo de referência:
 
@@ -44,20 +44,20 @@ Exceções por marcador, de fonte classificada como intervalo de referência:
 
 Por padrão todo limite é corte clínico. Os marcados `display` existem para a faixa ter dois lados no desenho, e o `flagAgainstCatalogRange` não os usa. A lista inclui todo limite do lado em que o marcador melhora (que um teste obriga a declarar) e os pisos e tetos de preenchimento.
 
-| Marcador                                                                      | Limite | Por quê                                                                                                                    |
-| ----------------------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------- |
-| `HDL`, `HDL_Large`, `LDL_Peak_Size`                                           | teto   | Subir é bom; o teto é limite do gauge. A diretriz não define teto para o HDL                                               |
-| `BMC`, `FatFreeMass`, `LeanMass`, `BMD_Total`, `TScore_Total`, `ZScore_Total` | teto   | Massa óssea e magra alta não é achado; o teto é o fim da escala                                                            |
-| `PSA_FreeRatio`                                                               | teto   | Porcentagem; 100 é o fim da escala                                                                                         |
-| `eGFR`                                                                        | teto   | O corte da DRC é o piso de 60; o 120 não tem significado clínico                                                           |
-| `AA_EPA_Ratio`, `Omega6_Omega3_Ratio`                                         | piso   | Razão baixa é desejável; o piso é o fim observado ou o valor ancestral                                                     |
-| `Homocysteine`                                                                | piso   | Homocisteína baixa não é achado clínico; o piso é o percentil 5                                                            |
-| `LDL_Medium`, `LDL_ParticleNumber`, `LDL_Small`                               | piso   | Contagem baixa de partículas aterogênicas não é achado                                                                     |
-| `GGT` (variantes por sexo)                                                    | piso   | GGT baixa não tem significado clínico                                                                                      |
-| `AndroidFatPct`, `GynoidFatPct`, `AndroidGynoidRatio`                         | piso   | Gordura regional ou razão baixa, isoladas, não são critério; o achado de gordura baixa está no `BodyFatPct` e na `FatMass` |
-| `HbA1c`                                                                       | piso   | O 2% é preenchimento; o corte da diretriz é o teto de 5,7%                                                                 |
-| `eAG`                                                                         | piso   | Derivado do piso da HbA1c                                                                                                  |
-| `VLDL`                                                                        | piso   | O corte é o teto; o piso é preenchimento                                                                                   |
+| Marcador                                                         | Limite | Por quê                                                                                                                    |
+| ---------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------- |
+| `HDL`, `HDL_Large`, `LDL_Peak_Size`                              | teto   | Subir é bom; o teto é limite do gauge. A diretriz não define teto para o HDL                                               |
+| `BMC`, `FatFreeMass`, `LeanMass`, `TScore_Total`, `ZScore_Total` | teto   | Massa óssea e magra alta não é achado; o teto é o fim da escala                                                            |
+| `PSA_FreeRatio`                                                  | teto   | Porcentagem; 100 é o fim da escala                                                                                         |
+| `eGFR`                                                           | teto   | O corte da DRC é o piso de 60; o 120 não tem significado clínico                                                           |
+| `AA_EPA_Ratio`, `Omega6_Omega3_Ratio`                            | piso   | Razão baixa é desejável; o piso é o fim observado ou o valor ancestral                                                     |
+| `Homocysteine`                                                   | piso   | Homocisteína baixa não é achado clínico; o piso é o percentil 5                                                            |
+| `LDL_Medium`, `LDL_ParticleNumber`, `LDL_Small`                  | piso   | Contagem baixa de partículas aterogênicas não é achado                                                                     |
+| `GGT` (variantes por sexo)                                       | piso   | GGT baixa não tem significado clínico                                                                                      |
+| `AndroidFatPct`, `GynoidFatPct`, `AndroidGynoidRatio`            | piso   | Gordura regional ou razão baixa, isoladas, não são critério; o achado de gordura baixa está no `BodyFatPct` e na `FatMass` |
+| `HbA1c`                                                          | piso   | O 2% é preenchimento; o corte da diretriz é o teto de 5,7%                                                                 |
+| `eAG`                                                            | piso   | Derivado do piso da HbA1c                                                                                                  |
+| `VLDL`                                                           | piso   | O corte é o teto; o piso é preenchimento                                                                                   |
 
 Declarados `clinical`, embora do lado em que o marcador melhora:
 
@@ -67,14 +67,14 @@ Declarados `clinical`, embora do lado em que o marcador melhora:
 
 ## Valores que não conferem com a fonte
 
-Achados durante a classificação acima, conferindo pelos resumos. A classificação não muda valor de faixa; estes ficam registrados para correção à parte.
+Achados durante a classificação acima, conferindo pelos resumos, e corrigidos em 03/11/2026 (PRE-467). Nenhum valor desta lista segue no catálogo; o que a fonte não sustenta saiu em vez de ganhar outro número.
 
-- `pns-hemograma-2019`: `RBC`, `Hgb` e `WBC` não batem com os limites que o resumo publica (hemácias: 4,3 a 5,8 milhões/mm³ em homens e 3,9 a 5,1 em mulheres; hemoglobina: 13,0 a 16,9 g/dL e 11,5 a 14,9 g/dL; leucócitos: em torno de 2.840 a 9.440/mm³ em homens e 2.880 a 9.970/mm³ em mulheres). Os valores do catálogo parecem de livro-texto.
-- `geloneze-brams-2009`: o teto de 1,5 do `HOMA_IR` não é nenhum dos cortes do artigo (resistência insulínica: HOMA1-IR > 2,7 e HOMA2-IR > 1,8; síndrome metabólica: HOMA1-IR > 2,3 e HOMA2-IR > 1,4).
-- `meuwese-mpo-2007`: o teto de 470 pmol/L da `Myeloperoxidase` não aparece no resumo, que usa 728 pmol/L como MPO elevada.
-- `harris-omega3-2004`: o resumo define só o Omega-3 Index (≤ 4% e ≥ 8%); as faixas próprias de `Omega3_DHA`, `Omega3_EPA`, `Omega3_DPA` e `Omega3_Total` não aparecem nele.
-- `wells-ddimer-2003`: o artigo compara estratégias diagnósticas com D-dímero e não publica o corte de 500 ng/mL FEU nem o ajuste por idade, que vêm de outras diretrizes (o comentário da faixa cita ESC 2019 e ACEP).
-- `who-osteoporosis-1994`: a OMS classifica pelo T-score, e a faixa absoluta de `BMD_Total` em g/cm² não vem dela.
+- `pns-hemograma-2019`: `RBC`, `Hgb` e `WBC` passaram a usar os limites por sexo do resumo (hemácias: 4,3 a 5,8 milhões/mm³ em homens e 3,9 a 5,1 em mulheres; hemoglobina: 13,0 a 16,9 g/dL e 11,5 a 14,9 g/dL; leucócitos: 2.843 a 9.440/mm³ em homens e 2.883 a 9.969/mm³ em mulheres). O padrão sem contexto é o envelope dos dois sexos. Os valores `optimal*` anteriores não tinham fonte e saíram.
+- `geloneze-brams-2009`: `HOMA_IR` usa os cortes do HOMA1-IR do artigo: 2,7 para resistência insulínica (teto) e 2,3 para síndrome metabólica (`optimalMax`). O 1,5 anterior não era nenhum deles.
+- `meuwese-mpo-2007`: o teto da `Myeloperoxidase` é o 728 pmol/L que o resumo usa como MPO elevada. Os 322 e 470 anteriores saíram.
+- `harris-omega3-2004`: o resumo define só o Omega-3 Index (≤ 4% e ≥ 8%), que fica em `Omega3_Index`. `Omega3_DHA`, `Omega3_EPA`, `Omega3_DPA` e `Omega3_Total` ficaram sem faixa de catálogo.
+- `wells-ddimer-2003`: saiu do catálogo. `DDimer` cita `righini-adjust-pe-2014`, que valida o corte convencional de 500 µg/L e o ajuste por idade (idade × 10 a partir dos 50 anos). As faixas etárias usam o teto da idade mais baixa de cada faixa, que nunca relaxa além da fórmula.
+- `who-osteoporosis-1994`: a OMS classifica pelo T-score, que fica em `TScore_Total`. `BMD_Total` ficou sem faixa de catálogo.
 
 ---
 
@@ -174,6 +174,14 @@ SOCIEDADE BRASILEIRA DE DIABETES (SBD). **Diretrizes da Sociedade Brasileira de 
 Disponível em: <https://diretriz.diabetes.org.br>.
 
 > **Nota**: Edição exata e dados bibliográficos completos pendentes de verificação.
+
+### geloneze-brams-2009
+
+GELONEZE, B. et al. HOMA1-IR and HOMA2-IR indexes in identifying insulin resistance and metabolic syndrome: Brazilian Metabolic Syndrome Study (BRAMS). **Arquivos Brasileiros de Endocrinologia & Metabologia**, v. 53, n. 2, p. 281-287, 2009. DOI: [10.1590/S0004-27302009000200020](https://doi.org/10.1590/S0004-27302009000200020).
+
+Disponível em: <https://pubmed.ncbi.nlm.nih.gov/19466221/>.
+
+**Valores utilizados:** HOMA1-IR acima de 2,7 para resistência insulínica (percentil 90 do grupo saudável) e acima de 2,3 para síndrome metabólica (curva ROC), em 1.203 adultos não diabéticos (resumo).
 
 ### sbem-thyroid-2013
 
@@ -305,7 +313,7 @@ MEUWESE, M. C. et al. Serum myeloperoxidase levels are associated with the futur
 
 Disponível em: <https://pubmed.ncbi.nlm.nih.gov/17616301/>.
 
-**Valores utilizados:** Mieloperoxidase — corte de risco ~420 pmol/L.
+**Valores utilizados:** Mieloperoxidase, MPO elevada acima de 728 pmol/L (resumo).
 
 ### rumberger-cac-1999
 
@@ -333,13 +341,13 @@ Disponível em: <https://pubmed.ncbi.nlm.nih.gov/10475885/>.
 
 **Valores utilizados:** Homocisteína — máximo 15, ótimo 10 µmol/L (NHANES III).
 
-### wells-ddimer-2003
+### righini-adjust-pe-2014
 
-WELLS, P. S. et al. Evaluation of D-dimer in the diagnosis of suspected deep-vein thrombosis. **New England Journal of Medicine**, v. 349, p. 1227-1235, 2003. DOI: [10.1056/NEJMoa023153](https://doi.org/10.1056/NEJMoa023153).
+RIGHINI, M. et al. Age-adjusted D-dimer cutoff levels to rule out pulmonary embolism: the ADJUST-PE study. **JAMA**, v. 311, n. 11, p. 1117-1124, 2014. DOI: [10.1001/jama.2014.2135](https://doi.org/10.1001/jama.2014.2135).
 
-Disponível em: <https://pubmed.ncbi.nlm.nih.gov/14507948/>.
+Disponível em: <https://pubmed.ncbi.nlm.nih.gov/24643601/>.
 
-**Valores utilizados:** D-Dímero — corte clínico 500 ng/mL para exclusão de TEV.
+**Valores utilizados:** D-Dímero, corte convencional de 500 µg/L (FEU) e corte ajustado por idade (idade × 10 a partir dos 50 anos) para excluir embolia pulmonar em probabilidade clínica não alta (resumo).
 
 ### schwedhelm-sdma-2011
 
@@ -371,7 +379,7 @@ HARRIS, W. S.; VON SCHACKY, C. The Omega-3 Index: a new risk factor for death fr
 
 Disponível em: <https://pubmed.ncbi.nlm.nih.gov/15208005/>.
 
-**Valores utilizados:** Índice Ômega-3, frações EPA/DPA/DHA, OmegaCheck.
+**Valores utilizados:** Índice Ômega-3 (≥ 8% maior proteção, ≤ 4% menor) e OmegaCheck. O artigo não define faixa por fração nem para o total de ômega-3.
 
 ### simopoulos-omega-ratio-2002
 

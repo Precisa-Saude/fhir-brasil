@@ -719,3 +719,58 @@ describe('CAC reference ranges', () => {
     expect(range!.warningMax).toBe(75);
   });
 });
+
+describe('faixas conferidas pela fonte em 03/11/2026', () => {
+  it('hemograma usa os limites por sexo do resumo da PNS 2019', () => {
+    const limites: Record<string, { F: [number, number]; M: [number, number] }> = {
+      Hgb: { F: [11.5, 14.9], M: [13.0, 16.9] },
+      RBC: { F: [3.9, 5.1], M: [4.3, 5.8] },
+      WBC: { F: [2.883, 9.969], M: [2.843, 9.44] },
+    };
+    for (const [code, porSexo] of Object.entries(limites)) {
+      for (const sex of ['M', 'F'] as const) {
+        const range = getReferenceRange(code, { age: 40, biologicalSex: sex });
+        expect([range?.min, range?.max], `${code} ${sex}`).toEqual(porSexo[sex]);
+        expect(range?.optimalMin, `${code} ${sex} optimalMin`).toBeUndefined();
+      }
+      const padrao = getReferenceRange(code);
+      expect([padrao?.min, padrao?.max], `${code} padrão`).toEqual([
+        Math.min(porSexo.F[0], porSexo.M[0]),
+        Math.max(porSexo.F[1], porSexo.M[1]),
+      ]);
+    }
+  });
+
+  it('HOMA_IR usa os cortes do HOMA1-IR do BRAMS', () => {
+    const range = getReferenceRange('HOMA_IR');
+    expect(range?.max).toBe(2.7);
+    expect(range?.optimalMax).toBe(2.3);
+    expect(range?.warningMax).toBeUndefined();
+  });
+
+  it('mieloperoxidase usa o 728 pmol/L do EPIC-Norfolk, sem faixa ótima', () => {
+    const range = getReferenceRange('Myeloperoxidase');
+    expect(range?.max).toBe(728);
+    expect(range?.optimalMax).toBeUndefined();
+  });
+
+  it('D-dímero cita o ADJUST-PE e nunca relaxa além de idade × 10', () => {
+    expect(biomarkerRangeDefinitions.DDimer.source).toBe('righini-adjust-pe-2014');
+    for (const age of [30, 50, 55, 59, 60, 65, 69, 70, 85]) {
+      const max = getReferenceRange('DDimer', { age, biologicalSex: 'F' })?.max ?? 0;
+      expect(max, `idade ${age}`).toBeLessThanOrEqual(Math.max(500, age * 10));
+      expect(max, `idade ${age}`).toBeGreaterThanOrEqual(500);
+    }
+    expect(getReferenceRange('DDimer', { age: 65, biologicalSex: 'M' })?.max).toBe(600);
+    expect(getReferenceRange('DDimer', { age: 85, biologicalSex: 'M' })?.max).toBe(700);
+  });
+
+  it('frações de ômega-3 e BMD_Total ficam sem faixa de catálogo', () => {
+    for (const code of ['Omega3_DHA', 'Omega3_DPA', 'Omega3_EPA', 'Omega3_Total', 'BMD_Total']) {
+      expect(biomarkerRangeDefinitions[code], code).toBeUndefined();
+      expect(getReferenceRange(code), code).toBeUndefined();
+    }
+    expect(getReferenceRange('Omega3_Index')).toBeDefined();
+    expect(getReferenceRange('TScore_Total')).toBeDefined();
+  });
+});

@@ -729,27 +729,27 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   // Todos os valores são em FEU (unidades equivalentes de fibrinogênio), e o
   // código do catálogo é o do FEU (48065-7). Em DDU os cortes caem pela
   // metade; não existe faixa DDU aqui.
+  // Corte convencional de 500 µg/L (FEU, igual a ng/mL) e corte ajustado por
+  // idade (idade × 10 a partir dos 50 anos) para excluir embolia pulmonar em
+  // probabilidade clínica não alta, validados no ADJUST-PE (Righini et al.,
+  // 2014), pelo resumo. O artigo de Wells (2003) que estava citado compara
+  // estratégias diagnósticas e não publica nenhum dos dois cortes.
+  //
+  // A fórmula não cabe numa variante estática. Cada faixa etária usa o teto da
+  // idade mais baixa da faixa, que nunca relaxa além do que a fórmula permite
+  // para alguém nela; dos 50 aos 59 anos isso é o próprio 500 do padrão. Os
+  // tetos anteriores (590, 690, 750) relaxavam além da fórmula para a maior
+  // parte de cada faixa.
   DDimer: {
     default: { max: 500, min: 0, unit: 'ng/mL' },
     direction: 'lower-better',
     kind: 'decision-threshold',
     loinc: '48065-7',
-    source: 'wells-ddimer-2003',
+    source: 'righini-adjust-pe-2014',
     variants: [
-      // Corte ajustado por idade — ESC 2019 (Konstantinides et al.) e
-      // ACEP recomendam em pacientes não gestantes ≥ 50 anos com
-      // probabilidade clínica baixa/intermediária de TEV. Fórmula:
-      // idade × 10 ng/mL. Aproximação por faixas etárias.
-      { ageMax: 59, ageMin: 50, range: { max: 590, min: 0, unit: 'ng/mL' }, sex: 'all' },
-      { ageMax: 69, ageMin: 60, range: { max: 690, min: 0, unit: 'ng/mL' }, sex: 'all' },
-      { ageMin: 70, range: { max: 750, min: 0, unit: 'ng/mL' }, sex: 'all' },
+      { ageMax: 69, ageMin: 60, range: { max: 600, min: 0, unit: 'ng/mL' }, sex: 'all' },
+      { ageMin: 70, range: { max: 700, min: 0, unit: 'ng/mL' }, sex: 'all' },
     ],
-  },
-
-  Omega3_DHA: {
-    default: { max: 8.0, min: 2.0, optimalMax: 6.5, optimalMin: 3.5, unit: '%' },
-    kind: 'decision-threshold',
-    source: 'harris-omega3-2004',
   },
 
   DHEAS: {
@@ -794,12 +794,6 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     ],
   },
 
-  Omega3_DPA: {
-    default: { max: 2.0, min: 0.3, optimalMax: 1.5, optimalMin: 0.5, unit: '%' },
-    kind: 'decision-threshold',
-    source: 'harris-omega3-2004',
-  },
-
   eGFR: {
     default: {
       max: 120,
@@ -827,12 +821,6 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
       { ageMin: 18, range: { max: 0.66, min: 0, unit: 'K/uL' }, sex: 'M' },
       { ageMin: 18, range: { max: 0.55, min: 0, unit: 'K/uL' }, sex: 'F' },
     ],
-  },
-
-  Omega3_EPA: {
-    default: { max: 3.5, min: 0.5, optimalMax: 2.5, optimalMin: 1.0, unit: '%' },
-    kind: 'decision-threshold',
-    source: 'harris-omega3-2004',
   },
 
   EPADPADHA: {
@@ -1128,8 +1116,13 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'caulfield-ionmobility-2008',
   },
 
+  // PNS 2013 (Rosenfeld et al., 2019), limites por sexo em adultos, pelo
+  // resumo: homens 13,0 a 16,9 g/dL, mulheres 11,5 a 14,9 g/dL. A fonte não
+  // publica faixa única para os dois sexos; o padrão é o envelope das duas
+  // (piso feminino, teto masculino) e só é devolvido sem contexto. As
+  // variantes gestacionais abaixo vêm da OMS e do CDC, não do PNS.
   Hgb: {
-    default: { max: 17.5, min: 12.0, optimalMax: 16.0, optimalMin: 13.5, unit: 'g/dL' },
+    default: { max: 16.9, min: 11.5, unit: 'g/dL' },
     kind: 'reference-interval',
     source: 'pns-hemograma-2019',
     variants: [
@@ -1160,31 +1153,24 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
         range: { max: 14.0, min: 10.5, optimalMax: 13.0, optimalMin: 11.0, unit: 'g/dL' },
         sex: 'F',
       },
-      {
-        ageMin: 18,
-        range: { max: 17.5, min: 13.5, optimalMax: 16.5, optimalMin: 14.0, unit: 'g/dL' },
-        sex: 'M',
-      },
-      {
-        ageMin: 18,
-        range: { max: 15.5, min: 12.0, optimalMax: 14.5, optimalMin: 12.5, unit: 'g/dL' },
-        sex: 'F',
-      },
+      { ageMin: 18, range: { max: 16.9, min: 13.0, unit: 'g/dL' }, sex: 'M' },
+      { ageMin: 18, range: { max: 14.9, min: 11.5, unit: 'g/dL' }, sex: 'F' },
     ],
   },
 
-  // HOMA-IR — três faixas do estudo BRAMS (Geloneze et al., 2009) validado em
-  // população urbana brasileira: ótimo até 1.5; sensibilidade reduzida (zona de
-  // atenção) entre 1.5 e 2.71; resistência à insulina acima de 2.71. Tietz 7ª
-  // ed. não publica corte próprio de HOMA-IR. `max` (1.5) delimita o verde,
-  // `warningMax` (2.71) o âmbar e acima disso o vermelho.
+  // HOMA1-IR, estudo BRAMS (Geloneze et al., 2009), 1.203 adultos não
+  // diabéticos, pelo resumo: resistência à insulina acima de 2,7 (percentil 90
+  // do grupo saudável) e síndrome metabólica acima de 2,3 (curva ROC). O teto
+  // de 2,3 delimita o ótimo e o de 2,7 é o corte de resistência. O 1,5 que
+  // estava aqui não é nenhum dos cortes do artigo.
   HOMA_IR: {
     default: {
       fastingRequired: 'strict',
-      max: 1.5,
+      max: 2.7,
       min: 0,
+      optimalMax: 2.3,
+      optimalMin: 0,
       unit: '',
-      warningMax: 2.71,
     },
     direction: 'lower-better',
     kind: 'decision-threshold',
@@ -1503,8 +1489,12 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   // MPO: Meuwese 2007 (EPIC-Norfolk) — risco CV elevado >322 pmol/L
+  // EPIC-Norfolk (Meuwese et al., 2007), pelo resumo: MPO elevada acima de
+  // 728 pmol/L prediz doença coronariana em pessoas aparentemente saudáveis.
+  // O artigo não publica faixa ótima; os 322 e 470 que estavam aqui não
+  // aparecem nele.
   Myeloperoxidase: {
-    default: { max: 470, min: 0, optimalMax: 322, optimalMin: 0, unit: 'pmol/L' },
+    default: { max: 728, min: 0, unit: 'pmol/L' },
     kind: 'decision-threshold',
     source: 'meuwese-mpo-2007',
   },
@@ -1569,16 +1559,11 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'harris-omega3-2004',
   },
 
-  // Ômega-3 Total (% de ácidos graxos eritrocitários) — Harris & von Schacky
-  // (2004) propõem ≥ 8% como zona ótima de proteção cardiovascular; valores
-  // entre 4% e 8% representam risco intermediário, < 4% risco alto.
-  // optimalMin anterior (5.5%) ficava em zona intermediária, contradizendo
-  // a literatura e o próprio texto educacional do `platform`.
-  Omega3_Total: {
-    default: { max: 12.0, min: 3.0, optimalMax: 10.0, optimalMin: 8.0, unit: '%' },
-    kind: 'decision-threshold',
-    source: 'harris-omega3-2004',
-  },
+  // Omega3_Total, Omega3_EPA, Omega3_DHA e Omega3_DPA ficam sem faixa de
+  // catálogo. Harris e von Schacky (2004) definem só o Omega-3 Index (EPA +
+  // DHA eritrocitário), que está em `Omega3_Index`; as faixas por fração e a
+  // do total de ômega-3 que estavam aqui não vinham de fonte nenhuma. A faixa
+  // impressa no laudo continua valendo para esses códigos.
 
   Omega6_Total: {
     default: { max: 40.0, min: 20.0, optimalMax: 35.0, optimalMin: 25.0, unit: '%' },
@@ -1719,21 +1704,15 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     ],
   },
 
+  // PNS 2013 (Rosenfeld et al., 2019), pelo resumo: homens 4,3 a 5,8 e
+  // mulheres 3,9 a 5,1 milhões/mm³. O padrão é o envelope dos dois sexos.
   RBC: {
-    default: { max: 5.5, min: 4.0, optimalMax: 5.2, optimalMin: 4.3, unit: 'M/uL' },
+    default: { max: 5.8, min: 3.9, unit: 'M/uL' },
     kind: 'reference-interval',
     source: 'pns-hemograma-2019',
     variants: [
-      {
-        ageMin: 18,
-        range: { max: 5.9, min: 4.5, optimalMax: 5.5, optimalMin: 4.7, unit: 'M/uL' },
-        sex: 'M',
-      },
-      {
-        ageMin: 18,
-        range: { max: 5.2, min: 4.0, optimalMax: 5.0, optimalMin: 4.2, unit: 'M/uL' },
-        sex: 'F',
-      },
+      { ageMin: 18, range: { max: 5.8, min: 4.3, unit: 'M/uL' }, sex: 'M' },
+      { ageMin: 18, range: { max: 5.1, min: 3.9, unit: 'M/uL' }, sex: 'F' },
     ],
   },
 
@@ -2150,10 +2129,16 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'sbc-lipids-2025',
   },
 
+  // PNS 2013 (Rosenfeld et al., 2019), pelo resumo: homens 2.843 a 9.440 e
+  // mulheres 2.883 a 9.969 por mm³. O padrão é o envelope dos dois sexos.
   WBC: {
-    default: { max: 11.0, min: 4.0, optimalMax: 8.0, optimalMin: 5.0, unit: 'K/uL' },
+    default: { max: 9.969, min: 2.843, unit: 'K/uL' },
     kind: 'reference-interval',
     source: 'pns-hemograma-2019',
+    variants: [
+      { ageMin: 18, range: { max: 9.44, min: 2.843, unit: 'K/uL' }, sex: 'M' },
+      { ageMin: 18, range: { max: 9.969, min: 2.883, unit: 'K/uL' }, sex: 'F' },
+    ],
   },
 
   Zinc: {
@@ -2515,19 +2500,9 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
     source: 'ge-corescan',
   },
 
-  BMD_Total: {
-    default: {
-      max: 1.4,
-      maxKind: 'display',
-      min: 0.9,
-      optimalMax: 1.3,
-      optimalMin: 1.0,
-      unit: 'g/cm²',
-    },
-    direction: 'higher-better',
-    kind: 'decision-threshold',
-    source: 'who-osteoporosis-1994',
-  },
+  // BMD_Total fica sem faixa de catálogo. A OMS (1994) classifica pelo T-score,
+  // que está em `TScore_Total`; a faixa absoluta em g/cm² que estava aqui não
+  // vinha dela. A densidade impressa no laudo continua valendo.
 
   TScore_Total: {
     default: {

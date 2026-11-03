@@ -13,6 +13,7 @@ import {
   diagnosticSectionsOfReport,
   V2_0074_SYSTEM,
 } from './diagnostic-sections';
+import { fhirResourceId } from './export-helpers';
 import type {
   FHIRBundle,
   FHIRCodeableConcept,
@@ -22,6 +23,7 @@ import type {
   FHIRQuantity,
   FHIRReferenceRange,
 } from './fhir-types';
+import type { FHIRBundleEntry } from './fhir-types';
 import { getLoincEntry } from './loinc-axes';
 import { ordinalValueFor, SNOMED_SYSTEM } from './ordinal-answers';
 import { referenceRangeMeaning } from './reference-ranges';
@@ -220,7 +222,11 @@ export function labObservationToFHIR(
     },
     ...bodySiteOf(observation.biomarkerCode),
     effectiveDateTime: observation.collectionDate,
-    id: `${observation.reportId}-${observation.biomarkerCode}`,
+    // O id passa pela gramática do R4 (`[A-Za-z0-9\-.]{1,64}`): códigos
+    // compostos do catálogo levam sublinhado (`LDL_Peak_Size`), e o id antigo
+    // `<laudo>-LDL_Peak_Size` era inválido para qualquer validador. O
+    // sublinhado vira hífen. Quem indexava pelo id antigo precisa reindexar.
+    id: fhirResourceId(observation.reportId, observation.biomarkerCode),
     interpretation: [
       {
         coding: [
@@ -400,17 +406,18 @@ export function userProfileToFHIR(profile: UserProfileData): Addressable<FHIRPat
 }
 
 /**
- * Convert complete lab result to FHIR Bundle
- * This is the main function for exporting lab results to FHIR R4 format
+ * As entradas de um laudo: o `DiagnosticReport` seguido das `Observation`,
+ * sem o `Patient`.
+ *
+ * É o que a exportação do prontuário consome, que tem um `Patient` só para
+ * dezenas de laudos. `labResultToFHIRBundle` continua montando o Bundle de um
+ * laudo a partir daqui.
  */
-export function labResultToFHIRBundle(
+export function labReportEntries(
   report: LabReportData,
-  observations: LabObservationData[],
-  userProfile: UserProfileData,
-): FHIRBundle {
-  const patientId = userProfile.userId;
-
-  // Convert observations
+  observations: readonly LabObservationData[],
+  patientId: string,
+): FHIRBundleEntry[] {
   const fhirObservations = observations.map((obs) => {
     const resource = labObservationToFHIR(
       { ...obs, collectionDate: report.collectionDate },
@@ -426,7 +433,6 @@ export function labResultToFHIRBundle(
   // referência se separava do recurso.
   const observationIds = fhirObservations.map((entry) => entry.resource.id);
 
-  // Convert report
   const diagnosticReport = labReportToFHIR(
     report,
     patientId,
@@ -434,14 +440,27 @@ export function labResultToFHIRBundle(
     observations.map((observation) => observation.biomarkerCode),
   );
 
-  // Convert patient
+  return [
+    { fullUrl: entryFullUrl(diagnosticReport), resource: diagnosticReport },
+    ...fhirObservations,
+  ];
+}
+
+/**
+ * Convert complete lab result to FHIR Bundle
+ * This is the main function for exporting lab results to FHIR R4 format
+ */
+export function labResultToFHIRBundle(
+  report: LabReportData,
+  observations: LabObservationData[],
+  userProfile: UserProfileData,
+): FHIRBundle {
   const fhirPatient = userProfileToFHIR(userProfile);
 
   return {
     entry: [
       { fullUrl: entryFullUrl(fhirPatient), resource: fhirPatient },
-      { fullUrl: entryFullUrl(diagnosticReport), resource: diagnosticReport },
-      ...fhirObservations,
+      ...labReportEntries(report, observations, userProfile.userId),
     ],
     resourceType: 'Bundle',
     type: 'collection',

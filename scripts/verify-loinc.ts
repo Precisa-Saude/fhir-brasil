@@ -5,6 +5,8 @@
  * Uso:
  *   pnpm loinc:check     — compara o vivo com o snapshot versionado
  *   pnpm loinc:update    — regrava o snapshot a partir do vivo
+ *   pnpm loinc:merge     — consulta só os códigos que o snapshot ainda não tem
+ *                          e os acrescenta, sem tocar nas entradas existentes
  *
  * Precisa de LOINC_USER e LOINC_PASSWORD (conta gratuita em
  * https://loinc.org/get-started/). No CI vêm dos secrets do repo.
@@ -55,8 +57,10 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { BIOMARKER_DEFINITIONS } from '../packages/core/src/biomarkers.ts';
+import { EXPORT_LOINC_CODES } from '../packages/core/src/export-loinc-codes.ts';
 import { MAPPING_DECISIONS } from '../packages/core/src/mapping-decisions.ts';
 import { gerarModuloDoSnapshot } from './generate-loinc-snapshot-module.ts';
+import { entradaDoSnapshot, type LookupComNome, mesclarFaltantes } from './merge-loinc-snapshot.ts';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SNAPSHOT_PATH = resolve(__dirname, 'loinc-snapshot.json');
@@ -68,6 +72,14 @@ const LOOKUP_URL = process.env.LOINC_LOOKUP_URL ?? 'https://fhir.loinc.org/CodeS
 const EXIGE_CREDENCIAL = !process.env.LOINC_LOOKUP_URL;
 
 const UPDATE = process.argv.includes('--update');
+/**
+ * Acrescenta ao snapshot só o que falta. É o caminho de quem adiciona um
+ * código novo e consulta um servidor alternativo em LOINC_LOOKUP_URL: o
+ * `--update` regravaria as 2,8 mil entradas conferidas no servidor oficial a
+ * partir de outra fonte, e o diff esconderia o que de fato mudou. As entradas
+ * acrescentadas assim passam pelo servidor oficial no workflow mensal.
+ */
+const MERGE_MISSING = process.argv.includes('--merge-missing');
 
 // Exigido pela seção 10.1 da licença. Texto verbatim — não reescrever.
 const LOINC_NOTICE =
@@ -365,6 +377,13 @@ async function main() {
       (b.methodVariants ?? []).map((v) => ({ code: b.code, loinc: v.loinc })),
     ),
   ];
+  // Os códigos que a exportação do prontuário emite fora do catálogo (sinais
+  // vitais, atividade, genômica, consentimento) entram com o uso como rótulo:
+  // são emitidos sob http://loinc.org como os dos biomarcadores, e precisam do
+  // mesmo check de existência e deriva.
+  for (const [use, loinc] of Object.entries(EXPORT_LOINC_CODES)) {
+    comLoinc.push({ code: `export:${use}`, loinc });
+  }
   const emitidos = new Set(comLoinc.map((b) => String(b.loinc)));
   // Os irmãos rejeitados no registro de decisão também entram: a rejeição só
   // vale como evidência se o código existe, e a ficha mostra os eixos dele ao
@@ -393,9 +412,13 @@ async function main() {
   const vivos = new Map<string, LookupResult>();
   let indisponibilidade: string | null = null;
 
+  const snapshotAtual = MERGE_MISSING ? lerSnapshot() : null;
+  if (MERGE_MISSING && !snapshotAtual) throw new Error(`Snapshot ausente em ${SNAPSHOT_PATH}`);
+
   for (const b of comLoinc) {
     const code = String(b.loinc);
     if (vivos.has(code)) continue;
+    if (snapshotAtual && snapshotAtual.codes[code]) continue;
     const r = await lookup(code);
     if (r.indisponivel) {
       // Não dá para distinguir "mudou" de "não perguntei". Para tudo.
@@ -410,6 +433,16 @@ async function main() {
     console.error(`\nNÃO VERIFICADO — ${indisponibilidade}`);
     console.error('Nenhuma conclusão sobre os códigos nesta execução.');
     process.exitCode = EXIT_UNVERIFIABLE;
+    return;
+  }
+
+  if (MERGE_MISSING && snapshotAtual) {
+    process.exitCode = await mesclarFaltantes({
+      rotuloDe: biomarcadoresDe,
+      snapshotAtual,
+      snapshotPath: SNAPSHOT_PATH,
+      vivos,
+    });
     return;
   }
 
@@ -430,18 +463,7 @@ async function main() {
         semDisplay.push(code);
         continue;
       }
-      codes[code] = {
-        class: r.class ?? null,
-        component: r.component ?? null,
-        display: r.display,
-        ...(r.groups && { groups: r.groups }),
-        method: r.method ?? null,
-        property: r.property ?? null,
-        scale: r.scale ?? null,
-        status: r.status ?? null,
-        system: r.system ?? null,
-        time: r.time ?? null,
-      };
+      codes[code] = entradaDoSnapshot(r as LookupComNome);
     }
     const semNome = [...naoResolvem, ...semDisplay];
     if (semNome.length) {

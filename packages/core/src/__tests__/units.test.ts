@@ -520,3 +520,16 @@ describe('HOMA-IR adimensional', () => {
     expect(getCanonicalUnit('HOMA_IR')).toBe(declared);
   });
 });
+
+describe('isUcumCode: colunas de mercúrio e de água', () => {
+  it('aceita mm[Hg] e cm[H2O] como prefixo mais átomo de coluna', () => {
+    expect(isUcumCode('mm[Hg]')).toBe(true);
+    expect(isUcumCode('cm[H2O]')).toBe(true);
+    expect(isUcumCode('m[Hg]')).toBe(true);
+  });
+
+  it('continua recusando duas letras que não são prefixo nem coluna', () => {
+    expect(isUcumCode('xx[IU]')).toBe(false);
+    expect(isUcumCode('mm[IU]')).toBe(false);
+  });
+});

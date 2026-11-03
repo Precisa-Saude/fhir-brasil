@@ -6,13 +6,32 @@
 
 // Export generic lab result types
 export type {
+  ActionPlanData,
+  BloodPressureData,
+  BrDMriscResultData,
+  CommunicationChannel,
+  CommunicationData,
+  CommunicationSender,
+  ConsentData,
+  ConsentKind,
+  DietaryProfileData,
+  ExportDocumentData,
+  ExportDocumentKind,
   Flag,
   Gender,
+  GeneticProfileData,
+  GeneticSnpData,
+  HealthConditionsData,
+  HealthKitDailyMetricsData,
   InterventionData,
   LabObservationData,
   LabReportData,
   OverallStatus,
+  PhenoAgeResultData,
+  RecommendationData,
+  SharingContactData,
   UserProfileData,
+  VitalsData,
 } from './types';
 
 // Export biomarker definitions (single source of truth)
@@ -33,6 +52,19 @@ export * from './llm-reference';
 
 // Export FHIR intervention converter
 export * from './intervention-converter';
+
+// Exportação do prontuário (LGPD art. 18): Bundle de coleção e conversores
+export * from './activity-converter';
+export * from './care-plan-converter';
+export * from './communication-converter';
+export * from './consent-converter';
+export * from './document-converter';
+export * from './export-bundle';
+export * from './export-codes';
+export * from './export-helpers';
+export * from './genomics-converter';
+export * from './risk-converter';
+export * from './vitals-converter';
 
 // Export LOINC answer codes for ordinal results (Negativo, Traços, ++)
 export * from './ordinal-answers';

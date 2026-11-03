@@ -504,3 +504,61 @@ describe('alias no coding interno', () => {
     expect(result.observation.loincCode).toBe('13458-5');
   });
 });
+
+describe('filtro de categoria', () => {
+  const base = {
+    code: { coding: [{ code: '29463-7', system: 'http://loinc.org' }] },
+    effectiveDateTime: '2026-01-15T08:00:00Z',
+    resourceType: 'Observation' as const,
+    status: 'final' as const,
+    subject: { reference: 'Patient/u' },
+    valueQuantity: { unit: 'kg', value: 70 },
+  };
+  const bundleWith = (category?: FHIRObservation['category']) =>
+    ({
+      entry: [{ resource: { ...base, ...(category ? { category } : {}) } }],
+      resourceType: 'Bundle',
+      type: 'collection',
+    }) as unknown as FHIRBundle;
+
+  it('Observation de sinais vitais não vira laudo', () => {
+    const { observations, skipped } = extractObservationsFromBundle(
+      bundleWith([
+        {
+          coding: [
+            {
+              code: 'vital-signs',
+              system: 'http://terminology.hl7.org/CodeSystem/observation-category',
+            },
+          ],
+        },
+      ]),
+    );
+    expect(observations).toEqual([]);
+    expect(skipped).toEqual([
+      {
+        index: 0,
+        reason: 'Observation is not a laboratory result (category: vital-signs)',
+        resourceType: 'Observation',
+      },
+    ]);
+  });
+
+  it('Observation de laboratório e Observation sem categoria passam', () => {
+    const lab = extractObservationsFromBundle(
+      bundleWith([
+        {
+          coding: [
+            {
+              code: 'laboratory',
+              system: 'http://terminology.hl7.org/CodeSystem/observation-category',
+            },
+          ],
+        },
+      ]),
+    );
+    expect(lab.observations).toHaveLength(1);
+    const none = extractObservationsFromBundle(bundleWith());
+    expect(none.observations).toHaveLength(1);
+  });
+});

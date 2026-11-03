@@ -97,6 +97,172 @@ export interface InterventionData {
 }
 
 /**
+ * Os tipos abaixo são as entradas dos conversores da exportação do prontuário
+ * (ver `export-bundle.ts`). São o mínimo que cada conversor consome; a forma
+ * como a plataforma guarda cada dado fica do lado de quem chama.
+ */
+
+/** Pressão arterial medida pela pessoa ou lida de um laudo. */
+export interface BloodPressureData {
+  diastolic: number;
+  measuredAt?: string;
+  systolic: number;
+}
+
+/** Medidas corporais do perfil. Datas em ISO 8601. */
+export interface VitalsData {
+  bloodPressure?: BloodPressureData;
+  heightCm?: number;
+  measuredAt?: string;
+  waistCm?: number;
+  weightKg?: number;
+}
+
+/** Condições de saúde declaradas no perfil. */
+export interface HealthConditionsData {
+  bpTreatment?: boolean;
+  diabetes?: boolean;
+  recordedAt?: string;
+  smoking?: boolean;
+}
+
+/** Perfil alimentar declarado no perfil. */
+export interface DietaryProfileData {
+  allergies?: string[];
+  dietType?: string;
+  recordedAt?: string;
+  restrictions?: string[];
+}
+
+/** Um dia de métricas do Apple Health ou equivalente. */
+export interface HealthKitDailyMetricsData {
+  activeCalories?: number;
+  /** Dia no formato `AAAA-MM-DD`. */
+  date: string;
+  exerciseMinutes?: number;
+  restingHeartRate?: number;
+  /** Regularidade do sono, de 0 a 1, como o fornecedor a define. */
+  sleepConsistency?: number;
+  sleepHours?: number;
+  source?: string;
+  steps?: number;
+}
+
+/** Resultado do cálculo de idade fenotípica. */
+export interface PhenoAgeResultData {
+  ageDifference: number;
+  calculatedAt: string;
+  chronologicalAge: number;
+  mortalityScore: number;
+  phenoAge: number;
+  resultId: string;
+}
+
+/** Resultado do modelo BRDMRISC de risco de diabetes tipo 2. */
+export interface BrDMriscResultData {
+  /** Ids das `Observation` laboratoriais que alimentaram o cálculo. */
+  basisObservationIds?: string[];
+  calculatedAt: string;
+  modelUsed?: string;
+  resultId: string;
+  /** Probabilidade em 10 anos, de 0 a 1. */
+  risk10y: number;
+  riskCategory: string;
+}
+
+/** Cabeçalho de um arquivo genético importado. */
+export interface GeneticProfileData {
+  fileName?: string;
+  format?: string;
+  genomeBuild?: string;
+  markerCount?: number;
+  profileId: string;
+  uploadedAt: string;
+}
+
+/** Uma variante lida do arquivo genético, com a interpretação do catálogo. */
+export interface GeneticSnpData {
+  category?: string;
+  gene?: string;
+  /** Genótipo como está no arquivo (`AG`, `TT`). */
+  genotype: string;
+  implication?: string;
+  profileId: string;
+  recommendation?: string;
+  riskLevel?: string;
+  rsId: string;
+}
+
+export type ConsentKind = 'lgpd' | 'precisa-ia-deep' | 'sharing' | 'whatsapp';
+
+/** Um consentimento registrado pela pessoa. */
+export interface ConsentData {
+  consentId: string;
+  grantedAt: string;
+  kind: ConsentKind;
+  policyText?: string;
+  policyUri?: string;
+  /** Com quem a pessoa compartilhou, no consentimento de compartilhamento. */
+  recipientDisplay?: string;
+  revokedAt?: string;
+}
+
+export type ExportDocumentKind = 'genetic-raw-file' | 'lab-report-pdf' | 'shared-pdf';
+
+/** Um arquivo que viaja junto do Bundle (PDF do laudo, arquivo genético). */
+export interface ExportDocumentData {
+  /** Hash SHA-256 em hexadecimal, quando quem chama o tem. */
+  contentHash?: string;
+  contentType: string;
+  createdAt?: string;
+  documentId: string;
+  kind: ExportDocumentKind;
+  /** Laudo a que o arquivo pertence, quando há um. */
+  relatedReportId?: string;
+  title?: string;
+  /** Caminho relativo dentro do pacote exportado. */
+  url: string;
+}
+
+export type CommunicationChannel = 'precisa-ia' | 'sharing' | 'support';
+export type CommunicationSender = 'agent' | 'assistant' | 'patient' | 'system';
+
+/** Uma mensagem de chat ou um envio de resultados. */
+export interface CommunicationData {
+  channel: CommunicationChannel;
+  conversationId: string;
+  messageId: string;
+  /** Id do `ExportDocumentData` enviado, quando a mensagem leva um arquivo. */
+  payloadDocumentId?: string;
+  recipientDisplay?: string;
+  sender: CommunicationSender;
+  sentAt: string;
+  text?: string;
+}
+
+/** Um contato salvo para compartilhar resultados. */
+export interface SharingContactData {
+  contactId: string;
+  email?: string;
+  name?: string;
+}
+
+/** Uma recomendação do plano de ação gerado por IA. */
+export interface RecommendationData {
+  category?: string;
+  description?: string;
+  recommendationId: string;
+  title: string;
+}
+
+/** O plano de ação em cache, quando existe. */
+export interface ActionPlanData {
+  generatedAt: string;
+  planId: string;
+  recommendations: RecommendationData[];
+}
+
+/**
  * User profile data for FHIR Patient resource
  */
 export interface UserProfileData {

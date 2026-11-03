@@ -168,6 +168,17 @@
       "system": "Urine sed",
       "time": "Pt"
     },
+    "11502-2": {
+      "class": "DOC.MISC",
+      "component": "Laboratory report",
+      "display": "Laboratory report",
+      "method": null,
+      "property": "Find",
+      "scale": "Doc",
+      "status": "ACTIVE",
+      "system": "^Patient",
+      "time": "Pt"
+    },
     "11565-9": {
       "class": "SERO",
       "component": "Jo-1 extractable nuclear Ab",
@@ -1836,6 +1847,17 @@
       "system": "Ser/Plas",
       "time": "Pt"
     },
+    "30525-0": {
+      "class": "MISC",
+      "component": "Age",
+      "display": "Age",
+      "method": null,
+      "property": "Time",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "^Patient",
+      "time": "Pt"
+    },
     "3053-6": {
       "class": "CHEM",
       "component": "Triiodothyronine",
@@ -2297,6 +2319,17 @@
       "system": "^Patient",
       "time": "Pt"
     },
+    "40443-4": {
+      "class": "HRTRATE.MOLEC",
+      "component": "Heart rate^resting",
+      "display": "Heart rate --resting",
+      "method": null,
+      "property": "NRat",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "XXX",
+      "time": "Pt"
+    },
     "41276-7": {
       "class": "CHEM",
       "component": "Anion gap",
@@ -2307,6 +2340,17 @@
       "status": "ACTIVE",
       "system": "Bld",
       "time": "Pt"
+    },
+    "41950-7": {
+      "class": "CLIN",
+      "component": "Number of steps",
+      "display": "Number of steps in 24 hour Measured",
+      "method": "Measured",
+      "property": "NRat",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "^Patient",
+      "time": "24H"
     },
     "41982-0": {
       "class": "BDYWGT.ATOM",
@@ -2466,6 +2510,17 @@
       "system": "Ser/Plas",
       "time": "Pt"
     },
+    "48018-6": {
+      "class": "HL7.GENETICS",
+      "component": "Gene identifier",
+      "display": "Gene studied [ID]",
+      "method": null,
+      "property": "ID",
+      "scale": "Nom",
+      "status": "ACTIVE",
+      "system": "Bld/Tiss",
+      "time": "Pt"
+    },
     "48065-7": {
       "class": "COAG",
       "component": "Fibrin D-dimer",
@@ -2559,6 +2614,17 @@
       "system": "Ser",
       "time": "Pt"
     },
+    "53034-5": {
+      "class": "HL7.GENETICS",
+      "component": "Allelic state",
+      "display": "Allelic state",
+      "method": "Molgen",
+      "property": "Find",
+      "scale": "Nom",
+      "status": "ACTIVE",
+      "system": "Bld/Tiss",
+      "time": "Pt"
+    },
     "53060-0": {
       "class": "CHEM",
       "component": "Butyrylcarnitine (C4)",
@@ -2593,6 +2659,17 @@
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Ser/Plas",
+      "time": "Pt"
+    },
+    "55411-3": {
+      "class": "CLIN",
+      "component": "Exercise duration",
+      "display": "Exercise duration",
+      "method": null,
+      "property": "Time",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "^Patient",
       "time": "Pt"
     },
     "5685-3": {
@@ -2902,6 +2979,17 @@
       "system": "Bld",
       "time": "Pt"
     },
+    "59284-0": {
+      "class": "DOC.ONTOLOGY",
+      "component": "Consent",
+      "display": "Consent Document",
+      "method": "Patient",
+      "property": "Find",
+      "scale": "Doc",
+      "status": "ACTIVE",
+      "system": "{Setting}",
+      "time": "Pt"
+    },
     "62292-8": {
       "class": "CHEM",
       "component": "Calcidiol+ercalcidiol",
@@ -3053,6 +3141,17 @@
       "system": "Ser/Plas",
       "time": "Pt"
     },
+    "69548-6": {
+      "class": "HL7.GENETICS",
+      "component": "Genetic variant assessment",
+      "display": "Genetic variant assessment",
+      "method": "Molgen",
+      "property": "Find",
+      "scale": "Nom",
+      "status": "ACTIVE",
+      "system": "Bld/Tiss",
+      "time": "Pt"
+    },
     "6969-0": {
       "class": "SERO",
       "component": "Myeloperoxidase Ab",
@@ -3140,6 +3239,17 @@
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Bld",
+      "time": "Pt"
+    },
+    "72166-2": {
+      "class": "H&P.HX",
+      "component": "Tobacco smoking status",
+      "display": "Tobacco smoking status",
+      "method": null,
+      "property": "Find",
+      "scale": "Nom",
+      "status": "ACTIVE",
+      "system": "^Patient",
       "time": "Pt"
     },
     "731-0": {
@@ -3465,6 +3575,28 @@
       "system": "Ser/Plas",
       "time": "Pt"
     },
+    "81247-9": {
+      "class": "PANEL.MOLPATH",
+      "component": "Master HL7 genetic variant reporting panel",
+      "display": "Master HL7 genetic variant reporting panel",
+      "method": null,
+      "property": "-",
+      "scale": "-",
+      "status": "TRIAL",
+      "system": "^Patient",
+      "time": "Pt"
+    },
+    "81252-9": {
+      "class": "MOLPATH",
+      "component": "Simple variant",
+      "display": "Discrete genetic variant",
+      "method": null,
+      "property": "ID",
+      "scale": "Nom",
+      "status": "TRIAL",
+      "system": "^Patient",
+      "time": "Pt"
+    },
     "8245-3": {
       "class": "DRUG/TOX",
       "component": "Zinc",
@@ -3488,6 +3620,17 @@
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Abdomen.mid",
+      "time": "Pt"
+    },
+    "8302-2": {
+      "class": "BDYHGT.ATOM",
+      "component": "Body height",
+      "display": "Body height",
+      "method": null,
+      "property": "Len",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "^Patient",
       "time": "Pt"
     },
     "8353-5": {
@@ -3521,6 +3664,39 @@
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Waist",
+      "time": "Pt"
+    },
+    "8462-4": {
+      "class": "BP.ATOM",
+      "component": "Intravascular diastolic",
+      "display": "Diastolic blood pressure",
+      "method": null,
+      "property": "Pres",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Arterial system",
+      "time": "Pt"
+    },
+    "8480-6": {
+      "class": "BP.ATOM",
+      "component": "Intravascular systolic",
+      "display": "Systolic blood pressure",
+      "method": null,
+      "property": "Pres",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Arterial system",
+      "time": "Pt"
+    },
+    "85354-9": {
+      "class": "PANEL.VITALS",
+      "component": "Blood pressure panel with all children optional",
+      "display": "Blood pressure panel with all children optional",
+      "method": null,
+      "property": "-",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Arterial system",
       "time": "Pt"
     },
     "85385-3": {
@@ -3683,6 +3859,17 @@
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Urine",
+      "time": "Pt"
+    },
+    "93832-4": {
+      "class": "H&P.HX",
+      "component": "Sleep duration",
+      "display": "Sleep duration",
+      "method": null,
+      "property": "Time",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "^Patient",
       "time": "Pt"
     },
     "96259-7": {

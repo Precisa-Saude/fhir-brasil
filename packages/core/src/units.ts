@@ -227,6 +227,12 @@ const UCUM_ATOMS = new Set([
   'Np',
 ]);
 
+/**
+ * Átomos do UCUM que começam com letra fora do colchete: as colunas de
+ * mercúrio e de água. `mm[Hg]` é prefixo `m` mais `m[Hg]`.
+ */
+const UCUM_COLUMN_ATOMS = new Set(['m[Hg]', 'm[H2O]']);
+
 /** Prefixos do UCUM, do yotta ao yocto. `da` (deca) é o único com duas letras. */
 const UCUM_PREFIXES = new Set([
   'Y',
@@ -264,7 +270,18 @@ function isUcumAtom(token: string): boolean {
   // Átomo entre colchetes: `[IU]`, `[HPF]`, `[lb_av]`, `[pH]`. Com prefixo:
   // `u[IU]`, `m[IU]`, `k[IU]`.
   const bracket = /^([A-Za-z]{0,2})\[[^[\]{}\s]+\]$/.exec(token);
-  if (bracket) return bracket[1] === '' || UCUM_PREFIXES.has(bracket[1] as string);
+  if (bracket) {
+    const prefix = bracket[1] as string;
+    if (prefix === '' || UCUM_PREFIXES.has(prefix)) return true;
+    // As colunas de mercúrio e de água são átomos que começam com letra fora
+    // do colchete (`m[Hg]`, `m[H2O]`), então `mm[Hg]` é prefixo `m` + átomo
+    // `m[Hg]`, e não um prefixo `mm` que não existe.
+    return (
+      prefix.length === 2 &&
+      UCUM_PREFIXES.has(prefix[0] as string) &&
+      UCUM_COLUMN_ATOMS.has(token.slice(1))
+    );
+  }
   if (UCUM_ATOMS.has(token)) return true;
   for (const prefix of UCUM_PREFIXES) {
     if (token.startsWith(prefix) && UCUM_ATOMS.has(token.slice(prefix.length))) return true;

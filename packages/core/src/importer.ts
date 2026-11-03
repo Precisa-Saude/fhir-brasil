@@ -13,7 +13,7 @@ import {
   methodVariantOf,
   normalizeCode,
 } from './biomarkers';
-import { BIOMARKER_CODE_SYSTEM, LOINC_SYSTEM } from './code-systems';
+import { BIOMARKER_CODE_SYSTEM, LOINC_SYSTEM, OBSERVATION_CATEGORY_SYSTEM } from './code-systems';
 import type { FHIRBundle, FHIRObservation } from './fhir-types';
 import { ordinalAnswerByCode, SNOMED_SYSTEM } from './ordinal-answers';
 import { validateFHIRImportBundle } from './validators';
@@ -177,6 +177,20 @@ function extractFlag(observation: FHIRObservation): 'H' | 'L' | '' {
 }
 
 /**
+ * O nome da categoria HL7 de uma `Observation` que não é de laboratório, ou
+ * `undefined` quando ela é de laboratório ou não declara categoria.
+ */
+function nonLaboratoryCategory(observation: FHIRObservation): string | undefined {
+  const hl7Categories = (observation.category ?? []).flatMap((concept) =>
+    (concept.coding ?? [])
+      .filter((coding) => coding.system === OBSERVATION_CATEGORY_SYSTEM && coding.code)
+      .map((coding) => String(coding.code)),
+  );
+  if (hl7Categories.length === 0 || hl7Categories.includes('laboratory')) return undefined;
+  return hl7Categories.join(', ');
+}
+
+/**
  * Extract Observation resources from a FHIR Bundle
  */
 export function extractObservationsFromBundle(bundle: FHIRBundle): {
@@ -195,6 +209,21 @@ export function extractObservationsFromBundle(bundle: FHIRBundle): {
 
     if (entry.resource.resourceType !== 'Observation') {
       // Non-observation resources are silently skipped (Patient, DiagnosticReport, etc.)
+      continue;
+    }
+
+    // Só resultado de laboratório vira laudo. A exportação do prontuário põe no
+    // mesmo Bundle sinais vitais, atividade do relógio e escores com códigos
+    // que também existem no catálogo (peso, altura), e reimportar esse arquivo
+    // sem este filtro criaria laudos a partir de medidas do perfil.
+    // `Observation` sem categoria passa: arquivo de terceiro nem sempre a traz.
+    const category = nonLaboratoryCategory(entry.resource);
+    if (category) {
+      skipped.push({
+        index: i,
+        reason: `Observation is not a laboratory result (category: ${category})`,
+        resourceType: 'Observation',
+      });
       continue;
     }
 

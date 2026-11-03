@@ -33,6 +33,57 @@ const bundle = labResultToFHIRBundle(report, observations, userProfile);
 // Retorna um FHIR Bundle com DiagnosticReport, Observations e Patient
 ```
 
+### Exportar o prontuário inteiro num Bundle (LGPD art. 18)
+
+Além do laudo, o pacote converte o restante do que um app de saúde guarda
+sobre a pessoa: medidas e pressão arterial (`vitalsToFHIRObservations`),
+condições e perfil alimentar declarados (`healthConditionsToFHIR`,
+`dietaryProfileToFHIR`), métricas diárias do relógio
+(`healthKitDailyToFHIRObservations`), PhenoAge e BRDMRISC
+(`phenoAgeToFHIRObservation`, `brDMriscToFHIRRiskAssessment`), painel
+genético (`geneticSnpToFHIRObservation`,
+`geneticProfileToFHIRDiagnosticReport`), consentimentos (`consentToFHIR`),
+arquivos anexos (`exportDocumentToFHIR`), conversas e envios
+(`communicationToFHIR`, `sharingContactToFHIRRelatedPerson`) e o plano de ação
+gerado por IA (`actionPlanToFHIRCarePlan`). Tudo entra num único Bundle de
+coleção, plano, com um `Patient` só:
+
+```ts
+import {
+  buildExportBundle,
+  createExportBundleWriter,
+  labReportEntries,
+  userProfileToFHIR,
+  validateBundleReferences,
+} from '@precisa-saude/fhir';
+
+const patient = userProfileToFHIR(userProfile);
+const resources = [
+  patient,
+  ...labReportEntries(report, observations, patient.id).map((entry) => entry.resource),
+  ...vitalsToFHIRObservations(vitals, patient.id),
+];
+
+// Em memória:
+const bundle = buildExportBundle(resources, { exportId, timestamp });
+validateBundleReferences(bundle); // [] quando toda referência resolve dentro do Bundle
+
+// Ou em pedaços, para escrever num stream sem acumular as entradas:
+const writer = createExportBundleWriter({ exportId, timestamp });
+response.write(writer.open());
+for (const resource of resources) response.write(writer.entry(resource));
+response.write(writer.close());
+```
+
+Os códigos LOINC desses conversores (altura, pressão, passos, variante
+genética…) ficam em `EXPORT_LOINC_CODES` e passam pelo mesmo snapshot
+verificado dos biomarcadores (`pnpm loinc:merge` acrescenta um código novo).
+O que não tem LOINC publicado (PhenoAge, calorias ativas, genótipo bruto)
+sai com código local em `LOCAL_CODES`, sob
+`http://fhir-brasil.dev/local-codes`. O importador ignora `Observation`
+cuja categoria não é `laboratory`, então reimportar uma exportação não
+transforma peso e passos em laudo.
+
 ### Resultado ordinal codificado
 
 Resultado em texto que tem resposta conhecida ("Negativo", "Não reagente",
@@ -115,6 +166,7 @@ import { validateFHIRObservation } from '@precisa-saude/fhir/validators';
 | `/biomarkers`       | Definições com códigos LOINC e nomes pt/en                                |
 | `/reference-ranges` | Faixas de referência por sexo/idade/gestação (SBPC/ML, SBC, SBD, OMS)     |
 | `/converter`        | Converte dados laboratoriais para FHIR R4 Bundle                          |
+| (raiz)              | Exportação do prontuário: `buildExportBundle` e os conversores por dado   |
 | `/importer`         | Importa FHIR Bundle de volta para estruturas internas                     |
 | `/units`            | Mapeamento de unidades, conversão para UCUM (`resolveUcum`, `isUcumCode`) |
 | `/validators`       | Validação de recursos FHIR (DiagnosticReport, Observation, Bundle)        |

@@ -123,6 +123,8 @@ import { validateFHIRObservation } from '@precisa-saude/fhir/validators';
 
 As faixas em `/reference-ranges` são **validadas para adultos (≥18 anos)**. Variantes pediátricas não estão incluídas — consumidores que atendem populações pediátricas devem adicionar suas próprias faixas ou buscar fontes específicas (SBP, protocolos neonatais).
 
+Quando o marcador tem variantes por sexo ou idade e o `context` passado não traz o dado de que uma variante precisava, `getReferenceRange` devolve `undefined` em vez da faixa padrão, porque para vários marcadores a padrão é a de um dos sexos. Sem `context` nenhum, a faixa padrão continua sendo devolvida; um contexto completo que não casa com variante alguma (uma criança, por exemplo) também recebe a padrão. A exceção são as definições com `defaultIsEnvelope: true`, cuja padrão é a união das faixas dos dois sexos e por isso é devolvida mesmo sem o dado (hoje, o diferencial leucocitário absoluto da PNS). `flagAgainstCatalogRange` segue o mesmo critério e não sinaliza nada quando a faixa fica indefinida.
+
 Variantes gestacionais estão disponíveis para `TSH`, `Hgb`, `Ferritin`, `Creatinine` e `Glucose`. Para usar, passe `pregnant: true` e, quando conhecido, `pregnancyTrimester` no `ReferenceRangeContext`:
 
 ```ts

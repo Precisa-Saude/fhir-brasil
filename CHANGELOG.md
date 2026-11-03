@@ -1,3 +1,17 @@
+## [2.0.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v1.1.2...v2.0.0) (2026-11-03)
+
+### ⚠ BREAKING CHANGES
+
+* **core:** o id das Observation de laudo passa pela gramática do R4
+(`[A-Za-z0-9\-.]{1,64}`). Códigos de biomarcador com sublinhado
+(`LDL_Peak_Size`) geravam ids inválidos; o sublinhado vira hífen
+(`<laudo>-LDL-Peak-Size`). Quem indexa pelo id da Observation precisa
+reindexar; `DiagnosticReport.result` acompanha automaticamente.
+
+### Features
+
+* **core:** exporta o prontuário num Bundle FHIR único, com conversores por tipo de dado ([fd2bb12](https://github.com/Precisa-Saude/fhir-brasil/commit/fd2bb12ab1714933ce2d03498e2735c8228607df))
+
 ## [1.1.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v1.1.1...v1.1.2) (2026-11-03)
 
 ### Bug Fixes

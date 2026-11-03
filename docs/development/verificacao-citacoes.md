@@ -8,7 +8,7 @@
 - `[ ]` - Nao verificado (sem fonte ou fonte nao conferida)
 - `[x]` - Verificado (valor conferido contra documento-fonte)
 
-**Estatisticas**: 204/204 verificados (100%). A unica entrada sem fonte publicada, `ApoCIII_ApoA1_Ratio`, foi removida — ver issue #3.
+**Estatisticas**: 199/199 verificados (100%). A unica entrada sem fonte publicada, `ApoCIII_ApoA1_Ratio`, foi removida — ver issue #3. Em 03/11/2026 sairam `Omega3_Total`, `Omega3_EPA`, `Omega3_DPA`, `Omega3_DHA` e `BMD_Total`, cujas faixas nao vinham da fonte citada (ver "Valores que nao conferem com a fonte" em `docs/fontes-referencia.md`).
 
 ---
 
@@ -43,7 +43,7 @@
 - [x] TroponinI - `schnabel-tni-2012` 0.04 ng/mL = percentil 99 (ensaio Siemens TnI-Ultra)
 - [x] TroponinT - `giannitsis-hstnt-2010` 14 ng/L = percentil 99 hs-cTnT (Roche Elecsys)
 - [x] CK - `tietz-7ed-2015` Valores conservadores. **NOTA**: percentis 97.5 reais podem ser maiores
-- [x] Myeloperoxidase - `meuwese-mpo-2007` 420 entre Meuwese (322) e Cleveland HeartLab (470)
+- [x] Myeloperoxidase - `meuwese-mpo-2007` teto 728 pmol/L, MPO elevada no resumo (corrigido em 03/11/2026)
 
 ### Escore de Calcio (CAC)
 
@@ -60,7 +60,7 @@
 - [x] ADMA - `schlesinger-adma-2017` Meta-analise HPLC: 97.5 percentil ~0.77 umol/L. Codigo 0.7 confere
 - [x] Homocysteine - `selhub-homocysteine-1999` NHANES III. max 15, optimal 10 umol/L confere
 - [x] Fibrinogen - `tietz-7ed-2015` 200-400 mg/dL faixa padrao (Clauss)
-- [x] DDimer - `wells-ddimer-2003` 500 ng/mL corte clinico padrao VTE
+- [x] DDimer - `righini-adjust-pe-2014` 500 ug/L e idade x 10 a partir dos 50 anos (fonte trocada em 03/11/2026)
 - [x] SDMA - `schwedhelm-sdma-2011` Framingham 97.5: 0.533. Codigo 0.6 razoavel
 
 ---
@@ -69,9 +69,9 @@
 
 ### Hemograma Completo (CBC)
 
-- [x] RBC - `pns-hemograma-2019` PNS brasileira (n=8952)
-- [x] WBC - `pns-hemograma-2019`
-- [x] Hgb - `pns-hemograma-2019`
+- [x] RBC - `pns-hemograma-2019` H 4,3-5,8 e M 3,9-5,1 milhoes/mm3 (resumo, corrigido em 03/11/2026)
+- [x] WBC - `pns-hemograma-2019` H 2.843-9.440 e M 2.883-9.969/mm3 (resumo, corrigido em 03/11/2026)
+- [x] Hgb - `pns-hemograma-2019` H 13,0-16,9 e M 11,5-14,9 g/dL (resumo, corrigido em 03/11/2026)
 - [x] Hct - `pns-hemograma-2019`
 - [x] Platelets - `pns-hemograma-2019`
 - [x] MCV - `pns-hemograma-2019`
@@ -113,7 +113,7 @@ Os códigos em % (`Neutrophils`, `Lymphocytes`, `Monocytes`, `Eosinophils`, `Bas
 - [x] HbA1c - `sbd-diabetes-2024` SBD: <5.7% normal
 - [x] eAG - `tietz-7ed-2015`
 - [x] GlycoMark - `tietz-7ed-2015`
-- [x] HOMA_IR - `tietz-7ed-2015`
+- [x] HOMA_IR - `geloneze-brams-2009` HOMA1-IR > 2,7 resistencia, > 2,3 sindrome metabolica (resumo, corrigido em 03/11/2026)
 - [x] Insulin - `tietz-7ed-2015`
 - [x] CPeptide - `tietz-7ed-2015`
 
@@ -260,10 +260,6 @@ Os códigos em % (`Neutrophils`, `Lymphocytes`, `Monocytes`, `Eosinophils`, `Bas
 ## Acidos Graxos Omega
 
 - [x] Omega3_Index - `harris-omega3-2004`
-- [x] Omega3_Total - `harris-omega3-2004`
-- [x] Omega3_EPA - `harris-omega3-2004`
-- [x] Omega3_DPA - `harris-omega3-2004`
-- [x] Omega3_DHA - `harris-omega3-2004`
 - [x] Omega6_Total - `simopoulos-omega-ratio-2002`
 - [x] Omega6_AA - `simopoulos-omega-ratio-2002`
 - [x] Omega6_LA - `simopoulos-omega-ratio-2002`
@@ -324,7 +320,6 @@ Os códigos em % (`Neutrophils`, `Lymphocytes`, `Monocytes`, `Eosinophils`, `Bas
 
 ## Densitometria Ossea (DXA)
 
-- [x] BMD_Total - `who-osteoporosis-1994`
 - [x] TScore_Total - `who-osteoporosis-1994`
 - [x] ZScore_Total - `who-osteoporosis-1994`
 
@@ -373,5 +368,5 @@ Os códigos em % (`Neutrophils`, `Lymphocytes`, `Monocytes`, `Eosinophils`, `Bas
 | `schnabel-tni-2012`           | SCHNABEL, R. B. et al. Relations of biomarkers and atrial fibrillation incidence. Circulation, 2010                                              |       1       |
 | `schwedhelm-sdma-2011`        | SCHWEDHELM, E. et al. Plasma symmetric dimethylarginine reference limits from Framingham. Clin. Chem. Lab. Med., 2011                            |       1       |
 | `selhub-homocysteine-1999`    | SELHUB, J. et al. Serum total homocysteine concentrations in NHANES III. Ann. Intern. Med., 1999                                                 |       1       |
-| `wells-ddimer-2003`           | WELLS, P. S. et al. Evaluation of D-dimer in the diagnosis of suspected DVT. N. Engl. J. Med., 2003                                              |       1       |
+| `righini-adjust-pe-2014`      | RIGHINI, M. et al. Age-adjusted D-dimer cutoff levels to rule out pulmonary embolism: the ADJUST-PE study. JAMA, 2014                            |       1       |
 | `who-obesity-2000`            | WHO. Obesity: preventing and managing the global epidemic. WHO Tech. Rep. Series, 2000                                                           |       1       |

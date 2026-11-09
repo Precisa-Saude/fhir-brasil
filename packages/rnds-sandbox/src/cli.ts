@@ -217,8 +217,12 @@ function isCliEntryPoint(): boolean {
 }
 
 if (isCliEntryPoint()) {
-  main().catch((err: unknown) => {
-    process.stderr.write(`erro fatal: ${err instanceof Error ? err.message : String(err)}\n`);
-    process.exit(1);
-  });
+  main()
+    .then((code) => {
+      process.exitCode = code;
+    })
+    .catch((err: unknown) => {
+      process.stderr.write(`erro fatal: ${err instanceof Error ? err.message : String(err)}\n`);
+      process.exit(1);
+    });
 }

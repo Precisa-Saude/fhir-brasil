@@ -332,8 +332,17 @@ Por padrão o sandbox valida cada `Bundle.entry[i].resource` enviado em
 `POST /api/fhir/r4/Bundle` contra os perfis `BR*` do IG `fhir-brasil`
 (`BRPatient`, `BRLabObservation`, `BRDiagnosticReport`). Bundles que
 violam restrições são rejeitados com `422 OperationOutcome` listando
-todas as issues — formato e códigos espelham o que a RNDS real
-retorna.
+todas as issues.
+
+Esses perfis são os do próprio `fhir-brasil`, não os perfis publicados
+pela RNDS (REL, RAC, SA, RIA). Passar na validação do sandbox não indica
+que a RNDS aceitaria o mesmo Bundle, e o formato e os códigos do
+`OperationOutcome` são os do sandbox.
+
+O endpoint aceita `Bundle.type` `transaction` ou `batch` e recusa os
+demais tipos com `400`, com ou sem validação de perfis. Isso inclui
+`document`, o tipo do REL (Resultado de Exame Laboratorial), e
+`collection`, o tipo que `labResultToFHIRBundle` emite.
 
 ```bash
 # Patient sem campos obrigatórios — o sandbox responde 422 com a lista

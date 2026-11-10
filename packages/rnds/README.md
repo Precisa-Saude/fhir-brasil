@@ -82,6 +82,8 @@ const bundle = labResultToFHIRBundle(report, observations, profile);
 const result = await client.submitBundle(bundle);
 ```
 
+> **Nota:** o cliente cuida do transporte (mTLS, JWT e endpoints) e não monta nem ajusta o conteúdo: `submitBundle` envia o Bundle como recebido. O exemplo mostra a chamada, não uma submissão de REL (Resultado de Exame Laboratorial). `labResultToFHIRBundle` emite um Bundle `collection` com `Patient`, `DiagnosticReport` e `Observation`, e o [modelo computacional do REL](https://rnds-guia.saude.gov.br/docs/rel/mc-rel/) pede um Bundle `document` com `Composition`, `Condition`, `Observation` e `Specimen`. Este repositório não tem um construtor do documento REL.
+
 ## Autenticação
 
 O cliente gerencia a autenticação automaticamente:

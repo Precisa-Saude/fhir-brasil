@@ -152,14 +152,62 @@ describe('labObservationToFHIR', () => {
     expect(fhirObs.performer?.[0]?.display).toBe('Test Lab');
   });
 
-  it('should include normal interpretation for normal values', () => {
+  // PRE-395: flag vazia é "ninguém determinou", não "normal". Antes saía `N`,
+  // e o Bundle afirmava normalidade de exame que o laudo marcou como baixo.
+  it('não afirma interpretação quando a flag não foi determinada', () => {
     const fhirObs = labObservationToFHIR(sampleLabObservation, 'patient-1');
-    expect(fhirObs.interpretation?.[0]?.coding?.[0]?.code).toBe('N');
+    expect(fhirObs.interpretation).toBeUndefined();
+    expect('interpretation' in fhirObs).toBe(false);
+  });
+
+  it('afirma Normal só quando a flag é N', () => {
+    const fhirObs = labObservationToFHIR({ ...sampleLabObservation, flag: 'N' }, 'patient-1');
+    expect(fhirObs.interpretation).toEqual([
+      {
+        coding: [
+          {
+            code: 'N',
+            display: 'Normal',
+            system: 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation',
+          },
+        ],
+      },
+    ]);
   });
 
   it('should include high interpretation for high values', () => {
     const fhirObs = labObservationToFHIR(sampleHighObservation, 'patient-1');
-    expect(fhirObs.interpretation?.[0]?.coding?.[0]?.code).toBe('H');
+    expect(fhirObs.interpretation?.[0]?.coding?.[0]).toEqual({
+      code: 'H',
+      display: 'High',
+      system: 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation',
+    });
+  });
+
+  it('should include low interpretation for low values', () => {
+    const fhirObs = labObservationToFHIR({ ...sampleLabObservation, flag: 'L' }, 'patient-1');
+    expect(fhirObs.interpretation?.[0]?.coding?.[0]).toEqual({
+      code: 'L',
+      display: 'Low',
+      system: 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation',
+    });
+  });
+
+  it('no Bundle, só a observação com flag leva interpretação', () => {
+    const bundle = labResultToFHIRBundle(
+      sampleLabReport,
+      [
+        sampleLabObservation,
+        sampleHighObservation,
+        { ...sampleLabObservation, biomarkerCode: 'HDL', flag: 'N' },
+      ],
+      sampleUserProfile,
+    );
+    const codes = bundle.entry
+      .map((entry) => entry.resource)
+      .filter((resource): resource is FHIRObservation => resource.resourceType === 'Observation')
+      .map((observation) => observation.interpretation?.[0]?.coding?.[0]?.code);
+    expect(codes).toEqual([undefined, 'H', 'N']);
   });
 
   it('should use valueString for qualitative observations', () => {

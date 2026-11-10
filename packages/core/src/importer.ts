@@ -16,6 +16,7 @@ import {
 import { BIOMARKER_CODE_SYSTEM, LOINC_SYSTEM, OBSERVATION_CATEGORY_SYSTEM } from './code-systems';
 import type { FHIRBundle, FHIRObservation } from './fhir-types';
 import { ordinalAnswerByCode, SNOMED_SYSTEM } from './ordinal-answers';
+import type { Flag } from './types';
 import { validateFHIRImportBundle } from './validators';
 
 export interface ImportedObservation {
@@ -28,7 +29,8 @@ export interface ImportedObservation {
   biomarkerCode: string;
   biomarkerName: string;
   collectionDate: string;
-  flag: 'H' | 'L' | '';
+  /** `N` só quando o Bundle afirma Normal; vazia quando ele não traz interpretação. */
+  flag: Flag;
   isQualitative: boolean;
   /** Ausente nos biomarcadores sem LOINC publicado, como composição corporal. */
   loincCode?: string;
@@ -169,10 +171,11 @@ function readCodedValue(
 /**
  * Extract interpretation flag from Observation
  */
-function extractFlag(observation: FHIRObservation): 'H' | 'L' | '' {
+function extractFlag(observation: FHIRObservation): Flag {
   const code = observation.interpretation?.[0]?.coding?.[0]?.code;
   if (code === 'H' || code === 'HH') return 'H';
   if (code === 'L' || code === 'LL') return 'L';
+  if (code === 'N') return 'N';
   return '';
 }
 

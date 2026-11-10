@@ -33,32 +33,34 @@ import { getDefaultUnit, resolveUcum } from './units';
 // Re-export all types and functions
 export * from './fhir-types';
 
-/**
- * Convert Flag to FHIR interpretation code
- */
-function interpretationCode(flag: Flag): string {
-  switch (flag) {
-    case 'H':
-      return 'H'; // High
-    case 'L':
-      return 'L'; // Low
-    default:
-      return 'N'; // Normal
-  }
-}
+const INTERPRETATION_SYSTEM = 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation';
+
+/** O display de cada código do v3-ObservationInterpretation que o conversor escreve. */
+const INTERPRETATION_DISPLAY: Record<Exclude<Flag, ''>, string> = {
+  H: 'High',
+  L: 'Low',
+  N: 'Normal',
+};
 
 /**
- * Convert Flag to FHIR interpretation display
+ * `Observation.interpretation` da flag, ou nada quando ela não foi determinada.
+ *
+ * Flag vazia é ausência de informação, e sai como ausência do campo. Antes
+ * virava `N`, e o Bundle afirmava "Normal" de exame que ninguém interpretou,
+ * inclusive de exame que o próprio laudo marcava como baixo e a extração não
+ * conseguiu ler. Normal só sai quando quem chama passa `N`.
  */
-function interpretationDisplay(flag: Flag): string {
-  switch (flag) {
-    case 'H':
-      return 'High';
-    case 'L':
-      return 'Low';
-    default:
-      return 'Normal';
-  }
+function interpretationOf(flag: Flag): Pick<FHIRObservation, 'interpretation'> {
+  if (flag === '') return {};
+  return {
+    interpretation: [
+      {
+        coding: [
+          { code: flag, display: INTERPRETATION_DISPLAY[flag], system: INTERPRETATION_SYSTEM },
+        ],
+      },
+    ],
+  };
 }
 
 /**
@@ -227,17 +229,7 @@ export function labObservationToFHIR(
     // `<laudo>-LDL_Peak_Size` era inválido para qualquer validador. O
     // sublinhado vira hífen. Quem indexava pelo id antigo precisa reindexar.
     id: fhirResourceId(observation.reportId, observation.biomarkerCode),
-    interpretation: [
-      {
-        coding: [
-          {
-            code: interpretationCode(observation.flag),
-            display: interpretationDisplay(observation.flag),
-            system: 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation',
-          },
-        ],
-      },
-    ],
+    ...interpretationOf(observation.flag),
     performer: laboratoryName ? [{ display: laboratoryName }] : undefined,
     resourceType: 'Observation',
     status: 'final',
@@ -336,7 +328,7 @@ export function labReportToFHIR(
                 {
                   code: 'A',
                   display: 'Abnormal',
-                  system: 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation',
+                  system: INTERPRETATION_SYSTEM,
                 },
               ],
             },

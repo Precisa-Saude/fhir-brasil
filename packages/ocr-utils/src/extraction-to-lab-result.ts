@@ -1,4 +1,4 @@
-import { loincToCode, methodVariantOf } from '@precisa-saude/fhir';
+import { type Flag, loincToCode, methodVariantOf } from '@precisa-saude/fhir';
 
 import type { ExtractedBiomarker } from './extraction-schema.js';
 
@@ -14,7 +14,7 @@ export interface LabResultEnvelope {
   observations: {
     biomarkerCode: string;
     biomarkerName: string;
-    flag: 'H' | 'L' | '';
+    flag: Flag;
     /** Ver `LabObservationData.methodLoinc`. */
     methodLoinc?: string;
     referenceMax?: number;
@@ -40,12 +40,19 @@ export interface ToLabResultOptions {
   userId?: string;
 }
 
-/** `H`/`L` só quando o próprio laudo trouxe a faixa. Nunca inferida daqui. */
-function flagFor(b: ExtractedBiomarker): 'H' | 'L' | '' {
-  if (typeof b.value !== 'number') return '';
-  if (typeof b.referenceMax === 'number' && b.value > b.referenceMax) return 'H';
-  if (typeof b.referenceMin === 'number' && b.value < b.referenceMin) return 'L';
-  return '';
+/**
+ * A flag só sai quando o próprio laudo trouxe a faixa. Nunca inferida daqui.
+ *
+ * `N` é o valor dentro da faixa impressa. Sem faixa, ou com resultado em
+ * texto, a flag fica vazia: ninguém determinou nada, e o conversor não
+ * escreve interpretação nenhuma.
+ */
+function flagFor(b: ExtractedBiomarker): Flag {
+  const { referenceMax: max, referenceMin: min, value } = b;
+  if (typeof value !== 'number') return '';
+  if (typeof max === 'number' && value > max) return 'H';
+  if (typeof min === 'number' && value < min) return 'L';
+  return typeof max === 'number' || typeof min === 'number' ? 'N' : '';
 }
 
 export function extractionToLabResult(
@@ -86,7 +93,9 @@ export function extractionToLabResult(
     report: {
       collectionDate,
       createdAt: `${collectionDate}T00:00:00Z`,
-      overallStatus: observations.some((o) => o.flag !== '') ? 'ANORMAL' : 'NORMAL',
+      overallStatus: observations.some((o) => o.flag === 'H' || o.flag === 'L')
+        ? 'ANORMAL'
+        : 'NORMAL',
       processingStatus: 'complete',
       reportId,
       userId,

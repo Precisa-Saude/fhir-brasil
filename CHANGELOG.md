@@ -1,3 +1,30 @@
+## [3.0.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v2.0.0...v3.0.0) (2026-11-11)
+
+### ⚠ BREAKING CHANGES
+
+* **core:** `labObservationToFHIR` e `labResultToFHIRBundle` não
+escrevem mais `Observation.interpretation` quando a `flag` é a string
+vazia. Quem passava `''` querendo dizer normal precisa passar `'N'`. O tipo
+`Flag` passa a ser `'H' | 'L' | 'N' | ''`, e a `flag` de
+`ImportedObservation` e de `LabResultEnvelope` pode vir `'N'`: o importador
+devolve `'N'` para Observation com interpretação `N`, que antes voltava
+como `''`.
+
+Refs: PRE-395
+
+### Features
+
+* **core:** colunas regionais da densitometria e diâmetros do escore de cálcio no catálogo ([#170](https://github.com/Precisa-Saude/fhir-brasil/issues/170)) ([6a9b38e](https://github.com/Precisa-Saude/fhir-brasil/commit/6a9b38efc471f6a9e4588c66ac99e1c4b1e4c92f))
+
+### Bug Fixes
+
+* **core:** flag não determinada deixa de sair como Normal no Bundle ([#168](https://github.com/Precisa-Saude/fhir-brasil/issues/168)) ([510c426](https://github.com/Precisa-Saude/fhir-brasil/commit/510c4260e2ca80e6e9bdc23ddaef5239ec59f5ab))
+* **rnds-sandbox:** propagate CLI exit status ([#167](https://github.com/Precisa-Saude/fhir-brasil/issues/167)) ([4dc2d75](https://github.com/Precisa-Saude/fhir-brasil/commit/4dc2d75e88f833bbb03315087d8902a70fb655b4)), closes [#166](https://github.com/Precisa-Saude/fhir-brasil/issues/166)
+
+### Documentation
+
+* **rnds:** o cliente é transporte, e o Bundle do conversor não é um documento REL ([#169](https://github.com/Precisa-Saude/fhir-brasil/issues/169)) ([3c8dd1d](https://github.com/Precisa-Saude/fhir-brasil/commit/3c8dd1df4867647f59aa727220b0577aa2657cfa))
+
 ## [2.0.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v1.1.2...v2.0.0) (2026-11-03)
 
 ### ⚠ BREAKING CHANGES

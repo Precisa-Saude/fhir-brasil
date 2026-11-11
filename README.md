@@ -245,7 +245,7 @@ proposta. Números escritos à mão em outro lugar não são conferidos por nada
 - [x] Contrato de extração — schema público que qualquer modelo pode preencher, e a conferência da saída contra a ancoragem
 - [x] `@precisa-saude/fhir-pdf` — Camada de texto de PDF, fechando o caminho do laudo até o FHIR
 - [x] Calculadoras clínicas — extraídas para [`@precisa-saude/calculadoras-clinicas`](https://github.com/Precisa-Saude/calculadoras-clinicas)
-- [x] `@precisa-saude/fhir-rnds` — Cliente RNDS: autenticação mTLS, submissão de bundles
+- [x] `@precisa-saude/fhir-rnds` — Cliente RNDS: autenticação mTLS e transporte de bundles (envia o Bundle como recebido; a montagem do documento REL faz parte do item de perfis RNDS abaixo)
 - [x] Implementation Guide FHIR — perfis BRPatient, BRLabObservation, BRDiagnosticReport via SUSHI
 - [x] Terminologias brasileiras — TUSS, TISS, CID-10, SUS raça/cor, IBGE, CNES
 - [x] Helpers de identificadores brasileiros (CPF, CNS)

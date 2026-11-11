@@ -33,6 +33,8 @@ const bundle = labResultToFHIRBundle(report, observations, userProfile);
 // Retorna um FHIR Bundle com DiagnosticReport, Observations e Patient
 ```
 
+A `flag` de cada observação decide o `Observation.interpretation`: `'H'` e `'L'` saem como High e Low, `'N'` sai como Normal, e a string vazia quer dizer que ninguém determinou a flag, então a Observation sai **sem** `interpretation`. Normal é afirmação e só sai quando quem chama passa `'N'`. O importador faz o caminho de volta: `N` no Bundle vira `flag: 'N'`, e Observation sem `interpretation` vira `flag: ''`.
+
 ### Exportar o prontuário inteiro num Bundle (LGPD art. 18)
 
 Além do laudo, o pacote converte o restante do que um app de saúde guarda

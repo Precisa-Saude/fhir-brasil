@@ -39,7 +39,7 @@ const observacoes: LabObservationData[] = [
   {
     biomarkerCode: 'Glucose',
     biomarkerName: 'Glicose',
-    flag: '', // Normal
+    flag: 'N', // Normal: dentro da faixa do laudo
     referenceMax: 99,
     referenceMin: 70,
     reportId: 'laudo-2025-001',
@@ -49,7 +49,7 @@ const observacoes: LabObservationData[] = [
   {
     biomarkerCode: 'HbA1c',
     biomarkerName: 'Hemoglobina Glicada',
-    flag: '', // Normal
+    flag: 'N', // Normal: dentro da faixa do laudo
     referenceMax: 5.6,
     referenceMin: 4.0,
     reportId: 'laudo-2025-001',
@@ -69,7 +69,7 @@ const observacoes: LabObservationData[] = [
   {
     biomarkerCode: 'HDL',
     biomarkerName: 'Colesterol HDL',
-    flag: '', // Normal
+    flag: 'N', // Normal: dentro da faixa do laudo
     referenceMax: 60,
     referenceMin: 40,
     reportId: 'laudo-2025-001',
@@ -79,7 +79,7 @@ const observacoes: LabObservationData[] = [
   {
     biomarkerCode: 'BloodType',
     biomarkerName: 'Tipo Sanguíneo',
-    flag: '',
+    flag: '', // Sem flag determinada: não sai interpretação nenhuma
     isQualitative: true,
     // Exemplo de resultado qualitativo (texto em vez de número)
     reportId: 'laudo-2025-001',
@@ -149,8 +149,9 @@ for (const entry of bundle.entry) {
       console.log(`    ${codigo?.display}: ${resource.valueString}`);
     }
 
+    // Sem flag determinada, a Observation sai sem `interpretation`.
     const interpretacao = resource.interpretation?.[0]?.coding?.[0];
-    console.log(`    Interpretação: ${interpretacao?.display}`);
+    console.log(`    Interpretação: ${interpretacao?.display ?? 'não determinada'}`);
   }
 }
 

@@ -43,6 +43,23 @@ describe('extractionToLabResult', () => {
     expect(envelope.observations[0]?.flag).toBe('L');
   });
 
+  // PRE-395: dentro da faixa impressa é `N`, afirmação; sem faixa é vazio,
+  // ausência. Os dois saíam como string vazia e o conversor lia tudo como Normal.
+  it('marca N quando o valor está dentro da faixa que o laudo trouxe', () => {
+    const envelope = extractionToLabResult([
+      { ...base, loinc: '2276-4', referenceMax: 150, referenceMin: 12, value: 80 },
+    ]);
+    expect(envelope.observations[0]?.flag).toBe('N');
+    expect(envelope.report.overallStatus).toBe('NORMAL');
+  });
+
+  it('marca N com faixa de um lado só, quando o valor não passa do limite', () => {
+    const teto = extractionToLabResult([{ ...base, referenceMax: 16, value: 14.5 }]);
+    expect(teto.observations[0]?.flag).toBe('N');
+    const piso = extractionToLabResult([{ ...base, referenceMin: 12, value: 14.5 }]);
+    expect(piso.observations[0]?.flag).toBe('N');
+  });
+
   it('não inventa flag quando o laudo não trouxe faixa', () => {
     const envelope = extractionToLabResult([base]);
     expect(envelope.observations[0]?.flag).toBe('');

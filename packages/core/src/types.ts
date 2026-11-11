@@ -8,7 +8,15 @@
 import type { RangeKind } from './reference-ranges';
 
 export type OverallStatus = 'NORMAL' | 'ANORMAL';
-export type Flag = 'H' | 'L' | '';
+/**
+ * A marcação de um resultado contra a faixa.
+ *
+ * `N` é afirmação: alguém (o laudo, ou quem comparou o valor com a faixa)
+ * determinou que o resultado está dentro do esperado. A string vazia é
+ * ausência: ninguém determinou nada. As duas coisas não são a mesma, e o
+ * conversor só escreve `Observation.interpretation` quando há afirmação.
+ */
+export type Flag = 'H' | 'L' | 'N' | '';
 export type Gender = 'male' | 'female' | 'other' | 'unknown';
 
 /**

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { labObservationToFHIR } from '../converter';
 import type { FHIRBundle, FHIRObservation } from '../fhir-types';
 import {
   extractObservationsFromBundle,
@@ -141,7 +142,7 @@ describe('mapFHIRObservationToInternal', () => {
       expect(result.observation.unit).toBe('mg/dL');
       expect(result.observation.loincCode).toBe('2345-7');
       expect(result.observation.collectionDate).toBe('2024-06-15T08:00:00.000Z');
-      expect(result.observation.flag).toBe('');
+      expect(result.observation.flag).toBe('N');
       expect(result.observation.isQualitative).toBe(false);
     }
   });
@@ -180,6 +181,44 @@ describe('mapFHIRObservationToInternal', () => {
     expect(kindOf(typed('recommended'))).toBe('decision-threshold');
     expect(kindOf(typed('treatment'))).toBeUndefined();
     expect(kindOf(validObservation)).toBeUndefined();
+  });
+
+  // PRE-395: `N` é afirmação do Bundle e volta como `N`; sem `interpretation`,
+  // a flag fica vazia, que é "não determinada".
+  it('lê a interpretação N como flag N', () => {
+    const result = mapFHIRObservationToInternal(validObservation, 0);
+    expect('observation' in result && result.observation.flag).toBe('N');
+  });
+
+  it('deixa a flag vazia quando o Bundle não traz interpretação', () => {
+    const { interpretation: _interpretation, ...semInterpretacao } = validObservation;
+    const result = mapFHIRObservationToInternal(semInterpretacao, 0);
+    expect('observation' in result && result.observation.flag).toBe('');
+  });
+
+  it('exportar, importar e exportar de novo mantém a interpretação', () => {
+    for (const flag of ['H', 'L', 'N', ''] as const) {
+      const exported = labObservationToFHIR(
+        {
+          biomarkerCode: 'Glucose',
+          biomarkerName: 'Glicose',
+          collectionDate: '2024-06-15T08:00:00.000Z',
+          flag,
+          reportId: 'laudo-1',
+          unit: 'mg/dL',
+          value: 85,
+        },
+        'paciente-1',
+      );
+      const result = mapFHIRObservationToInternal(exported, 0);
+      if (!('observation' in result)) throw new Error('observação não importada');
+      expect(result.observation.flag).toBe(flag);
+      const again = labObservationToFHIR(
+        { ...result.observation, reportId: 'laudo-1' },
+        'paciente-1',
+      );
+      expect(again.interpretation).toEqual(exported.interpretation);
+    }
   });
 
   it('should extract high flag', () => {

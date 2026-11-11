@@ -369,6 +369,42 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     section: 'CT',
     unit: 'AU',
   },
+  // Diâmetros impressos no laudo de escore de cálcio (Advocate, 2025), junto
+  // do escore. Sem LOINC: nenhum código foi pesquisado para estas medidas por
+  // tomografia, e o campo fica vazio até alguém conferir na fonte.
+  {
+    code: 'AscendingAortaDiameter',
+    codeAliases: ['UNKNOWN_Ascending_Aorta'],
+    hidden: true,
+    names: {
+      en: ['Ascending Aorta', 'Ascending Aorta Diameter', 'Ascending Aortic Diameter'],
+      pt: ['Aorta Ascendente', 'Diâmetro da Aorta Ascendente'],
+    },
+    section: 'CT',
+    unit: 'mm',
+  },
+  {
+    code: 'DescendingAortaDiameter',
+    codeAliases: ['UNKNOWN_Descending_Aorta'],
+    hidden: true,
+    names: {
+      en: ['Descending Aorta', 'Descending Aorta Diameter', 'Descending Aortic Diameter'],
+      pt: ['Aorta Descendente', 'Diâmetro da Aorta Descendente'],
+    },
+    section: 'CT',
+    unit: 'mm',
+  },
+  {
+    code: 'MainPulmonaryArteryDiameter',
+    codeAliases: ['UNKNOWN_Main_Pulmonary_Artery'],
+    hidden: true,
+    names: {
+      en: ['Main Pulmonary Artery', 'Main Pulmonary Artery Diameter', 'Pulmonary Artery Diameter'],
+      pt: ['Tronco da Artéria Pulmonar', 'Diâmetro do Tronco da Artéria Pulmonar'],
+    },
+    section: 'CT',
+    unit: 'mm',
+  },
 
   {
     code: 'ApoA1',
@@ -2711,6 +2747,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     code: 'AndroidFatPct',
+    codeAliases: ['UNKNOWN_Total_Fat_Android'],
     // No official LOINC code exists for android region fat percentage
     names: {
       en: [
@@ -2725,6 +2762,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         // "Total Fat %". Sem o nome, o "Total Fat %" da citação ancorava
         // `BodyFatPct`, e a região bloqueava o casamento sem pôr nada no lugar.
         'Android Total Fat %',
+        'Total Fat % Android',
       ],
       pt: [
         'Percentual de Gordura Androide',
@@ -2738,6 +2776,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     code: 'GynoidFatPct',
+    codeAliases: ['UNKNOWN_Total_Fat_Gynoid'],
     // No official LOINC code exists for gynoid region fat percentage
     names: {
       en: [
@@ -2753,6 +2792,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         // "Total Fat %". Sem o nome, o "Total Fat %" da citação ancorava
         // `BodyFatPct`, e a região bloqueava o casamento sem pôr nada no lugar.
         'Gynoid Total Fat %',
+        'Total Fat % Gynoid',
       ],
       pt: [
         'Percentual de Gordura Ginoide',
@@ -3121,11 +3161,13 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   // "Left Arm" são um lado só, e "Arms Difference" é direito menos esquerdo.
   {
     code: 'ArmsLeanMass',
-    codeAliases: ['UNKNOWN_Arms_Total_Lean_Mass'],
+    codeAliases: ['UNKNOWN_Arms_Total_Lean_Mass', 'UNKNOWN_Lean_Tissue_lbs_Arms'],
     hidden: true,
     names: {
       en: [
         'Arms Lean Mass',
+        'Lean Tissue Arms',
+        'Lean Tissue (lbs) Arms',
         'Arms Total Lean Mass',
         'Arms Lean',
         'Arms Lean Tissue',
@@ -3153,11 +3195,13 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     code: 'ArmsFatMass',
-    codeAliases: ['UNKNOWN_Arms_Total_Fat_Mass'],
+    codeAliases: ['UNKNOWN_Arms_Total_Fat_Mass', 'UNKNOWN_Fat_Tissue_lbs_Arms'],
     hidden: true,
     names: {
       en: [
         'Arms Fat Mass',
+        'Fat Tissue Arms',
+        'Fat Tissue (lbs) Arms',
         'Arms Total Fat Mass',
         'Arms Fat',
         'Arms Fat Tissue',
@@ -3186,11 +3230,13 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     code: 'LegsLeanMass',
-    codeAliases: ['UNKNOWN_Legs_Total_Lean_Mass'],
+    codeAliases: ['UNKNOWN_Legs_Total_Lean_Mass', 'UNKNOWN_Lean_Tissue_lbs_Legs'],
     hidden: true,
     names: {
       en: [
         'Legs Lean Mass',
+        'Lean Tissue Legs',
+        'Lean Tissue (lbs) Legs',
         'Legs Total Lean Mass',
         'Legs Lean',
         'Legs Lean Tissue',
@@ -3218,11 +3264,13 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     code: 'LegsFatMass',
-    codeAliases: ['UNKNOWN_Legs_Total_Fat_Mass'],
+    codeAliases: ['UNKNOWN_Legs_Total_Fat_Mass', 'UNKNOWN_Fat_Tissue_lbs_Legs'],
     hidden: true,
     names: {
       en: [
         'Legs Fat Mass',
+        'Fat Tissue Legs',
+        'Fat Tissue (lbs) Legs',
         'Legs Total Fat Mass',
         'Legs Fat',
         'Legs Fat Tissue',
@@ -3251,10 +3299,13 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     code: 'TrunkLeanMass',
+    codeAliases: ['UNKNOWN_Lean_Tissue_lbs_Trunk'],
     hidden: true,
     names: {
       en: [
         'Trunk Lean Mass',
+        'Lean Tissue Trunk',
+        'Lean Tissue (lbs) Trunk',
         'Trunk Lean',
         'Trunk Lean Tissue',
         'Torso Lean Mass',
@@ -3276,10 +3327,13 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   },
   {
     code: 'TrunkFatMass',
+    codeAliases: ['UNKNOWN_Fat_Tissue_lbs_Trunk'],
     hidden: true,
     names: {
       en: [
         'Trunk Fat Mass',
+        'Fat Tissue Trunk',
+        'Fat Tissue (lbs) Trunk',
         'Trunk Fat',
         'Trunk Fat Tissue',
         'Torso Fat Mass',
@@ -3296,6 +3350,128 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Gordura do Tronco',
         'Tronco Massa Gorda',
       ],
+    },
+    section: 'RAD',
+    unit: 'kg',
+  },
+
+  // Colunas da tabela regional do laudo da Live Lean (GE Lunar Prodigy) que
+  // ainda saíam como `UNKNOWN_`: "BMC (lbs)" das cinco regiões e "Fat Tissue
+  // (lbs)" e "Lean Tissue (lbs)" das regiões androide e ginoide. Conferido na
+  // rotulagem de seis laudos em 10/11/2026. Sem LOINC, como as outras massas
+  // regionais: nenhum código foi pesquisado para estas medidas, e o campo
+  // fica vazio em vez de receber o do corpo inteiro. O `codeAliases` cobre as
+  // grafias que o modelo já gravou.
+  {
+    code: 'ArmsBMC',
+    codeAliases: ['UNKNOWN_Arms_BMC_lbs', 'UNKNOWN_BMC_lbs_Arms'],
+    hidden: true,
+    names: {
+      en: ['Arms BMC', 'Arms Bone Mineral Content', 'BMC Arms', 'BMC (lbs) Arms'],
+      pt: ['CMO Braços', 'Conteúdo Mineral Ósseo Braços'],
+    },
+    section: 'RAD',
+    unit: 'kg',
+  },
+  {
+    code: 'LegsBMC',
+    codeAliases: ['UNKNOWN_Legs_BMC_lbs', 'UNKNOWN_BMC_lbs_Legs'],
+    hidden: true,
+    names: {
+      en: ['Legs BMC', 'Legs Bone Mineral Content', 'BMC Legs', 'BMC (lbs) Legs'],
+      pt: ['CMO Pernas', 'Conteúdo Mineral Ósseo Pernas'],
+    },
+    section: 'RAD',
+    unit: 'kg',
+  },
+  {
+    code: 'TrunkBMC',
+    codeAliases: ['UNKNOWN_Trunk_BMC_lbs', 'UNKNOWN_BMC_lbs_Trunk'],
+    hidden: true,
+    names: {
+      en: ['Trunk BMC', 'Trunk Bone Mineral Content', 'BMC Trunk', 'BMC (lbs) Trunk'],
+      pt: ['CMO Tronco', 'Conteúdo Mineral Ósseo Tronco'],
+    },
+    section: 'RAD',
+    unit: 'kg',
+  },
+  {
+    code: 'AndroidBMC',
+    codeAliases: ['UNKNOWN_Android_BMC_lbs', 'UNKNOWN_BMC_lbs_Android'],
+    hidden: true,
+    names: {
+      en: ['Android BMC', 'Android Bone Mineral Content', 'BMC Android', 'BMC (lbs) Android'],
+      pt: ['CMO Androide', 'Conteúdo Mineral Ósseo Androide'],
+    },
+    section: 'RAD',
+    unit: 'kg',
+  },
+  {
+    code: 'GynoidBMC',
+    codeAliases: ['UNKNOWN_Gynoid_BMC_lbs', 'UNKNOWN_BMC_lbs_Gynoid'],
+    hidden: true,
+    names: {
+      en: ['Gynoid BMC', 'Gynoid Bone Mineral Content', 'BMC Gynoid', 'BMC (lbs) Gynoid'],
+      pt: ['CMO Ginoide', 'Conteúdo Mineral Ósseo Ginoide'],
+    },
+    section: 'RAD',
+    unit: 'kg',
+  },
+  {
+    code: 'AndroidFatMass',
+    codeAliases: ['UNKNOWN_Android_Fat_Tissue_lbs', 'UNKNOWN_Fat_Tissue_lbs_Android'],
+    hidden: true,
+    names: {
+      en: [
+        'Android Fat Mass',
+        'Android Fat Tissue',
+        'Fat Tissue Android',
+        'Fat Tissue (lbs) Android',
+      ],
+      pt: ['Massa de Gordura Androide', 'Tecido Adiposo Androide'],
+    },
+    section: 'RAD',
+    unit: 'kg',
+  },
+  {
+    code: 'AndroidLeanMass',
+    codeAliases: ['UNKNOWN_Android_Lean_Tissue_lbs', 'UNKNOWN_Lean_Tissue_lbs_Android'],
+    hidden: true,
+    names: {
+      en: [
+        'Android Lean Mass',
+        'Android Lean Tissue',
+        'Lean Tissue Android',
+        'Lean Tissue (lbs) Android',
+      ],
+      pt: ['Massa Magra Androide', 'Tecido Magro Androide'],
+    },
+    section: 'RAD',
+    unit: 'kg',
+  },
+  {
+    code: 'GynoidFatMass',
+    codeAliases: ['UNKNOWN_Gynoid_Fat_Tissue_lbs', 'UNKNOWN_Fat_Tissue_lbs_Gynoid'],
+    hidden: true,
+    names: {
+      en: ['Gynoid Fat Mass', 'Gynoid Fat Tissue', 'Fat Tissue Gynoid', 'Fat Tissue (lbs) Gynoid'],
+      pt: ['Massa de Gordura Ginoide', 'Tecido Adiposo Ginoide'],
+    },
+    section: 'RAD',
+    unit: 'kg',
+  },
+  {
+    code: 'GynoidLeanMass',
+    codeAliases: ['UNKNOWN_Gynoid_Lean_Tissue_lbs', 'UNKNOWN_Lean_Tissue_lbs_Gynoid'],
+    hidden: true,
+    names: {
+      en: [
+        'Gynoid Lean Mass',
+        'Gynoid Lean Tissue',
+        'Lean Tissue Gynoid',
+        'Lean Tissue (lbs) Gynoid',
+      ],
+      pt: ['Massa Magra Ginoide', 'Tecido Magro Ginoide'],
     },
     section: 'RAD',
     unit: 'kg',

@@ -1,6 +1,6 @@
 {
   "acceptedLoincCodes": 231,
-  "biomarkers": 260,
+  "biomarkers": 272,
   "bySection": [
     {
       "count": 126,
@@ -17,18 +17,18 @@
       "withLoinc": 33
     },
     {
+      "count": 31,
+      "examples": ["BMC", "VATVolume", "VATMass", "AndroidGynoidRatio", "AndroidFatPct"],
+      "pt": "Radiologia (densitometria)",
+      "section": "RAD",
+      "withLoinc": 8
+    },
+    {
       "count": 28,
       "examples": ["BMI", "BodyFatPct", "FatMass", "LeanMass", "FatFreeMass"],
       "pt": "Outros (medida corporal)",
       "section": "OTH",
       "withLoinc": 14
-    },
-    {
-      "count": 22,
-      "examples": ["BMC", "VATVolume", "VATMass", "AndroidGynoidRatio", "AndroidFatPct"],
-      "pt": "Radiologia (densitometria)",
-      "section": "RAD",
-      "withLoinc": 8
     },
     {
       "count": 18,
@@ -51,7 +51,7 @@
       "withLoinc": 17
     },
     {
-      "count": 7,
+      "count": 10,
       "examples": ["CAC", "CAC_LMA", "CAC_LAD", "CAC_LCX", "CAC_RCA"],
       "pt": "Tomografia",
       "section": "CT",
@@ -81,11 +81,11 @@
     { "count": 1, "examples": ["APOE_Genotype"], "pt": "Genética", "section": "GE", "withLoinc": 1 }
   ],
   "decisions": { "nameOnly": 176, "reviewed": 0, "withEvidence": 49 },
-  "loincCoveragePct": 86.5,
+  "loincCoveragePct": 82.7,
   "referenceRanges": 198,
   "sections": 11,
   "version": "2.0.0",
   "withLoinc": 225,
-  "withoutLoinc": 35,
-  "withoutLoincByReason": { "ambiguous": 4, "no-concept": 31 }
+  "withoutLoinc": 47,
+  "withoutLoincByReason": { "ambiguous": 4, "no-concept": 31, "pending-review": 12 }
 }

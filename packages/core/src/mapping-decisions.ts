@@ -783,6 +783,14 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
 
 /** Buscas oficiais de 09/10/2026 (LOINC 2.83): docs/development/loinc-gaps-2026-10-09.json. */
 export const NO_LOINC_DECISIONS: Record<string, NoLoincDecision> = {
+  AndroidBMC: {
+    reason: 'pending-review',
+    note: 'Sem busca registrada no LOINC para esta coluna regional. A auditoria de 09/10/2026 não achou massa regional de gordura nem de tecido magro, e não cobriu esta medida. Entrada criada em 10/11/2026 a partir da rotulagem de laudos DXA GE Lunar Prodigy.',
+  },
+  AndroidFatMass: {
+    reason: 'pending-review',
+    note: 'Sem busca registrada no LOINC para esta coluna regional. A auditoria de 09/10/2026 não achou massa regional de gordura nem de tecido magro, e não cobriu esta medida. Entrada criada em 10/11/2026 a partir da rotulagem de laudos DXA GE Lunar Prodigy.',
+  },
   AndroidFatPct: {
     reason: 'no-concept',
     note: 'Nenhum resultado regional androide/ginoide encontrado; 41982-0 é percentual corporal total.',
@@ -791,9 +799,17 @@ export const NO_LOINC_DECISIONS: Record<string, NoLoincDecision> = {
     reason: 'no-concept',
     note: 'Nenhum resultado regional androide/ginoide encontrado; 41982-0 é percentual corporal total.',
   },
+  AndroidLeanMass: {
+    reason: 'pending-review',
+    note: 'Sem busca registrada no LOINC para esta coluna regional. A auditoria de 09/10/2026 não achou massa regional de gordura nem de tecido magro, e não cobriu esta medida. Entrada criada em 10/11/2026 a partir da rotulagem de laudos DXA GE Lunar Prodigy.',
+  },
   AorticValveCalcium: {
     reason: 'no-concept',
     note: '89927-8 é um exame de coração/raiz aórtica (Doc), não o escore numérico da valva aórtica.',
+  },
+  ArmsBMC: {
+    reason: 'pending-review',
+    note: 'Sem busca registrada no LOINC para esta coluna regional. A auditoria de 09/10/2026 não achou massa regional de gordura nem de tecido magro, e não cobriu esta medida. Entrada criada em 10/11/2026 a partir da rotulagem de laudos DXA GE Lunar Prodigy.',
   },
   ArmsFatMass: {
     reason: 'no-concept',
@@ -802,6 +818,10 @@ export const NO_LOINC_DECISIONS: Record<string, NoLoincDecision> = {
   ArmsLeanMass: {
     reason: 'no-concept',
     note: 'Nenhuma massa de tecido magro regional encontrada; 91557-9 é peso magro corporal total.',
+  },
+  AscendingAortaDiameter: {
+    reason: 'pending-review',
+    note: 'Sem busca registrada no LOINC para este diâmetro por tomografia. Entrada criada em 10/11/2026 a partir da rotulagem de um laudo de escore de cálcio.',
   },
   BasalMetabolicRate: {
     reason: 'ambiguous',
@@ -839,6 +859,10 @@ export const NO_LOINC_DECISIONS: Record<string, NoLoincDecision> = {
     reason: 'no-concept',
     note: 'Nenhum índice de conicidade encontrado nas buscas registradas.',
   },
+  DescendingAortaDiameter: {
+    reason: 'pending-review',
+    note: 'Sem busca registrada no LOINC para este diâmetro por tomografia. Entrada criada em 10/11/2026 a partir da rotulagem de um laudo de escore de cálcio.',
+  },
   ECWToTBWRatio: {
     reason: 'no-concept',
     note: 'Sem razão ECW/TBW encontrada; 101684-9 é percentual de água no corpo, com outro denominador.',
@@ -847,9 +871,21 @@ export const NO_LOINC_DECISIONS: Record<string, NoLoincDecision> = {
     reason: 'ambiguous',
     note: '73706-4 existe como volume de fluido extracelular, método Measured. A entrada genérica não declara medição versus estimativa por BIA.',
   },
+  GynoidBMC: {
+    reason: 'pending-review',
+    note: 'Sem busca registrada no LOINC para esta coluna regional. A auditoria de 09/10/2026 não achou massa regional de gordura nem de tecido magro, e não cobriu esta medida. Entrada criada em 10/11/2026 a partir da rotulagem de laudos DXA GE Lunar Prodigy.',
+  },
+  GynoidFatMass: {
+    reason: 'pending-review',
+    note: 'Sem busca registrada no LOINC para esta coluna regional. A auditoria de 09/10/2026 não achou massa regional de gordura nem de tecido magro, e não cobriu esta medida. Entrada criada em 10/11/2026 a partir da rotulagem de laudos DXA GE Lunar Prodigy.',
+  },
   GynoidFatPct: {
     reason: 'no-concept',
     note: 'Nenhum resultado regional androide/ginoide encontrado; 41982-0 é percentual corporal total.',
+  },
+  GynoidLeanMass: {
+    reason: 'pending-review',
+    note: 'Sem busca registrada no LOINC para esta coluna regional. A auditoria de 09/10/2026 não achou massa regional de gordura nem de tecido magro, e não cobriu esta medida. Entrada criada em 10/11/2026 a partir da rotulagem de laudos DXA GE Lunar Prodigy.',
   },
   IntracellularWater: {
     reason: 'ambiguous',
@@ -859,6 +895,10 @@ export const NO_LOINC_DECISIONS: Record<string, NoLoincDecision> = {
     reason: 'no-concept',
     note: 'O laudo DXA GE Lunar Prodigy confirma tecido magro separado de BMC. 91557-9 e 88334-8 incluem esse mineral no peso sem gordura; 73964-9 mede massa muscular. Nenhum equivalente de tecido magro sem BMC encontrado nas buscas registradas.',
   },
+  LegsBMC: {
+    reason: 'pending-review',
+    note: 'Sem busca registrada no LOINC para esta coluna regional. A auditoria de 09/10/2026 não achou massa regional de gordura nem de tecido magro, e não cobriu esta medida. Entrada criada em 10/11/2026 a partir da rotulagem de laudos DXA GE Lunar Prodigy.',
+  },
   LegsFatMass: {
     reason: 'no-concept',
     note: 'Nenhuma massa de gordura regional encontrada; 73708-0 é gordura corporal total.',
@@ -866,6 +906,10 @@ export const NO_LOINC_DECISIONS: Record<string, NoLoincDecision> = {
   LegsLeanMass: {
     reason: 'no-concept',
     note: 'Nenhuma massa de tecido magro regional encontrada; 91557-9 é peso magro corporal total.',
+  },
+  MainPulmonaryArteryDiameter: {
+    reason: 'pending-review',
+    note: 'Sem busca registrada no LOINC para este diâmetro por tomografia. Entrada criada em 10/11/2026 a partir da rotulagem de um laudo de escore de cálcio.',
   },
   MuscleMassIndex: {
     reason: 'no-concept',
@@ -890,6 +934,10 @@ export const NO_LOINC_DECISIONS: Record<string, NoLoincDecision> = {
   SkinfoldSuprailiac: {
     reason: 'no-concept',
     note: 'Só foram encontradas dobras de coxa, tríceps e cintura; nenhum termo do sítio anatômico desta entrada.',
+  },
+  TrunkBMC: {
+    reason: 'pending-review',
+    note: 'Sem busca registrada no LOINC para esta coluna regional. A auditoria de 09/10/2026 não achou massa regional de gordura nem de tecido magro, e não cobriu esta medida. Entrada criada em 10/11/2026 a partir da rotulagem de laudos DXA GE Lunar Prodigy.',
   },
   TrunkFatMass: {
     reason: 'no-concept',

@@ -547,6 +547,9 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'mg/dL',
     siUnit: 'mg/dL',
   },
+  AndroidBMC: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
+  AndroidFatMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
+  AndroidLeanMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
   AorticValveCalcium: { aliases: CAC_ALIASES, ...CAC },
   ApoB: {
     aliases: { 'mg/dl': 'mg/dL' },
@@ -562,6 +565,7 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 's',
     siUnit: 's',
   },
+  ArmsBMC: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
   ArmsFatMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
   ArmsLeanMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
   AST: { aliases: ENZYME_ALIASES, ...ENZYME },
@@ -786,6 +790,9 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'mmol/L',
     siUnit: 'mmol/L',
   },
+  GynoidBMC: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
+  GynoidFatMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
+  GynoidLeanMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
   HbA1c: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   Hct: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   HDL: {
@@ -914,6 +921,7 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUnit: 'µmol/L',
   },
   LeanMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
+  LegsBMC: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
   LegsFatMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
   LegsLeanMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
   Leptin: {
@@ -1243,6 +1251,7 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'ng/L',
     siUnit: 'ng/L',
   },
+  TrunkBMC: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
   TrunkFatMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
   TrunkLeanMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
   TSH: {

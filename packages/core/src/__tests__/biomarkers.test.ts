@@ -1107,3 +1107,80 @@ describe('densidade óssea por região da densitometria de corpo inteiro', () =>
     expect(findCodeByName('Total BMD')).toBe('BMD_Total');
   });
 });
+
+// Linhas rotuladas em seis laudos de densitometria e um de escore de cálcio em
+// 10/11/2026 que saíam como `UNKNOWN_`.
+describe('colunas regionais da densitometria e diâmetros do escore de cálcio', () => {
+  it.each([
+    ['Arms BMC', 'ArmsBMC'],
+    ['BMC (lbs) - Legs', 'LegsBMC'],
+    ['Trunk BMC', 'TrunkBMC'],
+    ['Android BMC', 'AndroidBMC'],
+    ['BMC (lbs) - Gynoid', 'GynoidBMC'],
+    ['Android Fat Tissue', 'AndroidFatMass'],
+    ['Lean Tissue (lbs) - Android', 'AndroidLeanMass'],
+    ['Fat Tissue (lbs) - Gynoid', 'GynoidFatMass'],
+    ['Gynoid Lean Tissue', 'GynoidLeanMass'],
+    ['Fat Tissue (lbs) - Arms', 'ArmsFatMass'],
+    ['Lean Tissue (lbs) - Legs', 'LegsLeanMass'],
+    ['Fat Tissue (lbs) - Trunk', 'TrunkFatMass'],
+    ['Total Fat % - Android', 'AndroidFatPct'],
+    ['Total Fat % - Gynoid', 'GynoidFatPct'],
+    ['Ascending Aorta', 'AscendingAortaDiameter'],
+    ['Descending Aorta', 'DescendingAortaDiameter'],
+    ['Main Pulmonary Artery', 'MainPulmonaryArteryDiameter'],
+  ])('%s resolve para %s', (name, code) => {
+    expect(findCodeByName(name)).toBe(code);
+  });
+
+  it.each([
+    ['UNKNOWN_Arms_BMC_lbs', 'ArmsBMC'],
+    ['UNKNOWN_Legs_BMC_lbs', 'LegsBMC'],
+    ['UNKNOWN_Trunk_BMC_lbs', 'TrunkBMC'],
+    ['UNKNOWN_Android_BMC_lbs', 'AndroidBMC'],
+    ['UNKNOWN_Android_Fat_Tissue_lbs', 'AndroidFatMass'],
+    ['UNKNOWN_Android_Lean_Tissue_lbs', 'AndroidLeanMass'],
+    ['UNKNOWN_Gynoid_Fat_Tissue_lbs', 'GynoidFatMass'],
+    ['UNKNOWN_Gynoid_Lean_Tissue_lbs', 'GynoidLeanMass'],
+    ['UNKNOWN_Fat_Tissue_lbs_Arms', 'ArmsFatMass'],
+    ['UNKNOWN_Lean_Tissue_lbs_Arms', 'ArmsLeanMass'],
+    ['UNKNOWN_Fat_Tissue_lbs_Legs', 'LegsFatMass'],
+    ['UNKNOWN_Lean_Tissue_lbs_Legs', 'LegsLeanMass'],
+    ['UNKNOWN_Fat_Tissue_lbs_Trunk', 'TrunkFatMass'],
+    ['UNKNOWN_Lean_Tissue_lbs_Trunk', 'TrunkLeanMass'],
+    ['UNKNOWN_Total_Fat_Android', 'AndroidFatPct'],
+    ['UNKNOWN_Total_Fat_Gynoid', 'GynoidFatPct'],
+    ['UNKNOWN_Ascending_Aorta', 'AscendingAortaDiameter'],
+    ['UNKNOWN_Descending_Aorta', 'DescendingAortaDiameter'],
+    ['UNKNOWN_Main_Pulmonary_Artery', 'MainPulmonaryArteryDiameter'],
+  ])('o código já gravado %s vira %s', (alias, code) => {
+    expect(normalizeCode(alias)).toBe(code);
+  });
+
+  it('nenhuma das medidas novas recebe LOINC', () => {
+    for (const code of [
+      'ArmsBMC',
+      'LegsBMC',
+      'TrunkBMC',
+      'AndroidBMC',
+      'GynoidBMC',
+      'AndroidFatMass',
+      'AndroidLeanMass',
+      'GynoidFatMass',
+      'GynoidLeanMass',
+      'AscendingAortaDiameter',
+      'DescendingAortaDiameter',
+      'MainPulmonaryArteryDiameter',
+    ]) {
+      expect(codeToLoinc(code)).toBeUndefined();
+    }
+  });
+
+  // "Android %" e "Android" sozinhos não dizem de quê é o percentual.
+  it.each(['Android', 'Gynoid', 'Android %', 'Arms Total Mass', 'Android Total Mass'])(
+    'deixa %s sem código',
+    (name) => {
+      expect(findCodeByName(name)).toBeUndefined();
+    },
+  );
+});

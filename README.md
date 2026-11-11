@@ -149,7 +149,7 @@ echo "Hemoglobina 14.5 g/dL Glicose 99 mg/dL" | fhir-ocr codes --json
 
 Medido no `@precisa-saude/fhir@2.0.0`, gerado por `pnpm catalog:counts`.
 
-- **260 biomarcadores** definidos, dos quais **225 têm código LOINC** (86,5%) e 35 não têm.
+- **272 biomarcadores** definidos, dos quais **225 têm código LOINC** (82,7%) e 47 não têm.
 - **231 códigos LOINC aceitos** na busca por código: os 225 canônicos, as variantes por método e os aliases de códigos que o LOINC aposentou.
 - **198 faixas de referência**, com variantes por sexo e idade.
 - **11 seções de serviço** (HL7 v2-0074), a categoria que sai no `DiagnosticReport`: da classe do LOINC, ou declarada no exame sem LOINC.
@@ -159,18 +159,18 @@ Medido no `@precisa-saude/fhir@2.0.0`, gerado por `pnpm catalog:counts`.
 | ---------------------------------- | ------------: | --------: | --------------------------------------------------------------------------- |
 | Bioquímica (`CH`)                  |           126 |       126 | ApoB, HDL, HDL_Large, CRP, LDL                                              |
 | Hematologia (`HM`)                 |            33 |        33 | Basophils, Basophils_Abs, Eosinophils, Eosinophils_Abs, Lymphocytes         |
+| Radiologia (densitometria) (`RAD`) |            31 |         8 | BMC, VATVolume, VATMass, AndroidGynoidRatio, AndroidFatPct                  |
 | Outros (medida corporal) (`OTH`)   |            28 |        14 | BMI, BodyFatPct, FatMass, LeanMass, FatFreeMass                             |
-| Radiologia (densitometria) (`RAD`) |            22 |         8 | BMC, VATVolume, VATMass, AndroidGynoidRatio, AndroidFatPct                  |
 | Sorologia (`SR`)                   |            18 |        18 | AntiThyroglobulin, AntiTPO, ANA_Screen, RheumatoidFactor, AntiCCP           |
 | Urinálise (`URN`)                  |            17 |        17 | Appearance_Urine, Bacteria_Urine, Bilirubin_Urine, Blood_Urine, Color_Urine |
-| Tomografia (`CT`)                  |             7 |         0 | CAC, CAC_LMA, CAC_LAD, CAC_LCX, CAC_RCA                                     |
+| Tomografia (`CT`)                  |            10 |         0 | CAC, CAC_LMA, CAC_LAD, CAC_LCX, CAC_RCA                                     |
 | Toxicologia (`TX`)                 |             4 |         4 | Lead, Mercury, Zinc, Selenium                                               |
 | Banco de sangue (`BLB`)            |             2 |         2 | ABO_Group, Rh_Type                                                          |
 | Imunologia (`IMM`)                 |             2 |         2 | IgE_E1_CatDander, IgE_GX1_Grasses                                           |
 | Genética (`GE`)                    |             1 |         1 | APOE_Genotype                                                               |
-| **Total**                          |       **260** |   **225** |                                                                             |
+| **Total**                          |       **272** |   **225** |                                                                             |
 
-### Os 35 sem LOINC, e por quê
+### Os 47 sem LOINC, e por quê
 
 **ambiguous** (4): há candidatos, mas a equivalência não está estabelecida.
 
@@ -216,6 +216,23 @@ Medido no `@precisa-saude/fhir@2.0.0`, gerado por `pnpm catalog:counts`.
 | `TrunkFatMass`        | Nenhuma massa de gordura regional encontrada; 73708-0 é gordura corporal total.                                                                                                                                                            |
 | `TScore_Total`        | Os T-scores encontrados são por sítio (fêmur, quadril ou coluna), não corpo inteiro.                                                                                                                                                       |
 | `ZScore_Total`        | Os Z-scores encontrados são por sítio (fêmur, quadril ou coluna lombar), não corpo inteiro.                                                                                                                                                |
+
+**pending-review** (12): ninguém registrou a busca.
+
+| Biomarcador                   | Motivo                                                                                                                                                                                                                                                   |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AscendingAortaDiameter`      | Sem busca registrada no LOINC para este diâmetro por tomografia. Entrada criada em 10/11/2026 a partir da rotulagem de um laudo de escore de cálcio.                                                                                                     |
+| `DescendingAortaDiameter`     | Sem busca registrada no LOINC para este diâmetro por tomografia. Entrada criada em 10/11/2026 a partir da rotulagem de um laudo de escore de cálcio.                                                                                                     |
+| `MainPulmonaryArteryDiameter` | Sem busca registrada no LOINC para este diâmetro por tomografia. Entrada criada em 10/11/2026 a partir da rotulagem de um laudo de escore de cálcio.                                                                                                     |
+| `ArmsBMC`                     | Sem busca registrada no LOINC para esta coluna regional. A auditoria de 09/10/2026 não achou massa regional de gordura nem de tecido magro, e não cobriu esta medida. Entrada criada em 10/11/2026 a partir da rotulagem de laudos DXA GE Lunar Prodigy. |
+| `LegsBMC`                     | Sem busca registrada no LOINC para esta coluna regional. A auditoria de 09/10/2026 não achou massa regional de gordura nem de tecido magro, e não cobriu esta medida. Entrada criada em 10/11/2026 a partir da rotulagem de laudos DXA GE Lunar Prodigy. |
+| `TrunkBMC`                    | Sem busca registrada no LOINC para esta coluna regional. A auditoria de 09/10/2026 não achou massa regional de gordura nem de tecido magro, e não cobriu esta medida. Entrada criada em 10/11/2026 a partir da rotulagem de laudos DXA GE Lunar Prodigy. |
+| `AndroidBMC`                  | Sem busca registrada no LOINC para esta coluna regional. A auditoria de 09/10/2026 não achou massa regional de gordura nem de tecido magro, e não cobriu esta medida. Entrada criada em 10/11/2026 a partir da rotulagem de laudos DXA GE Lunar Prodigy. |
+| `GynoidBMC`                   | Sem busca registrada no LOINC para esta coluna regional. A auditoria de 09/10/2026 não achou massa regional de gordura nem de tecido magro, e não cobriu esta medida. Entrada criada em 10/11/2026 a partir da rotulagem de laudos DXA GE Lunar Prodigy. |
+| `AndroidFatMass`              | Sem busca registrada no LOINC para esta coluna regional. A auditoria de 09/10/2026 não achou massa regional de gordura nem de tecido magro, e não cobriu esta medida. Entrada criada em 10/11/2026 a partir da rotulagem de laudos DXA GE Lunar Prodigy. |
+| `AndroidLeanMass`             | Sem busca registrada no LOINC para esta coluna regional. A auditoria de 09/10/2026 não achou massa regional de gordura nem de tecido magro, e não cobriu esta medida. Entrada criada em 10/11/2026 a partir da rotulagem de laudos DXA GE Lunar Prodigy. |
+| `GynoidFatMass`               | Sem busca registrada no LOINC para esta coluna regional. A auditoria de 09/10/2026 não achou massa regional de gordura nem de tecido magro, e não cobriu esta medida. Entrada criada em 10/11/2026 a partir da rotulagem de laudos DXA GE Lunar Prodigy. |
+| `GynoidLeanMass`              | Sem busca registrada no LOINC para esta coluna regional. A auditoria de 09/10/2026 não achou massa regional de gordura nem de tecido magro, e não cobriu esta medida. Entrada criada em 10/11/2026 a partir da rotulagem de laudos DXA GE Lunar Prodigy. |
 
 <!-- catalog:counts:end -->
 

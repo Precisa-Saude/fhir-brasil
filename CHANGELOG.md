@@ -1,3 +1,9 @@
+## [3.0.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.0.0...v3.0.1) (2026-11-13)
+
+### Bug Fixes
+
+* **core:** "Tiroxina (T4) Livre" ancora o T4 livre ([#171](https://github.com/Precisa-Saude/fhir-brasil/issues/171)) ([1f4198e](https://github.com/Precisa-Saude/fhir-brasil/commit/1f4198e15e4cc7d50f2d26e947f5e9e58d63329d))
+
 ## [3.0.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v2.0.0...v3.0.0) (2026-11-11)
 
 ### ⚠ BREAKING CHANGES

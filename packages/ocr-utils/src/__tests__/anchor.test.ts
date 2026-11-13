@@ -1021,6 +1021,16 @@ describe('findBiomarkersInText: grafias de produção (PRE-486)', () => {
     expect(codesOf('Free Thyroxine (T4) 1,2 ng/dL')).not.toContain('T4Total');
   });
 
+  // Fleury e Weinmann imprimem "TIROXINA (T4) LIVRE, soro". Sem o nome inteiro
+  // no catálogo, o "Tiroxina (T4)" do começo ancorava o T4 total, e o validador
+  // de citação recusava a leitura certa do T4 livre (PRE-558).
+  it('"Tiroxina (T4) Livre" ancora o T4 livre, e "Tiroxina (T4)" segue no total', () => {
+    const { matches } = findBiomarkersInText('TIROXINA (T4) LIVRE, soro 1,5 ng/dL');
+    expect(matches.map((m) => m.code)).toEqual(['T4Free']);
+    expect(matches[0]?.matchedName).toBe('Tiroxina (T4) Livre');
+    expect(codesOf('TIROXINA (T4) 7,8 µg/dL')).toEqual(['T4Total']);
+  });
+
   it('"CK" não ancora a creatina quinase total dentro de "CK-MB"', () => {
     expect(codesOf('CK-MB 2 ng/mL')).not.toContain('CK');
     expect(codesOf('CK MB massa 2 ng/mL')).not.toContain('CK');

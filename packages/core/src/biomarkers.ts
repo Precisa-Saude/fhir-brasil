@@ -478,7 +478,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'T4, Free',
         'T4 FREE',
       ],
-      pt: ['Tiroxina Livre', 'T4 Livre'],
+      pt: ['Tiroxina Livre', 'T4 Livre', 'Tiroxina (T4) Livre'],
     },
     unit: 'ng/dL',
   },

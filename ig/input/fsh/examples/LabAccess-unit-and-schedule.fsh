@@ -2,7 +2,7 @@ Instance: RegiaoSulExemplo
 InstanceOf: Location
 Usage: #example
 Title: "Região de preço de uma marca"
-Description: "Região fictícia que uma marca usa para precificar. Não é uma unidade: agrupa unidades, que apontam para ela em `partOf`, e a marca fica em `managingOrganization`."
+Description: "Região fictícia que uma marca usa para precificar. Não é uma unidade: agrupa unidades, que apontam para ela em `partOf`. A marca fica em `managingOrganization` e se repete no `useContext` de cada preço da região."
 
 * status = #active
 * name = "Laboratório Exemplo, região Sul"

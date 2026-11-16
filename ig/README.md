@@ -37,7 +37,7 @@ Perfis do protocolo em que um laboratório expõe catálogo, unidades, agenda, a
 - **BRLabSchedule**: Restringe `Schedule`: a agenda pertence a uma unidade `BRLabLocation` e, opcionalmente, a um `BRLabHealthcareService`.
 - **BRLabSlot**: Restringe `Slot`: o horário pertence a uma agenda `BRLabSchedule`.
 - **BRLabActivityDefinition**: Restringe `ActivityDefinition` para um exame do catálogo: URL canônica, título e ao menos um código. LOINC no exame avulso, TUSS opcional em fatia própria e sem binding, e código próprio do laboratório para combo sem LOINC.
-- **BRLabChargeItemDefinition**: Restringe `ChargeItemDefinition` para o preço de um exame: mesmo código do item de catálogo e preço base em BRL. O preço vale por unidade (`useContext` com a unidade), por cidade (`jurisdiction` com o município no IBGE) ou por marca e região (`useContext` com o `Location` da região, cuja `managingOrganization` é a marca).
+- **BRLabChargeItemDefinition**: Restringe `ChargeItemDefinition` para o preço de um exame: mesmo código do item de catálogo e preço base em BRL. O preço vale por unidade (`useContext` com a unidade), por cidade (`jurisdiction` com o município no IBGE) ou por marca e região (dois `useContext`: a `Organization` da marca, com o código `brand` do BRLabPriceContextCS, e o `Location` da região). A marca se lê no próprio preço, sem resolver o `Location`.
 - **BRLabServiceRequest**: Restringe `ServiceRequest` para o pedido de um exame agendado: ao menos um código (LOINC no exame avulso), TUSS opcional, paciente em `BRPatient` ou identificado por CPF.
 - **BRLabAppointment**: Restringe `Appointment`: pedidos em `BRLabServiceRequest`, horários em `BRLabSlot`, paciente e unidade como participantes obrigatórios e a extensão PaymentLink.
 
@@ -61,6 +61,7 @@ Perfis do protocolo em que um laboratório expõe catálogo, unidades, agenda, a
 - **BRCID10CS** — CID-10 pt-BR (DATASUS/Edusp). Stub `#not-present` — códigos nos ValueSets.
 - **BRIBGEMunicipioCS** — Códigos de município IBGE. Stub `#not-present`.
 - **BRLabAccessScopeCS**: Os seis escopos do acesso laboratorial por consentimento: `catalog.read`, `locations.read`, `schedule.read`, `appointment.write`, `results.read` e `consent.read`.
+- **BRLabPriceContextCS**: Tipo de contexto de uso que falta no FHIR R4 para preço de exame. Um código, `brand`, usado em `useContext` do BRLabChargeItemDefinition para apontar a marca.
 
 ### ValueSets
 

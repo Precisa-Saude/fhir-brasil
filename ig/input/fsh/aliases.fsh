@@ -24,6 +24,7 @@ Alias: $DerivedFromOCR = https://fhir-brasil.dev.br/ig/StructureDefinition/deriv
 
 // Acesso laboratorial por consentimento
 Alias: $LabAccessScope = https://fhir-brasil.dev.br/CodeSystem/lab-access-scope
+Alias: $LabPriceContext = https://fhir-brasil.dev.br/CodeSystem/lab-price-context
 Alias: $ConsentScope = http://terminology.hl7.org/CodeSystem/consentscope
 Alias: $ActCode = http://terminology.hl7.org/CodeSystem/v3-ActCode
 Alias: $ParticipationType = http://terminology.hl7.org/CodeSystem/v3-ParticipationType

@@ -49,10 +49,12 @@ Instance: PrecoGlicosePorMarcaERegiaoExemplo
 InstanceOf: BRLabChargeItemDefinition
 Usage: #example
 Title: "Preço por marca e região"
-Description: "Preço da glicose em uma região de uma marca: `useContext` aponta o Location da região, cuja `managingOrganization` é a marca. O valor é fictício."
+Description: "Preço da glicose em uma região de uma marca: um `useContext` aponta a Organization da marca e outro, o Location da região. Marca e valor são fictícios."
 
 * url = "https://laboratorio.example/fhir/ChargeItemDefinition/glicose-regiao-sul"
 * status = #active
 * code.coding[loinc] = $LOINC#2345-7 "Glicose"
+* useContext[brand].valueReference = Reference(Organization/laboratorio-exemplo)
+* useContext[brand].valueReference.display = "Laboratório Exemplo"
 * useContext[venue].valueReference = Reference(RegiaoSulExemplo)
 * propertyGroup.priceComponent[base].amount.value = 15.00

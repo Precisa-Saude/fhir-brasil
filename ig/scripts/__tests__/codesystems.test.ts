@@ -143,6 +143,23 @@ describe('BRLabAccessScopeCS', () => {
   });
 });
 
+describe('BRLabPriceContextCS', () => {
+  const content = readFsh('codesystems', 'BRLabPriceContextCS.fsh');
+
+  it('contém exatamente 1 código', () => {
+    expect(countCodes(content)).toBe(1);
+  });
+
+  it('contém o código da marca', () => {
+    expect(content).toContain('* #brand "Marca"');
+  });
+
+  it('declara a URL canônica e content = #complete', () => {
+    expect(content).toContain('https://fhir-brasil.dev.br/CodeSystem/lab-price-context');
+    expect(content).toContain('#complete');
+  });
+});
+
 describe('BRSUSRacaCorVS', () => {
   const content = readFsh('valuesets', 'BRSUSRacaCorVS.fsh');
 

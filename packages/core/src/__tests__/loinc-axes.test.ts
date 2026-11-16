@@ -78,14 +78,11 @@ const PROPERTIES_BY_UNIT: Record<string, string[]> = {
   'M/uL': ['NCnc'],
   'mEq/L': ['SCnc'],
   'mIU/mL': ['ACnc'],
-  'mL/min/1.73m²': ['ArVRat'],
-  'mcg/L': ['MCnc'],
-  'mcg/dL': ['MCnc'],
-  'mcg/mL': ['MCnc'],
+  'mL/min/1,73 m²': ['ArVRat'],
   'mg/L': ['MCnc'],
   'mg/dL': ['MCnc'],
   'mg/g': ['MRto'],
-  'mm/hr': ['Sedimentation Rate'],
+  'mm/h': ['Sedimentation Rate'],
   'mmol/L': ['SCnc'],
   'ng/L': ['MCnc'],
   'ng/dL': ['MCnc'],
@@ -95,15 +92,13 @@ const PROPERTIES_BY_UNIT: Record<string, string[]> = {
   'U/L': ['CCnc'],
   'U/mL': ['ACnc'],
   'uIU/mL': ['ACnc'],
-  'ug/dL': ['MCnc'],
-  'umol/L': ['SCnc'],
   cm: ['Len'],
   deg: ['Angle'],
   fL: ['EntVol', 'EntMeanVol'],
   // MCHC é massa/volume *por hemácia* (EntMCnc).
   'g/dL': ['MCnc', 'EntMCnc'],
   kg: ['Mass'],
-  'kg/m2': ['Ratio'],
+  'kg/m²': ['Ratio'],
   mm: ['Len'],
   pg: ['EntMass'],
   // O LOINC classifica o HOMA (47214-2) como concentração arbitrária.
@@ -111,8 +106,10 @@ const PROPERTIES_BY_UNIT: Record<string, string[]> = {
   // INR é tempo relativo (RelTime) no LOINC, e não razão de massa.
   razão: ['MRto', 'SRto', 'Ratio', 'RelTime'],
   s: ['Time'],
-  segundos: ['Time'],
+  'µg/dL': ['MCnc'],
   'µg/L': ['MCnc'],
+  'µg/mL': ['MCnc'],
+  'µmol/L': ['SCnc'],
 };
 
 /**

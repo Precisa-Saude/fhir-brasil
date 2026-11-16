@@ -525,7 +525,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Thyroxine', 'T4 Total', 'Total T4', 'Thyroxine (T4)', 'Thyroxine (T4), serum'],
       pt: ['Tiroxina', 'T4 Total', 'Tiroxina Total', 'Tiroxina (T4)'],
     },
-    unit: 'ug/dL',
+    unit: 'µg/dL',
   },
 
   // ============================================================================
@@ -902,7 +902,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['DHEA-Sulfate', 'DHEAS', 'DHEA-S', 'DHEA Sulfate'],
       pt: ['DHEA-Sulfato', 'DHEAS', 'Sulfato de DHEA'],
     },
-    unit: 'mcg/dL',
+    unit: 'µg/dL',
   },
   {
     code: 'Estradiol',
@@ -1167,7 +1167,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Lead', 'Blood Lead'],
       pt: ['Chumbo', 'Chumbo no Sangue'],
     },
-    unit: 'mcg/dL',
+    unit: 'µg/dL',
   },
   {
     code: 'Mercury',
@@ -1176,7 +1176,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Mercury', 'Blood Mercury'],
       pt: ['Mercúrio', 'Mercúrio no Sangue'],
     },
-    unit: 'mcg/L',
+    unit: 'µg/L',
   },
 
   // ============================================================================
@@ -1247,7 +1247,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Homocysteine'],
       pt: ['Homocisteína'],
     },
-    unit: 'umol/L',
+    unit: 'µmol/L',
   },
   {
     code: 'Iron',
@@ -1256,7 +1256,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Iron', 'Serum Iron'],
       pt: ['Ferro', 'Ferro Sérico'],
     },
-    unit: 'mcg/dL',
+    unit: 'µg/dL',
   },
   {
     code: 'TransferrinSaturation',
@@ -1296,7 +1296,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Ferro - Capac Total ligação',
       ],
     },
-    unit: 'mcg/dL',
+    unit: 'µg/dL',
   },
   {
     code: 'Transferrin',
@@ -1479,7 +1479,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Vitamin A', 'Retinol', 'Serum Retinol'],
       pt: ['Vitamina A', 'Retinol', 'Retinol Sérico', 'Vit A', 'Vit. A', 'Dosagem de Vitamina A'],
     },
-    unit: 'mcg/dL',
+    unit: 'µg/dL',
   },
   {
     code: 'VitaminB12',
@@ -1575,7 +1575,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Zinc', 'Serum Zinc'],
       pt: ['Zinco'],
     },
-    unit: 'mcg/dL',
+    unit: 'µg/dL',
   },
 
   // ============================================================================
@@ -1588,7 +1588,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Cortisol', 'Serum Cortisol'],
       pt: ['Cortisol'],
     },
-    unit: 'mcg/dL',
+    unit: 'µg/dL',
   },
   {
     code: 'IGF1',
@@ -1851,7 +1851,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Erythrocyte Sedimentation Rate', 'ESR', 'Sed Rate'],
       pt: ['Velocidade de Hemossedimentação', 'VHS', 'VSG'],
     },
-    unit: 'mm/hr',
+    unit: 'mm/h',
   },
   {
     code: 'INR',
@@ -1871,7 +1871,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Prothrombin Time', 'PT', 'Pro Time'],
       pt: ['Tempo de Protrombina', 'TP', 'TAP'],
     },
-    unit: 'segundos',
+    unit: 's',
   },
   {
     code: 'APTT',
@@ -2082,7 +2082,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'TFGe CKD-EPI 2021',
       ],
     },
-    unit: 'mL/min/1.73m²',
+    unit: 'mL/min/1,73 m²',
   },
   {
     code: 'Potassium',
@@ -2530,7 +2530,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Adiponectin', 'Serum Adiponectin'],
       pt: ['Adiponectina'],
     },
-    unit: 'mcg/mL',
+    unit: 'µg/mL',
   },
 
   // ============================================================================
@@ -2544,7 +2544,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Body Mass Index', 'BMI'],
       pt: ['Índice de Massa Corporal', 'IMC'],
     },
-    unit: 'kg/m2',
+    unit: 'kg/m²',
   },
   {
     code: 'BodyFatPct',
@@ -2927,7 +2927,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       pt: ['Índice de Massa Muscular', 'IMM', 'Índice de Massa Muscular Esquelética'],
     },
     section: 'OTH',
-    unit: 'kg/m2',
+    unit: 'kg/m²',
   },
   {
     code: 'PhaseAngle',

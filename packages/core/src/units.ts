@@ -81,6 +81,7 @@ export const UNIT_TO_UCUM: Record<string, string> = {
   'mIU/L': 'm[IU]/L',
   'mIU/mL': 'm[IU]/mL',
   mL: 'mL',
+  'mL/min/1,73 m²': 'mL/min/{1.73_m2}',
   'mL/min/1.73m²': 'mL/min/{1.73_m2}',
   mm: 'mm',
   'mm/h': 'mm/h',
@@ -102,6 +103,7 @@ export const UNIT_TO_UCUM: Record<string, string> = {
   pH: '[pH]',
   'pmol/L': 'pmol/L',
   razão: '{ratio}',
+  s: 's',
   score: '{score}',
   segundos: 's',
   // Enzyme activity
@@ -120,6 +122,7 @@ export const UNIT_TO_UCUM: Record<string, string> = {
   µg: 'ug',
   'µg/dL': 'ug/dL',
   'µg/L': 'ug/L',
+  'µg/mL': 'ug/mL',
   'µmol/L': 'umol/L',
   'µUI/mL': 'u[IU]/mL',
   índice: '{index}',
@@ -706,14 +709,14 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   },
   eGFR: {
     aliases: {
-      'ml/min/1,73 m2': 'mL/min/1.73m²',
-      'ml/min/1.73m2': 'mL/min/1.73m²',
-      'ml/min/1.73m²': 'mL/min/1.73m²',
+      'ml/min/1,73 m2': 'mL/min/1,73 m²',
+      'ml/min/1.73m2': 'mL/min/1,73 m²',
+      'ml/min/1.73m²': 'mL/min/1,73 m²',
     },
     canonicalUcum: 'mL/min/{1.73_m2}',
-    canonicalUnit: 'mL/min/1.73m²',
+    canonicalUnit: 'mL/min/1,73 m²',
     siUcum: 'mL/min/{1.73_m2}',
-    siUnit: 'mL/min/1.73m²',
+    siUnit: 'mL/min/1,73 m²',
   },
   Eosinophils: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   Eosinophils_Abs: { aliases: CBC_DIFF_ALIASES, ...CBC_DIFF },
@@ -884,13 +887,13 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   },
   Iron: {
     aliases: {
-      'mcg/dl': 'mcg/dL',
-      'microg/dl': 'mcg/dL',
-      'ug/dl': 'mcg/dL',
-      'µg/dl': 'mcg/dL',
+      'mcg/dl': 'µg/dL',
+      'microg/dl': 'µg/dL',
+      'ug/dl': 'µg/dL',
+      'µg/dl': 'µg/dL',
     },
     canonicalUcum: 'ug/dL',
-    canonicalUnit: 'mcg/dL',
+    canonicalUnit: 'µg/dL',
     siUcum: 'umol/L',
     siUnit: 'µmol/L',
   },
@@ -1192,13 +1195,13 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   },
   TIBC: {
     aliases: {
-      'mcg/dl': 'mcg/dL',
-      'microg/dl': 'mcg/dL',
-      'ug/dl': 'mcg/dL',
-      'µg/dl': 'mcg/dL',
+      'mcg/dl': 'µg/dL',
+      'microg/dl': 'µg/dL',
+      'ug/dl': 'µg/dL',
+      'µg/dl': 'µg/dL',
     },
     canonicalUcum: 'ug/dL',
-    canonicalUnit: 'mcg/dL',
+    canonicalUnit: 'µg/dL',
     siUcum: 'umol/L',
     siUnit: 'µmol/L',
   },
@@ -1350,11 +1353,38 @@ export function getSIUnit(code: string): string | null {
 // ─── Unit Conversion ────────────────────────────────────────────────────────────
 
 /**
+ * Grafia padrão de uma unidade, sem mudar a escala.
+ *
+ * O catálogo escreve cada unidade de um jeito só, e é o do SI na tradução do
+ * Inmetro: `µ` para micro (`mcg`, `ug` e `microg` são abreviações, que o SI
+ * não admite), `h` para hora, `s` para segundo, expoente em sobrescrito. A
+ * taxa de filtração segue o consenso SBN e SBPC/ML de 2024, com vírgula
+ * decimal e espaço antes do símbolo: `mL/min/1,73 m²`. As fontes estão em
+ * `docs/unidades.md`.
+ *
+ * Só troca grafia: `mcg/dL` e `µg/dL` são o mesmo número. Unidade que não
+ * tem regra aqui volta intacta.
+ */
+export function standardUnitSpelling(unit: string): string {
+  const trimmed = unit.trim().replace(/\u03bc/g, 'µ');
+  if (/^(segundos?|seconds?|seg|sec)$/i.test(trimmed)) return 's';
+  if (/^ml\/min\/1[.,]73\s*m[2²]$/i.test(trimmed)) return 'mL/min/1,73 m²';
+  return trimmed
+    .replace(/^(mcg|microg|ug)(?=$|\/)/i, 'µg')
+    .replace(/^umol(?=$|\/)/i, 'µmol')
+    .replace(/\/hr$/i, '/h')
+    .replace(/m2$/, 'm²');
+}
+
+/**
  * Normalize a unit string to its canonical display form for a given biomarker.
- * Returns the input unchanged if no alias is found.
+ * Returns the standard spelling of the input if no alias is found.
  */
 function normalizeUnit(unit: string, config: BiomarkerUnitConfig): string {
-  return config.aliases[unit.toLowerCase()] ?? config.aliases[unit] ?? unit;
+  const direct = config.aliases[unit.toLowerCase()] ?? config.aliases[unit];
+  if (direct !== undefined) return direct;
+  const standard = standardUnitSpelling(unit);
+  return config.aliases[standard.toLowerCase()] ?? config.aliases[standard] ?? standard;
 }
 
 /**

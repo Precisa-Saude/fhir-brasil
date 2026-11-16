@@ -78,7 +78,7 @@ describe('BIOMARKER_DEFAULT_UNIT deriva de biomarkers.ts', () => {
   it('tem a mesma unidade da definição, e não uma segunda grafia', () => {
     // Até out/2026 TSH era `µUI/mL` aqui e `uIU/mL` na definição.
     expect(BIOMARKER_DEFAULT_UNIT.TSH).toBe('uIU/mL');
-    expect(BIOMARKER_DEFAULT_UNIT.Iron).toBe('mcg/dL');
+    expect(BIOMARKER_DEFAULT_UNIT.Iron).toBe('µg/dL');
     expect(BIOMARKER_DEFAULT_UNIT.Omega3_EPA).toBe('%');
   });
 
@@ -268,9 +268,9 @@ describe('getDefaultUnit', () => {
   });
 
   it('should return correct units for iron studies', () => {
-    expect(getDefaultUnit('Iron')).toBe('mcg/dL');
+    expect(getDefaultUnit('Iron')).toBe('µg/dL');
     expect(getDefaultUnit('Ferritin')).toBe('ng/mL');
-    expect(getDefaultUnit('TIBC')).toBe('mcg/dL');
+    expect(getDefaultUnit('TIBC')).toBe('µg/dL');
     expect(getDefaultUnit('TransferrinSaturation')).toBe('%');
   });
 });

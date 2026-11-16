@@ -10,7 +10,7 @@
  * 3. Specific Labs - Fleury, Weinmann, Quest, LabCorp (when above unavailable)
  */
 
-import { getCanonicalUnit as getCanonicalUnitForCode } from './units';
+import { getCanonicalUnit as getCanonicalUnitForCode, standardUnitSpelling } from './units';
 
 // =============================================================================
 // TYPES
@@ -228,13 +228,13 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   Adiponectin: {
-    default: { max: 26, min: 4, optimalMax: 20, optimalMin: 8, unit: 'mcg/mL' },
+    default: { max: 26, min: 4, optimalMax: 20, optimalMin: 8, unit: 'µg/mL' },
     kind: 'reference-interval',
     source: 'tietz-7ed-2015',
   },
 
   ADMA: {
-    default: { max: 0.7, min: 0.3, optimalMax: 0.55, optimalMin: 0.3, unit: 'umol/L' },
+    default: { max: 0.7, min: 0.3, optimalMax: 0.55, optimalMin: 0.3, unit: 'µmol/L' },
     kind: 'reference-interval',
     source: 'nemeth-adma-2017',
   },
@@ -337,7 +337,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   Ammonia: {
-    default: { max: 45, min: 15, optimalMax: 40, optimalMin: 20, unit: 'umol/L' },
+    default: { max: 45, min: 15, optimalMax: 40, optimalMin: 20, unit: 'µmol/L' },
     kind: 'reference-interval',
     source: 'tietz-7ed-2015',
   },
@@ -405,7 +405,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   Arsenic: {
-    default: { max: 35, min: 0, optimalMax: 20, optimalMin: 0, unit: 'mcg/L' },
+    default: { max: 35, min: 0, optimalMax: 20, optimalMin: 0, unit: 'µg/L' },
     kind: 'decision-threshold',
     source: 'nr7-pcmso-2020',
   },
@@ -561,7 +561,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   Cadmium: {
-    default: { max: 1.2, min: 0, optimalMax: 0.5, optimalMin: 0, unit: 'mcg/L' },
+    default: { max: 1.2, min: 0, optimalMax: 0.5, optimalMin: 0, unit: 'µg/L' },
     kind: 'decision-threshold',
     source: 'nr7-pcmso-2020',
   },
@@ -650,7 +650,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   Copper: {
-    default: { max: 175, min: 70, optimalMax: 150, optimalMin: 85, unit: 'mcg/dL' },
+    default: { max: 175, min: 70, optimalMax: 150, optimalMin: 85, unit: 'µg/dL' },
     kind: 'reference-interval',
     source: 'tietz-7ed-2015',
   },
@@ -662,13 +662,13 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   Cortisol: {
-    default: { max: 25, min: 5, optimalMax: 20, optimalMin: 10, unit: 'mcg/dL' },
+    default: { max: 25, min: 5, optimalMax: 20, optimalMin: 10, unit: 'µg/dL' },
     kind: 'reference-interval',
     source: 'tietz-7ed-2015',
   },
 
   CortisolFree: {
-    default: { max: 2.5, min: 0.5, optimalMax: 2.0, optimalMin: 0.8, unit: 'mcg/dL' },
+    default: { max: 2.5, min: 0.5, optimalMax: 2.0, optimalMin: 0.8, unit: 'µg/dL' },
     kind: 'reference-interval',
     source: 'tietz-7ed-2015',
   },
@@ -761,42 +761,42 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   DHEAS: {
-    default: { max: 500, min: 100, optimalMax: 400, optimalMin: 150, unit: 'mcg/dL' },
+    default: { max: 500, min: 100, optimalMax: 400, optimalMin: 150, unit: 'µg/dL' },
     kind: 'reference-interval',
     source: 'tietz-7ed-2015',
     variants: [
       {
         ageMax: 39,
         ageMin: 18,
-        range: { max: 640, min: 280, optimalMax: 500, optimalMin: 300, unit: 'mcg/dL' },
+        range: { max: 640, min: 280, optimalMax: 500, optimalMin: 300, unit: 'µg/dL' },
         sex: 'M',
       },
       {
         ageMax: 59,
         ageMin: 40,
-        range: { max: 520, min: 120, optimalMax: 400, optimalMin: 150, unit: 'mcg/dL' },
+        range: { max: 520, min: 120, optimalMax: 400, optimalMin: 150, unit: 'µg/dL' },
         sex: 'M',
       },
       {
         ageMin: 60,
-        range: { max: 290, min: 42, optimalMax: 220, optimalMin: 80, unit: 'mcg/dL' },
+        range: { max: 290, min: 42, optimalMax: 220, optimalMin: 80, unit: 'µg/dL' },
         sex: 'M',
       },
       {
         ageMax: 39,
         ageMin: 18,
-        range: { max: 380, min: 65, optimalMax: 300, optimalMin: 100, unit: 'mcg/dL' },
+        range: { max: 380, min: 65, optimalMax: 300, optimalMin: 100, unit: 'µg/dL' },
         sex: 'F',
       },
       {
         ageMax: 59,
         ageMin: 40,
-        range: { max: 240, min: 32, optimalMax: 180, optimalMin: 60, unit: 'mcg/dL' },
+        range: { max: 240, min: 32, optimalMax: 180, optimalMin: 60, unit: 'µg/dL' },
         sex: 'F',
       },
       {
         ageMin: 60,
-        range: { max: 140, min: 18, optimalMax: 100, optimalMin: 30, unit: 'mcg/dL' },
+        range: { max: 140, min: 18, optimalMax: 100, optimalMin: 30, unit: 'µg/dL' },
         sex: 'F',
       },
     ],
@@ -809,7 +809,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
       min: 60,
       optimalMax: 120,
       optimalMin: 90,
-      unit: 'mL/min/1.73m²',
+      unit: 'mL/min/1,73 m²',
     },
     // KDIGO 2024: TFG 60-89 (G2) sem marcador de lesão renal não é DRC, em
     // nenhuma faixa etária. A variante por idade que existia aqui rebaixava o
@@ -839,7 +839,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   ESR: {
-    default: { max: 20, min: 0, optimalMax: 10, optimalMin: 0, unit: 'mm/hr' },
+    default: { max: 20, min: 0, optimalMax: 10, optimalMin: 0, unit: 'mm/h' },
     kind: 'reference-interval',
     source: 'tietz-7ed-2015',
   },
@@ -1022,7 +1022,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   GlycoMark: {
-    default: { max: 40, min: 10, optimalMax: 35, optimalMin: 15, unit: 'mcg/mL' },
+    default: { max: 40, min: 10, optimalMax: 35, optimalMin: 15, unit: 'µg/mL' },
     kind: 'reference-interval',
     source: 'tietz-7ed-2015',
   },
@@ -1187,7 +1187,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   Homocysteine: {
-    default: { max: 15, min: 4, minKind: 'display', optimalMax: 10, optimalMin: 5, unit: 'umol/L' },
+    default: { max: 15, min: 4, minKind: 'display', optimalMax: 10, optimalMin: 5, unit: 'µmol/L' },
     direction: 'lower-better',
     kind: 'reference-interval',
     source: 'selhub-homocysteine-1999',
@@ -1217,18 +1217,18 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   Iron: {
-    default: { max: 170, min: 60, optimalMax: 140, optimalMin: 80, unit: 'mcg/dL' },
+    default: { max: 170, min: 60, optimalMax: 140, optimalMin: 80, unit: 'µg/dL' },
     kind: 'reference-interval',
     source: 'sbpc-ml-2021',
     variants: [
       {
         ageMin: 18,
-        range: { max: 175, min: 65, optimalMax: 150, optimalMin: 80, unit: 'mcg/dL' },
+        range: { max: 175, min: 65, optimalMax: 150, optimalMin: 80, unit: 'µg/dL' },
         sex: 'M',
       },
       {
         ageMin: 18,
-        range: { max: 170, min: 50, optimalMax: 130, optimalMin: 60, unit: 'mcg/dL' },
+        range: { max: 170, min: 50, optimalMax: 130, optimalMin: 60, unit: 'µg/dL' },
         sex: 'F',
       },
     ],
@@ -1337,7 +1337,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   Lead: {
-    default: { max: 5, min: 0, optimalMax: 2, optimalMin: 0, unit: 'mcg/dL' },
+    default: { max: 5, min: 0, optimalMax: 2, optimalMin: 0, unit: 'µg/dL' },
     kind: 'decision-threshold',
     source: 'nr7-pcmso-2020',
   },
@@ -1463,7 +1463,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   Mercury: {
-    default: { max: 10, min: 0, optimalMax: 5, optimalMin: 0, unit: 'mcg/L' },
+    default: { max: 10, min: 0, optimalMax: 5, optimalMin: 0, unit: 'µg/L' },
     kind: 'decision-threshold',
     source: 'nr7-pcmso-2020',
   },
@@ -1743,7 +1743,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   SDMA: {
-    default: { max: 0.6, min: 0.3, optimalMax: 0.5, optimalMin: 0.3, unit: 'umol/L' },
+    default: { max: 0.6, min: 0.3, optimalMax: 0.5, optimalMin: 0.3, unit: 'µmol/L' },
     kind: 'reference-interval',
     source: 'schwedhelm-sdma-2011',
   },
@@ -1809,7 +1809,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   T4Total: {
-    default: { max: 12.0, min: 4.5, optimalMax: 10.0, optimalMin: 6.0, unit: 'ug/dL' },
+    default: { max: 12.0, min: 4.5, optimalMax: 10.0, optimalMin: 6.0, unit: 'µg/dL' },
     kind: 'reference-interval',
     source: 'tietz-7ed-2015',
   },
@@ -1871,7 +1871,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   TIBC: {
-    default: { max: 370, min: 250, optimalMax: 350, optimalMin: 280, unit: 'mcg/dL' },
+    default: { max: 370, min: 250, optimalMax: 350, optimalMin: 280, unit: 'µg/dL' },
     kind: 'reference-interval',
     source: 'tietz-7ed-2015',
   },
@@ -2066,7 +2066,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   VitaminA: {
-    default: { max: 100, min: 20, optimalMax: 80, optimalMin: 30, unit: 'mcg/dL' },
+    default: { max: 100, min: 20, optimalMax: 80, optimalMin: 30, unit: 'µg/dL' },
     kind: 'reference-interval',
     source: 'tietz-7ed-2015',
   },
@@ -2156,7 +2156,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   Zinc: {
-    default: { max: 120, min: 60, optimalMax: 100, optimalMin: 70, unit: 'mcg/dL' },
+    default: { max: 120, min: 60, optimalMax: 100, optimalMin: 70, unit: 'µg/dL' },
     kind: 'reference-interval',
     source: 'tietz-7ed-2015',
   },
@@ -2618,7 +2618,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   // BMI - WHO classification: 18.5–24.9 normal, 25–29.9 overweight, ≥30 obese
   BMI: {
-    default: { max: 30, min: 18.5, optimalMax: 24.9, optimalMin: 18.5, unit: 'kg/m2' },
+    default: { max: 30, min: 18.5, optimalMax: 24.9, optimalMin: 18.5, unit: 'kg/m²' },
     kind: 'decision-threshold',
     source: 'who-obesity-2000',
   },
@@ -2672,7 +2672,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
 
   // Prothrombin Time
   ProthrombinTime: {
-    default: { max: 13.5, min: 11, optimalMax: 13, optimalMin: 11, unit: 'seconds' },
+    default: { max: 13.5, min: 11, optimalMax: 13, optimalMin: 11, unit: 's' },
     kind: 'reference-interval',
     source: 'tietz-7ed-2015',
   },
@@ -2956,10 +2956,13 @@ export function applyFallbackReferenceRanges<
     if (fallback) {
       // Only apply if units are compatible or biomarker has no unit
       const canonicalUnit = getCanonicalUnitForCode(biomarker.code);
+      // A comparação é pela grafia padrão: um valor gravado em `mcg/dL` antes
+      // de o catálogo passar a `µg/dL` continua recebendo a faixa.
+      const spelled = biomarker.unit ? standardUnitSpelling(biomarker.unit).toLowerCase() : '';
       const unitsMatch =
         !biomarker.unit ||
-        biomarker.unit.toLowerCase() === fallback.unit.toLowerCase() ||
-        (canonicalUnit && biomarker.unit.toLowerCase() === canonicalUnit.toLowerCase()) ||
+        spelled === fallback.unit.toLowerCase() ||
+        (canonicalUnit && spelled === canonicalUnit.toLowerCase()) ||
         // Handle common unit variations
         (biomarker.unit === '%' && fallback.unit === '%');
 

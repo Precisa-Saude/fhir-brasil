@@ -6,6 +6,10 @@ Criar o pacote `@precisa-saude/fhir-lab-access` em `packages/lab-access`: o
 cliente do lado do receptor (o backend de um aplicativo voltado ao paciente)
 para o protocolo Open Labs Brasil, versão 0.2.0 da especificação.
 
+Atualizado depois para a versão 0.2.1: critérios, evidências e pontos em
+aberto dessa atualização estão na última seção, "Atualização para a
+especificação 0.2.1".
+
 A especificação é um rascunho ainda não publicado e nunca foi testada contra
 um laboratório real. Por isso o pacote nasce `private: true` e não entra na
 lista de publicação.
@@ -213,6 +217,10 @@ acesso laboratorial usa.
 
 ## Pontos em aberto
 
+Lista da implementação da 0.2.0. A 0.2.1 respondeu à maior parte: o que
+mudou em cada ponto está na seção "Atualização para a especificação 0.2.1",
+abaixo.
+
 Onde a especificação é ambígua, ou parece errada, o pacote ficou com a
 leitura mais conservadora. Cada ponto abaixo pede decisão na especificação.
 
@@ -279,3 +287,139 @@ leitura mais conservadora. Cada ponto abaixo pede decisão na especificação.
 16. **`RECEIVER_NOT_ALLOWED` e `invalid_client`.** A seção 6.4 manda parar de
     chamar o provedor. O pacote devolve o erro sem repetição, e a decisão de
     parar fica com o aplicativo.
+
+## Atualização para a especificação 0.2.1
+
+A 0.2.1 é um PATCH da especificação que esclarece pontos levantados por esta
+implementação e, em vários deles, fixa comportamento. A versão de protocolo
+continua `0.2`. Fonte: `CHANGELOG.md`, capítulos 00 a 09, `registro/` e as
+notas de revisão do repositório da especificação, lidos no ramo principal em
+2026-11-16. Como antes, este repositório cita os identificadores e descreve o
+comportamento com palavras próprias.
+
+### Critérios de aceite da 0.2.1
+
+Cada critério traz o comportamento observável, a verificação e, quando
+cabe, o identificador do requisito. Os testes com identificador no nome são
+escritos antes do código e falham contra a implementação da 0.2.0.
+
+1. **Números de versão.** O pacote declara a especificação `0.2.1` e o
+   protocolo `0.2`. O schema do registro aceita `schema_version` `0.x` e
+   recusa `1.x`. As fixtures passam a ser o exemplo regenerado da 0.2.1 e a
+   assinatura dele, com o resumo SHA-256 fixado no teste e a entrada no
+   `.prettierignore` mantida. Nada no código ou nos testes fica preso a
+   `1.0` ou a `/v1`.
+   Verificação: `registry.test.ts`, `package.test.ts` e
+   `grep -rn "acesso/v1" packages/lab-access` sem resultado.
+2. **Negociação de versão (REG-009, RCP-037).** A versão efetiva é calculada
+   pela regra da seção 9.1: com MAJOR 0, só versão idêntica; com MAJOR 1 ou
+   mais, o menor entre os maiores MINOR de cada lado. O `api_base_url` do
+   provedor precisa terminar em `/v{MAJOR}`. A versão efetiva precisa ser
+   uma que o pacote implementa (`0.2`). Sem versão efetiva o provedor não
+   aparece em `client.providers()` e nenhuma chamada é feita a ele.
+   Verificação: testes `REG-009` e `RCP-037`.
+3. **Verificação do registro em catorze passos (REG-007).** `verifyRegistry`
+   aplica V2 a V14, na ordem, e recusa no primeiro que falha, informando o
+   passo no erro (`step`). Entram o tamanho da chave (V5), o ambiente (V8,
+   com o ambiente do participante informado na chamada), a validade invertida
+   ou acima de 30 dias (V11), o `kid` das chaves anunciadas (V13) e a
+   unicidade de `participant_id` com `client_id` igual ao `participant_id`
+   (V14). V1 (baixar por HTTPS) é do aplicativo, porque o pacote não busca o
+   registro. Fora da lista, nenhuma regra de recusa.
+   Verificação: um teste `REG-007` por condição, cada candidato validamente
+   assinado quando a condição não é a assinatura.
+4. **Registro expirado (REG-008, RCP-033).** Nos 7 dias seguintes a
+   `expires_at`: nenhuma jornada nova, nenhum token de catálogo, unidades ou
+   agenda, e token `client_credentials` só com `consent.manage` sozinho, para
+   ler e revogar consentimentos. Criar consentimento é recusado localmente
+   com `RegistryExpiredError`, e o `403 REGISTRY_EXPIRED` do provedor vira
+   erro tipado. Depois dos 7 dias, nenhum token, e a revogação fica pendente.
+   Verificação: testes `REG-008` e `RCP-033`.
+5. **Revogação pendente (RCP-028, RCP-029).** Toda revogação enviada pelo
+   receptor faz no máximo três tentativas automáticas ao todo, contando a
+   obtenção do token de provedor, com recuo e `Retry-After`. Falhando, grava
+   a pendência (consentimento, provedor, motivo, instante do pedido,
+   tentativas, próxima tentativa e o `consent_management_uri` do provedor)
+   em um `RevocationStore`. O pacote traz um armazenamento em memória, que
+   não é durável: o armazenamento durável é do aplicativo. O pacote não roda
+   temporizador: expõe `pendingRevocations()` e `retryPendingRevocations()`,
+   que faz uma única chamada por pendência vencida e agenda a seguinte de
+   hora em hora nas primeiras 24 horas e diariamente depois. 204, 404
+   `CONSENT_NOT_FOUND`, 422 `CONSENT_INVALID_STATE` e a passagem de
+   `expiration_date_time`, quando conhecida, encerram a pendência. Nenhuma
+   pendência é apagada por desistência.
+   Verificação: testes `RCP-028` e `RCP-029`.
+6. **Conferência impossível (RCP-027).** Leitura do consentimento que falha,
+   que vem sem `patient`, sem `patient.cpf`, ou com CPF que não tem 11 dígitos
+   com dígitos verificadores válidos: o vínculo não é concluído, os tokens
+   são descartados e a revogação usa `RECEIVER_TERMINATION`, nunca
+   `PATIENT_MISMATCH`. O CPF esperado, informado pelo aplicativo, também é
+   conferido pelos dígitos verificadores antes da troca do código.
+   Verificação: testes `RCP-027`.
+7. **Metadados do servidor de autorização (AUT-026, RCP-031).** Os catorze
+   campos da tabela da seção 5.2 são conferidos com o valor exigido:
+   igualdade exata onde a tabela diz "exatamente", URLs `https`, os três
+   booleanos `true`, `grant_types_supported` sem `password` e `implicit`, e
+   `scopes_supported` contendo os escopos do provedor no registro. `jwks_uri`
+   é exigido e nunca buscado. Os endereços de `mtls_endpoint_aliases`
+   também precisam ser `https`.
+   Verificação: um teste `RCP-031` que omite cada campo, um por vez, e outro
+   que contradiz cada valor.
+8. **Paginação (API-012, RCP-030).** O link `next` só é seguido com o mesmo
+   esquema, host e porta do `fhir_base_url` do registro e caminho dentro do
+   caminho da base, em fronteira de segmento, depois de interpretar a URL.
+   Fora disso nenhuma requisição é feita. Resposta 3xx nunca é seguida, nos
+   endpoints de consentimento e na API FHIR.
+   Verificação: testes `RCP-030` para outro host, outro esquema, outra
+   porta, caminho fora da base e redirecionamento.
+9. **`If-None-Exist` (AGD-015, AGD-017, RCP-036).** O cabeçalho vai na forma
+   literal `identifier={system}|{value}`. `value` com 1 a 64 caracteres não
+   reservados do RFC 3986. `system` como URL `https` com até 200 caracteres
+   de `A-Z a-z 0-9 - . _ ~ : /`, sem consulta, fragmento nem `%`. Fora disso
+   o agendamento é recusado antes do envio.
+   Verificação: testes `RCP-036`.
+10. **Link de pagamento (AGD-016, RCP-035).** `readPaymentLink(appointment)`
+    devolve o endereço só da extensão de URL canônica `payment-link`, no
+    nível raiz, em `valueUrl` e com esquema `https`. Link em outro elemento,
+    em outro esquema ou repetido não é devolvido. A criação recusa um
+    `Appointment` que já traga a extensão. Remarcação e cancelamento
+    devolvem o recurso como foi lido.
+    Verificação: testes `RCP-035`.
+11. **Participantes e pedidos contidos (perfil `br-lab-appointment`).** Na
+    criação: exatamente um participante com `actor.type` `Patient`, com a
+    referência `Patient/{fhir_id}` do consentimento, e exatamente um com
+    `actor.type` `Location`. O `subject` de cada pedido contido repete a
+    referência do participante paciente, caractere a caractere, e, quando
+    traz `type`, ele é `Patient`. Cada pedido tem `status` `active`,
+    `intent` `order`, `code` com ao menos um `coding` e não leva
+    `meta.versionId` nem `meta.lastUpdated`.
+    Verificação: casos de recusa em `patient-api.test.ts`.
+12. **Tokens de provedor (AUT-027, RCP-032, RCP-034).** Um token por escopo,
+    `consent.manage` sempre sozinho. Nenhum token de acesso é usado depois de
+    `expires_in`, contado do recebimento, com margem de 60 segundos. O
+    endpoint de revogação de token do RFC 7009 nunca é chamado, e a
+    revogação de consentimento é sempre o `DELETE`.
+    Verificação: testes `RCP-032` e `RCP-034`.
+13. **Alcance do preço.** `chargeItemScope(chargeItemDefinition)` lê os três
+    alcances do perfil `br-lab-charge-item-definition`: unidade ou região
+    (`useContext` `venue`), marca (`useContext` `brand` do sistema
+    `lab-price-context`) e municípios (`jurisdiction`). Contexto de tipo
+    desconhecido é sinalizado, e o preço só é dado como geral quando não traz
+    contexto nenhum.
+    Verificação: testes em `provider-api.test.ts`.
+14. **Mapa de conformidade.** A tabela do README cobre REG-001 a REG-010 e
+    RCP-001 a RCP-037, com REG-006 e RCP-014 marcados como retirados e sem
+    teste. `conformance.test.ts` confere a tabela contra os nomes dos testes.
+15. **Verificações.** `pnpm turbo run lint typecheck test build` no
+    repositório inteiro, `pnpm format:check`, `pnpm packages:check` com o
+    pacote fora da lista de publicação, e cobertura do pacote igual ou acima
+    dos limiares do repositório.
+
+### Fora de escopo da 0.2.1
+
+- Temporizador ou agendador de repetições: o pacote é biblioteca.
+- Armazenamento durável de pendências: interface no pacote, implementação no
+  aplicativo.
+- Busca do registro e telas do aplicativo (inclusive a da pendência).
+- Qualquer mudança no guia de implementação, na especificação ou na
+  publicação do pacote.

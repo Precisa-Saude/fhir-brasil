@@ -5,10 +5,44 @@
  * valer assim que o aplicativo entrega ao cliente o documento novo.
  */
 
+import { SUPPORTED_PROTOCOL_VERSIONS } from './constants';
 import type { ClientContext, ResolvedProvider } from './context';
 import { PROTOCOL_ERROR_CODES } from './error-codes';
-import { LabAccessApiError, ReceiverStatusError, ScopeError } from './errors';
+import {
+  LabAccessApiError,
+  ProviderUnavailableError,
+  ReceiverStatusError,
+  ScopeError,
+} from './errors';
 import { negotiateProtocolVersion } from './registry';
+import type { RegistryProvider, RegistryReceiver } from './registry-types';
+import { baseUrl } from './validation';
+
+/**
+ * Confere se receptor e provedor se comunicam (seção 9.1) e devolve a versão
+ * efetiva: ela precisa existir, ser uma versão que este pacote implementa, e o
+ * `api_base_url` do provedor precisa terminar em `/v{MAJOR}` dela.
+ */
+export function effectiveProtocolVersion(
+  receiver: RegistryReceiver,
+  provider: RegistryProvider,
+): string {
+  const version = negotiateProtocolVersion(receiver.protocol_versions, provider.protocol_versions);
+  if (!SUPPORTED_PROTOCOL_VERSIONS.includes(version)) {
+    throw new ProviderUnavailableError(
+      'unsupported-version',
+      `A versão efetiva com o provedor é ${version}, que este pacote não implementa.`,
+    );
+  }
+  const major = version.split('.')[0];
+  if (!baseUrl(provider.provider.api_base_url).endsWith(`/v${major}`)) {
+    throw new ProviderUnavailableError(
+      'api-version-mismatch',
+      `O api_base_url do provedor deveria terminar em /v${major}.`,
+    );
+  }
+  return version;
+}
 
 export async function resolveProvider(
   ctx: ClientContext,
@@ -20,8 +54,11 @@ export async function resolveProvider(
     throw new ReceiverStatusError(receiver.status);
   }
   const provider = registry.getProvider(providerId);
-  negotiateProtocolVersion(receiver.protocol_versions, provider.protocol_versions);
-  const endpoints = await ctx.discover(provider.provider.issuer);
+  effectiveProtocolVersion(receiver, provider);
+  const endpoints = await ctx.discover(
+    provider.provider.issuer,
+    provider.provider.scopes_supported,
+  );
   return { endpoints, provider, receiver };
 }
 

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { PAYMENT_LINK_URL, readPaymentLink } from '../appointment';
 import { LabAccessConfigError, LabAccessProtocolError, LabAccessSchedulingError } from '../errors';
 import type { FHIRAppointment } from '../fhir-types';
 import { bundle, connect, createHarness, type Harness } from './fake-lab';
@@ -20,14 +21,14 @@ function proposed(): FHIRAppointment {
         intent: 'order',
         resourceType: 'ServiceRequest',
         status: 'active',
-        subject: { reference: 'Patient/pac-teste-1' },
+        subject: { reference: 'Patient/pac-teste-1', type: 'Patient' },
       },
     ],
     end: '2026-11-23T10:15:00-03:00',
     identifier: [IDENTIFIER],
     participant: [
-      { actor: { reference: 'Patient/pac-teste-1' }, status: 'accepted' },
-      { actor: { reference: 'Location/unidade-norte' }, status: 'needs-action' },
+      { actor: { reference: 'Patient/pac-teste-1', type: 'Patient' }, status: 'accepted' },
+      { actor: { reference: 'Location/unidade-norte', type: 'Location' }, status: 'needs-action' },
     ],
     resourceType: 'Appointment',
     slot: [{ reference: 'Slot/horario-23nov-10h' }],
@@ -57,7 +58,7 @@ function lastFhir(harness: Harness) {
 }
 
 describe('appointment.write', () => {
-  it('cria o agendamento com os pedidos contidos, If-None-Exist e Prefer', async () => {
+  it('RCP-036: cria o agendamento com If-None-Exist na forma literal, os pedidos contidos e Prefer', async () => {
     const { access, harness } = await setup();
     harness.lab.fhir = (call) =>
       jsonResponse(
@@ -151,6 +152,13 @@ describe('appointment.write', () => {
         identifier: { system: 'https://x.example', value: 'y' },
       }),
     ).rejects.toBeInstanceOf(LabAccessConfigError);
+    // O indicado também precisa seguir o conjunto de caracteres do protocolo.
+    appointment.identifier!.push({ system: IDENTIFIER.system, value: 'a b' });
+    await expect(
+      access.createAppointment(appointment, {
+        identifier: { system: IDENTIFIER.system, value: 'a b' },
+      }),
+    ).rejects.toBeInstanceOf(LabAccessConfigError);
   });
 
   const invalid: [string, (a: FHIRAppointment) => void][] = [
@@ -173,9 +181,70 @@ describe('appointment.write', () => {
     ],
     [
       'participante de outro paciente',
-      (a) => (a.participant[0]!.actor = { reference: 'Patient/outro' }),
+      (a) => (a.participant[0]!.actor = { reference: 'Patient/outro', type: 'Patient' }),
     ],
     ['sem o paciente entre os participantes', (a) => a.participant.shift()],
+    ['participante paciente sem actor.type', (a) => delete a.participant[0]!.actor!.type],
+    ['participante unidade sem actor.type', (a) => delete a.participant[1]!.actor!.type],
+    ['sem a unidade entre os participantes', (a) => a.participant.pop()],
+    ['sem participantes', (a) => delete (a as { participant?: unknown }).participant],
+    ['sem basedOn', (a) => delete a.basedOn],
+    ['sem contained', (a) => delete a.contained],
+    [
+      'dois participantes paciente',
+      (a) =>
+        a.participant.push({
+          actor: { reference: 'Patient/pac-teste-1', type: 'Patient' },
+          status: 'accepted',
+        }),
+    ],
+    [
+      'duas unidades',
+      (a) =>
+        a.participant.push({
+          actor: { reference: 'Location/outra', type: 'Location' },
+          status: 'needs-action',
+        }),
+    ],
+    [
+      'actor.type Patient apontando para outro tipo de recurso',
+      (a) => (a.participant[0]!.actor = { reference: 'Location/unidade-norte', type: 'Patient' }),
+    ],
+    [
+      'actor.type Location apontando para outro tipo de recurso',
+      (a) => (a.participant[1]!.actor = { reference: 'Patient/pac-teste-1', type: 'Location' }),
+    ],
+    [
+      'paciente identificado só pelo CPF',
+      (a) =>
+        (a.participant[0]!.actor = {
+          identifier: {
+            system: 'http://rnds.saude.gov.br/fhir/r4/NamingSystem/cpf',
+            value: '52998224725',
+          },
+          type: 'Patient',
+        }),
+    ],
+    [
+      'subject do pedido com referência diferente da do participante',
+      (a) =>
+        (a.contained![0]!.subject = {
+          reference: 'https://api.laboratorio.example/fhir/r4/Patient/pac-teste-1',
+        }),
+    ],
+    [
+      'subject do pedido com type diferente de Patient',
+      (a) => (a.contained![0]!.subject = { reference: 'Patient/pac-teste-1', type: 'Group' }),
+    ],
+    ['pedido fora de active', (a) => (a.contained![0]!.status = 'draft')],
+    ['pedido com intent diferente de order', (a) => (a.contained![0]!.intent = 'plan')],
+    ['pedido sem code', (a) => delete a.contained![0]!.code],
+    ['pedido com code sem coding', (a) => (a.contained![0]!.code = { text: 'Glicose' })],
+    ['pedido contido com meta.versionId', (a) => (a.contained![0]!.meta = { versionId: '1' })],
+    [
+      'pedido contido com meta.lastUpdated',
+      (a) => (a.contained![0]!.meta = { lastUpdated: '2026-11-16T12:00:00Z' }),
+    ],
     ['tipo de recurso errado', (a) => ((a as { resourceType: string }).resourceType = 'Slot')],
   ];
 
@@ -188,6 +257,89 @@ describe('appointment.write', () => {
       LabAccessConfigError,
     );
     expect(harness.lab.fhirCalls).toHaveLength(before);
+  });
+
+  it('aceita pedido sem LOINC, com o código próprio do laboratório, e subject sem type', async () => {
+    const { access, harness } = await setup();
+    harness.lab.fhir = (call) => jsonResponse(201, { ...(call.json as object), id: 'ag-2' });
+    const appointment = proposed();
+    appointment.contained![0]!.code = {
+      coding: [{ code: 'COMBO-12', system: 'https://laboratorio.example/codigos' }],
+    };
+    appointment.contained![0]!.subject = { reference: 'Patient/pac-teste-1' };
+    await expect(access.createAppointment(appointment)).resolves.toMatchObject({ created: true });
+  });
+
+  it('RCP-036: recusa identificador fora do conjunto de caracteres do protocolo', async () => {
+    const { access, harness } = await setup();
+    const before = harness.lab.fhirCalls.length;
+    const values = ['a'.repeat(65), 'a/b', 'a:b', 'a%20b', 'a@b', 'á', ''];
+    const systems = [
+      'http://app-paciente.example/agendamentos',
+      'https://app-paciente.example/agendamentos?x=1',
+      'https://app-paciente.example/agendamentos#x',
+      'https://app-paciente.example/agend%61mentos',
+      'https://usuario@app-paciente.example/agendamentos',
+      `https://app-paciente.example/${'a'.repeat(180)}`,
+      'https://',
+      'https://:',
+      'urn:uuid:e3f1b2a4-5c6d-4e7f-8a9b-0c1d2e3f4a5b',
+    ];
+    const cases = [
+      ...values.map((value) => ({ system: IDENTIFIER.system, value })),
+      ...systems.map((system) => ({ system, value: IDENTIFIER.value })),
+    ];
+    for (const identifier of cases) {
+      const appointment = proposed();
+      appointment.identifier = [identifier];
+      await expect(
+        access.createAppointment(appointment),
+        JSON.stringify(identifier),
+      ).rejects.toBeInstanceOf(LabAccessConfigError);
+    }
+    expect(harness.lab.fhirCalls).toHaveLength(before);
+  });
+
+  it('RCP-036: aceita value de 64 caracteres não reservados e system no limite de 200', async () => {
+    const { access, harness } = await setup();
+    harness.lab.fhir = (call) => jsonResponse(201, { ...(call.json as object), id: 'ag-3' });
+    const system = `https://app-paciente.example/${'a'.repeat(200 - 'https://app-paciente.example/'.length)}`;
+    const value = `${'A-._~z09'.repeat(8)}`;
+    expect(system).toHaveLength(200);
+    expect(value).toHaveLength(64);
+    const appointment = proposed();
+    appointment.identifier = [{ system, value }];
+    await access.createAppointment(appointment);
+    expect(lastFhir(harness).call.headers['If-None-Exist']).toBe(`identifier=${system}|${value}`);
+  });
+
+  it('RCP-035: a criação não envia a extensão de link de pagamento', async () => {
+    const { access, harness } = await setup();
+    const before = harness.lab.fhirCalls.length;
+    const appointment = proposed();
+    appointment.extension = [{ url: PAYMENT_LINK_URL, valueUrl: 'https://pagamento.example/x' }];
+    await expect(access.createAppointment(appointment)).rejects.toBeInstanceOf(
+      LabAccessConfigError,
+    );
+    expect(harness.lab.fhirCalls).toHaveLength(before);
+  });
+
+  it('RCP-035: na remarcação, o recurso volta como foi lido, com a extensão de pagamento', async () => {
+    const { access, harness } = await setup();
+    harness.lab.fhir = (call) => jsonResponse(200, call.json, { ETag: 'W/"4"' });
+    const current = {
+      ...stored(),
+      extension: [{ url: PAYMENT_LINK_URL, valueUrl: 'https://www.laboratorio.example/pagar/1' }],
+      status: 'pending' as const,
+    };
+    await access.rescheduleAppointment({
+      current,
+      end: '2026-11-24T09:15:00-03:00',
+      etag: 'W/"3"',
+      slot: 'horario-24nov-09h',
+      start: '2026-11-24T09:00:00-03:00',
+    });
+    expect((lastFhir(harness).call.json as FHIRAppointment).extension).toEqual(current.extension);
   });
 
   it('409 SLOT_UNAVAILABLE vira erro tipado, sem repetição', async () => {
@@ -299,6 +451,12 @@ describe('appointment.write', () => {
     );
     await expect(
       access.cancelAppointment({ current: { ...stored(), id: undefined }, etag: 'W/"3"' }),
+    ).rejects.toBeInstanceOf(LabAccessConfigError);
+    await expect(
+      access.cancelAppointment({
+        current: { ...stored(), resourceType: 'Slot' } as never,
+        etag: 'W/"3"',
+      }),
     ).rejects.toBeInstanceOf(LabAccessConfigError);
     await expect(
       access.rescheduleAppointment({
@@ -456,5 +614,48 @@ describe('paciente e consent.read', () => {
     await page.next();
     expect(lastFhir(harness).call.url).toBe(next);
     expect(lastFhir(harness).call.headers.Authorization).toMatch(/^Bearer patient-token/);
+  });
+});
+
+describe('readPaymentLink', () => {
+  const LINK = 'https://www.laboratorio.example/pagamento/9f2c1b7e';
+  const pending = (extension: unknown[]): FHIRAppointment => ({
+    ...stored(),
+    extension: extension as FHIRAppointment['extension'],
+    status: 'pending',
+  });
+
+  it('RCP-035: lê o link só da extensão de URL canônica, em valueUrl e com https', () => {
+    expect(PAYMENT_LINK_URL).toBe('https://fhir-brasil.dev.br/ig/StructureDefinition/payment-link');
+    expect(readPaymentLink(pending([{ url: PAYMENT_LINK_URL, valueUrl: LINK }]))).toBe(LINK);
+    expect(readPaymentLink(stored())).toBeUndefined();
+  });
+
+  it('RCP-035: link com outro esquema, ou fora da extensão canônica, não é devolvido', () => {
+    const cases: FHIRAppointment[] = [
+      pending([{ url: PAYMENT_LINK_URL, valueUrl: 'http://www.laboratorio.example/pagar' }]),
+      pending([{ url: PAYMENT_LINK_URL, valueUrl: 'javascript:alert(1)' }]),
+      pending([{ url: PAYMENT_LINK_URL, valueUrl: 'https://' }]),
+      pending([{ url: PAYMENT_LINK_URL, valueString: LINK }]),
+      pending([{ url: 'https://laboratorio.example/ext/pagamento', valueUrl: LINK }]),
+      pending([
+        { url: PAYMENT_LINK_URL, valueUrl: LINK },
+        { url: PAYMENT_LINK_URL, valueUrl: `${LINK}-2` },
+      ]),
+      { ...stored(), comment: LINK, patientInstruction: LINK, status: 'pending' },
+      {
+        ...stored(),
+        contained: [
+          {
+            ...stored().contained![0]!,
+            extension: [{ url: PAYMENT_LINK_URL, valueUrl: LINK }],
+          },
+        ],
+        status: 'pending',
+      },
+    ];
+    for (const appointment of cases) {
+      expect(readPaymentLink(appointment), JSON.stringify(appointment.extension)).toBeUndefined();
+    }
   });
 });

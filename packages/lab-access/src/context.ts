@@ -6,6 +6,7 @@ import type { SigningKey } from './client-assertion';
 import type { AuthorizationServerEndpoints } from './discovery';
 import type { ParticipantRegistry } from './registry';
 import type { RegistryProvider, RegistryReceiver } from './registry-types';
+import type { RevocationStore } from './revocation';
 import type { LabAccessTransport } from './transport';
 
 export interface RetryPolicy {
@@ -42,12 +43,13 @@ export interface ResolvedProvider {
 
 export interface ClientContext {
   clientId: string;
-  discover: (issuer: string) => Promise<AuthorizationServerEndpoints>;
+  discover: (issuer: string, scopes: readonly string[]) => Promise<AuthorizationServerEndpoints>;
   invalidateProviderToken: (resolved: ResolvedProvider, scope: string, token: string) => void;
   now: () => Date;
-  providerToken: (resolved: ResolvedProvider, scope: string) => Promise<string>;
+  providerToken: (resolved: ResolvedProvider, scope: string, repeat?: boolean) => Promise<string>;
   registry: () => ParticipantRegistry;
   retry: RetryPolicy;
+  revocations: RevocationStore;
   signingKey: SigningKey;
   sleep: (ms: number) => Promise<void>;
   transport: LabAccessTransport;

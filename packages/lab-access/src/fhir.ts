@@ -131,13 +131,33 @@ function toPage<T>(env: FhirEnv, resourceType: string, json: unknown): SearchPag
 }
 
 /**
- * O link `next` é seguido como veio, mas só dentro da base FHIR do registro:
- * o token não é enviado a um endereço que não veio do registro.
+ * O link `next` é seguido como veio, mas só dentro do `fhir_base_url` do
+ * registro (seção 5.1): mesmo esquema, host e porta, e caminho que começa pelo
+ * caminho da base em fronteira de segmento. A comparação é feita sobre a URL
+ * já interpretada, para que `..`, maiúsculas no host ou a porta padrão escrita
+ * não mudem o resultado. Fora disso nenhuma requisição é feita, e o token e o
+ * certificado não chegam a outro endereço.
  */
+export function isInsideBase(base: string, candidate: string): boolean {
+  let target: URL;
+  let root: URL;
+  try {
+    target = new URL(candidate);
+    root = new URL(base);
+  } catch {
+    return false;
+  }
+  // A origem cobre esquema, host e porta. A URL que traz usuário antes do host
+  // não começa pela própria origem e também é recusada.
+  if (target.origin !== root.origin || !target.href.startsWith(`${target.origin}/`)) {
+    return false;
+  }
+  const prefix = root.pathname.replace(/\/+$/, '');
+  return target.pathname === prefix || target.pathname.startsWith(`${prefix}/`);
+}
+
 function assertInsideFhirBase(env: FhirEnv, url: string): void {
-  const base = fhirBase(env);
-  const rest = url.startsWith(base) ? url.slice(base.length) : undefined;
-  if (rest === undefined || !(rest === '' || rest.startsWith('/') || rest.startsWith('?'))) {
+  if (!isInsideBase(fhirBase(env), url)) {
     throw new LabAccessProtocolError(
       'O link da próxima página aponta para fora da base FHIR do provedor no registro.',
     );

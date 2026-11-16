@@ -2,7 +2,7 @@
  * Validação do registro de participantes contra o schema da especificação.
  *
  * É uma transcrição à mão do JSON Schema publicado com o protocolo
- * (`participantes.schema.json`, formato 1.x), para não trazer um validador de
+ * (`participantes.schema.json`, formato 0.x), para não trazer um validador de
  * schema como dependência. Como no schema, campo desconhecido é erro em todos
  * os níveis.
  */
@@ -180,7 +180,7 @@ const document = object({
   issued_at: utcDateTime,
   participants: list(participant),
   registry_keys: object({ keys: list(registryKey, { max: 4, min: 1 }) }),
-  schema_version: text(/^1\.[0-9]+$/),
+  schema_version: text(/^0\.[0-9]+$/),
   sequence,
 });
 

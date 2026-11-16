@@ -299,10 +299,10 @@ describe('startAuthorization', () => {
     expect(harness.lab.calls).toHaveLength(before);
   });
 
-  it('REG-006: com o registro expirado, não abre nova autorização', async () => {
+  it('RCP-033: com o registro expirado, não abre nova autorização', async () => {
     const harness = await createHarness();
     const { consent, provider } = await openJourney(harness);
-    harness.lab.now = new Date('2026-12-15T12:00:01Z');
+    harness.lab.now = new Date('2026-12-16T12:00:01Z');
     await expect(
       provider.startAuthorization({ consent, redirectUri: REDIRECT_URI }),
     ).rejects.toBeInstanceOf(RegistryExpiredError);
@@ -425,6 +425,9 @@ describe('completeAuthorization: retorno', () => {
     await expect(
       provider.completeAuthorization({ callback, expectedCpf: CPF_PATIENT, journey }),
     ).rejects.toBeInstanceOf(AuthorizationResponseError);
+    await expect(
+      provider.completeAuthorization({ callback: 'não é URL', expectedCpf: CPF_PATIENT, journey }),
+    ).rejects.toBeInstanceOf(AuthorizationResponseError);
   });
 
   it('aceita o retorno como URL, URLSearchParams ou objeto', async () => {
@@ -522,11 +525,11 @@ describe('completeAuthorization: troca do código', () => {
     expect(tokenGrants(harness).filter((grant) => grant === 'authorization_code')).toHaveLength(1);
   });
 
-  it('REG-006: com o registro expirado, não conclui a autorização', async () => {
+  it('RCP-033: com o registro expirado, não conclui a autorização', async () => {
     const harness = await createHarness();
     const { journey, provider } = await openJourney(harness);
     const callback = harness.lab.authorize(journey.authorizationUrl, PATIENT);
-    harness.lab.now = new Date('2026-12-15T12:00:01Z');
+    harness.lab.now = new Date('2026-12-16T12:00:01Z');
     await expect(
       provider.completeAuthorization({ callback, expectedCpf: CPF_PATIENT, journey }),
     ).rejects.toBeInstanceOf(RegistryExpiredError);

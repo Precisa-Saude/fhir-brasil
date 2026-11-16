@@ -1,17 +1,17 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "0.1",
   "environment": "pilot",
   "sequence": 7,
-  "issued_at": "2026-11-15T12:00:00Z",
-  "expires_at": "2026-12-15T12:00:00Z",
+  "issued_at": "2026-11-16T12:00:00Z",
+  "expires_at": "2026-12-16T12:00:00Z",
   "registry_keys": {
     "keys": [
       {
         "kty": "RSA",
-        "kid": "QYYlw79CiVBFA6HCDy5SxJVPQwIWlu1S82vgqyHRjZk",
+        "kid": "MzixgWQ3DGXGJ99tKAnr0hdMF0ruhU748xuU7ucWtCw",
         "use": "sig",
         "alg": "PS256",
-        "n": "skjznI_XU30UMsIJCdakOmlH0VqOKzbxlTyc4iyGIcaAW5VIzEkj35L-1IYhHXMuMA0oZW0wNh9q24kzNOZHrWsN0FGXoO2rsYRCT2NG5cOtnOAHmOBJznIRxVb6UYs87HCOKYUFYsj1gWtccb8YrP0gVG_cU7cXAGKRtNP_xzaBFGByVVqRlx_VkJ-e8NqbeobVNS3UvIvHZw1NZvgvvprXFpz1672NaSzZN4Dj2RNrsSy80XBHtWivFid_Z7Zg5a16K1vgEchwvnr6ThZehC1P8cT8ffEPQ27Sh2gpAWdt5jpdziaBJjI50uPq0wZx-EVZGKPsgYBuj9nEEdHl4w",
+        "n": "25QzytPYL6xDlvFrkJ0B7b7jxkdOA3FQXMraEpgpCd9Wk1b0sAY1FlI7TddNfuwCkfFuGkVFxGahLSTZwe-ZPFWFdIDKXRZ65B8jN3Ymrjzn6v77_0_rOhNXlrVkXCzaSCuc6ZeQUno2z6EUHuyOAI5Ft6-fTG1my2ZTlyhJ4GVM94gG45ZOD6iGfgZUuQ3VwUfoaEzbupDuZRFXfhnywvxbWQeL3pIbPub-BSL99Z4_UP-9b2v5ulrRCPlZysRq6GlYJTR2jXCgfScNa9YK8lc4wAdujmhnv5au1Xj5nlziYFBEb8hF45t54cYbDh_AN41PECChH9UpTlOfWRmIcQ",
         "e": "AQAB"
       }
     ]
@@ -29,13 +29,13 @@
         "security_email": "seguranca@laboratorio.example"
       },
       "protocol_versions": [
-        "1.0"
+        "0.2"
       ],
       "updated_at": "2026-11-10T09:30:00Z",
       "provider": {
         "issuer": "https://auth.laboratorio.example",
         "fhir_base_url": "https://api.laboratorio.example/fhir/r4",
-        "api_base_url": "https://api.laboratorio.example/acesso/v1",
+        "api_base_url": "https://api.laboratorio.example/acesso/v0",
         "scopes_supported": [
           "catalog.read",
           "locations.read",
@@ -61,7 +61,7 @@
         "security_email": "seguranca@app-paciente.example"
       },
       "protocol_versions": [
-        "1.0"
+        "0.2"
       ],
       "updated_at": "2026-11-12T16:45:00Z",
       "receiver": {

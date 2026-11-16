@@ -10,12 +10,13 @@ import { timingSafeEqual } from 'node:crypto';
 
 import { base64url, calculateJwkThumbprint, compactVerify, importJWK } from 'jose';
 
-import { CLOCK_TOLERANCE_MS, REGISTRY_MAX_VALIDITY_MS } from './constants';
+import { CLOCK_TOLERANCE_MS, REGISTRY_KEY_MIN_BITS, REGISTRY_MAX_VALIDITY_MS } from './constants';
 import {
   LabAccessConfigError,
   ProviderUnavailableError,
   type RegistryRejectionReason,
   RegistryVerificationError,
+  type RegistryVerificationStep,
 } from './errors';
 import { validateRegistryDocument } from './registry-schema';
 import type {
@@ -121,6 +122,8 @@ export class ParticipantRegistry {
   }
 }
 
+export type RegistryEnvironment = RegistryDocument['environment'];
+
 export interface VerifyRegistryInput {
   now?: Date;
   /** Bytes exatos de `participantes.json`, como baixados. */
@@ -129,9 +132,13 @@ export interface VerifyRegistryInput {
   signature: string;
   /**
    * De onde vem a confiança: o documento já aceito, ou, para o primeiro
-   * documento, o conjunto de chaves inicial recebido na admissão.
+   * documento, o conjunto de chaves inicial recebido na admissão, junto com o
+   * ambiente em que o participante opera (passo V8). Com um documento já
+   * aceito, o ambiente é o dele.
    */
-  trust: { current: ParticipantRegistry } | { initialKeys: readonly RegistryKey[] };
+  trust:
+    | { current: ParticipantRegistry }
+    | { environment: RegistryEnvironment; initialKeys: readonly RegistryKey[] };
 }
 
 export interface RegistryVerification {
@@ -140,21 +147,30 @@ export interface RegistryVerification {
   registry: ParticipantRegistry;
 }
 
-function reject(reason: RegistryRejectionReason, message: string, cause?: unknown): never {
-  throw new RegistryVerificationError(reason, message, { cause });
+function reject(
+  step: RegistryVerificationStep,
+  reason: RegistryRejectionReason,
+  message: string,
+  cause?: unknown,
+): never {
+  throw new RegistryVerificationError(reason, `${step}: ${message}`, { cause, step });
 }
 
 interface DetachedJws {
-  kid: string;
+  header: Record<string, unknown>;
   protectedHeader: string;
   signature: string;
 }
 
-/** Lê `cabeçalho..assinatura` e exige o cabeçalho exato do protocolo. */
+/** V2: `cabeçalho..assinatura`, com o cabeçalho em base64url de um objeto JSON. */
 function parseDetachedJws(text: string): DetachedJws {
   const parts = text.trim().split('.');
   if (parts.length !== 3 || !parts[0] || parts[1] !== '' || !parts[2]) {
-    reject('malformed-signature', 'A assinatura não é um JWS compacto de conteúdo destacado.');
+    reject(
+      'V2',
+      'malformed-signature',
+      'a assinatura não é um JWS compacto de conteúdo destacado.',
+    );
   }
   const [protectedHeader, , signature] = parts as [string, string, string];
 
@@ -162,20 +178,17 @@ function parseDetachedJws(text: string): DetachedJws {
   try {
     header = JSON.parse(new TextDecoder().decode(base64url.decode(protectedHeader)));
   } catch (cause) {
-    reject('malformed-signature', 'O cabeçalho da assinatura não é JSON em base64url.', cause);
+    reject(
+      'V2',
+      'malformed-signature',
+      'o cabeçalho da assinatura não é JSON em base64url.',
+      cause,
+    );
   }
-  const fields = header as Record<string, unknown>;
-  const exact =
-    typeof header === 'object' &&
-    header !== null &&
-    Object.keys(fields).length === 3 &&
-    fields.alg === 'PS256' &&
-    fields.typ === 'JOSE' &&
-    typeof fields.kid === 'string';
-  if (!exact) {
-    reject('malformed-signature', 'O cabeçalho da assinatura deveria ter só alg PS256, kid e typ.');
+  if (typeof header !== 'object' || header === null || Array.isArray(header)) {
+    reject('V2', 'malformed-signature', 'o cabeçalho da assinatura não é um objeto JSON.');
   }
-  return { kid: fields.kid as string, protectedHeader, signature };
+  return { header: header as Record<string, unknown>, protectedHeader, signature };
 }
 
 async function hasThumbprintKid(key: RegistryKey): Promise<boolean> {
@@ -188,47 +201,89 @@ async function hasThumbprintKid(key: RegistryKey): Promise<boolean> {
   }
 }
 
+/** Tamanho do módulo RSA em bits, a partir do `n` em base64url. */
+function modulusBits(key: RegistryKey): number {
+  let bytes: Uint8Array;
+  try {
+    bytes = base64url.decode(key.n);
+  } catch {
+    return 0;
+  }
+  let start = 0;
+  while (start < bytes.length && bytes[start] === 0) start += 1;
+  if (start === bytes.length) return 0;
+  return (bytes.length - start - 1) * 8 + (32 - Math.clz32(bytes[start]!));
+}
+
 function sameBytes(a: Uint8Array, b: Uint8Array): boolean {
   return a.length === b.length && timingSafeEqual(a, b);
 }
 
-function checkValidity(document: RegistryDocument, now: Date): void {
-  const issuedAt = Date.parse(document.issued_at);
-  const expiresAt = Date.parse(document.expires_at);
-  if (expiresAt <= issuedAt || expiresAt - issuedAt > REGISTRY_MAX_VALIDITY_MS) {
-    reject('invalid-validity', 'expires_at deveria ficar até 30 dias depois de issued_at.');
-  }
-  if (issuedAt - now.getTime() > CLOCK_TOLERANCE_MS) {
-    reject('issued-in-future', 'issued_at está mais de 60 segundos no futuro.');
-  }
-  if (now.getTime() > expiresAt) {
-    reject('expired', 'O documento já passou de expires_at.');
+/** V14: `participant_id` único, e `client_id` de receptor igual ao `participant_id`. */
+function checkParticipants(document: RegistryDocument): void {
+  const seen = new Set<string>();
+  for (const participant of document.participants) {
+    if (seen.has(participant.participant_id)) {
+      reject('V14', 'duplicate-participant', 'um participant_id aparece mais de uma vez.');
+    }
+    seen.add(participant.participant_id);
+    if (
+      participant.role === 'receiver' &&
+      participant.receiver?.client_id !== participant.participant_id
+    ) {
+      reject(
+        'V14',
+        'duplicate-participant',
+        'o client_id de um receptor é diferente do participant_id da mesma entrada.',
+      );
+    }
   }
 }
 
 /**
- * Verifica um candidato a registro, na ordem da seção 8.3: chave pelo `kid`,
- * assinatura PS256 sobre os bytes recebidos, schema, sequência e validade.
+ * Verifica um candidato a registro pela lista da seção 8.3, passo a passo e
+ * na ordem, e recusa no primeiro que falha. Não há outra regra de recusa além
+ * dos passos: V2 a V14 aqui, e V1 (baixar os dois arquivos por HTTPS) com quem
+ * chama, que entrega os bytes já baixados.
  *
- * Em qualquer falha lança `RegistryVerificationError`, e quem chama continua
- * com o documento que já tinha.
+ * Em qualquer falha lança `RegistryVerificationError` com o passo em `step`,
+ * e quem chama continua com o documento que já tinha.
  */
 export async function verifyRegistry(input: VerifyRegistryInput): Promise<RegistryVerification> {
   const now = input.now ?? new Date();
-  const current = 'current' in input.trust ? input.trust.current : undefined;
-  const trusted = current
-    ? current.registryKeys
-    : (input.trust as { initialKeys: readonly RegistryKey[] }).initialKeys;
+  const trust = input.trust;
+  const current = 'current' in trust ? trust.current : undefined;
+  const trusted = current ? current.registryKeys : 'initialKeys' in trust ? trust.initialKeys : [];
+  const environment = current
+    ? current.environment
+    : (trust as { environment?: unknown }).environment;
+  if (environment !== 'pilot' && environment !== 'production') {
+    throw new LabAccessConfigError(
+      'Para o primeiro documento, informe o ambiente em que o participante opera (pilot ou production).',
+    );
+  }
 
+  // V2 e V3: formato do JWS e algoritmo.
   const jws = parseDetachedJws(input.signature ?? '');
-  const key = trusted.find((candidate) => candidate.kid === jws.kid);
-  if (!key) {
-    reject('unknown-key', 'O kid da assinatura não está entre as chaves aceitas.');
-  }
-  if (!(await hasThumbprintKid(key))) {
-    reject('invalid-key-id', 'O kid da chave de confiança não é o thumbprint RFC 7638 dela.');
+  if (jws.header.alg !== 'PS256') {
+    reject('V3', 'unsupported-algorithm', 'o algoritmo da assinatura deveria ser PS256.');
   }
 
+  // V4: a chave vem do documento já aceito, ou do conjunto inicial.
+  const key = trusted.find((candidate) => candidate.kid === jws.header.kid);
+  if (!key) {
+    reject('V4', 'unknown-key', 'o kid da assinatura não está entre as chaves aceitas.');
+  }
+
+  // V5: kid igual ao thumbprint recalculado, e RSA de 2048 bits ou mais.
+  if (!(await hasThumbprintKid(key))) {
+    reject('V5', 'invalid-key-id', 'o kid da chave de confiança não é o thumbprint RFC 7638 dela.');
+  }
+  if (modulusBits(key) < REGISTRY_KEY_MIN_BITS) {
+    reject('V5', 'weak-key', 'a chave de confiança tem menos de 2048 bits.');
+  }
+
+  // V6: assinatura PS256 sobre os bytes recebidos.
   try {
     const publicKey = await importJWK({ e: key.e, kty: key.kty, n: key.n }, 'PS256');
     await compactVerify(
@@ -237,40 +292,74 @@ export async function verifyRegistry(input: VerifyRegistryInput): Promise<Regist
       { algorithms: ['PS256'] },
     );
   } catch (cause) {
-    reject('invalid-signature', 'A assinatura do registro não confere.', cause);
+    reject('V6', 'invalid-signature', 'a assinatura do registro não confere.', cause);
   }
 
+  // V7: JSON válido contra o schema.
   let parsed: unknown;
   try {
     parsed = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(input.registry));
   } catch (cause) {
-    reject('invalid-schema', 'O registro não é JSON em UTF-8.', cause);
+    reject('V7', 'invalid-schema', 'o registro não é JSON em UTF-8.', cause);
   }
   const violations = validateRegistryDocument(parsed);
   if (violations.length > 0) {
-    reject('invalid-schema', `O registro não valida contra o schema: ${violations.join('; ')}`);
+    reject(
+      'V7',
+      'invalid-schema',
+      `o registro não valida contra o schema: ${violations.join('; ')}`,
+    );
   }
   const document = parsed as RegistryDocument;
 
-  for (const announced of document.registry_keys.keys) {
-    if (!(await hasThumbprintKid(announced))) {
-      reject('invalid-key-id', 'Uma chave de registry_keys tem kid diferente do thumbprint.');
-    }
+  // V8: ambiente.
+  if (document.environment !== environment) {
+    reject('V8', 'wrong-environment', `o registro é do ambiente ${document.environment}.`);
   }
 
+  // V9: sequência.
   if (current) {
     if (document.sequence < current.sequence) {
-      reject('stale-sequence', 'A sequence do candidato é menor que a do documento atual.');
+      reject('V9', 'stale-sequence', 'a sequence do candidato é menor que a do documento atual.');
     }
     if (document.sequence === current.sequence) {
       if (!sameBytes(input.registry, current.bytes)) {
-        reject('sequence-conflict', 'Mesma sequence do documento atual, com bytes diferentes.');
+        reject(
+          'V9',
+          'sequence-conflict',
+          'mesma sequence do documento atual, com bytes diferentes.',
+        );
       }
       return { changed: false, registry: current };
     }
   }
 
-  checkValidity(document, now);
+  // V10 a V12: emissão e validade.
+  const issuedAt = Date.parse(document.issued_at);
+  const expiresAt = Date.parse(document.expires_at);
+  if (issuedAt - now.getTime() > CLOCK_TOLERANCE_MS) {
+    reject('V10', 'issued-in-future', 'issued_at está mais de 60 segundos no futuro.');
+  }
+  if (expiresAt <= issuedAt || expiresAt - issuedAt > REGISTRY_MAX_VALIDITY_MS) {
+    reject('V11', 'invalid-validity', 'expires_at deveria ficar até 30 dias depois de issued_at.');
+  }
+  if (now.getTime() > expiresAt) {
+    reject('V12', 'expired', 'o documento já passou de expires_at.');
+  }
+
+  // V13: kid das chaves anunciadas para o documento seguinte.
+  for (const announced of document.registry_keys.keys) {
+    if (!(await hasThumbprintKid(announced))) {
+      reject(
+        'V13',
+        'invalid-key-id',
+        'uma chave de registry_keys tem kid diferente do thumbprint.',
+      );
+    }
+  }
+
+  // V14: participantes.
+  checkParticipants(document);
 
   return {
     changed: true,
@@ -283,29 +372,49 @@ function parseVersion(version: string): [number, number] {
   return [major ?? Number.NaN, minor ?? Number.NaN];
 }
 
+function parsedVersions(list: readonly string[]): [number, number][] {
+  return list
+    .map(parseVersion)
+    .filter(([major, minor]) => Number.isInteger(major) && Number.isInteger(minor));
+}
+
 /**
- * Escolhe a maior versão `MAJOR.MINOR` que os dois participantes listam.
+ * Calcula a versão efetiva entre dois participantes pela regra da seção 9.1, a
+ * partir das listas `protocol_versions` do registro.
  *
- * Sem MAJOR em comum não há comunicação. Com MAJOR em comum e nenhuma versão
- * idêntica nas duas listas, devolve `undefined`: a especificação não diz qual
- * versão vale nesse caso.
+ * Vale o maior MAJOR presente nas duas listas. Com MAJOR 0, a versão efetiva é
+ * a maior `0.MINOR` idêntica nas duas. Com MAJOR 1 ou mais, é `M.m`, em que `m`
+ * é o menor entre o maior MINOR de cada lado. Sem versão efetiva não há
+ * comunicação, e a função lança `ProviderUnavailableError`.
  */
 export function negotiateProtocolVersion(
   mine: readonly string[],
   theirs: readonly string[],
-): string | undefined {
-  const theirMajors = new Set(theirs.map((v) => parseVersion(v)[0]));
-  if (!mine.some((v) => theirMajors.has(parseVersion(v)[0]))) {
+): string {
+  const ours = parsedVersions(mine);
+  const others = parsedVersions(theirs);
+  const theirMajors = new Set(others.map(([major]) => major));
+  const common = ours.map(([major]) => major).filter((major) => theirMajors.has(major));
+  if (common.length === 0) {
     throw new ProviderUnavailableError(
       'no-common-version',
       'Receptor e provedor não têm versão MAJOR do protocolo em comum.',
     );
   }
-  const common = mine.filter((v) => theirs.includes(v));
-  common.sort((a, b) => {
-    const [aMajor, aMinor] = parseVersion(a);
-    const [bMajor, bMinor] = parseVersion(b);
-    return bMajor - aMajor || bMinor - aMinor;
-  });
-  return common[0];
+  const major = Math.max(...common);
+  const minors = (list: [number, number][]) =>
+    list.filter(([m]) => m === major).map(([, minor]) => minor);
+
+  if (major === 0) {
+    const theirMinors = new Set(minors(others));
+    const identical = minors(ours).filter((minor) => theirMinors.has(minor));
+    if (identical.length === 0) {
+      throw new ProviderUnavailableError(
+        'no-common-version',
+        'Na fase 0, receptor e provedor só se comunicam com a mesma versão de protocolo.',
+      );
+    }
+    return `0.${Math.max(...identical)}`;
+  }
+  return `${major}.${Math.min(Math.max(...minors(ours)), Math.max(...minors(others)))}`;
 }

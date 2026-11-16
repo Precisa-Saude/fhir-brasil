@@ -14,12 +14,15 @@ const METADATA = {
   pushed_authorization_request_endpoint: 'https://mtls.auth.laboratorio.example/par',
   require_pushed_authorization_requests: true,
   response_types_supported: ['code'],
-  scopes_supported: ['catalog.read'],
+  scopes_supported: ['catalog.read', 'consent.manage', 'results.read'],
   tls_client_certificate_bound_access_tokens: true,
   token_endpoint: 'https://mtls.auth.laboratorio.example/token',
   token_endpoint_auth_methods_supported: ['private_key_jwt'],
   token_endpoint_auth_signing_alg_values_supported: ['PS256'],
 };
+
+/** Escopos do provedor no registro. */
+const SCOPES = ['catalog.read', 'consent.manage'];
 
 describe('metadataUrl', () => {
   it('usa o caminho do RFC 8414 na raiz do host', () => {
@@ -44,7 +47,7 @@ describe('metadataUrl', () => {
 describe('discoverAuthorizationServer', () => {
   it('lê os endpoints do documento de metadados', async () => {
     const transport = fakeTransport(() => jsonResponse(200, { ...METADATA, campo_novo: 1 }));
-    const endpoints = await discoverAuthorizationServer(transport, ISSUER);
+    const endpoints = await discoverAuthorizationServer(transport, ISSUER, SCOPES);
 
     expect(transport.calls[0]!.url).toBe(`${ISSUER}/.well-known/oauth-authorization-server`);
     expect(transport.calls[0]!.method).toBe('GET');
@@ -60,7 +63,7 @@ describe('discoverAuthorizationServer', () => {
   it('RCP-008: metadados com issuer diferente do registro derrubam o provedor', async () => {
     for (const issuer of ['https://auth.outro.example', `${ISSUER}/`, undefined]) {
       const transport = fakeTransport(() => jsonResponse(200, { ...METADATA, issuer }));
-      await expect(discoverAuthorizationServer(transport, ISSUER)).rejects.toBeInstanceOf(
+      await expect(discoverAuthorizationServer(transport, ISSUER, SCOPES)).rejects.toBeInstanceOf(
         IssuerMismatchError,
       );
     }
@@ -80,7 +83,7 @@ describe('discoverAuthorizationServer', () => {
         token_endpoint: `${ISSUER}/token`,
       }),
     );
-    const endpoints = await discoverAuthorizationServer(transport, ISSUER);
+    const endpoints = await discoverAuthorizationServer(transport, ISSUER, SCOPES);
     expect(endpoints.tokenEndpoint).toBe('https://mtls2.laboratorio.example/token');
     expect(endpoints.parEndpoint).toBe('https://mtls2.laboratorio.example/par');
     expect(endpoints.revocationEndpoint).toBe('https://mtls2.laboratorio.example/revoke');
@@ -95,7 +98,7 @@ describe('discoverAuthorizationServer', () => {
         mtls_endpoint_aliases: { token_endpoint: 'https://mtls2.laboratorio.example/token' },
       }),
     );
-    const endpoints = await discoverAuthorizationServer(transport, ISSUER);
+    const endpoints = await discoverAuthorizationServer(transport, ISSUER, SCOPES);
     expect(endpoints.tokenEndpoint).toBe('https://mtls2.laboratorio.example/token');
     expect(endpoints.parEndpoint).toBe('https://mtls.auth.laboratorio.example/par');
   });
@@ -118,15 +121,116 @@ describe('discoverAuthorizationServer', () => {
 
   it.each(invalid)('recusa metadados %s', async (_name, change) => {
     const transport = fakeTransport(() => jsonResponse(200, { ...METADATA, ...change }));
-    await expect(discoverAuthorizationServer(transport, ISSUER)).rejects.toBeInstanceOf(
+    await expect(discoverAuthorizationServer(transport, ISSUER, SCOPES)).rejects.toBeInstanceOf(
       ProviderMetadataError,
     );
+  });
+
+  const REQUIRED_FIELDS = [
+    'authorization_endpoint',
+    'token_endpoint',
+    'pushed_authorization_request_endpoint',
+    'jwks_uri',
+    'require_pushed_authorization_requests',
+    'authorization_response_iss_parameter_supported',
+    'tls_client_certificate_bound_access_tokens',
+    'response_types_supported',
+    'grant_types_supported',
+    'token_endpoint_auth_methods_supported',
+    'token_endpoint_auth_signing_alg_values_supported',
+    'code_challenge_methods_supported',
+    'scopes_supported',
+  ];
+
+  it('RCP-031: recusa o provedor quando falta qualquer um dos campos obrigatórios', async () => {
+    for (const field of REQUIRED_FIELDS) {
+      const transport = fakeTransport(() => jsonResponse(200, { ...METADATA, [field]: undefined }));
+      await expect(
+        discoverAuthorizationServer(transport, ISSUER, SCOPES),
+        field,
+      ).rejects.toBeInstanceOf(ProviderMetadataError);
+    }
+    // O issuer é o 14º campo: ausente, vale como issuer diferente do registro.
+    const transport = fakeTransport(() => jsonResponse(200, { ...METADATA, issuer: undefined }));
+    await expect(discoverAuthorizationServer(transport, ISSUER, SCOPES)).rejects.toBeInstanceOf(
+      IssuerMismatchError,
+    );
+  });
+
+  const contradicting: [string, Record<string, unknown>][] = [
+    ['response_types_supported com mais que code', { response_types_supported: ['code', 'token'] }],
+    [
+      'grant_types_supported com implicit',
+      {
+        grant_types_supported: [
+          'authorization_code',
+          'refresh_token',
+          'client_credentials',
+          'implicit',
+        ],
+      },
+    ],
+    [
+      'grant_types_supported com password',
+      {
+        grant_types_supported: [
+          'authorization_code',
+          'refresh_token',
+          'client_credentials',
+          'password',
+        ],
+      },
+    ],
+    [
+      'token_endpoint_auth_methods_supported com outro método ao lado',
+      { token_endpoint_auth_methods_supported: ['private_key_jwt', 'client_secret_basic'] },
+    ],
+    [
+      'token_endpoint_auth_signing_alg_values_supported com outro algoritmo ao lado',
+      { token_endpoint_auth_signing_alg_values_supported: ['PS256', 'RS256'] },
+    ],
+    [
+      'code_challenge_methods_supported com plain ao lado',
+      { code_challenge_methods_supported: ['S256', 'plain'] },
+    ],
+    ['jwks_uri sem https', { jwks_uri: 'http://auth.laboratorio.example/jwks' }],
+    ['jwks_uri que não é URL', { jwks_uri: 'https://' }],
+    ['token_endpoint que só começa com https', { token_endpoint: 'https:/x' }],
+    ['booleano como texto', { require_pushed_authorization_requests: 'true' }],
+    ['scopes_supported sem um escopo do registro', { scopes_supported: ['catalog.read'] }],
+    ['scopes_supported que não é lista', { scopes_supported: 'catalog.read consent.manage' }],
+  ];
+
+  it.each(contradicting)('RCP-031: recusa metadados com %s', async (_name, change) => {
+    const transport = fakeTransport(() => jsonResponse(200, { ...METADATA, ...change }));
+    await expect(discoverAuthorizationServer(transport, ISSUER, SCOPES)).rejects.toBeInstanceOf(
+      ProviderMetadataError,
+    );
+  });
+
+  it('RCP-031: exige os endpoints no nível raiz mesmo quando há alias mTLS', async () => {
+    const transport = fakeTransport(() =>
+      jsonResponse(200, {
+        ...METADATA,
+        mtls_endpoint_aliases: { token_endpoint: 'https://mtls2.laboratorio.example/token' },
+        token_endpoint: undefined,
+      }),
+    );
+    await expect(discoverAuthorizationServer(transport, ISSUER, SCOPES)).rejects.toBeInstanceOf(
+      ProviderMetadataError,
+    );
+  });
+
+  it('não busca o jwks_uri: o receptor não valida JWT do provedor', async () => {
+    const transport = fakeTransport(() => jsonResponse(200, METADATA));
+    await discoverAuthorizationServer(transport, ISSUER, SCOPES);
+    expect(transport.calls).toHaveLength(1);
   });
 
   it('recusa resposta que não é JSON de objeto', async () => {
     for (const body of ['<html>', '[]']) {
       const transport = fakeTransport(() => ({ body, headers: {}, status: 200 }));
-      await expect(discoverAuthorizationServer(transport, ISSUER)).rejects.toBeInstanceOf(
+      await expect(discoverAuthorizationServer(transport, ISSUER, SCOPES)).rejects.toBeInstanceOf(
         ProviderMetadataError,
       );
     }
@@ -134,7 +238,7 @@ describe('discoverAuthorizationServer', () => {
 
   it('propaga status diferente de 200 como erro', async () => {
     const transport = fakeTransport(() => jsonResponse(503, {}));
-    await expect(discoverAuthorizationServer(transport, ISSUER)).rejects.toBeInstanceOf(
+    await expect(discoverAuthorizationServer(transport, ISSUER, SCOPES)).rejects.toBeInstanceOf(
       LabAccessApiError,
     );
   });

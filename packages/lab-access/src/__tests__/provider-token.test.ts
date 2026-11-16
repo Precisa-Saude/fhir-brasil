@@ -201,7 +201,7 @@ describe('token de provedor', () => {
     await expect(client.provider(PROVIDER_ID).searchLocations()).rejects.toBeInstanceOf(ScopeError);
   });
 
-  it('REG-006: com o registro expirado, não pede novo token client_credentials', async () => {
+  it('RCP-033: com o registro expirado, não pede token de catálogo, unidades ou agenda', async () => {
     const { client, lab } = await createHarness({
       registry: (doc) => {
         doc.issued_at = '2026-11-16T11:00:00Z';
@@ -248,19 +248,114 @@ describe('token de provedor', () => {
     await expect(client.provider(PROVIDER_ID).searchLocations()).rejects.toBeInstanceOf(
       ReceiverStatusError,
     );
+    expect(client.providers()).toEqual([]);
     expect(lab.calls).toHaveLength(0);
   });
 
-  it('sem versão MAJOR em comum, não há comunicação', async () => {
+  it('RCP-037: provedor sem versão efetiva não é oferecido nem chamado', async () => {
+    for (const versions of [['0.3'], ['0.1'], ['1.0']]) {
+      const { client, lab } = await createHarness({
+        registry: (doc) => {
+          doc.participants[0]!.protocol_versions = versions;
+        },
+      });
+      expect(client.providers()).toEqual([]);
+      await expect(client.provider(PROVIDER_ID).searchLocations()).rejects.toMatchObject({
+        name: 'ProviderUnavailableError',
+        reason: 'no-common-version',
+      });
+      expect(lab.calls).toHaveLength(0);
+    }
+  });
+
+  it('RCP-037: versão efetiva que o pacote não implementa também deixa o provedor de fora', async () => {
     const { client, lab } = await createHarness({
       registry: (doc) => {
-        doc.participants[0]!.protocol_versions = ['2.0'];
+        doc.participants[0]!.protocol_versions = ['1.3'];
+        doc.participants[0]!.provider!.api_base_url = 'https://api.laboratorio.example/acesso/v1';
+        doc.participants[1]!.protocol_versions = ['1.1'];
       },
     });
+    expect(client.providers()).toEqual([]);
     await expect(client.provider(PROVIDER_ID).searchLocations()).rejects.toMatchObject({
-      reason: 'no-common-version',
+      reason: 'unsupported-version',
     });
     expect(lab.calls).toHaveLength(0);
+  });
+
+  it('RCP-037: o api_base_url do provedor termina no MAJOR da versão efetiva', async () => {
+    const { client, lab } = await createHarness({
+      registry: (doc) => {
+        doc.participants[0]!.provider!.api_base_url = 'https://api.laboratorio.example/acesso/v1';
+      },
+    });
+    expect(client.providers()).toEqual([]);
+    await expect(client.provider(PROVIDER_ID).searchLocations()).rejects.toMatchObject({
+      reason: 'api-version-mismatch',
+    });
+    expect(lab.calls).toHaveLength(0);
+  });
+
+  it('RCP-037: com a mesma versão 0.2 dos dois lados, o provedor é oferecido', async () => {
+    const { client } = await createHarness();
+    expect(client.providers().map((p) => p.participant_id)).toEqual([PROVIDER_ID]);
+  });
+
+  it('RCP-032: pede consent.manage sempre sozinho, num token próprio', async () => {
+    const { client, lab } = await createHarness();
+    lab.fhir = () => jsonResponse(200, bundle([]));
+    const provider = client.provider(PROVIDER_ID);
+    await provider.searchLocations();
+    await provider.createConsent({
+      expirationDateTime: '2027-05-15T03:00:00Z',
+      purpose: 'Guardar os resultados dos seus exames no seu histórico pessoal.',
+      scopes: ['results.read'],
+    });
+    await provider.searchSchedules({ location: 'unidade-norte' });
+
+    const scopes = tokenCalls(lab.calls).map((call) => call.form!.get('scope'));
+    expect(scopes).toEqual(['locations.read', 'consent.manage', 'schedule.read']);
+    for (const scope of scopes) expect(scope!.split(' ')).toHaveLength(1);
+  });
+
+  it('RCP-034: não usa o token de acesso depois de expires_in, com margem de 60 segundos', async () => {
+    const { client, lab } = await createHarness();
+    lab.expiresIn = 300;
+    lab.fhir = () => jsonResponse(200, bundle([]));
+    const provider = client.provider(PROVIDER_ID);
+    await provider.searchLocations();
+    const first = lab.fhirCalls.at(-1)!.headers.Authorization;
+
+    lab.now = new Date(lab.now.getTime() + 239_000);
+    await provider.searchLocations();
+    expect(lab.fhirCalls.at(-1)!.headers.Authorization).toBe(first);
+
+    // Faltando menos de 60 segundos, o token não é mais usado.
+    lab.now = new Date(lab.now.getTime() + 2_000);
+    await provider.searchLocations();
+    expect(lab.fhirCalls.at(-1)!.headers.Authorization).not.toBe(first);
+    expect(tokenCalls(lab.calls)).toHaveLength(2);
+  });
+
+  it('RCP-034: o prazo conta do recebimento da resposta, pelo relógio do receptor', async () => {
+    const { client, lab } = await createHarness();
+    lab.expiresIn = 300;
+    lab.fhir = () => jsonResponse(200, bundle([]));
+    let tick = 0;
+    // O relógio anda 100 segundos entre o pedido e a resposta do token.
+    const original = lab.transport.request.bind(lab.transport);
+    lab.transport.request = async (request) => {
+      const response = await original(request);
+      if (request.url === TOKEN_ENDPOINT && tick++ === 0) {
+        lab.now = new Date(lab.now.getTime() + 100_000);
+      }
+      return response;
+    };
+    const provider = client.provider(PROVIDER_ID);
+    await provider.searchLocations();
+    lab.now = new Date(lab.now.getTime() + 239_000);
+    await provider.searchLocations();
+    expect(tokenCalls(lab.calls)).toHaveLength(1);
   });
 
   it('busca os metadados uma vez e de novo depois de 24 horas', async () => {

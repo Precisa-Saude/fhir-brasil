@@ -6,10 +6,10 @@
 import { timingSafeEqual } from 'node:crypto';
 
 import type { ConsentRecord } from './consent-types';
-import { readConsentAsPatient, revokeAndReport } from './consents';
+import { readConsentAsPatient } from './consents';
 import { PATIENT_SCOPES, type PatientScope } from './constants';
 import type { ClientContext, ResolvedProvider } from './context';
-import { normalizeExpectedCpf, sameCpf } from './cpf';
+import { isValidCpf, normalizeExpectedCpf, sameCpf } from './cpf';
 import {
   AuthorizationDeniedError,
   AuthorizationResponseError,
@@ -23,6 +23,7 @@ import {
 import { oauthPost, withRetry } from './http';
 import { codeChallengeS256, generateCodeVerifier, generateState } from './pkce';
 import { assertScopeUsable } from './resolve';
+import { revokeConsent } from './revocation';
 import { assertRegistryAllowsNewGrants, type IssuedToken, requestToken } from './tokens';
 import { isConsentId, isFhirId } from './validation';
 
@@ -207,6 +208,8 @@ export function parseAuthorizationResponse(
 }
 
 export interface CompletedAuthorization {
+  /** `expiration_date_time` do consentimento, lido na conferência. */
+  consentExpiresAt: string;
   patientFhirId: string;
   tokens: IssuedToken;
 }
@@ -253,14 +256,22 @@ export async function completeAuthorization(
   );
 
   // Conferência do titular: primeira chamada a recurso depois dos tokens.
-  const giveUp = async (cause?: unknown): Promise<never> => {
-    const { outcome } = await revokeAndReport(
-      ctx,
-      resolved,
+  // Conferência impossível revoga com RECEIVER_TERMINATION, nunca com
+  // PATIENT_MISMATCH, que afirmaria uma divergência que ninguém viu.
+  const giveUp = async (cause?: unknown, consentExpiresAt?: string): Promise<never> => {
+    const result = await revokeConsent(ctx, {
+      consentExpiresAt,
+      consentId: journey.consentId,
+      providerId,
+      reason: 'RECEIVER_TERMINATION',
+    });
+    throw new HolderVerificationError(
       journey.consentId,
-      'RECEIVER_TERMINATION',
+      providerId,
+      result.outcome,
+      { cause },
+      result.outcome === 'pending' ? result.pending : undefined,
     );
-    throw new HolderVerificationError(journey.consentId, providerId, outcome, { cause });
   };
 
   let read;
@@ -276,15 +287,26 @@ export async function completeAuthorization(
     read.record.status === 'AUTHORISED' &&
     typeof patient === 'object' &&
     patient !== null &&
-    typeof patient.cpf === 'string' &&
-    /^\d{11}$/.test(patient.cpf) &&
+    isValidCpf(patient.cpf) &&
     isFhirId(patient.fhir_id);
-  if (!verifiable) return giveUp();
+  const consentExpiresAt = read.record.expirationDateTime;
+  if (!verifiable) return giveUp(undefined, consentExpiresAt);
 
   if (!sameCpf(expected, patient.cpf as string)) {
-    const { outcome } = await revokeAndReport(ctx, resolved, journey.consentId, 'PATIENT_MISMATCH');
-    throw new PatientMismatchError(journey.consentId, providerId, read.interactionId, outcome);
+    const result = await revokeConsent(ctx, {
+      consentExpiresAt,
+      consentId: journey.consentId,
+      providerId,
+      reason: 'PATIENT_MISMATCH',
+    });
+    throw new PatientMismatchError(
+      journey.consentId,
+      providerId,
+      read.interactionId,
+      result.outcome,
+      result.outcome === 'pending' ? result.pending : undefined,
+    );
   }
 
-  return { patientFhirId: patient.fhir_id as string, tokens };
+  return { consentExpiresAt, patientFhirId: patient.fhir_id as string, tokens };
 }

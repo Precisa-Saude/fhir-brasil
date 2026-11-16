@@ -8,20 +8,19 @@ import {
   type ConsentRecord,
   type ConsentStatus,
   type CreateConsentInput,
-  REVOCATION_REASONS,
-  type RevocationReason,
 } from './consent-types';
 import { CONSENT_MAX_MONTHS, PATIENT_SCOPES } from './constants';
 import type { ClientContext, ResolvedProvider } from './context';
-import { LabAccessApiError, LabAccessConfigError, LabAccessProtocolError } from './errors';
+import { LabAccessConfigError, LabAccessProtocolError } from './errors';
 import { apiRequest, withRetry } from './http';
 import { assertScopeUsable, withProviderToken } from './resolve';
+import { assertRegistryAllowsNewGrants } from './tokens';
 import { assertConsentId, baseUrl, isConsentId } from './validation';
 
 const UTC_DATE_TIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
 const DATE = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 
-function consentUrl(resolved: ResolvedProvider, consentId?: string): string {
+export function consentUrl(resolved: ResolvedProvider, consentId?: string): string {
   const base = `${baseUrl(resolved.provider.provider.api_base_url)}/consents`;
   return consentId === undefined ? base : `${base}/${encodeURIComponent(consentId)}`;
 }
@@ -166,7 +165,9 @@ export function toConsentRecord(json: unknown): ConsentRecord {
 
 /**
  * Cria o consentimento a partir do corpo montado por `buildConsentBody`. A
- * criação não é repetida sozinha: ela não é idempotente.
+ * criação não é repetida sozinha: ela não é idempotente. Com o registro
+ * expirado ela é recusada antes de chamar o provedor, que responderia 403
+ * `REGISTRY_EXPIRED` (seção 8.3).
  */
 export async function createConsent(
   ctx: ClientContext,
@@ -174,6 +175,7 @@ export async function createConsent(
   body: Record<string, unknown>,
 ): Promise<ConsentRecord> {
   for (const scope of body.scopes as string[]) assertScopeUsable(resolved, scope);
+  assertRegistryAllowsNewGrants(ctx);
 
   const { json } = await withProviderToken(ctx, resolved, 'consent.manage', (token) =>
     apiRequest(ctx, {
@@ -245,51 +247,4 @@ export async function readConsentAsPatient(
   );
   const record = toConsentRecord(json);
   return { interactionId, patient: (json as { patient?: unknown }).patient, record };
-}
-
-/** Revoga o consentimento. `DELETE` de consentimento pode ser repetido. */
-export async function deleteConsent(
-  ctx: ClientContext,
-  resolved: ResolvedProvider,
-  consentId: string,
-  reason: RevocationReason,
-): Promise<void> {
-  assertConsentId(consentId);
-  if (!REVOCATION_REASONS.includes(reason)) {
-    throw new LabAccessConfigError('Motivo de revogação desconhecido.');
-  }
-  await withProviderToken(ctx, resolved, 'consent.manage', (token) =>
-    withRetry(ctx, true, () =>
-      apiRequest(ctx, {
-        accept: 'json',
-        consentId,
-        method: 'DELETE',
-        okStatuses: [204],
-        providerId: resolved.provider.participant_id,
-        token,
-        url: `${consentUrl(resolved, consentId)}?reason=${reason}`,
-      }),
-    ),
-  );
-}
-
-/**
- * Revoga e diz se o provedor confirmou. Um consentimento que já está em
- * estado final conta como confirmado: não há mais o que encerrar.
- */
-export async function revokeAndReport(
-  ctx: ClientContext,
-  resolved: ResolvedProvider,
-  consentId: string,
-  reason: RevocationReason,
-): Promise<{ error?: unknown; outcome: 'confirmed' | 'pending' }> {
-  try {
-    await deleteConsent(ctx, resolved, consentId, reason);
-    return { outcome: 'confirmed' };
-  } catch (error) {
-    if (error instanceof LabAccessApiError && error.code === 'CONSENT_INVALID_STATE') {
-      return { outcome: 'confirmed' };
-    }
-    return { error, outcome: 'pending' };
-  }
 }

@@ -65,9 +65,19 @@ export class FakeLab {
     code_challenge_methods_supported: ['S256'],
     grant_types_supported: ['authorization_code', 'refresh_token', 'client_credentials'],
     issuer: ISSUER,
+    jwks_uri: `${ISSUER}/jwks`,
     pushed_authorization_request_endpoint: PAR_ENDPOINT,
     require_pushed_authorization_requests: true,
     response_types_supported: ['code'],
+    scopes_supported: [
+      'catalog.read',
+      'locations.read',
+      'schedule.read',
+      'consent.manage',
+      'appointment.write',
+      'results.read',
+      'consent.read',
+    ],
     tls_client_certificate_bound_access_tokens: true,
     token_endpoint: TOKEN_ENDPOINT,
     token_endpoint_auth_methods_supported: ['private_key_jwt'],
@@ -84,7 +94,11 @@ export class FakeLab {
     { challenge: string; consentId: string; scope: string }
   >();
   private counter = 0;
-  private readonly faults: { fault: Fault; match: (call: RecordedCall) => boolean }[] = [];
+  private readonly faults: {
+    fault: Fault;
+    match: (call: RecordedCall) => boolean;
+    persistent?: boolean;
+  }[] = [];
   private readonly pushed = new Map<string, URLSearchParams>();
   private readonly refreshTokens = new Map<string, { consentId: string; scope: string }>();
   private readonly seenJti = new Set<string>();
@@ -132,6 +146,16 @@ export class FakeLab {
     this.faults.push({ fault, match });
   }
 
+  /** Faz toda chamada que casar com `match` falhar, até a função devolvida ser chamada. */
+  failAll(match: (call: RecordedCall) => boolean, fault: Fault): () => void {
+    const entry = { fault, match, persistent: true };
+    this.faults.push(entry);
+    return () => {
+      const index = this.faults.indexOf(entry);
+      if (index >= 0) this.faults.splice(index, 1);
+    };
+  }
+
   /** Encerra um consentimento do lado do provedor e invalida os tokens. */
   endConsent(consentId: string, status: string, code: string, endedVia = 'PROVIDER'): void {
     const consent = this.consents.get(consentId)!;
@@ -155,7 +179,9 @@ export class FakeLab {
   private async handle(call: RecordedCall): Promise<LabAccessResponse | undefined> {
     const index = this.faults.findIndex((fault) => fault.match(call));
     if (index >= 0) {
-      const fault = this.faults.splice(index, 1)[0]!.fault;
+      const entry = this.faults[index]!;
+      if (!entry.persistent) this.faults.splice(index, 1);
+      const fault = entry.fault;
       if (fault === 'network') throw new LabAccessTransportError('queda de rede simulada');
       return fault;
     }
@@ -358,7 +384,7 @@ export async function createHarness(
     now: EXAMPLE_NOW,
     registry: bytes,
     signature: await signDetached(bytes, registryKey),
-    trust: { initialKeys: [registryKey.jwk] },
+    trust: { environment: 'pilot' as const, initialKeys: [registryKey.jwk] },
   });
   const sleeps: number[] = [];
   const client = new LabAccessClient({

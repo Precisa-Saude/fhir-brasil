@@ -32,7 +32,7 @@ export const PROVIDER_ID = '5f0c7c0e-3d1a-4b7e-9a51-2f6d8c1e4a10';
 export const CLIENT_ID = 'c2b8f6a4-71de-4c0b-8f3a-9e5d2a7b6c31';
 export const ISSUER = 'https://auth.laboratorio.example';
 export const FHIR_BASE = 'https://api.laboratorio.example/fhir/r4';
-export const API_BASE = 'https://api.laboratorio.example/acesso/v1';
+export const API_BASE = 'https://api.laboratorio.example/acesso/v0';
 export const REDIRECT_URI = 'https://app-paciente.example/conexoes/retorno';
 
 /** CPFs de teste com dígitos verificadores válidos, já usados no repositório. */

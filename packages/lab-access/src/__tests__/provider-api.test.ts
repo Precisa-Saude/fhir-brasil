@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { chargeItemScope } from '../catalog';
 import { LabAccessConfigError, LabAccessProtocolError } from '../errors';
 import { bundle, createHarness, type Harness } from './fake-lab';
 import { FHIR_BASE, jsonResponse, operationOutcome, PROVIDER_ID } from './helpers';
@@ -324,20 +325,136 @@ describe('paginação', () => {
     expect(await second!.next()).toBeUndefined();
   });
 
-  it('não envia o token para um link next fora da base FHIR do registro', async () => {
+  it('RCP-030: não envia token nem certificado para um link next fora da base FHIR do registro', async () => {
     const { harness, provider } = await setup();
     for (const next of [
       'https://atacante.example/fhir/r4/Location?page=2',
       'http://api.laboratorio.example/fhir/r4/Location?page=2',
+      'https://api.laboratorio.example:8443/fhir/r4/Location?page=2',
       'https://api.laboratorio.example/fhir/r4-outro/Location?page=2',
+      'https://api.laboratorio.example/fhir/Location?page=2',
+      'https://api.laboratorio.example/fhir/r4/../../admin/Location?page=2',
+      'https://api.laboratorio.example/fhir/r4/%2e%2e/%2e%2e/admin?page=2',
+      'https://api.laboratorio.example@atacante.example/fhir/r4/Location?page=2',
+      '/fhir/r4/Location?page=2',
       'nada',
     ]) {
       harness.lab.fhir = () => jsonResponse(200, bundle([], next));
       const page = await provider.searchLocations();
       const before = harness.lab.calls.length;
-      await expect(page.next()).rejects.toBeInstanceOf(LabAccessProtocolError);
+      await expect(page.next(), next).rejects.toBeInstanceOf(LabAccessProtocolError);
       expect(harness.lab.calls).toHaveLength(before);
     }
+  });
+
+  it('RCP-030: compara a URL já interpretada: host em maiúsculas e porta padrão explícita valem', async () => {
+    const { harness, provider } = await setup();
+    for (const next of [
+      'https://API.Laboratorio.example/fhir/r4/Location?page=2',
+      'https://api.laboratorio.example:443/fhir/r4/Location?page=2',
+      'https://api.laboratorio.example/fhir/r4?_getpages=abc',
+    ]) {
+      harness.lab.fhir = () => jsonResponse(200, bundle([], next));
+      const page = await provider.searchLocations();
+      await page.next();
+      // A URL segue como veio, sem ser reescrita.
+      expect(harness.lab.calls.at(-1)!.url).toBe(next);
+    }
+  });
+
+  it('RCP-030: não segue redirecionamento HTTP na API FHIR nem nos endpoints de consentimento', async () => {
+    const { harness, provider } = await setup();
+    harness.lab.fhir = () => ({
+      body: '',
+      headers: { Location: `${FHIR_BASE}/Location?page=outra` },
+      status: 302,
+    });
+    const before = harness.lab.calls.length;
+    await expect(provider.searchLocations()).rejects.toBeInstanceOf(LabAccessProtocolError);
+    // Token e busca: nenhuma chamada ao endereço do Location.
+    expect(harness.lab.calls.slice(before).filter((call) => call.url.includes('outra'))).toEqual(
+      [],
+    );
+
+    harness.lab.failNext((call) => call.method === 'GET' && call.url.includes('/consents/'), {
+      body: '',
+      headers: { Location: 'https://atacante.example/consents/x' },
+      status: 303,
+    });
+    await expect(
+      provider.getConsent('7c1d5f0a-2b3e-4a6c-8d9e-0f1a2b3c4d5e'),
+    ).rejects.toBeInstanceOf(LabAccessProtocolError);
+    expect(harness.lab.calls.some((call) => call.url.includes('atacante'))).toBe(false);
+  });
+});
+
+describe('alcance do preço', () => {
+  const VENUE = {
+    code: 'venue',
+    system: 'http://terminology.hl7.org/CodeSystem/usage-context-type',
+  };
+  const BRAND = {
+    code: 'brand',
+    system: 'https://fhir-brasil.dev.br/CodeSystem/lab-price-context',
+  };
+  const IBGE = 'https://fhir-brasil.dev.br/CodeSystem/ibge-municipio';
+  const base = { resourceType: 'ChargeItemDefinition' as const, status: 'active' as const };
+
+  it('preço sem contexto nem município vale para todas as unidades', () => {
+    expect(chargeItemScope(base)).toEqual({
+      brands: [],
+      jurisdictions: [],
+      unrecognizedContexts: 0,
+      unrestricted: true,
+      venues: [],
+    });
+  });
+
+  it('lê unidade ou região, marca e município', () => {
+    const scope = chargeItemScope({
+      ...base,
+      jurisdiction: [{ coding: [{ code: '4314902', system: IBGE }] }],
+      useContext: [
+        { code: VENUE, valueReference: { reference: 'Location/regiao-sul' } },
+        { code: BRAND, valueReference: { reference: 'Organization/marca-exemplo' } },
+      ],
+    });
+    expect(scope).toEqual({
+      brands: ['Organization/marca-exemplo'],
+      jurisdictions: [{ code: '4314902', system: IBGE }],
+      unrecognizedContexts: 0,
+      unrestricted: false,
+      venues: ['Location/regiao-sul'],
+    });
+  });
+
+  it('contexto que o cliente não reconhece impede tratar o preço como geral', () => {
+    const scope = chargeItemScope({
+      ...base,
+      useContext: [
+        { code: { code: 'focus', system: VENUE.system }, valueCodeableConcept: { text: 'x' } },
+        { code: VENUE, valueCodeableConcept: { text: 'sem referência' } },
+        {
+          code: { code: 'brand', system: 'https://outro.example/cs' },
+          valueReference: { reference: 'Organization/x' },
+        },
+      ],
+    });
+    expect(scope).toMatchObject({
+      brands: [],
+      unrecognizedContexts: 3,
+      unrestricted: false,
+      venues: [],
+    });
+  });
+
+  it('município sem código utilizável também conta como contexto não reconhecido', () => {
+    const scope = chargeItemScope({ ...base, jurisdiction: [{ text: 'Porto Alegre' }] });
+    expect(scope).toMatchObject({
+      jurisdictions: [],
+      unrecognizedContexts: 1,
+      unrestricted: false,
+    });
   });
 });
 

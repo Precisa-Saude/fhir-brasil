@@ -50,6 +50,7 @@ export const PROTOCOL_ERROR_CODES: Readonly<Record<string, CodeEntry>> = {
   PROVIDER_UNAVAILABLE: entry('operational', 'after-retry-after'),
   RATE_LIMITED: entry('operational', 'after-retry-after'),
   RECEIVER_NOT_ALLOWED: entry('authorization'),
+  REGISTRY_EXPIRED: entry('authorization'),
   RESOURCE_NOT_FOUND: entry('request'),
   SCOPE_INSUFFICIENT: entry('authorization'),
   SEARCH_WINDOW_TOO_LARGE: entry('request'),

@@ -49,27 +49,42 @@ expressão 'micrograma' deve ser descrita como 'mcg'" (RDC nº 768/2022, art.
 pode ser lido como `m` e multiplicar a dose por mil. Ela não trata de laudo de
 laboratório, e por isso o catálogo fica com o SI. `mcg/dL` continua sendo lido.
 
+## Grafias escolhidas pelo uso brasileiro
+
+Para estas unidades nenhuma norma decide. A escolha foi a grafia que as
+publicações brasileiras consultadas usam, em português.
+
+| Antes             | Agora             | Onde a grafia aparece                                             |
+| ----------------- | ----------------- | ----------------------------------------------------------------- |
+| `K/uL`            | `mil/mm³`         | Tabela de hemograma da Divisão de Laboratório Central do HC-FMUSP |
+| `M/uL`            | `milhões/mm³`     | Rosenfeld et al., 2019; HC-FMUSP                                  |
+| `uIU/mL` (TSH)    | `mUI/L`           | SBPC/ML, 2019 e 2020                                              |
+| `uIU/mL` (outros) | `µUI/mL`          | UI das linhas abaixo, com o µ do SI                               |
+| `IU/mL`, `IU/L`   | `UI/mL`, `UI/L`   | SBPC/ML, 2020                                                     |
+| `mIU/mL`, `mIU/L` | `mUI/mL`, `mUI/L` | SBPC/ML, 2020                                                     |
+| `/HPF`            | `/campo`          | SBPC/ML, 2017 ("por campo de grande aumento")                     |
+| `titer`           | `título`          | tradução; a palavra é a usada nos livros da SBPC/ML               |
+| `/100 WBC`        | `/100 leucócitos` | tradução; não encontrada com esta grafia nas fontes consultadas   |
+
+`mil/mm³` e `10³/µL` são a mesma contagem, porque 1 mm³ é 1 µL, e o código
+UCUM continua `10*3/uL`. O TSH em `µUI/mL` e em `mUI/L` é o mesmo número.
+
+A insulina fica em `µUI/mL`. As fontes consultadas não trazem a unidade da
+insulina, então a grafia vem das duas regras já adotadas (UI e µ) e não de uma
+publicação.
+
 ## O que ainda não foi decidido
 
-Estas grafias seguem como estavam. Cada uma tem mais de uma forma em uso nos
-laudos e nas publicações brasileiras, e nenhuma norma consultada resolve a
-escolha.
+`/LPF` (cilindros hialinos na urina) segue em inglês. O livro de urina da
+SBPC/ML distingue "campo de pequeno aumento" de "campo de grande aumento", e
+`/campo` já está em uso para o segundo.
 
-| Hoje no catálogo          | Alternativas em uso no Brasil                  |
-| ------------------------- | ---------------------------------------------- |
-| `K/uL`, `M/uL`            | `10³/µL` e `10⁶/µL`; `mil/mm³` e `milhões/mm³` |
-| `uIU/mL` (TSH)            | `µUI/mL`; `mUI/L`                              |
-| `IU/mL`, `mIU/mL`         | `UI/mL`, `mUI/mL`                              |
-| `/HPF`, `/LPF`            | `/campo`                                       |
-| `titer`                   | `título`                                       |
-| `/100 WBC`                | `/100 leucócitos`                              |
-| `razão`, `''` e `{ratio}` | uma só para toda grandeza adimensional         |
-
-A última linha é a lista `KNOWN_LABEL_MISMATCHES` do teste: razões, índices e
-escores trazem `razão`, `índice` ou `score` na definição e unidade vazia na
-faixa, e o INR usa `{ratio}` como canônica. `AU` (escore de Agatston) e
-`score` (T-score e Z-score) dividem a anotação UCUM `{score}` sem serem a
-mesma unidade, e estão em `KNOWN_DOUBLE_SPELLINGS` com o INR.
+As grandezas adimensionais ainda têm três rótulos. Razões, índices e escores
+trazem `razão`, `índice` ou `score` na definição e unidade vazia na faixa, e
+o INR usa `{ratio}` como canônica. É a lista `KNOWN_LABEL_MISMATCHES` do
+teste. `AU` (escore de Agatston) e `score` (T-score e Z-score) dividem a
+anotação UCUM `{score}` sem serem a mesma unidade, e estão em
+`KNOWN_DOUBLE_SPELLINGS` com o INR.
 
 ## O que não foi possível consultar
 
@@ -103,3 +118,30 @@ AGÊNCIA NACIONAL DE VIGILÂNCIA SANITÁRIA. **Resolução RDC nº 768, de 12 de
 dezembro de 2022**. Disponível em:
 https://ses.sp.bvs.br/wp-content/uploads/2022/12/U_RS-MS-ANVISA-RDC-768_121222.pdf.
 Acesso em: 16 nov. 2026.
+
+ROSENFELD, L. G. et al. Valores de referência para exames laboratoriais de
+hemograma da população adulta brasileira: Pesquisa Nacional de Saúde.
+**Revista Brasileira de Epidemiologia**, v. 22, supl. 2, 2019. DOI:
+https://doi.org/10.1590/1980-549720190003.supl.2.
+
+SUMITA, N. M. et al. (org.). **Recomendações da Sociedade Brasileira de
+Patologia Clínica/Medicina Laboratorial (SBPC/ML)**: boas práticas em
+laboratório clínico. 1. ed. Barueri: Manole, 2020. ISBN 978-85-7868-395-5.
+Disponível em:
+https://controllab.com/wp-content/uploads/RecomendacoesSBPCML_BoasPraticasEmLaboratorioClinico.pdf.
+Acesso em: 16 nov. 2026.
+
+SUMITA, N. M. et al. (org.). **Recomendações da Sociedade Brasileira de
+Patologia Clínica/Medicina Laboratorial (SBPC/ML)**: inovação no laboratório
+clínico. 1. ed. Barueri: Manole, 2019.
+
+SOCIEDADE BRASILEIRA DE PATOLOGIA CLÍNICA/MEDICINA LABORATORIAL.
+**Recomendações da Sociedade Brasileira de Patologia Clínica/Medicina
+Laboratorial (SBPC/ML)**: realização de exames em urina. Barueri: Manole, 2017. Disponível em:
+https://controllab.com/wp-content/uploads/recomendacoes_da_sbpcml_realizacao_de_exames_em_urina.pdf.
+Acesso em: 16 nov. 2026.
+
+HOSPITAL DAS CLÍNICAS DA FACULDADE DE MEDICINA DA UNIVERSIDADE DE SÃO PAULO.
+Divisão de Laboratório Central. **Hemograma**: especificação do exame. Disponível em:
+https://patologiaclinica.hc.fm.usp.br/exames-especificacao?id=9662. Acesso em:
+16 nov. 2026.

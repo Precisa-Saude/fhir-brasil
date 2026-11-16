@@ -270,6 +270,7 @@ function grafiaDeUnidade(u: string): string {
 // Grafias que os laudos imprimem e a tabela acima não tem, pela mesma leitura.
 const UNIDADE_LAUDO: Record<string, string[]> = {
   '·103/ul': ['NCnc'],
+  '/campo': ['Naric'],
   '/hpf': ['Naric'],
   '/lpf': ['Naric'],
   '/ml': ['NCnc'],

@@ -22,7 +22,7 @@ import { BIOMARKER_UNITS, isUcumCode, resolveUcum } from '../units';
  * por regra:
  *
  * - a **propriedade** do código tem que combinar com a dimensão da unidade
- *   declarada: % é fração, mg/dL é massa/volume, /HPF é número/área;
+ *   declarada: % é fração, mg/dL é massa/volume, /campo é número/área;
  * - o **sistema** tem que caber no catálogo: urina para `_Urine`, sangue e
  *   derivados para o resto, e líquido amniótico para ninguém;
  * - a **escala** de quem tem unidade é quantitativa, e a de quem não tem não é;
@@ -61,23 +61,24 @@ const PROPERTIES_BY_UNIT: Record<string, string[]> = {
   // Fração: massa, substância, número, volume. `DistWidth` é o RDW.
   '%': ['MFr', 'SFr', 'NFr', 'VFr', 'DistWidth'],
   // Eritroblastos por 100 leucócitos: o LOINC trata como razão.
-  '/100 WBC': ['Ratio'],
-  '/HPF': ['Naric'],
+  '/100 leucócitos': ['Ratio'],
+  '/campo': ['Naric'],
   '/LPF': ['Naric'],
   Angstrom: ['EntLen'],
   // Unidades arbitrárias por volume, dos imunoensaios.
-  'IU/mL': ['ACnc'],
+  'UI/mL': ['ACnc'],
   // Densidade mineral óssea: massa por área.
   'g/cm²': ['ArMass'],
   // Índice de anticorpo dos painéis de autoanticorpos, e o título.
   AI: ['ACnc'],
-  titer: ['Titr'],
-  'K/uL': ['NCnc'],
+  título: ['Titr'],
+  'mil/mm³': ['NCnc'],
   'kU/L': ['ACnc'],
   L: ['Vol'],
-  'M/uL': ['NCnc'],
+  'milhões/mm³': ['NCnc'],
   'mEq/L': ['SCnc'],
-  'mIU/mL': ['ACnc'],
+  'mUI/L': ['ACnc'],
+  'mUI/mL': ['ACnc'],
   'mL/min/1,73 m²': ['ArVRat'],
   'mg/L': ['MCnc'],
   'mg/dL': ['MCnc'],
@@ -91,7 +92,7 @@ const PROPERTIES_BY_UNIT: Record<string, string[]> = {
   'pg/mL': ['MCnc'],
   'U/L': ['CCnc'],
   'U/mL': ['ACnc'],
-  'uIU/mL': ['ACnc'],
+  'µUI/mL': ['ACnc'],
   cm: ['Len'],
   deg: ['Angle'],
   fL: ['EntVol', 'EntMeanVol'],

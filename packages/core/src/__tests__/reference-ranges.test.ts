@@ -506,7 +506,7 @@ describe('getReferenceRange', () => {
     });
 
     describe('absolute WBC differential (PNS 2019, Tabela 2)', () => {
-      // Limites publicados em células/mm³, divididos por 1.000 para K/uL.
+      // Limites publicados em células/mm³, divididos por 1.000 para mil/mm³.
       const table2: Record<
         string,
         { F: [number, number]; M: [number, number]; union: [number, number] }
@@ -523,7 +523,7 @@ describe('getReferenceRange', () => {
           for (const sex of ['M', 'F'] as const) {
             const range = getReferenceRange(code, { age: 40, biologicalSex: sex });
             expect([range?.min, range?.max]).toEqual(limits[sex]);
-            expect(range?.unit).toBe('K/uL');
+            expect(range?.unit).toBe('mil/mm³');
             expect(range?.source).toBe('pns-hemograma-2019');
             // O artigo não publica faixa ótima.
             expect(range?.optimalMin).toBeUndefined();
@@ -535,7 +535,7 @@ describe('getReferenceRange', () => {
           for (const context of [undefined, { age: 40 }]) {
             const range = getReferenceRange(code, context);
             expect([range?.min, range?.max]).toEqual(limits.union);
-            expect(range?.unit).toBe('K/uL');
+            expect(range?.unit).toBe('mil/mm³');
           }
         });
       }

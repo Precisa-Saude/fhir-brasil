@@ -261,11 +261,24 @@ describe('standardUnitSpelling', () => {
     ['mL/min/1.73m²', 'mL/min/1,73 m²'],
     ['mL/min/1.73m2', 'mL/min/1,73 m²'],
     ['ml/min/1,73 m2', 'mL/min/1,73 m²'],
+    ['K/uL', 'mil/mm³'],
+    ['10³/µL', 'mil/mm³'],
+    ['mil/mm3', 'mil/mm³'],
+    ['M/uL', 'milhões/mm³'],
+    ['milhões/mm3', 'milhões/mm³'],
+    ['IU/mL', 'UI/mL'],
+    ['mIU/mL', 'mUI/mL'],
+    ['IU/L', 'UI/L'],
+    ['mIU/L', 'mUI/L'],
+    ['uIU/mL', 'µUI/mL'],
+    ['/HPF', '/campo'],
+    ['titer', 'título'],
+    ['/100 WBC', '/100 leucócitos'],
   ])('%s vira %s', (printed, standard) => {
     expect(standardUnitSpelling(printed)).toBe(standard);
   });
 
-  it.each(['mg/dL', 'µg/dL', 'uIU/mL', 'K/uL', 'U/L', '%', 'mL/min/1,73 m²'])(
+  it.each(['mg/dL', 'µg/dL', 'mUI/L', 'mil/mm³', 'U/L', '/LPF', '%', 'mL/min/1,73 m²'])(
     'deixa %s como está',
     (unit) => {
       expect(standardUnitSpelling(unit)).toBe(unit);
@@ -279,10 +292,21 @@ describe('standardUnitSpelling', () => {
       value: 90,
     });
     expect(convertUnit(12, 'mm/hr', 'mm/h', 'ESR')).toEqual({ unit: 'mm/h', value: 12 });
+    expect(convertUnit(6.2, 'K/uL', 'mil/mm³', 'WBC')).toEqual({ unit: 'mil/mm³', value: 6.2 });
+    expect(convertUnit(4.8, 'M/uL', 'milhões/mm³', 'RBC')).toEqual({
+      unit: 'milhões/mm³',
+      value: 4.8,
+    });
+    expect(convertUnit(2.1, 'uIU/mL', 'mUI/L', 'TSH')).toEqual({ unit: 'mUI/L', value: 2.1 });
+    expect(convertUnit(7, 'uIU/mL', 'µUI/mL', 'Insulin')).toEqual({ unit: 'µUI/mL', value: 7 });
   });
 
   it('a faixa de reserva ainda alcança um valor gravado na grafia antiga', () => {
-    const stored = [{ code: 'Iron', unit: 'mcg/dL', value: 80 }];
-    expect(applyFallbackReferenceRanges(stored)).toBe(1);
+    const stored = [
+      { code: 'Iron', unit: 'mcg/dL', value: 80 },
+      { code: 'WBC', unit: 'K/uL', value: 6.2 },
+      { code: 'TSH', unit: 'uIU/mL', value: 2.1 },
+    ];
+    expect(applyFallbackReferenceRanges(stored)).toBe(3);
   });
 });

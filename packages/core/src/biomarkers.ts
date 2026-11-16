@@ -440,7 +440,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Anticorpos Antitireoglobulina',
       ],
     },
-    unit: 'IU/mL',
+    unit: 'UI/mL',
   },
   {
     code: 'AntiTPO',
@@ -454,7 +454,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'TPO',
       ],
     },
-    unit: 'IU/mL',
+    unit: 'UI/mL',
   },
   {
     code: 'TSH',
@@ -463,7 +463,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Thyroid-Stimulating Hormone', 'TSH', 'Thyrotropin'],
       pt: ['Hormônio Tireoestimulante', 'Hormônio Tiroestimulante', 'TSH', 'Tireotrofina'],
     },
-    unit: 'uIU/mL',
+    unit: 'mUI/L',
   },
   {
     code: 'T4Free',
@@ -546,7 +546,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Rheumatoid Factor', 'RF'],
       pt: ['Fator Reumatoide', 'FR'],
     },
-    unit: 'IU/mL',
+    unit: 'UI/mL',
   },
   {
     code: 'AntiCCP',
@@ -590,7 +590,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['p-ANCA', 'P-ANCA', 'Perinuclear ANCA', 'ANCA, Perinuclear'],
       pt: ['p-ANCA', 'ANCA Perinuclear'],
     },
-    unit: 'titer',
+    unit: 'título',
   },
   {
     code: 'AntiDsDNA',
@@ -605,7 +605,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       ],
       pt: ['Anti-DNA Nativo', 'Anti-dsDNA', 'Anticorpo Anti-DNA de Dupla Hélice'],
     },
-    unit: 'IU/mL',
+    unit: 'UI/mL',
   },
   {
     code: 'AntiSm',
@@ -697,7 +697,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Absolute Basophils', 'Basophils Absolute', 'Baso (Absolute)', 'Basos (Absolute)'],
       pt: ['Basófilos Absolutos'],
     },
-    unit: 'K/uL',
+    unit: 'mil/mm³',
   },
   {
     code: 'Eosinophils',
@@ -716,7 +716,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Absolute Eosinophils', 'Eosinophils Absolute', 'Eos (Absolute)'],
       pt: ['Eosinófilos Absolutos'],
     },
-    unit: 'K/uL',
+    unit: 'mil/mm³',
   },
   {
     code: 'Lymphocytes',
@@ -735,7 +735,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Absolute Lymphocytes', 'Lymphocytes Absolute', 'Lymphs (Absolute)'],
       pt: ['Linfócitos Absolutos'],
     },
-    unit: 'K/uL',
+    unit: 'mil/mm³',
   },
   {
     code: 'Monocytes',
@@ -754,7 +754,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Absolute Monocytes', 'Monocytes Absolute', 'Monocytes (Absolute)'],
       pt: ['Monócitos Absolutos'],
     },
-    unit: 'K/uL',
+    unit: 'mil/mm³',
   },
   {
     code: 'Neutrophils',
@@ -778,7 +778,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Absolute Neutrophils', 'Neutrophils Absolute', 'Neutrophils (Absolute)'],
       pt: ['Neutrófilos Absolutos'],
     },
-    unit: 'K/uL',
+    unit: 'mil/mm³',
   },
   {
     code: 'ImmatureGranulocytes',
@@ -802,7 +802,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       ],
       pt: ['Granulócitos Imaturos Absolutos'],
     },
-    unit: 'K/uL',
+    unit: 'mil/mm³',
   },
   {
     code: 'NRBC',
@@ -811,7 +811,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['NRBC', 'Nucleated RBC', 'Nucleated Red Blood Cells'],
       pt: ['Eritroblastos', 'Hemácias Nucleadas'],
     },
-    unit: '/100 WBC',
+    unit: '/100 leucócitos',
   },
   {
     code: 'NRBC_Abs',
@@ -821,7 +821,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Absolute NRBC', 'NRBC, Absolute', 'Nucleated RBC, Absolute'],
       pt: ['Eritroblastos Absolutos'],
     },
-    unit: 'K/uL',
+    unit: 'mil/mm³',
   },
   {
     code: 'WBC',
@@ -830,7 +830,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['White Blood Cell Count', 'WBC', 'Leukocytes'],
       pt: ['Contagem de Leucócitos', 'Leucócitos', 'Glóbulos Brancos'],
     },
-    unit: 'K/uL',
+    unit: 'mil/mm³',
   },
   {
     code: 'IgA',
@@ -859,7 +859,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Total IgE', 'IgE', 'Immunoglobulin E', 'IgE Total'],
       pt: ['IgE Total', 'Imunoglobulina E', 'IgE'],
     },
-    unit: 'IU/mL',
+    unit: 'UI/mL',
   },
   {
     code: 'IgE_E1_CatDander',
@@ -932,7 +932,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Follicle Stimulating Hormone', 'FSH'],
       pt: ['Hormônio Folículo-Estimulante', 'FSH', 'Folitropina'],
     },
-    unit: 'mIU/mL',
+    unit: 'mUI/mL',
   },
   {
     code: 'LH',
@@ -941,7 +941,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Luteinizing Hormone', 'LH'],
       pt: ['Hormônio Luteinizante', 'LH', 'Lutropina'],
     },
-    unit: 'mIU/mL',
+    unit: 'mUI/mL',
   },
   {
     code: 'Prolactin',
@@ -1101,7 +1101,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Insulin', 'Fasting Insulin'],
       pt: ['Insulina', 'Insulina de Jejum'],
     },
-    unit: 'uIU/mL',
+    unit: 'µUI/mL',
   },
   {
     code: 'CPeptide',
@@ -1801,7 +1801,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Platelet Count', 'Platelets'],
       pt: ['Contagem de Plaquetas', 'Plaquetas'],
     },
-    unit: 'K/uL',
+    unit: 'mil/mm³',
   },
   {
     code: 'RBC',
@@ -1810,7 +1810,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Red Blood Cell Count', 'RBC', 'Erythrocytes'],
       pt: ['Contagem de Hemácias', 'Hemácias', 'Eritrócitos'],
     },
-    unit: 'M/uL',
+    unit: 'milhões/mm³',
   },
   {
     code: 'RDW',
@@ -2213,7 +2213,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Urine Bacteria', 'Bacteria Urine', 'Bacteria, Urine', 'Bacteria', 'Bacteriuria'],
       pt: ['Bactérias na Urina', 'Bactérias', 'Bacteriúria'],
     },
-    unit: '/HPF',
+    unit: '/campo',
   },
   {
     code: 'Bilirubin_Urine',
@@ -2297,7 +2297,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Urine Leukocytes', 'Urine WBC', 'White Blood Cells in Urine', 'WBC Urine'],
       pt: ['Leucócitos na Urina', 'Leucócitos Urinários'],
     },
-    unit: '/HPF',
+    unit: '/campo',
   },
   {
     code: 'Nitrite_Urine',
@@ -2343,7 +2343,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Urine RBC', 'Red Blood Cells in Urine', 'RBC Urine', 'RBC, Urine'],
       pt: ['Hemácias na Urina'],
     },
-    unit: '/HPF',
+    unit: '/campo',
   },
   {
     code: 'SpecificGravity_Urine',
@@ -2372,7 +2372,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       ],
       pt: ['Células Epiteliais Escamosas na Urina'],
     },
-    unit: '/HPF',
+    unit: '/campo',
   },
   {
     code: 'Urobilinogen_Urine',
@@ -3814,7 +3814,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Gonadotrofina Coriônica',
       ],
     },
-    unit: 'mIU/mL',
+    unit: 'mUI/mL',
   },
 
   // ============================================================================

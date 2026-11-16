@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { RegistryExpiredError, RevocationPendingError } from '../errors';
 import { connect, createHarness, type Harness, PURPOSE, TOKEN_ENDPOINT } from './fake-lab';
-import { PROVIDER_ID, REDIRECT_URI } from './helpers';
+import { CPF_PATIENT, PROVIDER_ID, REDIRECT_URI } from './helpers';
 
 /** `expires_at` do registro de exemplo. */
 const EXPIRES_AT = Date.parse('2026-12-16T12:00:00Z');
@@ -25,7 +25,7 @@ describe('registro expirado', () => {
       RegistryExpiredError,
     );
     await expect(
-      provider.startAuthorization({ consent, redirectUri: REDIRECT_URI }),
+      provider.startAuthorization({ expectedCpf: CPF_PATIENT, consent, redirectUri: REDIRECT_URI }),
     ).rejects.toBeInstanceOf(RegistryExpiredError);
     expect(clientCredentials(harness)).toHaveLength(tokensBefore);
 
@@ -45,11 +45,14 @@ describe('registro expirado', () => {
     const provider = harness.client.provider(PROVIDER_ID);
     harness.lab.now = new Date(EXPIRES_AT + DAY);
     await expect(
-      provider.createConsent({
-        expirationDateTime: '2027-05-15T03:00:00Z',
-        purpose: PURPOSE,
-        scopes: ['results.read'],
-      }),
+      provider.createConsent(
+        {
+          expirationDateTime: '2027-05-15T03:00:00Z',
+          purpose: PURPOSE,
+          scopes: ['results.read'],
+        },
+        { expectedCpf: CPF_PATIENT },
+      ),
     ).rejects.toBeInstanceOf(RegistryExpiredError);
     expect(harness.lab.calls.filter((call) => call.method === 'POST')).toHaveLength(0);
   });

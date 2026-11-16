@@ -233,6 +233,29 @@ describe('appointment.write', () => {
         }),
     ],
     [
+      'participante paciente com identifier ao lado da referência',
+      (a) =>
+        (a.participant[0]!.actor = {
+          identifier: {
+            system: 'http://rnds.saude.gov.br/fhir/r4/NamingSystem/cpf',
+            value: '52998224725',
+          },
+          reference: 'Patient/pac-teste-1',
+          type: 'Patient',
+        }),
+    ],
+    [
+      'subject do pedido com identifier ao lado da referência',
+      (a) =>
+        (a.contained![0]!.subject = {
+          identifier: {
+            system: 'http://rnds.saude.gov.br/fhir/r4/NamingSystem/cpf',
+            value: '52998224725',
+          },
+          reference: 'Patient/pac-teste-1',
+        }),
+    ],
+    [
       'subject do pedido com type diferente de Patient',
       (a) => (a.contained![0]!.subject = { reference: 'Patient/pac-teste-1', type: 'Group' }),
     ],
@@ -268,6 +291,29 @@ describe('appointment.write', () => {
     };
     appointment.contained![0]!.subject = { reference: 'Patient/pac-teste-1' };
     await expect(access.createAppointment(appointment)).resolves.toMatchObject({ created: true });
+  });
+
+  it('RCP-045: o paciente vai só por Patient/{fhir_id}, sem identifier, no participante e nos pedidos', async () => {
+    const { access, harness } = await setup();
+    harness.lab.fhir = (call) => jsonResponse(201, { ...(call.json as object), id: 'ag-9' });
+    await access.createAppointment(proposed());
+    const body = lastFhir(harness).call.json as FHIRAppointment;
+    const patient = body.participant.find((p) => p.actor?.type === 'Patient')!.actor!;
+    expect(patient).toEqual({ reference: 'Patient/pac-teste-1', type: 'Patient' });
+    for (const request of body.contained!) {
+      expect((request.subject as { identifier?: unknown }).identifier).toBeUndefined();
+      expect((request.subject as { reference?: string }).reference).toBe('Patient/pac-teste-1');
+    }
+    expect(JSON.stringify(body)).not.toContain('NamingSystem/cpf');
+
+    const withCpf = proposed();
+    withCpf.participant[0]!.actor!.identifier = {
+      system: 'http://rnds.saude.gov.br/fhir/r4/NamingSystem/cpf',
+      value: '52998224725',
+    };
+    const before = harness.lab.fhirCalls.length;
+    await expect(access.createAppointment(withCpf)).rejects.toBeInstanceOf(LabAccessConfigError);
+    expect(harness.lab.fhirCalls).toHaveLength(before);
   });
 
   it('RCP-036: recusa identificador fora do conjunto de caracteres do protocolo', async () => {
@@ -631,17 +677,9 @@ describe('readPaymentLink', () => {
     expect(readPaymentLink(stored())).toBeUndefined();
   });
 
-  it('RCP-035: link com outro esquema, ou fora da extensão canônica, não é devolvido', () => {
+  it('RCP-035: link fora da extensão canônica não é procurado', () => {
     const cases: FHIRAppointment[] = [
-      pending([{ url: PAYMENT_LINK_URL, valueUrl: 'http://www.laboratorio.example/pagar' }]),
-      pending([{ url: PAYMENT_LINK_URL, valueUrl: 'javascript:alert(1)' }]),
-      pending([{ url: PAYMENT_LINK_URL, valueUrl: 'https://' }]),
-      pending([{ url: PAYMENT_LINK_URL, valueString: LINK }]),
       pending([{ url: 'https://laboratorio.example/ext/pagamento', valueUrl: LINK }]),
-      pending([
-        { url: PAYMENT_LINK_URL, valueUrl: LINK },
-        { url: PAYMENT_LINK_URL, valueUrl: `${LINK}-2` },
-      ]),
       { ...stored(), comment: LINK, patientInstruction: LINK, status: 'pending' },
       {
         ...stored(),
@@ -654,8 +692,30 @@ describe('readPaymentLink', () => {
         status: 'pending',
       },
     ];
-    for (const appointment of cases) {
-      expect(readPaymentLink(appointment), JSON.stringify(appointment.extension)).toBeUndefined();
+    for (const appointment of cases) expect(readPaymentLink(appointment)).toBeUndefined();
+  });
+
+  it('RCP-035: extensão canônica com outro esquema ou sem valueUrl https é erro do provedor, sem link', () => {
+    for (const extension of [
+      { url: PAYMENT_LINK_URL, valueUrl: 'http://www.laboratorio.example/pagar' },
+      { url: PAYMENT_LINK_URL, valueUrl: 'javascript:alert(1)' },
+      { url: PAYMENT_LINK_URL, valueUrl: 'https://' },
+      { url: PAYMENT_LINK_URL, valueString: LINK },
+    ]) {
+      expect(() => readPaymentLink(pending([extension])), JSON.stringify(extension)).toThrowError(
+        LabAccessProtocolError,
+      );
     }
+  });
+
+  it('RCP-044: com mais de uma extensão payment-link, nenhum link é aberto', () => {
+    expect(() =>
+      readPaymentLink(
+        pending([
+          { url: PAYMENT_LINK_URL, valueUrl: LINK },
+          { url: PAYMENT_LINK_URL, valueUrl: LINK },
+        ]),
+      ),
+    ).toThrowError(LabAccessProtocolError);
   });
 });

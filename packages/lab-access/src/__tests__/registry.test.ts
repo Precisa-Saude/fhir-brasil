@@ -210,11 +210,12 @@ describe('verifyRegistry', () => {
     }
   });
 
-  it('REG-007: a lista de passos é completa: typ diferente ou membro extra no cabeçalho não são motivo de recusa', async () => {
+  it('REG-011: ignora typ, membros a mais e jwk de outra chave no cabeçalho, e só usa o kid', async () => {
     const key = await testKey();
+    const other = await testKey('outra');
     const bytes = encodeJson(await buildRegistryDocument());
     const trust = { environment: 'pilot' as const, initialKeys: [key.jwk] };
-    for (const header of [{ typ: 'JWT' }, { extra: true }]) {
+    for (const header of [{ typ: 'JWT' }, { extra: true }, { jwk: other.jwk }]) {
       const { registry } = await verifyRegistry({
         now: EXAMPLE_NOW,
         registry: bytes,
@@ -239,6 +240,66 @@ describe('verifyRegistry', () => {
         'V3',
       );
     }
+  });
+
+  it('REG-011: recusa no passo V3 o candidato que traz crit, mesmo validamente assinado', async () => {
+    const key = await testKey();
+    const bytes = encodeJson(await buildRegistryDocument());
+    const trust = { environment: 'pilot' as const, initialKeys: [key.jwk] };
+    for (const crit of [['exp'], ['b64'], []]) {
+      const header = Buffer.from(
+        JSON.stringify({ alg: 'PS256', crit, exp: 1, kid: key.kid, typ: 'JOSE' }),
+      ).toString('base64url');
+      const input = Buffer.from(`${header}.${Buffer.from(bytes).toString('base64url')}`);
+      const signature = sign('sha256', input, {
+        key: key.privateKey,
+        padding: constants.RSA_PKCS1_PSS_PADDING,
+        saltLength: 32,
+      }).toString('base64url');
+      await expectRejection(
+        verifyRegistry({
+          now: EXAMPLE_NOW,
+          registry: bytes,
+          signature: `${header}..${signature}`,
+          trust,
+        }),
+        'critical-header',
+        'V3',
+      );
+    }
+  });
+
+  it('REG-010: o schema recusa entrada que lista uma versão 0.x junto com outra', async () => {
+    for (const versions of [
+      ['0.2', '1.0'],
+      ['0.2', '0.3'],
+      ['1.0', '0.2'],
+    ]) {
+      const { bytes, key, signature } = await signed(
+        (doc) => (doc.participants[0]!.protocol_versions = versions),
+      );
+      await expectRejection(
+        verifyRegistry({
+          now: EXAMPLE_NOW,
+          registry: bytes,
+          signature,
+          trust: { environment: 'pilot', initialKeys: [key.jwk] },
+        }),
+        'invalid-schema',
+        'V7',
+      );
+    }
+    // Sem versão 0.x, mais de uma versão continua permitida.
+    const { bytes, key, signature } = await signed(
+      (doc) => (doc.participants[0]!.protocol_versions = ['1.0', '1.1']),
+    );
+    const { registry } = await verifyRegistry({
+      now: EXAMPLE_NOW,
+      registry: bytes,
+      signature,
+      trust: { environment: 'pilot', initialKeys: [key.jwk] },
+    });
+    expect(registry.findParticipant(PROVIDER_ID)!.protocol_versions).toEqual(['1.0', '1.1']);
   });
 
   it('REG-007: chave anunciada só no próprio candidato não serve para verificá-lo (V4)', async () => {

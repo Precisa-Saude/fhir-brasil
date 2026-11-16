@@ -415,12 +415,19 @@ export const PATIENT = { cpf: CPF_PATIENT, fhirId: 'pac-teste-1' };
 
 export async function openJourney(harness: Harness, scopes: PatientScope[] = [...PATIENT_SCOPES]) {
   const provider = harness.client.provider(PROVIDER_ID);
-  const consent = await provider.createConsent({
-    expirationDateTime: '2027-05-15T03:00:00Z',
-    purpose: PURPOSE,
-    scopes,
+  const consent = await provider.createConsent(
+    {
+      expirationDateTime: '2027-05-15T03:00:00Z',
+      purpose: PURPOSE,
+      scopes,
+    },
+    { expectedCpf: CPF_PATIENT },
+  );
+  const journey = await provider.startAuthorization({
+    expectedCpf: CPF_PATIENT,
+    consent,
+    redirectUri: REDIRECT_URI,
   });
-  const journey = await provider.startAuthorization({ consent, redirectUri: REDIRECT_URI });
   return { consent, journey, provider };
 }
 

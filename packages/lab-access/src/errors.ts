@@ -69,6 +69,7 @@ export class LabAccessProtocolError extends LabAccessError {
 }
 
 export type RegistryRejectionReason =
+  | 'critical-header'
   | 'duplicate-participant'
   | 'expired'
   | 'invalid-key-id'

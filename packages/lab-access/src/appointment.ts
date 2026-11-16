@@ -9,7 +9,7 @@
 
 import type { FHIRCodeableConcept, FHIRIdentifier } from '@precisa-saude/fhir';
 
-import { LabAccessConfigError } from './errors';
+import { LabAccessConfigError, LabAccessProtocolError } from './errors';
 import type { FHIRAppointment, FHIRServiceRequest, FHIRTypedReference } from './fhir-types';
 import { assertFhirId, toReference } from './validation';
 
@@ -102,14 +102,16 @@ function participantsOfType(appointment: FHIRAppointment, type: string): FHIRTyp
  * Confere as regras da criação e devolve o valor de `If-None-Exist`.
  *
  * - Estado `proposed`, sem a extensão de link de pagamento, que é do provedor.
- * - Participantes distinguidos por `actor.type`: exatamente um `Patient`, com a
- *   referência `Patient/{fhir_id}` do consentimento, e exatamente uma
+ * - Participantes distinguidos por `actor.type`: exatamente um `Patient`, só
+ *   com a referência `Patient/{fhir_id}` do consentimento, sem `identifier`
+ *   (o receptor não envia CPF ao provedor), e exatamente uma
  *   `Location`. Participante que aponta para um paciente sem `actor.type`
  *   também é recusado: sem ele o recurso não valida no perfil.
  * - Ao menos um `ServiceRequest` contido, cada um com `status` `active`,
  *   `intent` `order`, `code` com ao menos um `coding`, sem `meta.versionId` nem
  *   `meta.lastUpdated`, e com `subject` igual, caractere a caractere, à
- *   referência do participante paciente (o `type`, quando vem, é `Patient`).
+ *   referência do participante paciente, sem `identifier` (o `type`, quando
+ *   vem, é `Patient`).
  * - Um `basedOn` local para cada pedido contido e nenhum para fora do recurso.
  */
 export function prepareAppointmentCreation(
@@ -130,9 +132,9 @@ export function prepareAppointmentCreation(
 
   const patient = `Patient/${patientFhirId}`;
   const patients = participantsOfType(appointment, 'Patient');
-  if (patients.length !== 1 || patients[0]!.reference !== patient) {
+  if (patients.length !== 1 || patients[0]!.reference !== patient || patients[0]!.identifier) {
     fail(
-      'O Appointment deveria ter um participante com actor.type Patient e a referência do paciente do consentimento.',
+      'O Appointment deveria ter um participante com actor.type Patient e só a referência do paciente do consentimento, sem identifier.',
     );
   }
   const untyped = (appointment.participant ?? []).some(
@@ -175,10 +177,11 @@ export function prepareAppointmentCreation(
     const subject = request.subject;
     if (
       subject?.reference !== patient ||
+      subject.identifier !== undefined ||
       (subject.type !== undefined && subject.type !== 'Patient')
     ) {
       fail(
-        'O subject de cada pedido contido deveria repetir a referência do participante paciente.',
+        'O subject de cada pedido contido deveria repetir a referência do participante paciente, sem identifier.',
       );
     }
     containedIds.add(resource.id as string);
@@ -201,27 +204,38 @@ export function prepareAppointmentCreation(
 }
 
 /**
- * Link de pagamento do agendamento, ou `undefined` (seção 5.5.5).
+ * Link de pagamento do agendamento, ou `undefined` quando não há (seção 5.5.5).
  *
- * Lido só da extensão de URL canônica `payment-link` no nível raiz do
- * `Appointment`, em `valueUrl`, e só com esquema `https`. Link em outro
- * elemento, em outra extensão, com outro esquema, ou com a extensão repetida
- * não é devolvido. O aplicativo abre o endereço como veio, no navegador do
- * sistema: o pacote não o busca nem o altera.
+ * O link é procurado só na extensão de URL canônica `payment-link` no nível
+ * raiz do `Appointment`: link em outro elemento ou em outra extensão é
+ * ignorado. Com a extensão presente, ela precisa ser única e trazer em
+ * `valueUrl` uma URL `https`. Caso contrário, nenhum link é devolvido e a
+ * função lança `LabAccessProtocolError`, porque o provedor descumpriu o
+ * protocolo. O domínio não é conferido: o registro não lista os domínios do
+ * provedor. O aplicativo abre o endereço como veio, no navegador do sistema.
  */
 export function readPaymentLink(appointment: FHIRAppointment): string | undefined {
   const links = (appointment?.extension ?? []).filter(
     (extension) => extension?.url === PAYMENT_LINK_URL,
   );
-  if (links.length !== 1) return undefined;
-  const value = links[0]!.valueUrl;
-  if (typeof value !== 'string' || !value.startsWith('https://')) return undefined;
-  try {
-    new URL(value);
-    return value;
-  } catch {
-    return undefined;
+  if (links.length === 0) return undefined;
+  if (links.length > 1) {
+    throw new LabAccessProtocolError(
+      'O agendamento traz mais de uma extensão de link de pagamento. Nenhuma é aberta.',
+    );
   }
+  const value = links[0]!.valueUrl;
+  if (typeof value === 'string' && value.startsWith('https://')) {
+    try {
+      new URL(value);
+      return value;
+    } catch {
+      // Cai no erro abaixo.
+    }
+  }
+  throw new LabAccessProtocolError(
+    'A extensão de link de pagamento não traz uma URL https em valueUrl. O link não é aberto.',
+  );
 }
 
 function assertUpdatable(current: FHIRAppointment, etag: string): string {

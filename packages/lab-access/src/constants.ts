@@ -1,9 +1,9 @@
 /**
- * Constantes do protocolo Open Labs Brasil, versão 0.2.1 da especificação.
+ * Constantes do protocolo Open Labs Brasil, versão 0.2.2 da especificação.
  */
 
 /** Versão do documento da especificação que este pacote implementa. */
-export const SPEC_VERSION = '0.2.1';
+export const SPEC_VERSION = '0.2.2';
 
 /**
  * Versão de protocolo (`MAJOR.MINOR`) que este pacote implementa, a que vai em

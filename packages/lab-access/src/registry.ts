@@ -263,10 +263,16 @@ export async function verifyRegistry(input: VerifyRegistryInput): Promise<Regist
     );
   }
 
-  // V2 e V3: formato do JWS e algoritmo.
+  // V2 e V3: formato do JWS, algoritmo e ausência de crit. O protocolo não
+  // define extensão de cabeçalho, então qualquer crit é de uma extensão que o
+  // participante não entende. Os demais membros (typ, jwk, x5c...) são
+  // ignorados: a chave vem só do kid.
   const jws = parseDetachedJws(input.signature ?? '');
   if (jws.header.alg !== 'PS256') {
     reject('V3', 'unsupported-algorithm', 'o algoritmo da assinatura deveria ser PS256.');
+  }
+  if ('crit' in jws.header) {
+    reject('V3', 'critical-header', 'o cabeçalho da assinatura traz crit.');
   }
 
   // V4: a chave vem do documento já aceito, ou do conjunto inicial.

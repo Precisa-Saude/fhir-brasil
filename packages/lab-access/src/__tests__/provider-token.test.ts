@@ -12,6 +12,7 @@ import {
 import { bundle, createHarness, TOKEN_ENDPOINT } from './fake-lab';
 import {
   CLIENT_ID,
+  CPF_PATIENT,
   FHIR_BASE,
   ISSUER,
   jsonResponse,
@@ -283,7 +284,7 @@ describe('token de provedor', () => {
     expect(lab.calls).toHaveLength(0);
   });
 
-  it('RCP-037: o api_base_url do provedor termina no MAJOR da versão efetiva', async () => {
+  it('RCP-046: não oferece nem chama provedor cujo api_base_url não termina no MAJOR da versão efetiva', async () => {
     const { client, lab } = await createHarness({
       registry: (doc) => {
         doc.participants[0]!.provider!.api_base_url = 'https://api.laboratorio.example/acesso/v1';
@@ -292,6 +293,20 @@ describe('token de provedor', () => {
     expect(client.providers()).toEqual([]);
     await expect(client.provider(PROVIDER_ID).searchLocations()).rejects.toMatchObject({
       reason: 'api-version-mismatch',
+    });
+    expect(lab.calls).toHaveLength(0);
+  });
+
+  it('REG-012: versão efetiva que o software não implementa conta como inexistente, mesmo com as duas pontas de acordo', async () => {
+    const { client, lab } = await createHarness({
+      registry: (doc) => {
+        doc.participants[0]!.protocol_versions = ['0.3'];
+        doc.participants[1]!.protocol_versions = ['0.3'];
+      },
+    });
+    expect(client.providers()).toEqual([]);
+    await expect(client.provider(PROVIDER_ID).searchLocations()).rejects.toMatchObject({
+      reason: 'unsupported-version',
     });
     expect(lab.calls).toHaveLength(0);
   });
@@ -306,11 +321,14 @@ describe('token de provedor', () => {
     lab.fhir = () => jsonResponse(200, bundle([]));
     const provider = client.provider(PROVIDER_ID);
     await provider.searchLocations();
-    await provider.createConsent({
-      expirationDateTime: '2027-05-15T03:00:00Z',
-      purpose: 'Guardar os resultados dos seus exames no seu histórico pessoal.',
-      scopes: ['results.read'],
-    });
+    await provider.createConsent(
+      {
+        expirationDateTime: '2027-05-15T03:00:00Z',
+        purpose: 'Guardar os resultados dos seus exames no seu histórico pessoal.',
+        scopes: ['results.read'],
+      },
+      { expectedCpf: CPF_PATIENT },
+    );
     await provider.searchSchedules({ location: 'unidade-norte' });
 
     const scopes = tokenCalls(lab.calls).map((call) => call.form!.get('scope'));

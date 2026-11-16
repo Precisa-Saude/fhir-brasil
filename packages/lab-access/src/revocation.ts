@@ -2,10 +2,10 @@
  * Revogação de consentimento pelo receptor e revogação pendente (seção 4.4,
  * "Revogação pendente", e fluxo 2.6).
  *
- * O pacote é uma biblioteca e não roda temporizador. Ele faz as tentativas
- * automáticas de cada revogação, grava a pendência num `RevocationStore` e
- * oferece `retryPendingRevocations`, que o aplicativo chama do próprio
- * agendador. O calendário fica em `nextAttemptAt` de cada pendência.
+ * O pacote é uma biblioteca e não roda temporizador. Ele grava a revogação
+ * num `RevocationStore` assim que ela é decidida, faz as tentativas
+ * automáticas e oferece `retryPendingRevocations`, que o aplicativo chama do
+ * próprio agendador. O calendário fica em `nextAttemptAt` de cada pendência.
  */
 
 import { REVOCATION_REASONS, type RevocationReason } from './consent-types';
@@ -16,16 +16,28 @@ import {
   PENDING_REVOCATION_HOURLY_PERIOD_MS,
 } from './constants';
 import type { ClientContext } from './context';
-import { LabAccessApiError, LabAccessConfigError, LabAccessError } from './errors';
+import {
+  LabAccessApiError,
+  LabAccessConfigError,
+  LabAccessError,
+  OAuthError,
+  ReceiverStatusError,
+} from './errors';
 import { apiRequest, retryDelay } from './http';
-import { assertScopeUsable, resolveProvider, shouldRenewToken } from './resolve';
+import {
+  assertScopeUsable,
+  effectiveProtocolVersion,
+  resolveProvider,
+  shouldRenewToken,
+} from './resolve';
 import { assertRegistryAllowsProviderToken } from './tokens';
 import { assertConsentId } from './validation';
 
 /**
- * Uma revogação que o provedor ainda não confirmou. Do ponto de vista do
- * receptor o acesso já acabou: os tokens foram descartados quando a revogação
- * foi decidida.
+ * Uma revogação gravada e ainda não confirmada pelo provedor. Do ponto de
+ * vista do receptor o acesso já acabou: os tokens foram descartados quando a
+ * revogação foi decidida, e ela foi gravada no mesmo momento, antes da
+ * primeira chamada.
  */
 export interface PendingRevocation {
   /** Tentativas feitas até agora, contando as automáticas do pedido. */
@@ -39,9 +51,15 @@ export interface PendingRevocation {
    * endereço enquanto a pendência existir.
    */
   consentManagementUri?: string;
-  lastAttemptAt: string;
-  /** Quando a próxima tentativa vence: de hora em hora no primeiro dia, uma vez por dia depois. */
+  /** Instante da última chamada ao provedor. Ausente enquanto nenhuma foi feita. */
+  lastAttemptAt?: string;
+  /**
+   * Quando a próxima tentativa vence: de hora em hora no primeiro dia, uma vez
+   * por dia depois, e nunca antes de `notBefore`.
+   */
   nextAttemptAt: string;
+  /** Instante indicado pelo último `Retry-After`. Nenhuma tentativa acontece antes dele. */
+  notBefore?: string;
   providerId: string;
   reason: RevocationReason;
   /** Instante em que a revogação foi decidida. */
@@ -124,6 +142,39 @@ function repeatable(error: unknown): error is LabAccessError {
   );
 }
 
+function pendingKey(providerId: string, consentId: string): string {
+  return `${providerId} ${consentId}`;
+}
+
+/** Instante indicado por `Retry-After` na falha, se houver. */
+function retryAfterInstant(error: unknown, now: Date): number | undefined {
+  const seconds =
+    error instanceof LabAccessApiError || error instanceof OAuthError
+      ? error.retryAfterSeconds
+      : undefined;
+  return seconds === undefined ? undefined : now.getTime() + seconds * 1000;
+}
+
+/**
+ * Condições locais que impedem a chamada (seção 4.4, item 4): registro
+ * expirado há mais de 7 dias, receptor ou provedor fora de `active` no
+ * registro aceito, ou sem versão efetiva entre os dois. Nenhuma delas faz
+ * chamada de rede, e com qualquer uma o provedor não é chamado, nem para
+ * revogar.
+ */
+function localBlocker(ctx: ClientContext, providerId: string): unknown {
+  try {
+    assertRegistryAllowsProviderToken(ctx, 'consent.manage');
+    const registry = ctx.registry();
+    const receiver = registry.getReceiver(ctx.clientId);
+    if (receiver.status !== 'active') throw new ReceiverStatusError(receiver.status);
+    effectiveProtocolVersion(receiver, registry.getProvider(providerId));
+    return undefined;
+  } catch (error) {
+    return error;
+  }
+}
+
 /**
  * Uma tentativa: um pedido de token de provedor, se o que está em cache não
  * serve, e um `DELETE`, sem repetição dentro dela. Termina sem erro quando a
@@ -135,8 +186,6 @@ async function attemptRevocation(
   consentId: string,
   reason: RevocationReason,
 ): Promise<void> {
-  // Com o registro expirado, só consent.manage sozinho, e só por 7 dias.
-  assertRegistryAllowsProviderToken(ctx, 'consent.manage');
   const resolved = await resolveProvider(ctx, providerId);
   assertScopeUsable(resolved, 'consent.manage');
   const token = await ctx.providerToken(resolved, 'consent.manage', false);
@@ -157,6 +206,25 @@ async function attemptRevocation(
   }
 }
 
+/** Reagenda depois de uma chamada que falhou, respeitando `Retry-After`. */
+function afterFailure(record: PendingRevocation, error: unknown, attemptAt: Date): void {
+  record.lastAttemptAt = attemptAt.toISOString();
+  const scheduled = Date.parse(nextRevocationAttemptAt(record.requestedAt, attemptAt));
+  const notBefore = retryAfterInstant(error, attemptAt);
+  if (notBefore === undefined) delete record.notBefore;
+  else record.notBefore = new Date(notBefore).toISOString();
+  record.nextAttemptAt = new Date(Math.max(scheduled, notBefore ?? 0)).toISOString();
+}
+
+async function quietly(action: () => Promise<void> | void): Promise<unknown> {
+  try {
+    await action();
+    return undefined;
+  } catch (error) {
+    return error;
+  }
+}
+
 export interface RevocationRequest {
   consentExpiresAt?: string;
   consentId: string;
@@ -169,9 +237,17 @@ export type RevocationResult =
   | { error: unknown; outcome: 'pending'; pending: PendingRevocation };
 
 /**
- * Envia a revogação com no máximo `retry.maxAttempts` (3) tentativas
- * automáticas ao todo, com recuo e `Retry-After`. Falha que não admite
- * repetição encerra as tentativas. Sem confirmação, grava a pendência.
+ * Revoga um consentimento (seção 4.4, "Revogação pendente").
+ *
+ * 1. Grava a revogação no `RevocationStore` antes de qualquer chamada. Se já
+ *    havia uma gravada para o mesmo consentimento, segue com ela.
+ * 2. Com uma condição local que impede a chamada, ou antes do instante de um
+ *    `Retry-After` recebido, não chama o provedor.
+ * 3. Senão, faz no máximo `retry.maxAttempts` (3) tentativas ao todo, com
+ *    recuo e `Retry-After`. Falha que não admite repetição, ou espera acima de
+ *    `retry.maxDelayMs`, encerra as tentativas na hora.
+ * 4. Confirmada, apaga o registro. Sem confirmação, deixa-o pendente, com o
+ *    próximo vencimento.
  *
  * Quem chama já descartou os tokens do paciente antes de chamar.
  */
@@ -184,55 +260,81 @@ export async function revokeConsent(
   if (!REVOCATION_REASONS.includes(reason)) {
     throw new LabAccessConfigError('Motivo de revogação desconhecido.');
   }
-  const requestedAt = ctx.now().toISOString();
+  const key = pendingKey(providerId, consentId);
+  const decidedAt = ctx.now();
+  const existing = (await ctx.revocations.list()).find(
+    (item) => item.providerId === providerId && item.consentId === consentId,
+  );
+  const record: PendingRevocation = existing
+    ? { ...existing }
+    : {
+        attempts: 0,
+        consentId,
+        nextAttemptAt: decidedAt.toISOString(),
+        providerId,
+        reason,
+        requestedAt: decidedAt.toISOString(),
+      };
+  const provider = ctx.registry().findParticipant(providerId)?.provider;
+  if (record.consentManagementUri === undefined && provider !== undefined) {
+    record.consentManagementUri = provider.consent_management_uri;
+  }
+  if (record.consentExpiresAt === undefined && request.consentExpiresAt !== undefined) {
+    record.consentExpiresAt = request.consentExpiresAt;
+  }
+
+  // Gravada antes da primeira chamada: um reinício no meio não a perde.
+  let storeError = existing ? undefined : await quietly(() => ctx.revocations.save({ ...record }));
 
   let error: unknown;
-  let attempts = 0;
-  while (attempts < ctx.retry.maxAttempts) {
-    attempts += 1;
+  const waiting =
+    ctx.revocationsInFlight.has(key) ||
+    (record.notBefore !== undefined && decidedAt.getTime() < Date.parse(record.notBefore));
+  const blocker = waiting ? undefined : localBlocker(ctx, providerId);
+  if (blocker !== undefined) {
+    // Sem chamada. A pendência fica vencida, para ser tentada assim que a
+    // condição acabar.
+    error = blocker;
+    record.nextAttemptAt = decidedAt.toISOString();
+  } else if (!waiting) {
+    ctx.revocationsInFlight.add(key);
     try {
-      await attemptRevocation(ctx, providerId, consentId, reason);
-      await ctx.revocations.remove(providerId, consentId);
-      return { outcome: 'confirmed' };
-    } catch (failure) {
-      error = failure;
-      if (!repeatable(failure) || attempts >= ctx.retry.maxAttempts) break;
-      const delay = retryDelay(ctx, failure, attempts);
-      if (delay > ctx.retry.maxDelayMs) break;
-      await ctx.sleep(delay);
+      for (let tries = 1; tries <= ctx.retry.maxAttempts; tries += 1) {
+        record.attempts += 1;
+        try {
+          await attemptRevocation(ctx, providerId, consentId, reason);
+          await quietly(() => ctx.revocations.remove(providerId, consentId));
+          return { outcome: 'confirmed' };
+        } catch (failure) {
+          error = failure;
+          afterFailure(record, failure, ctx.now());
+          if (!repeatable(failure) || tries >= ctx.retry.maxAttempts) break;
+          const delay = retryDelay(ctx, failure, tries);
+          if (delay > ctx.retry.maxDelayMs) break;
+          await ctx.sleep(delay);
+        }
+      }
+    } finally {
+      ctx.revocationsInFlight.delete(key);
     }
   }
 
-  const lastAttempt = ctx.now();
-  const provider = ctx.registry().findParticipant(providerId)?.provider;
-  const pending: PendingRevocation = {
-    attempts,
-    consentId,
-    lastAttemptAt: lastAttempt.toISOString(),
-    nextAttemptAt: nextRevocationAttemptAt(requestedAt, lastAttempt),
-    providerId,
-    reason,
-    requestedAt,
-  };
-  if (provider?.consent_management_uri !== undefined) {
-    pending.consentManagementUri = provider.consent_management_uri;
-  }
-  if (request.consentExpiresAt !== undefined) pending.consentExpiresAt = request.consentExpiresAt;
-
-  try {
-    await ctx.revocations.save(pending);
-  } catch (storeError) {
-    // A pendência segue no erro, para o aplicativo gravá-la de outro jeito.
-    return { error: storeError, outcome: 'pending', pending };
-  }
-  return { error, outcome: 'pending', pending };
+  storeError ??= await quietly(() => ctx.revocations.save({ ...record }));
+  // A pendência segue no erro, para o aplicativo gravá-la de outro jeito se o
+  // armazenamento falhou.
+  return { error: storeError ?? error, outcome: 'pending', pending: record };
 }
 
 /**
  * Repete as revogações pendentes que venceram: uma única chamada por
- * pendência, sem nova sequência de três. Pendência confirmada ou de
- * consentimento já expirado é apagada. As demais são reagendadas e nunca
- * apagadas por desistência.
+ * pendência, sem nova sequência de três, e nunca antes do instante de um
+ * `Retry-After` recebido. Pendência de provedor que não pode ser chamado
+ * (condição local) fica como está e é tentada assim que a condição acaba.
+ * Pendência confirmada ou de consentimento já expirado é apagada. As demais
+ * são reagendadas e nunca apagadas por desistência.
+ *
+ * Inclui as revogações gravadas e nunca confirmadas que o aplicativo
+ * encontra ao reiniciar.
  */
 export async function retryPendingRevocations(
   ctx: ClientContext,
@@ -241,6 +343,8 @@ export async function retryPendingRevocations(
   for (const pending of await ctx.revocations.list()) {
     const now = ctx.now();
     const { consentId, providerId } = pending;
+    const key = pendingKey(providerId, consentId);
+    if (ctx.revocationsInFlight.has(key)) continue;
     if (
       pending.consentExpiresAt !== undefined &&
       now.getTime() > Date.parse(pending.consentExpiresAt)
@@ -249,23 +353,35 @@ export async function retryPendingRevocations(
       results.push({ consentId, outcome: 'expired', providerId });
       continue;
     }
+    // `nextAttemptAt` nunca fica antes de `notBefore`: o Retry-After já entrou nele.
     if (now.getTime() < Date.parse(pending.nextAttemptAt)) continue;
 
+    const blocker = localBlocker(ctx, providerId);
+    if (blocker !== undefined) {
+      results.push({ consentId, error: blocker, outcome: 'pending', pending, providerId });
+      continue;
+    }
+
+    const record: PendingRevocation = { ...pending, attempts: pending.attempts + 1 };
+    ctx.revocationsInFlight.add(key);
     try {
       await attemptRevocation(ctx, providerId, consentId, pending.reason);
       await ctx.revocations.remove(providerId, consentId);
       results.push({ consentId, outcome: 'confirmed', providerId });
     } catch (error) {
-      const attemptAt = ctx.now();
-      const updated: PendingRevocation = {
-        ...pending,
-        attempts: pending.attempts + 1,
-        lastAttemptAt: attemptAt.toISOString(),
-        nextAttemptAt: nextRevocationAttemptAt(pending.requestedAt, attemptAt),
-      };
-      await ctx.revocations.save(updated);
-      results.push({ consentId, error, outcome: 'pending', pending: updated, providerId });
+      afterFailure(record, error, ctx.now());
+      await ctx.revocations.save(record);
+      results.push({ consentId, error, outcome: 'pending', pending: record, providerId });
+    } finally {
+      ctx.revocationsInFlight.delete(key);
     }
   }
   return results;
+}
+
+/** Pendências gravadas, menos as que este processo está tentando agora. */
+export async function listPendingRevocations(ctx: ClientContext): Promise<PendingRevocation[]> {
+  return (await ctx.revocations.list())
+    .filter((item) => !ctx.revocationsInFlight.has(pendingKey(item.providerId, item.consentId)))
+    .map((item) => ({ ...item }));
 }

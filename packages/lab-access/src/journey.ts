@@ -52,6 +52,13 @@ export interface AuthorizationJourney {
 export interface StartAuthorizationInput {
   /** O consentimento criado para esta jornada, em `AWAITING_AUTHORISATION`. */
   consent: Pick<ConsentRecord, 'consentId' | 'scopes' | 'status'>;
+  /**
+   * CPF do paciente que inicia a jornada no aplicativo. Só é conferido (11
+   * dígitos, dígitos verificadores certos e algarismos não todos iguais): com
+   * CPF inválido a jornada não começa. Não é enviado ao provedor nem guardado
+   * na jornada, e volta a ser informado na conclusão.
+   */
+  expectedCpf: string;
   /** Um dos `redirect_uris` do receptor no registro, idêntico caractere a caractere. */
   redirectUri: string;
   /** Subconjunto dos escopos do consentimento. Padrão: todos. */
@@ -67,6 +74,7 @@ export async function startAuthorization(
   input: StartAuthorizationInput,
 ): Promise<AuthorizationJourney> {
   const { consent, redirectUri } = input;
+  normalizeExpectedCpf(input.expectedCpf);
   if (!isConsentId(consent?.consentId)) {
     throw new LabAccessConfigError('O consentimento não traz um consent_id válido.');
   }

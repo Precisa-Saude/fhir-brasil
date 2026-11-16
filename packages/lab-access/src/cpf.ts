@@ -25,7 +25,7 @@ export function isValidCpf(value: unknown): value is string {
 }
 
 /** Devolve os 11 dígitos do CPF informado pelo aplicativo, sem pontuação. */
-export function normalizeExpectedCpf(cpf: string): string {
+export function normalizeExpectedCpf(cpf: string | undefined): string {
   const digits = typeof cpf === 'string' ? cpf.replace(/[.\-\s]/g, '') : '';
   if (!isValidCpf(digits)) {
     // A mensagem não repete o valor recebido.

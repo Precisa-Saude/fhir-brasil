@@ -7,6 +7,7 @@ import type { ConsentRecord, CreateConsentInput, RevocationReason } from './cons
 import { buildConsentBody, createConsent, readConsent } from './consents';
 import { type ProviderScope, SLOT_SEARCH_MAX_WINDOW_DAYS } from './constants';
 import type { ClientContext } from './context';
+import { normalizeExpectedCpf } from './cpf';
 import { IssuerMismatchError, LabAccessConfigError, RevocationPendingError } from './errors';
 import {
   asResource,
@@ -156,8 +157,16 @@ export class ProviderAccess {
     );
   }
 
-  /** Cria um consentimento. A criação não identifica o paciente. */
-  async createConsent(input: CreateConsentInput): Promise<ConsentRecord> {
+  /**
+   * Cria um consentimento, primeiro passo da jornada. A criação não identifica
+   * o paciente: `expectedCpf` só é conferido, para que a jornada não comece com
+   * um CPF inválido (seção 4.4), e não vai ao provedor.
+   */
+  async createConsent(
+    input: CreateConsentInput,
+    options: { expectedCpf: string },
+  ): Promise<ConsentRecord> {
+    normalizeExpectedCpf(options?.expectedCpf);
     const body = buildConsentBody(input, this.ctx.now());
     return createConsent(this.ctx, await resolveProvider(this.ctx, this.providerId), body);
   }

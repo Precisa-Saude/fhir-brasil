@@ -127,12 +127,24 @@ describe('revogação pendente', () => {
   it('RCP-028: não apaga a pendência por desistência nem por limite de tentativas', async () => {
     const harness = await createHarness();
     await pendingAfterOutage(harness);
-    for (let day = 0; day < 40; day += 1) {
+    for (let day = 0; day < 25; day += 1) {
       advance(harness, 24 * HOUR);
       await harness.client.retryPendingRevocations();
     }
-    const [pending] = await harness.client.pendingRevocations();
-    expect(pending!.attempts).toBe(43);
+    expect((await harness.client.pendingRevocations())[0]!.attempts).toBe(28);
+
+    // Passada a janela do registro expirado (7 dias depois de 2026-12-16), não
+    // há chamada, mas a pendência fica.
+    harness.lab.now = new Date('2026-12-23T12:00:01Z');
+    await harness.client.retryPendingRevocations();
+    const before = harness.lab.calls.length;
+    const attempts = (await harness.client.pendingRevocations())[0]!.attempts;
+    for (let day = 0; day < 20; day += 1) {
+      advance(harness, 24 * HOUR);
+      await harness.client.retryPendingRevocations();
+    }
+    expect(harness.lab.calls).toHaveLength(before);
+    expect(await harness.client.pendingRevocations()).toMatchObject([{ attempts }]);
   });
 
   it('RCP-028: falha que não admite repetição vai direto para a pendência, sem novas tentativas', async () => {
@@ -201,6 +213,141 @@ describe('revogação pendente', () => {
     expect(error.pending).toMatchObject({ consentId: consent.consentId, attempts: 3 });
   });
 
+  it('RCP-038: grava a revogação antes da primeira tentativa, e um reinício no meio não a perde', async () => {
+    const store = new InMemoryRevocationStore();
+    const harness = await createHarness({ config: { revocationStore: store } });
+    const { access, consent } = await connect(harness);
+    const signal: { reached?: () => void } = {};
+    const deleteReached = new Promise<void>((resolve) => (signal.reached = resolve));
+    const original = harness.lab.transport.request.bind(harness.lab.transport);
+    harness.lab.transport.request = (request) => {
+      if (request.method !== 'DELETE') return original(request);
+      signal.reached!();
+      // O provedor segura a resposta: o processo "cai" antes de ela chegar.
+      return new Promise(() => {});
+    };
+
+    void access.revoke();
+    await deleteReached;
+    expect(store.list()).toMatchObject([
+      { attempts: 0, consentId: consent.consentId, reason: 'PATIENT_REQUEST' },
+    ]);
+    // Enquanto este processo tenta, a revogação ainda não é pendente para ele,
+    // e a repetição do calendário não faz uma segunda chamada em paralelo.
+    expect(await harness.client.pendingRevocations()).toEqual([]);
+    expect(await harness.client.retryPendingRevocations()).toEqual([]);
+
+    // Reinício: outro cliente, o mesmo armazenamento.
+    const restarted = await createHarness({ config: { revocationStore: store } });
+    restarted.lab.consents.set(consent.consentId, harness.lab.consents.get(consent.consentId)!);
+    expect(await restarted.client.pendingRevocations()).toMatchObject([
+      { consentId: consent.consentId },
+    ]);
+    expect(await restarted.client.retryPendingRevocations()).toMatchObject([
+      { consentId: consent.consentId, outcome: 'confirmed' },
+    ]);
+    expect(store.list()).toEqual([]);
+  });
+
+  it('RCP-040: invalid_client no endpoint de token encerra as tentativas na hora, com a revogação pendente', async () => {
+    const harness = await createHarness();
+    const { access } = await connect(harness);
+    advance(harness, 11 * 60 * 1000);
+    harness.lab.failNext(isClientCredentials, jsonResponse(401, { error: 'invalid_client' }));
+    const before = harness.lab.calls.length;
+
+    await expect(access.revoke()).rejects.toBeInstanceOf(RevocationPendingError);
+    const after = harness.lab.calls.slice(before);
+    expect(after.filter(isClientCredentials)).toHaveLength(1);
+    expect(after.filter(isDelete)).toHaveLength(0);
+    expect(harness.sleeps).toEqual([]);
+    expect(await harness.client.pendingRevocations()).toMatchObject([{ attempts: 1 }]);
+  });
+
+  it('RCP-041: nenhuma tentativa, automática ou do calendário, antes do instante de Retry-After', async () => {
+    const harness = await createHarness();
+    const { access, consent, provider } = await connect(harness);
+    const unavailable = () =>
+      jsonResponse(503, operationOutcome('PROVIDER_UNAVAILABLE', 'transient'), {
+        'Retry-After': '7200',
+      });
+    harness.lab.failNext(isDelete, unavailable());
+    const start = harness.lab.now.getTime();
+
+    await expect(access.revoke()).rejects.toBeInstanceOf(RevocationPendingError);
+    // A espera passa do teto do cliente: sem tentativa automática nova.
+    expect(deletes(harness)).toHaveLength(1);
+    expect(harness.sleeps).toEqual([]);
+    const [pending] = await harness.client.pendingRevocations();
+    expect(Date.parse(pending!.nextAttemptAt)).toBe(start + 2 * HOUR);
+
+    // Nem o calendário de hora em hora nem um novo pedido passam por cima do Retry-After.
+    advance(harness, HOUR);
+    expect(await harness.client.retryPendingRevocations()).toEqual([]);
+    await expect(provider.revokeConsent(consent.consentId)).rejects.toBeInstanceOf(
+      RevocationPendingError,
+    );
+    expect(deletes(harness)).toHaveLength(1);
+
+    // Um Retry-After recebido numa repetição do calendário também adia a seguinte.
+    advance(harness, HOUR);
+    harness.lab.failNext(isDelete, unavailable());
+    const [retried] = await harness.client.retryPendingRevocations();
+    expect(deletes(harness)).toHaveLength(2);
+    expect(Date.parse(retried!.pending!.nextAttemptAt)).toBe(harness.lab.now.getTime() + 2 * HOUR);
+  });
+
+  it('RCP-048: provedor suspenso não é chamado nem para revogar, e o calendário volta quando ele é reativado', async () => {
+    const harness = await createHarness();
+    const { access, consent } = await connect(harness);
+    const withProvider = async (sequence: number, status: 'active' | 'suspended') =>
+      (
+        await createHarness({
+          registry: (doc) => {
+            doc.sequence = sequence;
+            doc.participants[0]!.status = status;
+          },
+        })
+      ).client.registry;
+
+    harness.client.updateRegistry(await withProvider(8, 'suspended'));
+    const before = harness.lab.calls.length;
+    await expect(access.revoke()).rejects.toBeInstanceOf(RevocationPendingError);
+    advance(harness, HOUR);
+    const [blocked] = await harness.client.retryPendingRevocations();
+    expect(blocked).toMatchObject({ outcome: 'pending' });
+    expect(harness.lab.calls).toHaveLength(before);
+    expect(await harness.client.pendingRevocations()).toMatchObject([
+      { attempts: 0, consentId: consent.consentId, consentManagementUri: CONSENT_PAGE },
+    ]);
+
+    // Reativado, a repetição seguinte já chama, sem esperar o próximo vencimento.
+    harness.client.updateRegistry(await withProvider(9, 'active'));
+    expect(await harness.client.retryPendingRevocations()).toMatchObject([
+      { outcome: 'confirmed' },
+    ]);
+    expect(deletes(harness)).toHaveLength(1);
+    expect(harness.lab.consents.get(consent.consentId)!.body.status).toBe('REVOKED');
+  });
+
+  it('RCP-048: com o próprio receptor fora de active, nenhuma chamada, e a pendência fica', async () => {
+    const harness = await createHarness();
+    const { access } = await connect(harness);
+    const suspended = await createHarness({
+      registry: (doc) => {
+        doc.sequence = 8;
+        doc.participants[1]!.status = 'suspended';
+      },
+    });
+    harness.client.updateRegistry(suspended.client.registry);
+    const before = harness.lab.calls.length;
+    const error = (await access.revoke().catch((err: unknown) => err)) as RevocationPendingError;
+    expect(error).toBeInstanceOf(RevocationPendingError);
+    expect(error.cause).toMatchObject({ name: 'ReceiverStatusError' });
+    expect(harness.lab.calls).toHaveLength(before);
+    expect(await harness.client.pendingRevocations()).toHaveLength(1);
+  });
+
   it('o armazenamento em memória guarda uma pendência por consentimento e provedor', async () => {
     const store = new InMemoryRevocationStore();
     const pending: PendingRevocation = {
@@ -260,11 +407,18 @@ describe('fim da pendência pela resposta do provedor', () => {
     }
   });
 
-  it('404 sem o código do protocolo não encerra a pendência', async () => {
-    const harness = await createHarness();
-    const { access } = await connect(harness);
-    harness.lab.failNext(isDelete, { body: '', headers: {}, status: 404 });
-    await expect(access.revoke()).rejects.toBeInstanceOf(RevocationPendingError);
-    expect(await harness.client.pendingRevocations()).toHaveLength(1);
+  it('RCP-039: 404 sem corpo, ou com outro código, não encerra a revogação', async () => {
+    for (const response of [
+      { body: '', headers: {}, status: 404 },
+      jsonResponse(404, operationOutcome('RESOURCE_NOT_FOUND', 'not-found')),
+    ]) {
+      const harness = await createHarness();
+      const { access } = await connect(harness);
+      harness.lab.failNext(isDelete, response);
+      await expect(access.revoke()).rejects.toBeInstanceOf(RevocationPendingError);
+      // Não admite repetição automática: uma chamada só, e a pendência segue.
+      expect(deletes(harness)).toHaveLength(1);
+      expect(await harness.client.pendingRevocations()).toHaveLength(1);
+    }
   });
 });

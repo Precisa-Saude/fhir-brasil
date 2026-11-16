@@ -8,11 +8,11 @@ const README = readFileSync(fileURLToPath(new URL('../../README.md', HERE)), 'ut
 
 /**
  * Requisitos do receptor e os de registro, que valem para os dois papéis, na
- * versão 0.2.1 da especificação.
+ * versão 0.2.2 da especificação.
  */
 const REQUIRED = [
-  ...Array.from({ length: 10 }, (_, i) => `REG-${String(i + 1).padStart(3, '0')}`),
-  ...Array.from({ length: 37 }, (_, i) => `RCP-${String(i + 1).padStart(3, '0')}`),
+  ...Array.from({ length: 13 }, (_, i) => `REG-${String(i + 1).padStart(3, '0')}`),
+  ...Array.from({ length: 49 }, (_, i) => `RCP-${String(i + 1).padStart(3, '0')}`),
 ];
 
 /** Retirados na 0.2.1: ficam na tabela, marcados, e sem teste. */

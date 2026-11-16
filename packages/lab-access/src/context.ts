@@ -50,6 +50,8 @@ export interface ClientContext {
   registry: () => ParticipantRegistry;
   retry: RetryPolicy;
   revocations: RevocationStore;
+  /** Revogações que este processo está tentando agora, por provedor e consentimento. */
+  revocationsInFlight: Set<string>;
   signingKey: SigningKey;
   sleep: (ms: number) => Promise<void>;
   transport: LabAccessTransport;

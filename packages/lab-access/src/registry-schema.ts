@@ -136,6 +136,18 @@ const receiverBlock = object(
   { logo_uri: httpsUrl },
 );
 
+/** Com uma versão `0.x` na lista, ela é a única (fase 0: uma versão por participante). */
+const protocolVersions: Check = (value, path, errors) => {
+  list(text(/^[0-9]+\.[0-9]+$/), { min: 1, unique: true })(value, path, errors);
+  if (
+    Array.isArray(value) &&
+    value.length > 1 &&
+    value.some((item) => typeof item === 'string' && item.startsWith('0.'))
+  ) {
+    errors.push(`${path}: com uma versão 0.x, a lista deveria ter só ela`);
+  }
+};
+
 const participantFields = object(
   {
     cnpj: text(/^[0-9A-Z]{12}[0-9]{2}$/),
@@ -146,7 +158,7 @@ const participantFields = object(
     display_name: anyText(1, 80),
     legal_name: anyText(1, 200),
     participant_id: text(UUID),
-    protocol_versions: list(text(/^[0-9]+\.[0-9]+$/), { min: 1, unique: true }),
+    protocol_versions: protocolVersions,
     role: oneOf('provider', 'receiver'),
     status: oneOf('active', 'suspended', 'withdrawn'),
     updated_at: utcDateTime,

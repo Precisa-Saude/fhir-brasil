@@ -34,7 +34,7 @@ describe('package.json', () => {
   });
 
   it('declara a versão da especificação e a versão de protocolo que implementa', () => {
-    expect(SPEC_VERSION).toBe('0.2.1');
+    expect(SPEC_VERSION).toBe('0.2.2');
     expect(PROTOCOL_VERSION).toBe('0.2');
   });
 });

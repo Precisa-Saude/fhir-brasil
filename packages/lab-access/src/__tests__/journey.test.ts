@@ -41,12 +41,15 @@ const tokenGrants = (harness: Harness) =>
 describe('createConsent', () => {
   it('cria o consentimento com token de provedor e devolve AWAITING_AUTHORISATION', async () => {
     const harness = await createHarness();
-    const consent = await harness.client.provider(PROVIDER_ID).createConsent({
-      dataPeriod: { start: '2022-01-01' },
-      expirationDateTime: new Date('2027-05-15T03:00:00.000Z'),
-      purpose: PURPOSE,
-      scopes: ['results.read', 'consent.read'],
-    });
+    const consent = await harness.client.provider(PROVIDER_ID).createConsent(
+      {
+        dataPeriod: { start: '2022-01-01' },
+        expirationDateTime: new Date('2027-05-15T03:00:00.000Z'),
+        purpose: PURPOSE,
+        scopes: ['results.read', 'consent.read'],
+      },
+      { expectedCpf: CPF_PATIENT },
+    );
 
     const [call] = consentCalls(harness);
     expect(call!.method).toBe('POST');
@@ -77,13 +80,16 @@ describe('createConsent', () => {
 
   it('RCP-011: a criação do consentimento envia só finalidade, escopos, expiração e período, sem dado de paciente', async () => {
     const harness = await createHarness();
-    await harness.client.provider(PROVIDER_ID).createConsent({
-      // Campos a mais são descartados: o corpo é montado campo a campo.
-      ...({ cpf: CPF_PATIENT, patient: { cpf: CPF_PATIENT } } as object),
-      expirationDateTime: '2027-05-15T03:00:00Z',
-      purpose: PURPOSE,
-      scopes: ['results.read'],
-    });
+    await harness.client.provider(PROVIDER_ID).createConsent(
+      {
+        // Campos a mais são descartados: o corpo é montado campo a campo.
+        ...({ cpf: CPF_PATIENT, patient: { cpf: CPF_PATIENT } } as object),
+        expirationDateTime: '2027-05-15T03:00:00Z',
+        purpose: PURPOSE,
+        scopes: ['results.read'],
+      },
+      { expectedCpf: CPF_PATIENT },
+    );
 
     const [call] = consentCalls(harness);
     expect(Object.keys(call!.json as object).sort()).toEqual([
@@ -111,23 +117,29 @@ describe('createConsent', () => {
   it.each(invalid)('recusa %s antes de chamar o provedor', async (_name, change) => {
     const harness = await createHarness();
     await expect(
-      harness.client.provider(PROVIDER_ID).createConsent({
-        expirationDateTime: '2027-05-15T03:00:00Z',
-        purpose: PURPOSE,
-        scopes: ['results.read'],
-        ...change,
-      } as never),
+      harness.client.provider(PROVIDER_ID).createConsent(
+        {
+          expirationDateTime: '2027-05-15T03:00:00Z',
+          purpose: PURPOSE,
+          scopes: ['results.read'],
+          ...change,
+        } as never,
+        { expectedCpf: CPF_PATIENT },
+      ),
     ).rejects.toBeInstanceOf(LabAccessConfigError);
     expect(harness.lab.calls).toHaveLength(0);
   });
 
   it('aceita expiração a exatamente 12 meses', async () => {
     const harness = await createHarness();
-    const consent = await harness.client.provider(PROVIDER_ID).createConsent({
-      expirationDateTime: '2027-11-16T12:00:00Z',
-      purpose: PURPOSE,
-      scopes: ['results.read'],
-    });
+    const consent = await harness.client.provider(PROVIDER_ID).createConsent(
+      {
+        expirationDateTime: '2027-11-16T12:00:00Z',
+        purpose: PURPOSE,
+        scopes: ['results.read'],
+      },
+      { expectedCpf: CPF_PATIENT },
+    );
     expect(consent.expirationDateTime).toBe('2027-11-16T12:00:00Z');
   });
 
@@ -138,11 +150,14 @@ describe('createConsent', () => {
       },
     });
     await expect(
-      harness.client.provider(PROVIDER_ID).createConsent({
-        expirationDateTime: '2027-05-15T03:00:00Z',
-        purpose: PURPOSE,
-        scopes: ['appointment.write'],
-      }),
+      harness.client.provider(PROVIDER_ID).createConsent(
+        {
+          expirationDateTime: '2027-05-15T03:00:00Z',
+          purpose: PURPOSE,
+          scopes: ['appointment.write'],
+        },
+        { expectedCpf: CPF_PATIENT },
+      ),
     ).rejects.toBeInstanceOf(ScopeError);
   });
 
@@ -159,11 +174,14 @@ describe('createConsent', () => {
         jsonResponse(201, body),
       );
       await expect(
-        harness.client.provider(PROVIDER_ID).createConsent({
-          expirationDateTime: '2027-05-15T03:00:00Z',
-          purpose: PURPOSE,
-          scopes: ['results.read'],
-        }),
+        harness.client.provider(PROVIDER_ID).createConsent(
+          {
+            expirationDateTime: '2027-05-15T03:00:00Z',
+            purpose: PURPOSE,
+            scopes: ['results.read'],
+          },
+          { expectedCpf: CPF_PATIENT },
+        ),
       ).rejects.toBeInstanceOf(LabAccessProtocolError);
     }
   });
@@ -172,11 +190,14 @@ describe('createConsent', () => {
     const harness = await createHarness();
     harness.lab.failNext((call) => call.url.endsWith('/consents'), 'network');
     await expect(
-      harness.client.provider(PROVIDER_ID).createConsent({
-        expirationDateTime: '2027-05-15T03:00:00Z',
-        purpose: PURPOSE,
-        scopes: ['results.read'],
-      }),
+      harness.client.provider(PROVIDER_ID).createConsent(
+        {
+          expirationDateTime: '2027-05-15T03:00:00Z',
+          purpose: PURPOSE,
+          scopes: ['results.read'],
+        },
+        { expectedCpf: CPF_PATIENT },
+      ),
     ).rejects.toMatchObject({ name: 'LabAccessTransportError', retryable: true });
     expect(consentCalls(harness)).toHaveLength(1);
   });
@@ -251,6 +272,7 @@ describe('startAuthorization', () => {
     const harness = await createHarness();
     const { provider, consent } = await openJourney(harness);
     await provider.startAuthorization({
+      expectedCpf: CPF_PATIENT,
       ...({ cpf: CPF_PATIENT, login_hint: CPF_PATIENT } as object),
       consent,
       redirectUri: REDIRECT_URI,
@@ -266,6 +288,7 @@ describe('startAuthorization', () => {
     const harness = await createHarness();
     const { consent, provider } = await openJourney(harness);
     const journey = await provider.startAuthorization({
+      expectedCpf: CPF_PATIENT,
       consent,
       redirectUri: REDIRECT_URI,
       scopes: ['results.read'],
@@ -292,9 +315,9 @@ describe('startAuthorization', () => {
       { consent: { ...consent, consentId: 'a b' }, redirectUri: REDIRECT_URI },
     ];
     for (const attempt of attempts) {
-      await expect(provider.startAuthorization(attempt as never)).rejects.toBeInstanceOf(
-        LabAccessConfigError,
-      );
+      await expect(
+        provider.startAuthorization({ ...attempt, expectedCpf: CPF_PATIENT } as never),
+      ).rejects.toBeInstanceOf(LabAccessConfigError);
     }
     expect(harness.lab.calls).toHaveLength(before);
   });
@@ -304,7 +327,7 @@ describe('startAuthorization', () => {
     const { consent, provider } = await openJourney(harness);
     harness.lab.now = new Date('2026-12-16T12:00:01Z');
     await expect(
-      provider.startAuthorization({ consent, redirectUri: REDIRECT_URI }),
+      provider.startAuthorization({ expectedCpf: CPF_PATIENT, consent, redirectUri: REDIRECT_URI }),
     ).rejects.toBeInstanceOf(RegistryExpiredError);
   });
 
@@ -525,7 +548,7 @@ describe('completeAuthorization: troca do código', () => {
     expect(tokenGrants(harness).filter((grant) => grant === 'authorization_code')).toHaveLength(1);
   });
 
-  it('RCP-033: com o registro expirado, não conclui a autorização', async () => {
+  it('RCP-047: com o registro local expirado, não troca o código de jornada aberta antes do vencimento', async () => {
     const harness = await createHarness();
     const { journey, provider } = await openJourney(harness);
     const callback = harness.lab.authorize(journey.authorizationUrl, PATIENT);
@@ -533,5 +556,35 @@ describe('completeAuthorization: troca do código', () => {
     await expect(
       provider.completeAuthorization({ callback, expectedCpf: CPF_PATIENT, journey }),
     ).rejects.toBeInstanceOf(RegistryExpiredError);
+    expect(tokenGrants(harness)).not.toContain('authorization_code');
+  });
+
+  it('RCP-042: CPF do paciente inválido não deixa a jornada começar: nenhuma chamada ao provedor', async () => {
+    const harness = await createHarness();
+    const provider = harness.client.provider(PROVIDER_ID);
+    for (const expectedCpf of ['00000000000', '11111111111', '52998224724', '']) {
+      await expect(
+        provider.createConsent(
+          {
+            expirationDateTime: '2027-05-15T03:00:00Z',
+            purpose: PURPOSE,
+            scopes: ['results.read'],
+          },
+          { expectedCpf },
+        ),
+      ).rejects.toBeInstanceOf(LabAccessConfigError);
+    }
+    expect(harness.lab.calls).toHaveLength(0);
+
+    const { consent } = await openJourney(harness);
+    const before = harness.lab.calls.length;
+    await expect(
+      provider.startAuthorization({
+        consent,
+        expectedCpf: '00000000000',
+        redirectUri: REDIRECT_URI,
+      }),
+    ).rejects.toBeInstanceOf(LabAccessConfigError);
+    expect(harness.lab.calls).toHaveLength(before);
   });
 });

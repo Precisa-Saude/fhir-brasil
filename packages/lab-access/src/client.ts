@@ -14,6 +14,7 @@ import type { RegistryProvider } from './registry-types';
 import { effectiveProtocolVersion } from './resolve';
 import {
   InMemoryRevocationStore,
+  listPendingRevocations,
   type PendingRevocation,
   retryPendingRevocations,
   type RevocationRetryResult,
@@ -112,6 +113,7 @@ export class LabAccessClient {
       registry: () => this.#registry,
       retry: retryPolicy(config.retry),
       revocations: config.revocationStore ?? new InMemoryRevocationStore(),
+      revocationsInFlight: new Set(),
       signingKey: config.signingKey,
       sleep: config.sleep ?? ((ms) => new Promise((resolve) => setTimeout(resolve, ms))),
       transport: config.transport,
@@ -126,12 +128,14 @@ export class LabAccessClient {
   }
 
   /**
-   * Revogações que o provedor ainda não confirmou. O aplicativo mostra cada
-   * uma ao paciente, com `consentManagementUri`, a página do provedor onde ele
-   * pode revogar direto.
+   * Revogações que o provedor ainda não confirmou, inclusive as gravadas antes
+   * de um reinício. As que este processo está tentando no momento ficam de
+   * fora. O aplicativo mostra cada uma ao paciente, com
+   * `consentManagementUri`, a página do provedor onde ele pode revogar direto,
+   * também enquanto o provedor está suspenso e não é chamado.
    */
   async pendingRevocations(): Promise<PendingRevocation[]> {
-    return [...(await this.#ctx.revocations.list())];
+    return listPendingRevocations(this.#ctx);
   }
 
   /**

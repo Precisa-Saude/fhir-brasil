@@ -347,6 +347,23 @@ describe('paginação', () => {
     }
   });
 
+  it('RCP-043: não segue link com componente de usuário nem link relativo, dentro ou fora da base', async () => {
+    const { harness, provider } = await setup();
+    for (const next of [
+      'https://usuario@api.laboratorio.example/fhir/r4/Location?page=2',
+      'https://usuario:senha@api.laboratorio.example/fhir/r4/Location?page=2',
+      'Location?page=2',
+      '../../outro/Location?page=2',
+      '//atacante.example/fhir/r4/Location?page=2',
+    ]) {
+      harness.lab.fhir = () => jsonResponse(200, bundle([], next));
+      const page = await provider.searchLocations();
+      const before = harness.lab.calls.length;
+      await expect(page.next(), next).rejects.toBeInstanceOf(LabAccessProtocolError);
+      expect(harness.lab.calls).toHaveLength(before);
+    }
+  });
+
   it('RCP-030: compara a URL já interpretada: host em maiúsculas e porta padrão explícita valem', async () => {
     const { harness, provider } = await setup();
     for (const next of [
@@ -428,7 +445,7 @@ describe('alcance do preço', () => {
     });
   });
 
-  it('contexto que o cliente não reconhece impede tratar o preço como geral', () => {
+  it('RCP-049: contexto que o cliente não reconhece impede tratar o preço como geral', () => {
     const scope = chargeItemScope({
       ...base,
       useContext: [

@@ -1,3 +1,11 @@
+## [3.1.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.0.1...v3.1.0) (2026-11-16)
+
+### Features
+
+* **core:** perfis de acesso laboratorial por consentimento no IG ([#172](https://github.com/Precisa-Saude/fhir-brasil/issues/172)) ([b05bd9e](https://github.com/Precisa-Saude/fhir-brasil/commit/b05bd9e2ae874a690384df1fa5a0dbf3ff44e001))
+* **core:** unidades do catálogo em uma grafia só, no padrão brasileiro ([#173](https://github.com/Precisa-Saude/fhir-brasil/issues/173)) ([909255c](https://github.com/Precisa-Saude/fhir-brasil/commit/909255c4ca65817325490cb9c51787da0a9deca0))
+* **lab-access:** cliente do receptor para acesso laboratorial com consentimento ([#174](https://github.com/Precisa-Saude/fhir-brasil/issues/174)) ([c444af8](https://github.com/Precisa-Saude/fhir-brasil/commit/c444af8d3bc883c2d1625d820b628a25c6f11ec6))
+
 ## [3.0.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.0.0...v3.0.1) (2026-11-13)
 
 ### Bug Fixes

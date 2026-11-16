@@ -99,18 +99,28 @@ export interface SectionLine {
   text: string;
   /**
    * A linha só pode ser da urina: casa um código da categoria urina ("OCCULT
-   * BLOOD", "COLOR"), fala de urina, ou traz a unidade de campo do sedimento
-   * (/HPF, /LPF).
+   * BLOOD", "COLOR"), fala de urina ou de sedimento, ou traz a unidade de campo
+   * do sedimento (/HPF, /LPF).
    */
   urine: boolean;
 }
 
 const MENTIONS_URINE = /(?<![\p{L}\p{N}])urin[ae](?![\p{L}\p{N}])/u;
+/**
+ * "Sedimento" só nomeia o sedimento urinário. A Dasa abre essa parte com o
+ * subtítulo "Sedimento Quantitativo RESULTADO INTERVALO DE REFERÊNCIA", sem
+ * valor e sem nome do catálogo: sem este indício a linha tinha a forma do
+ * título de outro painel, e a seção acabava nela (PRE-579). A fronteira de
+ * palavra deixa de fora a "hemossedimentação" do VHS.
+ */
+const MENTIONS_SEDIMENT = /(?<![\p{L}\p{N}])sediment(?:o|os)?(?![\p{L}\p{N}])/u;
 const SEDIMENT_FIELD_UNIT = /\/(?:hpf|lpf)(?![\p{L}\p{N}])/u;
 
 /** Indício de urina que não depende de casar nome: a palavra, ou a unidade de campo. */
 export function hasUrineCue(line: string): boolean {
-  return MENTIONS_URINE.test(line) || SEDIMENT_FIELD_UNIT.test(line);
+  return (
+    MENTIONS_URINE.test(line) || MENTIONS_SEDIMENT.test(line) || SEDIMENT_FIELD_UNIT.test(line)
+  );
 }
 
 type LineKind = 'blank' | 'foreign' | 'header' | 'neutral' | 'unknown' | 'urine';

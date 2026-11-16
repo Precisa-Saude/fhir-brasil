@@ -2183,7 +2183,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     loinc: '2075-0',
     names: {
       en: ['Chloride', 'Cl'],
-      pt: ['Cloreto', 'Cloretos', 'Cl'],
+      pt: ['Cloreto', 'Cloretos', 'Cloro', 'Cl'],
     },
     unit: 'mEq/L',
   },

@@ -1147,6 +1147,33 @@ describe('findBiomarkersInText: urinálise em português e sedimento (PRE-486)',
     ]);
   });
 
+  // A página da Dasa inteira: "Hemoglobina Não reagente" é a fita da urina.
+  // Sem o nome na seção ela casava a hemoglobina do sangue, contava como
+  // outro painel e encerrava a seção ali, antes do sedimento (PRE-579).
+  it('"Hemoglobina" na fita da urina não encerra a seção', () => {
+    const text = [
+      'Urina Tipo I RESULTADO INTERVALO DE REFERÊNCIA',
+      'Densidade 1.009 1.003 a 1.035',
+      'Nitrito Não reagente Não Reagente',
+      'Hemoglobina Não reagente Não Reagente',
+      'Células Epiteliais 200 /mL Inferior a 31.000  /mL',
+      'Sedimento Quantitativo RESULTADO INTERVALO DE REFERÊNCIA',
+      'Leucócitos 100 /mL Inferior a 25.000  /mL',
+      'Hemácias 1.100 /mL Inferior a 23.000  /mL',
+    ].join('\n');
+    expect(codesOf(text)).toEqual([
+      'SpecificGravity_Urine',
+      'Nitrite_Urine',
+      'Blood_Urine',
+      'Leukocytes_Urine',
+      'RBC_Urine',
+    ]);
+  });
+
+  it('"Hemoglobina" fora da seção continua sendo a do sangue', () => {
+    expect(codesOf('Hemoglobina 14,5 g/dL')).toEqual(['Hgb']);
+  });
+
   it('"Aspecto" e "Densidade" fora da seção não ancoram nada', () => {
     expect(codesOf('Aspecto geral bom\nDensidade mineral óssea 1,1 g/cm2')).not.toContain(
       'Appearance_Urine',

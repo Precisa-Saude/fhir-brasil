@@ -67,6 +67,10 @@ export const URINALYSIS_SECTION_NAMES: ReadonlyMap<string, string> = new Map([
   ['glicose', 'Glucose_Urine'],
   ['glucose', 'Glucose_Urine'],
   ['hemacias', 'RBC_Urine'],
+  // A fita da urina brasileira imprime o sangue oculto como "Hemoglobina".
+  // Fora deste mapa a linha casava a hemoglobina do sangue, contava como
+  // `foreign` e a seção acabava antes do sedimento (laudo da Dasa, PRE-579).
+  ['hemoglobina', 'Blood_Urine'],
   ['ketones', 'Ketones_Urine'],
   ['leucocitos', 'Leukocytes_Urine'],
   ['leukocytes', 'Leukocytes_Urine'],

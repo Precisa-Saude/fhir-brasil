@@ -62,9 +62,7 @@ publicações brasileiras consultadas usam, em português.
 | `uIU/mL` (outros) | `µUI/mL`          | UI das linhas abaixo, com o µ do SI                               |
 | `IU/mL`, `IU/L`   | `UI/mL`, `UI/L`   | SBPC/ML, 2020                                                     |
 | `mIU/mL`, `mIU/L` | `mUI/mL`, `mUI/L` | SBPC/ML, 2020                                                     |
-| `/HPF`            | `/campo`          | SBPC/ML, 2017 ("por campo de grande aumento")                     |
 | `titer`           | `título`          | tradução; a palavra é a usada nos livros da SBPC/ML               |
-| `/100 WBC`        | `/100 leucócitos` | tradução; não encontrada com esta grafia nas fontes consultadas   |
 
 `mil/mm³` e `10³/µL` são a mesma contagem, porque 1 mm³ é 1 µL, e o código
 UCUM continua `10*3/uL`. O TSH em `µUI/mL` e em `mUI/L` é o mesmo número.
@@ -73,11 +71,15 @@ A insulina fica em `µUI/mL`. As fontes consultadas não trazem a unidade da
 insulina, então a grafia vem das duas regras já adotadas (UI e µ) e não de uma
 publicação.
 
-## O que ainda não foi decidido
+## O que fica em inglês
 
-`/LPF` (cilindros hialinos na urina) segue em inglês. O livro de urina da
-SBPC/ML distingue "campo de pequeno aumento" de "campo de grande aumento", e
-`/campo` já está em uso para o segundo.
+`/HPF`, `/LPF` e `/100 WBC` ficam como estão. As alternativas em português
+foram avaliadas e descartadas: `/campo` não distingue o campo de grande
+aumento do de pequeno aumento, que o livro de urina da SBPC/ML (2017) trata
+como contagens diferentes, e `/100 leucócitos` não apareceu em nenhuma das
+fontes consultadas.
+
+## O que ainda não foi decidido
 
 As grandezas adimensionais ainda têm três rótulos. Razões, índices e escores
 trazem `razão`, `índice` ou `score` na definição e unidade vazia na faixa, e

@@ -1554,7 +1554,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   NRBC: {
-    default: { max: 0, min: 0, optimalMax: 0, optimalMin: 0, unit: '/100 leucócitos' },
+    default: { max: 0, min: 0, optimalMax: 0, optimalMin: 0, unit: '/100 WBC' },
     kind: 'reference-interval',
     source: 'tietz-7ed-2015',
   },
@@ -2046,19 +2046,19 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
   },
 
   RBC_Urine: {
-    default: { max: 3, min: 0, optimalMax: 1, optimalMin: 0, unit: '/campo' },
+    default: { max: 3, min: 0, optimalMax: 1, optimalMin: 0, unit: '/HPF' },
     kind: 'reference-interval',
     source: 'tietz-7ed-2015',
   },
 
   SquamousEpithelial_Urine: {
-    default: { max: 15, min: 0, optimalMax: 5, optimalMin: 0, unit: '/campo' },
+    default: { max: 15, min: 0, optimalMax: 5, optimalMin: 0, unit: '/HPF' },
     kind: 'reference-interval',
     source: 'tietz-7ed-2015',
   },
 
   Leukocytes_Urine: {
-    default: { max: 5, min: 0, optimalMax: 2, optimalMin: 0, unit: '/campo' },
+    default: { max: 5, min: 0, optimalMax: 2, optimalMin: 0, unit: '/HPF' },
     kind: 'reference-interval',
     source: 'tietz-7ed-2015',
   },

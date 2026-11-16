@@ -811,7 +811,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['NRBC', 'Nucleated RBC', 'Nucleated Red Blood Cells'],
       pt: ['Eritroblastos', 'Hemácias Nucleadas'],
     },
-    unit: '/100 leucócitos',
+    unit: '/100 WBC',
   },
   {
     code: 'NRBC_Abs',
@@ -2213,7 +2213,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Urine Bacteria', 'Bacteria Urine', 'Bacteria, Urine', 'Bacteria', 'Bacteriuria'],
       pt: ['Bactérias na Urina', 'Bactérias', 'Bacteriúria'],
     },
-    unit: '/campo',
+    unit: '/HPF',
   },
   {
     code: 'Bilirubin_Urine',
@@ -2297,7 +2297,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Urine Leukocytes', 'Urine WBC', 'White Blood Cells in Urine', 'WBC Urine'],
       pt: ['Leucócitos na Urina', 'Leucócitos Urinários'],
     },
-    unit: '/campo',
+    unit: '/HPF',
   },
   {
     code: 'Nitrite_Urine',
@@ -2343,7 +2343,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Urine RBC', 'Red Blood Cells in Urine', 'RBC Urine', 'RBC, Urine'],
       pt: ['Hemácias na Urina'],
     },
-    unit: '/campo',
+    unit: '/HPF',
   },
   {
     code: 'SpecificGravity_Urine',
@@ -2372,7 +2372,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       ],
       pt: ['Células Epiteliais Escamosas na Urina'],
     },
-    unit: '/campo',
+    unit: '/HPF',
   },
   {
     code: 'Urobilinogen_Urine',

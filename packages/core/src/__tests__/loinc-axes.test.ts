@@ -22,7 +22,7 @@ import { BIOMARKER_UNITS, isUcumCode, resolveUcum } from '../units';
  * por regra:
  *
  * - a **propriedade** do código tem que combinar com a dimensão da unidade
- *   declarada: % é fração, mg/dL é massa/volume, /campo é número/área;
+ *   declarada: % é fração, mg/dL é massa/volume, /HPF é número/área;
  * - o **sistema** tem que caber no catálogo: urina para `_Urine`, sangue e
  *   derivados para o resto, e líquido amniótico para ninguém;
  * - a **escala** de quem tem unidade é quantitativa, e a de quem não tem não é;
@@ -61,8 +61,8 @@ const PROPERTIES_BY_UNIT: Record<string, string[]> = {
   // Fração: massa, substância, número, volume. `DistWidth` é o RDW.
   '%': ['MFr', 'SFr', 'NFr', 'VFr', 'DistWidth'],
   // Eritroblastos por 100 leucócitos: o LOINC trata como razão.
-  '/100 leucócitos': ['Ratio'],
-  '/campo': ['Naric'],
+  '/100 WBC': ['Ratio'],
+  '/HPF': ['Naric'],
   '/LPF': ['Naric'],
   Angstrom: ['EntLen'],
   // Unidades arbitrárias por volume, dos imunoensaios.

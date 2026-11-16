@@ -271,19 +271,25 @@ describe('standardUnitSpelling', () => {
     ['IU/L', 'UI/L'],
     ['mIU/L', 'mUI/L'],
     ['uIU/mL', 'µUI/mL'],
-    ['/HPF', '/campo'],
     ['titer', 'título'],
-    ['/100 WBC', '/100 leucócitos'],
   ])('%s vira %s', (printed, standard) => {
     expect(standardUnitSpelling(printed)).toBe(standard);
   });
 
-  it.each(['mg/dL', 'µg/dL', 'mUI/L', 'mil/mm³', 'U/L', '/LPF', '%', 'mL/min/1,73 m²'])(
-    'deixa %s como está',
-    (unit) => {
-      expect(standardUnitSpelling(unit)).toBe(unit);
-    },
-  );
+  it.each([
+    'mg/dL',
+    'µg/dL',
+    'mUI/L',
+    'mil/mm³',
+    'U/L',
+    '/HPF',
+    '/LPF',
+    '/100 WBC',
+    '%',
+    'mL/min/1,73 m²',
+  ])('deixa %s como está', (unit) => {
+    expect(standardUnitSpelling(unit)).toBe(unit);
+  });
 
   it('não muda a escala: a grafia antiga converte para a nova com o mesmo número', () => {
     expect(convertUnit(80, 'mcg/dL', 'µg/dL', 'Iron')).toEqual({ unit: 'µg/dL', value: 80 });

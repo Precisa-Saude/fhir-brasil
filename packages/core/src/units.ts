@@ -31,9 +31,7 @@ export const UNIT_TO_UCUM: Record<string, string> = {
   '{score}': '{score}',
   '{specific gravity}': '{specific gravity}',
 
-  '/100 leucócitos': '/100{WBCs}',
   '/100 WBC': '/100{WBCs}',
-  '/campo': '/[HPF]',
   '/HPF': '/[HPF]',
   AI: '{AI}',
   titer: '{titer}',
@@ -420,17 +418,18 @@ const DEXA_KG: Omit<BiomarkerUnitConfig, 'aliases'> = {
 
 /**
  * Urine sediment units — Brazilian automated analyzers (Sysmex UF-series)
- * report in /mL while manual microscopy uses /HPF. Canonical unit is /campo (high-power field).
+ * report in /mL while manual microscopy uses /HPF. Canonical unit is /HPF.
  */
 const URINE_SEDIMENT_ALIASES: Record<string, string> = {
-  '/hpf': '/campo',
+  '/hpf': '/HPF',
+  '/lpf': '/LPF',
   '/ml': '/mL',
 };
 const URINE_SEDIMENT: Omit<BiomarkerUnitConfig, 'aliases'> = {
   canonicalUcum: '/[HPF]',
-  canonicalUnit: '/campo',
+  canonicalUnit: '/HPF',
   siUcum: '/[HPF]',
-  siUnit: '/campo',
+  siUnit: '/HPF',
 };
 
 /** Percentage biomarkers — canonical and SI both use %. */
@@ -1031,14 +1030,14 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   // A Quest imprime "/100 WBC"; o hemograma que imprime % dá o mesmo número.
   NRBC: {
     aliases: {
-      '%': '/100 leucócitos',
-      '/100 wbc': '/100 leucócitos',
-      '/100wbc': '/100 leucócitos',
+      '%': '/100 WBC',
+      '/100 wbc': '/100 WBC',
+      '/100wbc': '/100 WBC',
     },
     canonicalUcum: '/100{WBCs}',
-    canonicalUnit: '/100 leucócitos',
+    canonicalUnit: '/100 WBC',
     siUcum: '/100{WBCs}',
-    siUnit: '/100 leucócitos',
+    siUnit: '/100 WBC',
   },
   NRBC_Abs: { aliases: CBC_DIFF_ALIASES, ...CBC_DIFF },
   NTproBNP: {
@@ -1366,16 +1365,14 @@ export function getSIUnit(code: string): string | null {
 
 /**
  * Grafias que não saem de regra de escrita: a contagem de células, a unidade
- * internacional (UI em português) e os rótulos em inglês da microscopia. A
+ * internacional (UI em português) e o título. A
  * chave é a grafia impressa em minúsculas. Cada par é o mesmo número: mil/mm³
  * e 10³/µL são a mesma contagem, porque 1 mm³ é 1 µL.
  */
 const NAMED_SPELLINGS: Record<string, string> = {
-  '/100 leucócitos': '/100 leucócitos',
-  '/100 wbc': '/100 leucócitos',
-  '/100wbc': '/100 leucócitos',
-  '/campo': '/campo',
-  '/hpf': '/campo',
+  '/100 wbc': '/100 WBC',
+  '/100wbc': '/100 WBC',
+  '/hpf': '/HPF',
   '10^3/ul': 'mil/mm³',
   '10^6/ul': 'milhões/mm³',
   '10³/µl': 'mil/mm³',

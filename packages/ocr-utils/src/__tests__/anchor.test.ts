@@ -1013,6 +1013,8 @@ describe('findBiomarkersInText: grafias de produção (PRE-486)', () => {
     ['25 - Hidroxivitamina D 30 ng/mL', 'VitaminD'],
     ['Fat Mass Percentage 22 %', 'BodyFatPct'],
     ['CK 120 U/L', 'CK'],
+    // Grafia da Dasa (PRE-579).
+    ['Cloro 104 mmol/L 98 a 107 mmol/L', 'Chloride'],
   ])('%s → %s', (line, code) => {
     expect(codesOf(line)).toEqual([code]);
   });
@@ -1122,6 +1124,27 @@ describe('findBiomarkersInText: urinálise em português e sedimento (PRE-486)',
       'Hemácias 4,8 milhões/mm3',
     ].join('\n');
     expect(codesOf(text)).toEqual(['SpecificGravity_Urine', 'Leukocytes_Urine', 'WBC', 'RBC']);
+  });
+
+  // A Dasa abre o sedimento com um subtítulo de colunas, sem valor e sem nome
+  // do catálogo, igual na forma ao título de outro painel ("HEMOGRAMA"). A
+  // seção acabava nele, e leucócitos e hemácias da urina viravam os do sangue
+  // (PRE-579).
+  it('o subtítulo "Sedimento Quantitativo" não encerra a seção', () => {
+    const text = [
+      'Urina Tipo I RESULTADO INTERVALO DE REFERÊNCIA',
+      'Densidade 1.009 1.003 a 1.035',
+      'Nitrito Não reagente Não Reagente',
+      'Sedimento Quantitativo RESULTADO INTERVALO DE REFERÊNCIA',
+      'Leucócitos 100 /mL Inferior a 25.000 /mL',
+      'Hemácias 1.100 /mL Inferior a 23.000 /mL',
+    ].join('\n');
+    expect(codesOf(text)).toEqual([
+      'SpecificGravity_Urine',
+      'Nitrite_Urine',
+      'Leukocytes_Urine',
+      'RBC_Urine',
+    ]);
   });
 
   it('"Aspecto" e "Densidade" fora da seção não ancoram nada', () => {

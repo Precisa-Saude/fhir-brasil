@@ -1,3 +1,9 @@
+## [3.1.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.1.0...v3.1.1) (2026-11-16)
+
+### Bug Fixes
+
+* **ocr-utils:** "Cloro" ancora o cloreto e o sedimento não encerra a urina ([#175](https://github.com/Precisa-Saude/fhir-brasil/issues/175)) ([62a0201](https://github.com/Precisa-Saude/fhir-brasil/commit/62a020100fc8ca2ad237f9bfbb609efecdeceaf2))
+
 ## [3.1.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.0.1...v3.1.0) (2026-11-16)
 
 ### Features

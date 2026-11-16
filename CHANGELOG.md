@@ -1,3 +1,9 @@
+## [3.1.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.1.1...v3.1.2) (2026-11-16)
+
+### Bug Fixes
+
+* **ocr-utils:** "Hemoglobina" da fita da urina não encerra a seção ([#176](https://github.com/Precisa-Saude/fhir-brasil/issues/176)) ([dd2448f](https://github.com/Precisa-Saude/fhir-brasil/commit/dd2448f724d8d585acbb5196ca550ade156b44e3)), closes [#175](https://github.com/Precisa-Saude/fhir-brasil/issues/175)
+
 ## [3.1.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.1.0...v3.1.1) (2026-11-16)
 
 ### Bug Fixes

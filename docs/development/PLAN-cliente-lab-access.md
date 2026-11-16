@@ -575,3 +575,54 @@ espera do merge desse PR.
 
 Fora de escopo, como antes: temporizador, armazenamento durável, telas e
 mudanças no guia de implementação ou na especificação.
+
+### Situação da 0.2.2
+
+Implementado e verificado localmente em 2026-11-17, no mesmo PR da 0.2.1
+(#177). Os testes novos foram escritos antes do código: falharam 13, e os de
+RCP-039, RCP-040, RCP-043 e RCP-049 já passavam, porque a leitura da 0.2.1
+coincidia com a decisão da 0.2.2.
+
+| #   | Critério                      | Evidência                                                                                                                                                                                              |
+| --- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1   | Schema                        | `REG-010: o schema recusa entrada que lista uma versão 0.x junto com outra`                                                                                                                            |
+| 2   | Cabeçalho do JWS              | 2 testes `REG-011`, com `crit` recusado em V3 e `jwk` de outra chave ignorado                                                                                                                          |
+| 3   | Versão não implementada       | `REG-012` e `RCP-046`                                                                                                                                                                                  |
+| 4   | Revogação gravada antes       | `RCP-038`, com o `DELETE` preso, o registro conferido no armazenamento e um cliente novo concluindo a revogação                                                                                        |
+| 5   | 404 sem código, sem repetição | `RCP-039` (404 sem corpo e com outro código) e `RCP-040` (`invalid_client`: um pedido de token, nenhum `DELETE`)                                                                                       |
+| 6   | `Retry-After`                 | `RCP-041`: nada antes de 2 horas, nem pelo calendário nem por novo pedido, e o adiamento vale também numa repetição                                                                                    |
+| 7   | CPF do paciente               | `RCP-042`: quatro CPFs inválidos, nenhuma chamada                                                                                                                                                      |
+| 8   | Paginação                     | `RCP-043`: usuário antes do host, link relativo e link sem esquema                                                                                                                                     |
+| 9   | Link de pagamento             | `RCP-035` e `RCP-044`                                                                                                                                                                                  |
+| 10  | Paciente sem `identifier`     | `RCP-045` e dois casos de recusa novos                                                                                                                                                                 |
+| 11  | Troca do código               | `RCP-047`, conferindo que não houve pedido `authorization_code`                                                                                                                                        |
+| 12  | Provedor fora de `active`     | 2 testes `RCP-048`: provedor suspenso e reativado, receptor suspenso                                                                                                                                   |
+| 13  | Preço                         | `RCP-049`                                                                                                                                                                                              |
+| 14  | Mapa de conformidade          | 62 linhas: 40 cobertas, 14 parciais, 6 fora do alcance, 2 retiradas                                                                                                                                    |
+| 15  | Verificações                  | `pnpm turbo run lint typecheck test build`: 25 tarefas, 25 certas. `format:check` e `packages:check` passam. 440 testes. Cobertura: 99,60% statements, 96,90% branches, 99,02% functions, 99,60% lines |
+
+Mudanças de API: `createConsent` recebe `{ expectedCpf }` como segundo
+argumento, `startAuthorization` recebe `expectedCpf`, `readPaymentLink` lança
+`LabAccessProtocolError` em extensão malformada ou repetida,
+`PendingRevocation.lastAttemptAt` passa a opcional e ganha `notBefore`, e
+`RegistryRejectionReason` ganha `critical-header`.
+
+### Pontos da 0.2.2 que pedem atenção na especificação
+
+1. **4xx que admite repetição.** A seção 4.4, item 4, diz que um 4xx do
+   `DELETE` fora das conclusões do item 8 não admite repetição, mas o item 3
+   lista 429 e 401 `TOKEN_INVALID` como repetíveis. Implementado como o item 3. O item 4 deveria excluir os dois.
+2. **`Retry-After` sem teto no calendário.** O item 7 suspende o calendário
+   enquanto vale um `Retry-After`, sem limite. Um provedor que responda
+   `Retry-After` de semanas adia a revogação por semanas. A página do
+   provedor continua à vista do paciente, mas um teto (por exemplo, 24 horas)
+   deixaria o calendário de pé.
+3. **Revogação gravada por outra instância.** O item 6 manda tratar como
+   pendente a revogação gravada e não confirmada encontrada ao reiniciar, sem
+   distinguir a que outra instância do mesmo receptor ainda está tentando.
+   Duas instâncias podem enviar o mesmo `DELETE`. O efeito é inofensivo (204 e
+   depois 422), e o pacote só evita a repetição dentro do próprio processo.
+4. **Link relativo.** A 0.2 permite recusar ou resolver. O pacote recusa,
+   então um provedor da 0.2.0 ou da 0.2.1 que emita link relativo tem a
+   paginação interrompida com este cliente, embora o texto diga que a escolha
+   não corta a comunicação.

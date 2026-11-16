@@ -513,3 +513,65 @@ na especificação.
 14. **Contexto de preço desconhecido.** O perfil tem fatiamento aberto em
     `useContext`. Implementado: contexto de outro tipo é contado em
     `unrecognizedContexts`, e o preço deixa de ser dado como geral.
+
+## Atualização para a especificação 0.2.2
+
+A 0.2.2 decide os catorze pontos em aberto da 0.2.1, listados acima. A
+versão de protocolo continua `0.2`. Fonte: o ramo `docs/especificacao-0-2-2`
+do repositório da especificação, ainda em revisão (PR 2 de
+`open-labs-brasil`). O pacote passa a implementar a 0.2.2 sobre a 0.2.1, à
+espera do merge desse PR.
+
+### Critérios de aceite da 0.2.2
+
+1. **Schema (ponto 2, REG-010).** O schema do registro recusa a lista de
+   `protocol_versions` que traz uma versão `0.x` junto com outra.
+   Verificação: teste `REG-010`.
+2. **Cabeçalho do JWS (ponto 1, REG-011).** `typ`, membros a mais e `jwk` de
+   outra chave são ignorados, a chave vem só do `kid`, e `crit` presente é
+   recusado no passo V3, e não mais no V6 pela biblioteca JOSE.
+   Verificação: testes `REG-011`.
+3. **Versão que o software não implementa (ponto 11, REG-012, RCP-046).**
+   Verificação: testes `REG-012` e `RCP-046`.
+4. **Revogação gravada antes da primeira tentativa (ponto 3, RCP-038).** A
+   revogação entra no `RevocationStore` no momento em que é decidida. Um
+   reinício durante as tentativas não a perde: o cliente novo a encontra e a
+   tenta. Enquanto o próprio processo tenta, ela não aparece como pendente e
+   não é repetida em paralelo.
+   Verificação: teste `RCP-038`.
+5. **404 sem código (ponto 4, RCP-039) e falha sem repetição (ponto 5,
+   RCP-040).** Verificação: testes `RCP-039` e `RCP-040`.
+6. **`Retry-After` (ponto 6, RCP-041).** Nenhuma tentativa, automática, do
+   calendário ou de um novo pedido de revogação, antes do instante indicado,
+   guardado em `notBefore`.
+   Verificação: teste `RCP-041`.
+7. **CPF do paciente (ponto 7, RCP-042).** O CPF informado pelo aplicativo é
+   conferido em `createConsent` e em `startAuthorization`, antes de qualquer
+   chamada, e de novo na troca do código. Sequências de um só algarismo são
+   inválidas.
+   Verificação: teste `RCP-042` e os casos de `holder-check.test.ts`.
+8. **Paginação (ponto 8, RCP-043).** Link com componente de usuário e link
+   relativo são recusados sem requisição.
+   Verificação: teste `RCP-043`.
+9. **Link de pagamento (ponto 9, RCP-044).** Com a extensão repetida, ou sem
+   URL `https`, `readPaymentLink` lança `LabAccessProtocolError` e não devolve
+   link. Sem a extensão, `undefined`.
+   Verificação: testes `RCP-035` e `RCP-044`.
+10. **Paciente sem `identifier` (ponto 10, RCP-045).** Participante paciente
+    e `subject` dos pedidos só com `Patient/{fhir_id}`.
+    Verificação: teste `RCP-045`.
+11. **Troca do código com registro expirado (ponto 12, RCP-047).**
+    Verificação: teste `RCP-047`.
+12. **Provedor fora de `active` (ponto 13, RCP-048).** Nenhuma chamada, nem
+    para revogar, a provedor fora de `active`, sem versão efetiva, com o
+    próprio receptor fora de `active` ou com o registro expirado há mais de 7
+    dias. A pendência fica vencida e é tentada assim que a condição acaba.
+    Verificação: testes `RCP-048`.
+13. **Preço com contexto desconhecido (ponto 14, RCP-049).** Verificação:
+    teste `RCP-049`.
+14. **Mapa de conformidade.** REG-001 a REG-013 e RCP-001 a RCP-049.
+15. **Verificações.** As mesmas da 0.2.1, com cobertura igual ou acima da
+    medição da 0.2.1.
+
+Fora de escopo, como antes: temporizador, armazenamento durável, telas e
+mudanças no guia de implementação ou na especificação.

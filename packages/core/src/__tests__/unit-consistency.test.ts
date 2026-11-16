@@ -6,7 +6,14 @@ import {
   biomarkerRangeDefinitions,
   getReferenceRange,
 } from '../reference-ranges';
-import { BIOMARKER_UNITS, convertUnit, getCanonicalUnit, getSIUnit } from '../units';
+import {
+  BIOMARKER_UNITS,
+  convertUnit,
+  getCanonicalUnit,
+  getSIUnit,
+  standardUnitSpelling,
+  UNIT_TO_UCUM,
+} from '../units';
 
 /**
  * A unidade de um biomarcador aparece em três lugares que precisam concordar:
@@ -27,10 +34,9 @@ import { BIOMARKER_UNITS, convertUnit, getCanonicalUnit, getSIUnit } from '../un
 
 /**
  * Códigos que ficam de fora, com o motivo. Nenhum deles tem risco de escala:
- * a divergência é só de rótulo de unidade adimensional ou de grafia de
- * segundos, e não há alias no catálogo que permita equipará-las. Uniformizar
- * esses rótulos é decisão separada, porque `unit` da definição aparece na
- * interface em pt-BR.
+ * a divergência é só de rótulo de unidade adimensional, e não há alias no
+ * catálogo que permita equipará-las. Uniformizar esses rótulos é decisão
+ * separada, porque `unit` da definição aparece na interface em pt-BR.
  */
 const KNOWN_LABEL_MISMATCHES: Record<string, string> = {
   AA_EPA_Ratio: "razão adimensional: definição 'razão', faixa ''",
@@ -41,9 +47,19 @@ const KNOWN_LABEL_MISMATCHES: Record<string, string> = {
   HOMA_IR: "índice adimensional: definição 'índice', faixa ''",
   INR: "razão adimensional: canônica '{ratio}', definição 'razão', faixa 'ratio'",
   Omega6_Omega3_Ratio: "razão adimensional: definição 'razão', faixa ''",
-  ProthrombinTime: "segundos nas três: canônica 's', definição 'segundos', faixa 'seconds'",
   TScore_Total: "escore adimensional: definição 'score', faixa ''",
   ZScore_Total: "escore adimensional: definição 'score', faixa ''",
+};
+
+/**
+ * Códigos UCUM que o catálogo ainda traz com duas grafias, à espera da decisão
+ * registrada em `docs/unidades.md`. O INR usa `{ratio}` como canônica e as
+ * outras razões usam `razão`. `AU` (escore de Agatston) e `score` (T-score e
+ * Z-score) não são a mesma unidade: só dividem a anotação `{score}`.
+ */
+const KNOWN_DOUBLE_SPELLINGS: Record<string, string[]> = {
+  '{ratio}': ['razão', '{ratio}'],
+  '{score}': ['AU', 'score'],
 };
 
 interface UnitSource {
@@ -193,5 +209,111 @@ describe('BUN e ureia em mmol/L', () => {
     const bun = convertUnit(14, 'mg/dL', 'mmol/L', 'BUN')?.value ?? NaN;
     const urea = convertUnit(14 * (60.06 / 28.0134), 'mg/dL', 'mmol/L', 'Urea')?.value ?? NaN;
     expect(bun).toBeCloseTo(urea, 10);
+  });
+});
+
+describe('grafia das unidades do catálogo', () => {
+  // Toda unidade que o catálogo declara, com os códigos que a usam.
+  const declared = new Map<string, Set<string>>();
+  const declare = (code: string, unit: string | undefined): void => {
+    if (!unit) return;
+    declared.set(unit, (declared.get(unit) ?? new Set()).add(code));
+  };
+  for (const code of ALL_CODES) {
+    collectUnitSources(code).forEach((s) => declare(code, s.unit));
+    declare(code, BIOMARKER_UNITS[code]?.siUnit);
+  }
+
+  it.each([...declared.keys()].sort())('%s já está na grafia padrão', (unit) => {
+    expect(standardUnitSpelling(unit)).toBe(unit);
+  });
+
+  it('nenhum código UCUM tem duas grafias no catálogo', () => {
+    const byUcum = new Map<string, string[]>();
+    for (const unit of declared.keys()) {
+      const ucum = UNIT_TO_UCUM[unit];
+      if (ucum === undefined) continue;
+      byUcum.set(ucum, [...(byUcum.get(ucum) ?? []), unit]);
+    }
+    const doubled = [...byUcum].filter(([, units]) => units.length > 1);
+    expect(Object.fromEntries(doubled)).toEqual(KNOWN_DOUBLE_SPELLINGS);
+  });
+
+  it('não sobra micro escrito sem µ', () => {
+    const offenders = [...declared.keys()].filter((unit) => /^(mcg|microg|ug|umol)/i.test(unit));
+    expect(offenders).toEqual([]);
+  });
+});
+
+describe('standardUnitSpelling', () => {
+  it.each([
+    ['mcg/dL', 'µg/dL'],
+    ['ug/dL', 'µg/dL'],
+    ['microg/dL', 'µg/dL'],
+    ['mcg/L', 'µg/L'],
+    ['ug/mL', 'µg/mL'],
+    ['umol/L', 'µmol/L'],
+    ['μg/dL', 'µg/dL'],
+    ['mm/hr', 'mm/h'],
+    ['kg/m2', 'kg/m²'],
+    ['segundos', 's'],
+    ['seconds', 's'],
+    ['mL/min/1.73m²', 'mL/min/1,73 m²'],
+    ['mL/min/1.73m2', 'mL/min/1,73 m²'],
+    ['ml/min/1,73 m2', 'mL/min/1,73 m²'],
+    ['K/uL', 'mil/mm³'],
+    ['10³/µL', 'mil/mm³'],
+    ['mil/mm3', 'mil/mm³'],
+    ['M/uL', 'milhões/mm³'],
+    ['milhões/mm3', 'milhões/mm³'],
+    ['IU/mL', 'UI/mL'],
+    ['mIU/mL', 'mUI/mL'],
+    ['IU/L', 'UI/L'],
+    ['mIU/L', 'mUI/L'],
+    ['uIU/mL', 'mUI/L'],
+    ['µUI/mL', 'mUI/L'],
+    ['titer', 'título'],
+  ])('%s vira %s', (printed, standard) => {
+    expect(standardUnitSpelling(printed)).toBe(standard);
+  });
+
+  it.each([
+    'mg/dL',
+    'µg/dL',
+    'mUI/L',
+    'mil/mm³',
+    'U/L',
+    '/HPF',
+    '/LPF',
+    '/100 WBC',
+    '%',
+    'mL/min/1,73 m²',
+  ])('deixa %s como está', (unit) => {
+    expect(standardUnitSpelling(unit)).toBe(unit);
+  });
+
+  it('não muda a escala: a grafia antiga converte para a nova com o mesmo número', () => {
+    expect(convertUnit(80, 'mcg/dL', 'µg/dL', 'Iron')).toEqual({ unit: 'µg/dL', value: 80 });
+    expect(convertUnit(90, 'mL/min/1.73m²', 'mL/min/1,73 m²', 'eGFR')).toEqual({
+      unit: 'mL/min/1,73 m²',
+      value: 90,
+    });
+    expect(convertUnit(12, 'mm/hr', 'mm/h', 'ESR')).toEqual({ unit: 'mm/h', value: 12 });
+    expect(convertUnit(6.2, 'K/uL', 'mil/mm³', 'WBC')).toEqual({ unit: 'mil/mm³', value: 6.2 });
+    expect(convertUnit(4.8, 'M/uL', 'milhões/mm³', 'RBC')).toEqual({
+      unit: 'milhões/mm³',
+      value: 4.8,
+    });
+    expect(convertUnit(2.1, 'uIU/mL', 'mUI/L', 'TSH')).toEqual({ unit: 'mUI/L', value: 2.1 });
+    expect(convertUnit(7, 'uIU/mL', 'mUI/L', 'Insulin')).toEqual({ unit: 'mUI/L', value: 7 });
+  });
+
+  it('a faixa de reserva ainda alcança um valor gravado na grafia antiga', () => {
+    const stored = [
+      { code: 'Iron', unit: 'mcg/dL', value: 80 },
+      { code: 'WBC', unit: 'K/uL', value: 6.2 },
+      { code: 'TSH', unit: 'uIU/mL', value: 2.1 },
+    ];
+    expect(applyFallbackReferenceRanges(stored)).toBe(3);
   });
 });

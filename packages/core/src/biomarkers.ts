@@ -440,7 +440,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Anticorpos Antitireoglobulina',
       ],
     },
-    unit: 'IU/mL',
+    unit: 'UI/mL',
   },
   {
     code: 'AntiTPO',
@@ -454,7 +454,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'TPO',
       ],
     },
-    unit: 'IU/mL',
+    unit: 'UI/mL',
   },
   {
     code: 'TSH',
@@ -463,7 +463,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Thyroid-Stimulating Hormone', 'TSH', 'Thyrotropin'],
       pt: ['Hormônio Tireoestimulante', 'Hormônio Tiroestimulante', 'TSH', 'Tireotrofina'],
     },
-    unit: 'uIU/mL',
+    unit: 'mUI/L',
   },
   {
     code: 'T4Free',
@@ -525,7 +525,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Thyroxine', 'T4 Total', 'Total T4', 'Thyroxine (T4)', 'Thyroxine (T4), serum'],
       pt: ['Tiroxina', 'T4 Total', 'Tiroxina Total', 'Tiroxina (T4)'],
     },
-    unit: 'ug/dL',
+    unit: 'µg/dL',
   },
 
   // ============================================================================
@@ -546,7 +546,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Rheumatoid Factor', 'RF'],
       pt: ['Fator Reumatoide', 'FR'],
     },
-    unit: 'IU/mL',
+    unit: 'UI/mL',
   },
   {
     code: 'AntiCCP',
@@ -590,7 +590,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['p-ANCA', 'P-ANCA', 'Perinuclear ANCA', 'ANCA, Perinuclear'],
       pt: ['p-ANCA', 'ANCA Perinuclear'],
     },
-    unit: 'titer',
+    unit: 'título',
   },
   {
     code: 'AntiDsDNA',
@@ -605,7 +605,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       ],
       pt: ['Anti-DNA Nativo', 'Anti-dsDNA', 'Anticorpo Anti-DNA de Dupla Hélice'],
     },
-    unit: 'IU/mL',
+    unit: 'UI/mL',
   },
   {
     code: 'AntiSm',
@@ -697,7 +697,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Absolute Basophils', 'Basophils Absolute', 'Baso (Absolute)', 'Basos (Absolute)'],
       pt: ['Basófilos Absolutos'],
     },
-    unit: 'K/uL',
+    unit: 'mil/mm³',
   },
   {
     code: 'Eosinophils',
@@ -716,7 +716,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Absolute Eosinophils', 'Eosinophils Absolute', 'Eos (Absolute)'],
       pt: ['Eosinófilos Absolutos'],
     },
-    unit: 'K/uL',
+    unit: 'mil/mm³',
   },
   {
     code: 'Lymphocytes',
@@ -735,7 +735,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Absolute Lymphocytes', 'Lymphocytes Absolute', 'Lymphs (Absolute)'],
       pt: ['Linfócitos Absolutos'],
     },
-    unit: 'K/uL',
+    unit: 'mil/mm³',
   },
   {
     code: 'Monocytes',
@@ -754,7 +754,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Absolute Monocytes', 'Monocytes Absolute', 'Monocytes (Absolute)'],
       pt: ['Monócitos Absolutos'],
     },
-    unit: 'K/uL',
+    unit: 'mil/mm³',
   },
   {
     code: 'Neutrophils',
@@ -778,7 +778,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Absolute Neutrophils', 'Neutrophils Absolute', 'Neutrophils (Absolute)'],
       pt: ['Neutrófilos Absolutos'],
     },
-    unit: 'K/uL',
+    unit: 'mil/mm³',
   },
   {
     code: 'ImmatureGranulocytes',
@@ -802,7 +802,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       ],
       pt: ['Granulócitos Imaturos Absolutos'],
     },
-    unit: 'K/uL',
+    unit: 'mil/mm³',
   },
   {
     code: 'NRBC',
@@ -821,7 +821,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Absolute NRBC', 'NRBC, Absolute', 'Nucleated RBC, Absolute'],
       pt: ['Eritroblastos Absolutos'],
     },
-    unit: 'K/uL',
+    unit: 'mil/mm³',
   },
   {
     code: 'WBC',
@@ -830,7 +830,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['White Blood Cell Count', 'WBC', 'Leukocytes'],
       pt: ['Contagem de Leucócitos', 'Leucócitos', 'Glóbulos Brancos'],
     },
-    unit: 'K/uL',
+    unit: 'mil/mm³',
   },
   {
     code: 'IgA',
@@ -859,7 +859,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Total IgE', 'IgE', 'Immunoglobulin E', 'IgE Total'],
       pt: ['IgE Total', 'Imunoglobulina E', 'IgE'],
     },
-    unit: 'IU/mL',
+    unit: 'UI/mL',
   },
   {
     code: 'IgE_E1_CatDander',
@@ -902,7 +902,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['DHEA-Sulfate', 'DHEAS', 'DHEA-S', 'DHEA Sulfate'],
       pt: ['DHEA-Sulfato', 'DHEAS', 'Sulfato de DHEA'],
     },
-    unit: 'mcg/dL',
+    unit: 'µg/dL',
   },
   {
     code: 'Estradiol',
@@ -932,7 +932,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Follicle Stimulating Hormone', 'FSH'],
       pt: ['Hormônio Folículo-Estimulante', 'FSH', 'Folitropina'],
     },
-    unit: 'mIU/mL',
+    unit: 'mUI/mL',
   },
   {
     code: 'LH',
@@ -941,7 +941,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Luteinizing Hormone', 'LH'],
       pt: ['Hormônio Luteinizante', 'LH', 'Lutropina'],
     },
-    unit: 'mIU/mL',
+    unit: 'mUI/mL',
   },
   {
     code: 'Prolactin',
@@ -1101,7 +1101,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Insulin', 'Fasting Insulin'],
       pt: ['Insulina', 'Insulina de Jejum'],
     },
-    unit: 'uIU/mL',
+    unit: 'mUI/L',
   },
   {
     code: 'CPeptide',
@@ -1167,7 +1167,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Lead', 'Blood Lead'],
       pt: ['Chumbo', 'Chumbo no Sangue'],
     },
-    unit: 'mcg/dL',
+    unit: 'µg/dL',
   },
   {
     code: 'Mercury',
@@ -1176,7 +1176,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Mercury', 'Blood Mercury'],
       pt: ['Mercúrio', 'Mercúrio no Sangue'],
     },
-    unit: 'mcg/L',
+    unit: 'µg/L',
   },
 
   // ============================================================================
@@ -1247,7 +1247,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Homocysteine'],
       pt: ['Homocisteína'],
     },
-    unit: 'umol/L',
+    unit: 'µmol/L',
   },
   {
     code: 'Iron',
@@ -1256,7 +1256,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Iron', 'Serum Iron'],
       pt: ['Ferro', 'Ferro Sérico'],
     },
-    unit: 'mcg/dL',
+    unit: 'µg/dL',
   },
   {
     code: 'TransferrinSaturation',
@@ -1296,7 +1296,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Ferro - Capac Total ligação',
       ],
     },
-    unit: 'mcg/dL',
+    unit: 'µg/dL',
   },
   {
     code: 'Transferrin',
@@ -1479,7 +1479,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Vitamin A', 'Retinol', 'Serum Retinol'],
       pt: ['Vitamina A', 'Retinol', 'Retinol Sérico', 'Vit A', 'Vit. A', 'Dosagem de Vitamina A'],
     },
-    unit: 'mcg/dL',
+    unit: 'µg/dL',
   },
   {
     code: 'VitaminB12',
@@ -1575,7 +1575,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Zinc', 'Serum Zinc'],
       pt: ['Zinco'],
     },
-    unit: 'mcg/dL',
+    unit: 'µg/dL',
   },
 
   // ============================================================================
@@ -1588,7 +1588,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Cortisol', 'Serum Cortisol'],
       pt: ['Cortisol'],
     },
-    unit: 'mcg/dL',
+    unit: 'µg/dL',
   },
   {
     code: 'IGF1',
@@ -1801,7 +1801,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Platelet Count', 'Platelets'],
       pt: ['Contagem de Plaquetas', 'Plaquetas'],
     },
-    unit: 'K/uL',
+    unit: 'mil/mm³',
   },
   {
     code: 'RBC',
@@ -1810,7 +1810,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Red Blood Cell Count', 'RBC', 'Erythrocytes'],
       pt: ['Contagem de Hemácias', 'Hemácias', 'Eritrócitos'],
     },
-    unit: 'M/uL',
+    unit: 'milhões/mm³',
   },
   {
     code: 'RDW',
@@ -1851,7 +1851,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Erythrocyte Sedimentation Rate', 'ESR', 'Sed Rate'],
       pt: ['Velocidade de Hemossedimentação', 'VHS', 'VSG'],
     },
-    unit: 'mm/hr',
+    unit: 'mm/h',
   },
   {
     code: 'INR',
@@ -1871,7 +1871,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Prothrombin Time', 'PT', 'Pro Time'],
       pt: ['Tempo de Protrombina', 'TP', 'TAP'],
     },
-    unit: 'segundos',
+    unit: 's',
   },
   {
     code: 'APTT',
@@ -2082,7 +2082,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'TFGe CKD-EPI 2021',
       ],
     },
-    unit: 'mL/min/1.73m²',
+    unit: 'mL/min/1,73 m²',
   },
   {
     code: 'Potassium',
@@ -2530,7 +2530,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Adiponectin', 'Serum Adiponectin'],
       pt: ['Adiponectina'],
     },
-    unit: 'mcg/mL',
+    unit: 'µg/mL',
   },
 
   // ============================================================================
@@ -2544,7 +2544,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Body Mass Index', 'BMI'],
       pt: ['Índice de Massa Corporal', 'IMC'],
     },
-    unit: 'kg/m2',
+    unit: 'kg/m²',
   },
   {
     code: 'BodyFatPct',
@@ -2927,7 +2927,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       pt: ['Índice de Massa Muscular', 'IMM', 'Índice de Massa Muscular Esquelética'],
     },
     section: 'OTH',
-    unit: 'kg/m2',
+    unit: 'kg/m²',
   },
   {
     code: 'PhaseAngle',
@@ -3814,7 +3814,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'Gonadotrofina Coriônica',
       ],
     },
-    unit: 'mIU/mL',
+    unit: 'mUI/mL',
   },
 
   // ============================================================================

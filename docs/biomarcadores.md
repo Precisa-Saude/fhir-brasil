@@ -19,7 +19,7 @@ interface BiomarkerDefinition {
   };
   section?: DiagnosticSection; // Seção v2-0074, só onde a classe do LOINC não a dá
   bodySite?: { code: string; display: string }; // Região (SNOMED CT) quando o LOINC não diz o sítio
-  unit?: string; // Unidade padrão (ex: "mg/dL")
+  unit?: string; // Unidade padrão (ex: "mg/dL"), na grafia de unidades.md
   sex?: 'male' | 'female' | 'both'; // Relevância por sexo
   hidden?: boolean; // Se true, extraído mas não exibido na UI
 }

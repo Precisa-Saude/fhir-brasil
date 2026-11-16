@@ -35,6 +35,7 @@ export const UNIT_TO_UCUM: Record<string, string> = {
   '/HPF': '/[HPF]',
   AI: '{AI}',
   titer: '{titer}',
+  título: '{titer}',
   '/LPF': '/[LPF]',
   '/µL': '/uL',
   // Percentage
@@ -78,9 +79,12 @@ export const UNIT_TO_UCUM: Record<string, string> = {
   'mg/dL': 'mg/dL',
   'mg/g': 'mg/g',
   'mg/L': 'mg/L',
+  'mil/mm³': '10*3/uL',
+  'milhões/mm³': '10*6/uL',
   'mIU/L': 'm[IU]/L',
   'mIU/mL': 'm[IU]/mL',
   mL: 'mL',
+  'mL/min/1,73 m²': 'mL/min/{1.73_m2}',
   'mL/min/1.73m²': 'mL/min/{1.73_m2}',
   mm: 'mm',
   'mm/h': 'mm/h',
@@ -102,6 +106,7 @@ export const UNIT_TO_UCUM: Record<string, string> = {
   pH: '[pH]',
   'pmol/L': 'pmol/L',
   razão: '{ratio}',
+  s: 's',
   score: '{score}',
   segundos: 's',
   // Enzyme activity
@@ -120,6 +125,7 @@ export const UNIT_TO_UCUM: Record<string, string> = {
   µg: 'ug',
   'µg/dL': 'ug/dL',
   'µg/L': 'ug/L',
+  'µg/mL': 'ug/mL',
   'µmol/L': 'umol/L',
   'µUI/mL': 'u[IU]/mL',
   índice: '{index}',
@@ -378,20 +384,20 @@ export interface BiomarkerUnitConfig {
 const CBC_DIFF_ALIASES: Record<string, string> = {
   '/ul': '/uL',
   '/µl': '/uL',
-  '10*3/ul': 'K/uL',
+  '10*3/ul': 'mil/mm³',
   'cells/ul': '/uL',
   'cells/µl': '/uL',
-  'k/ul': 'K/uL',
+  'k/ul': 'mil/mm³',
   // Como o laudo monoespaçado da Quest escreve a contagem: sem o alias, a
   // unidade não convertia nem virava UCUM, e o Bundle levava texto livre.
-  'thousand/ul': 'K/uL',
-  'x10e3/ul': 'K/uL',
+  'thousand/ul': 'mil/mm³',
+  'x10e3/ul': 'mil/mm³',
 };
 const CBC_DIFF: Omit<BiomarkerUnitConfig, 'aliases'> = {
   canonicalUcum: '10*3/uL',
-  canonicalUnit: 'K/uL',
+  canonicalUnit: 'mil/mm³',
   siUcum: '10*3/uL',
-  siUnit: 'K/uL',
+  siUnit: 'mil/mm³',
 };
 /**
  * Massa corporal em kg: densitometria (total e por região) e bioimpedância.
@@ -416,6 +422,7 @@ const DEXA_KG: Omit<BiomarkerUnitConfig, 'aliases'> = {
  */
 const URINE_SEDIMENT_ALIASES: Record<string, string> = {
   '/hpf': '/HPF',
+  '/lpf': '/LPF',
   '/ml': '/mL',
 };
 const URINE_SEDIMENT: Omit<BiomarkerUnitConfig, 'aliases'> = {
@@ -514,11 +521,11 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUnit: 'U/mL',
   },
   AntiDsDNA: {
-    aliases: { 'iu/ml': 'IU/mL' },
+    aliases: { 'iu/ml': 'UI/mL' },
     canonicalUcum: '[IU]/mL',
-    canonicalUnit: 'IU/mL',
+    canonicalUnit: 'UI/mL',
     siUcum: '[IU]/mL',
-    siUnit: 'IU/mL',
+    siUnit: 'UI/mL',
   },
   AntiJo1: { aliases: ANTIBODY_INDEX_ALIASES, ...ANTIBODY_INDEX },
   AntiRNP: { aliases: ANTIBODY_INDEX_ALIASES, ...ANTIBODY_INDEX },
@@ -527,18 +534,18 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   AntiSSA: { aliases: ANTIBODY_INDEX_ALIASES, ...ANTIBODY_INDEX },
   AntiSSB: { aliases: ANTIBODY_INDEX_ALIASES, ...ANTIBODY_INDEX },
   AntiThyroglobulin: {
-    aliases: { 'iu/ml': 'IU/mL', 'ui/ml': 'IU/mL' },
+    aliases: { 'iu/ml': 'UI/mL', 'ui/ml': 'UI/mL' },
     canonicalUcum: '[iU]/mL',
-    canonicalUnit: 'IU/mL',
+    canonicalUnit: 'UI/mL',
     siUcum: '[iU]/mL',
-    siUnit: 'IU/mL',
+    siUnit: 'UI/mL',
   },
   AntiTPO: {
-    aliases: { 'iu/ml': 'IU/mL', 'ui/ml': 'IU/mL' },
+    aliases: { 'iu/ml': 'UI/mL', 'ui/ml': 'UI/mL' },
     canonicalUcum: '[iU]/mL',
-    canonicalUnit: 'IU/mL',
+    canonicalUnit: 'UI/mL',
     siUcum: '[iU]/mL',
-    siUnit: 'IU/mL',
+    siUnit: 'UI/mL',
   },
   AoA1: {
     aliases: { 'mg/dl': 'mg/dL' },
@@ -706,14 +713,14 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   },
   eGFR: {
     aliases: {
-      'ml/min/1,73 m2': 'mL/min/1.73m²',
-      'ml/min/1.73m2': 'mL/min/1.73m²',
-      'ml/min/1.73m²': 'mL/min/1.73m²',
+      'ml/min/1,73 m2': 'mL/min/1,73 m²',
+      'ml/min/1.73m2': 'mL/min/1,73 m²',
+      'ml/min/1.73m²': 'mL/min/1,73 m²',
     },
     canonicalUcum: 'mL/min/{1.73_m2}',
-    canonicalUnit: 'mL/min/1.73m²',
+    canonicalUnit: 'mL/min/1,73 m²',
     siUcum: 'mL/min/{1.73_m2}',
-    siUnit: 'mL/min/1.73m²',
+    siUnit: 'mL/min/1,73 m²',
   },
   Eosinophils: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   Eosinophils_Abs: { aliases: CBC_DIFF_ALIASES, ...CBC_DIFF },
@@ -757,14 +764,14 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   },
   FSH: {
     aliases: {
-      'iu/l': 'mIU/mL',
-      'miu/ml': 'mIU/mL',
-      'ui/l': 'mIU/mL',
+      'iu/l': 'mUI/mL',
+      'miu/ml': 'mUI/mL',
+      'ui/l': 'mUI/mL',
     },
     canonicalUcum: 'm[iU]/mL',
-    canonicalUnit: 'mIU/mL',
+    canonicalUnit: 'mUI/mL',
     siUcum: '[iU]/L',
-    siUnit: 'IU/L',
+    siUnit: 'UI/L',
   },
   GGT: { aliases: ENZYME_ALIASES, ...ENZYME },
   Globulin: {
@@ -862,13 +869,16 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   },
   Insulin: {
     aliases: {
-      'mu/l': 'uIU/mL',
-      'uiu/ml': 'uIU/mL',
-      'µu/ml': 'uIU/mL',
-      'µui/ml': 'uIU/mL',
+      'miu/l': 'mUI/L',
+      'mu/l': 'mUI/L',
+      'mui/l': 'mUI/L',
+      'uiu/ml': 'mUI/L',
+      'µiu/ml': 'mUI/L',
+      'µu/ml': 'mUI/L',
+      'µui/ml': 'mUI/L',
     },
-    canonicalUcum: 'u[iU]/mL',
-    canonicalUnit: 'uIU/mL',
+    canonicalUcum: 'm[iU]/L',
+    canonicalUnit: 'mUI/L',
     siUcum: 'pmol/L',
     siUnit: 'pmol/L',
   },
@@ -884,13 +894,13 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   },
   Iron: {
     aliases: {
-      'mcg/dl': 'mcg/dL',
-      'microg/dl': 'mcg/dL',
-      'ug/dl': 'mcg/dL',
-      'µg/dl': 'mcg/dL',
+      'mcg/dl': 'µg/dL',
+      'microg/dl': 'µg/dL',
+      'ug/dl': 'µg/dL',
+      'µg/dl': 'µg/dL',
     },
     canonicalUcum: 'ug/dL',
-    canonicalUnit: 'mcg/dL',
+    canonicalUnit: 'µg/dL',
     siUcum: 'umol/L',
     siUnit: 'µmol/L',
   },
@@ -934,14 +944,14 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   Leukocytes_Urine: { aliases: URINE_SEDIMENT_ALIASES, ...URINE_SEDIMENT },
   LH: {
     aliases: {
-      'iu/l': 'mIU/mL',
-      'miu/ml': 'mIU/mL',
-      'ui/l': 'mIU/mL',
+      'iu/l': 'mUI/mL',
+      'miu/ml': 'mUI/mL',
+      'ui/l': 'mUI/mL',
     },
     canonicalUcum: 'm[iU]/mL',
-    canonicalUnit: 'mIU/mL',
+    canonicalUnit: 'mUI/mL',
     siUcum: '[iU]/L',
-    siUnit: 'IU/L',
+    siUnit: 'UI/L',
   },
   Lipase: { aliases: ENZYME_ALIASES, ...ENZYME },
   Lipoprotein_a: {
@@ -1022,7 +1032,11 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   },
   // A Quest imprime "/100 WBC"; o hemograma que imprime % dá o mesmo número.
   NRBC: {
-    aliases: { '%': '/100 WBC', '/100 wbc': '/100 WBC', '/100wbc': '/100 WBC' },
+    aliases: {
+      '%': '/100 WBC',
+      '/100 wbc': '/100 WBC',
+      '/100wbc': '/100 WBC',
+    },
     canonicalUcum: '/100{WBCs}',
     canonicalUnit: '/100 WBC',
     siUcum: '/100{WBCs}',
@@ -1044,11 +1058,11 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   Omega6_LA: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   Omega6_Total: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   pANCA: {
-    aliases: { titer: 'titer', titre: 'titer' },
+    aliases: { titer: 'título', titre: 'título' },
     canonicalUcum: '{titer}',
-    canonicalUnit: 'titer',
+    canonicalUnit: 'título',
     siUcum: '{titer}',
-    siUnit: 'titer',
+    siUnit: 'título',
   },
   Phosphorus: {
     aliases: { 'mg/dl': 'mg/dL', 'mmol/l': 'mmol/L' },
@@ -1111,34 +1125,34 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     aliases: {
       '/ul': '/uL',
       '/µl': '/uL',
-      '10*6/ul': 'M/uL',
+      '10*6/ul': 'milhões/mm³',
       'cells/ul': '/uL',
-      'm/ul': 'M/uL',
-      'milhões/mm3': 'M/uL',
-      'milhões/mm³': 'M/uL',
+      'm/ul': 'milhões/mm³',
+      'milhões/mm3': 'milhões/mm³',
+      'milhões/mm³': 'milhões/mm³',
       // O mesmo milhão por microlitro, com o µL no lugar do mm³. Um laudo do
       // Cachoeirinha sai assim, e sem o alias a unidade não convertia nem
       // virava UCUM.
-      'milhões/ul': 'M/uL',
-      'milhões/µl': 'M/uL',
-      'million/ul': 'M/uL',
-      'x10e6/ul': 'M/uL',
+      'milhões/ul': 'milhões/mm³',
+      'milhões/µl': 'milhões/mm³',
+      'million/ul': 'milhões/mm³',
+      'x10e6/ul': 'milhões/mm³',
     },
     canonicalUcum: '10*6/uL',
-    canonicalUnit: 'M/uL',
+    canonicalUnit: 'milhões/mm³',
     siUcum: '10*6/uL',
-    siUnit: 'M/uL',
+    siUnit: 'milhões/mm³',
   },
   RBC_Urine: { aliases: URINE_SEDIMENT_ALIASES, ...URINE_SEDIMENT },
   RDW: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   ResidualMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
   Reticulocytes: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   RheumatoidFactor: {
-    aliases: { 'iu/ml': 'IU/mL', 'ui/ml': 'IU/mL' },
+    aliases: { 'iu/ml': 'UI/mL', 'ui/ml': 'UI/mL' },
     canonicalUcum: '[iU]/mL',
-    canonicalUnit: 'IU/mL',
+    canonicalUnit: 'UI/mL',
     siUcum: '[iU]/mL',
-    siUnit: 'IU/mL',
+    siUnit: 'UI/mL',
   },
   SHBG: { aliases: NMOL_L_ALIASES, ...NMOL_L },
   Sodium: { aliases: ELECTROLYTE_MONO_ALIASES, ...ELECTROLYTE_MONO },
@@ -1192,13 +1206,13 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   },
   TIBC: {
     aliases: {
-      'mcg/dl': 'mcg/dL',
-      'microg/dl': 'mcg/dL',
-      'ug/dl': 'mcg/dL',
-      'µg/dl': 'mcg/dL',
+      'mcg/dl': 'µg/dL',
+      'microg/dl': 'µg/dL',
+      'ug/dl': 'µg/dL',
+      'µg/dl': 'µg/dL',
     },
     canonicalUcum: 'ug/dL',
-    canonicalUnit: 'mcg/dL',
+    canonicalUnit: 'µg/dL',
     siUcum: 'umol/L',
     siUnit: 'µmol/L',
   },
@@ -1254,17 +1268,20 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   TrunkBMC: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
   TrunkFatMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
   TrunkLeanMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
+  // µUI/mL e mUI/L são o mesmo número. A canônica é mUI/L, que é como a
+  // SBPC/ML escreve o TSH (docs/unidades.md).
   TSH: {
     aliases: {
-      'miu/l': 'uIU/mL',
-      'mui/l': 'uIU/mL',
-      'uiu/ml': 'uIU/mL',
-      'µui/ml': 'uIU/mL',
+      'miu/l': 'mUI/L',
+      'mui/l': 'mUI/L',
+      'uiu/ml': 'mUI/L',
+      'µiu/ml': 'mUI/L',
+      'µui/ml': 'mUI/L',
     },
-    canonicalUcum: 'u[iU]/mL',
-    canonicalUnit: 'uIU/mL',
+    canonicalUcum: 'm[iU]/L',
+    canonicalUnit: 'mUI/L',
     siUcum: 'm[iU]/L',
-    siUnit: 'mIU/L',
+    siUnit: 'mUI/L',
   },
   Urea: {
     aliases: { 'mg/dl': 'mg/dL', 'mmol/l': 'mmol/L' },
@@ -1350,11 +1367,83 @@ export function getSIUnit(code: string): string | null {
 // ─── Unit Conversion ────────────────────────────────────────────────────────────
 
 /**
+ * Grafias que não saem de regra de escrita: a contagem de células, a unidade
+ * internacional (UI em português) e o título. A
+ * chave é a grafia impressa em minúsculas. Cada par é o mesmo número: mil/mm³
+ * e 10³/µL são a mesma contagem, porque 1 mm³ é 1 µL.
+ */
+const NAMED_SPELLINGS: Record<string, string> = {
+  '/100 wbc': '/100 WBC',
+  '/100wbc': '/100 WBC',
+  '/hpf': '/HPF',
+  '10^3/ul': 'mil/mm³',
+  '10^6/ul': 'milhões/mm³',
+  '10³/µl': 'mil/mm³',
+  '10⁶/µl': 'milhões/mm³',
+  'iu/l': 'UI/L',
+  'iu/ml': 'UI/mL',
+  'k/ul': 'mil/mm³',
+  'k/µl': 'mil/mm³',
+  'm/ul': 'milhões/mm³',
+  'm/µl': 'milhões/mm³',
+  'mil/mm3': 'mil/mm³',
+  'mil/mm³': 'mil/mm³',
+  'mil/ul': 'mil/mm³',
+  'mil/µl': 'mil/mm³',
+  'milhoes/mm3': 'milhões/mm³',
+  'milhões/mm3': 'milhões/mm³',
+  'milhões/mm³': 'milhões/mm³',
+  'milhões/ul': 'milhões/mm³',
+  'milhões/µl': 'milhões/mm³',
+  'miu/l': 'mUI/L',
+  'miu/ml': 'mUI/mL',
+  'mui/l': 'mUI/L',
+  'mui/ml': 'mUI/mL',
+  titer: 'título',
+  titre: 'título',
+  título: 'título',
+  'ui/l': 'UI/L',
+  'ui/ml': 'UI/mL',
+  'uiu/ml': 'mUI/L',
+  'µiu/ml': 'mUI/L',
+  'µui/ml': 'mUI/L',
+};
+
+/**
+ * Grafia padrão de uma unidade, sem mudar a escala.
+ *
+ * O catálogo escreve cada unidade de um jeito só, e é o do SI na tradução do
+ * Inmetro: `µ` para micro (`mcg`, `ug` e `microg` são abreviações, que o SI
+ * não admite), `h` para hora, `s` para segundo, expoente em sobrescrito. A
+ * taxa de filtração segue o consenso SBN e SBPC/ML de 2024, com vírgula
+ * decimal e espaço antes do símbolo: `mL/min/1,73 m²`. As fontes estão em
+ * `docs/unidades.md`.
+ *
+ * Só troca grafia: `mcg/dL` e `µg/dL` são o mesmo número. Unidade que não
+ * tem regra aqui volta intacta.
+ */
+export function standardUnitSpelling(unit: string): string {
+  const trimmed = unit.trim().replace(/\u03bc/g, 'µ');
+  const named = NAMED_SPELLINGS[trimmed.toLowerCase().replace(/\s+/g, ' ')];
+  if (named !== undefined) return named;
+  if (/^(segundos?|seconds?|seg|sec)$/i.test(trimmed)) return 's';
+  if (/^ml\/min\/1[.,]73\s*m[2²]$/i.test(trimmed)) return 'mL/min/1,73 m²';
+  return trimmed
+    .replace(/^(mcg|microg|ug)(?=$|\/)/i, 'µg')
+    .replace(/^umol(?=$|\/)/i, 'µmol')
+    .replace(/\/hr$/i, '/h')
+    .replace(/m2$/, 'm²');
+}
+
+/**
  * Normalize a unit string to its canonical display form for a given biomarker.
- * Returns the input unchanged if no alias is found.
+ * Returns the standard spelling of the input if no alias is found.
  */
 function normalizeUnit(unit: string, config: BiomarkerUnitConfig): string {
-  return config.aliases[unit.toLowerCase()] ?? config.aliases[unit] ?? unit;
+  const direct = config.aliases[unit.toLowerCase()] ?? config.aliases[unit];
+  if (direct !== undefined) return direct;
+  const standard = standardUnitSpelling(unit);
+  return config.aliases[standard.toLowerCase()] ?? config.aliases[standard] ?? standard;
 }
 
 /**

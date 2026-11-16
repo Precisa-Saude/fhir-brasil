@@ -998,14 +998,16 @@ describe('labObservationToFHIR: código UCUM do Quantity', () => {
   };
 
   it('usa o canonicalUcum do biomarcador, e não a grafia do laudo', () => {
+    // uIU/mL é o mesmo número que mUI/L, a canônica do TSH, e sai com o
+    // código dela.
     const obs = labObservationToFHIR(base, 'p1');
     expect(obs.valueQuantity).toEqual({
-      code: 'u[iU]/mL',
+      code: 'm[iU]/L',
       system: 'http://unitsofmeasure.org',
       unit: 'uIU/mL',
       value: 2.1,
     });
-    expect(obs.referenceRange?.[0]?.high?.code).toBe('u[iU]/mL');
+    expect(obs.referenceRange?.[0]?.high?.code).toBe('m[iU]/L');
     expect(obs.referenceRange?.[0]?.low?.system).toBe('http://unitsofmeasure.org');
   });
 

@@ -77,8 +77,8 @@ describe('UNIT_TO_UCUM só aponta para UCUM', () => {
 describe('BIOMARKER_DEFAULT_UNIT deriva de biomarkers.ts', () => {
   it('tem a mesma unidade da definição, e não uma segunda grafia', () => {
     // Até out/2026 TSH era `µUI/mL` aqui e `uIU/mL` na definição.
-    expect(BIOMARKER_DEFAULT_UNIT.TSH).toBe('uIU/mL');
-    expect(BIOMARKER_DEFAULT_UNIT.Iron).toBe('mcg/dL');
+    expect(BIOMARKER_DEFAULT_UNIT.TSH).toBe('mUI/L');
+    expect(BIOMARKER_DEFAULT_UNIT.Iron).toBe('µg/dL');
     expect(BIOMARKER_DEFAULT_UNIT.Omega3_EPA).toBe('%');
   });
 
@@ -172,10 +172,10 @@ describe('resolveUcum', () => {
   it('prefere a configuração do biomarcador, que sabe o que K/uL quer dizer', () => {
     expect(resolveUcum('K/uL', 'WBC')).toBe('10*3/uL');
     expect(resolveUcum('10*3/ul', 'WBC')).toBe('10*3/uL');
-    expect(resolveUcum('uIU/mL', 'TSH')).toBe('u[iU]/mL');
+    expect(resolveUcum('uIU/mL', 'TSH')).toBe('m[iU]/L');
     // mIU/L é numericamente igual a uIU/mL, e a configuração do TSH o trata
     // como grafia da canônica.
-    expect(resolveUcum('mIU/L', 'TSH')).toBe('u[iU]/mL');
+    expect(resolveUcum('mIU/L', 'TSH')).toBe('m[iU]/L');
   });
 
   it('cai na tabela para biomarcador sem configuração', () => {
@@ -200,7 +200,7 @@ describe('BIOMARKER_DEFAULT_UNIT', () => {
   it('should contain default units for common biomarkers', () => {
     expect(BIOMARKER_DEFAULT_UNIT.Glucose).toBe('mg/dL');
     expect(BIOMARKER_DEFAULT_UNIT.HbA1c).toBe('%');
-    expect(BIOMARKER_DEFAULT_UNIT.TSH).toBe('uIU/mL');
+    expect(BIOMARKER_DEFAULT_UNIT.TSH).toBe('mUI/L');
   });
 
   it('should have units for lipid panel', () => {
@@ -259,7 +259,7 @@ describe('getDefaultUnit', () => {
   it('should return default unit for known biomarkers', () => {
     expect(getDefaultUnit('Glucose')).toBe('mg/dL');
     expect(getDefaultUnit('HbA1c')).toBe('%');
-    expect(getDefaultUnit('TSH')).toBe('uIU/mL');
+    expect(getDefaultUnit('TSH')).toBe('mUI/L');
   });
 
   it('should return empty string for unknown biomarkers', () => {
@@ -268,9 +268,9 @@ describe('getDefaultUnit', () => {
   });
 
   it('should return correct units for iron studies', () => {
-    expect(getDefaultUnit('Iron')).toBe('mcg/dL');
+    expect(getDefaultUnit('Iron')).toBe('µg/dL');
     expect(getDefaultUnit('Ferritin')).toBe('ng/mL');
-    expect(getDefaultUnit('TIBC')).toBe('mcg/dL');
+    expect(getDefaultUnit('TIBC')).toBe('µg/dL');
     expect(getDefaultUnit('TransferrinSaturation')).toBe('%');
   });
 });

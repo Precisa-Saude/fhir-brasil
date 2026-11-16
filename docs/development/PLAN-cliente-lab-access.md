@@ -149,11 +149,11 @@ estão listados em "Pontos em aberto".
 - [x] Erros e repetição
 - [x] README, tabela de conformidade e integração no monorepo
 - [x] Verificação final
-- [ ] Revisão do mantenedor, commit e PR
+- [x] Revisão do mantenedor, commit e PR (#174)
 
 ## Situação
 
-Implementado e verificado localmente em 2026-11-16. Nada foi commitado.
+Implementado e verificado localmente em 2026-11-16, e incorporado pelo PR #174.
 Nenhum teste roda contra um laboratório real: o provedor é simulado em
 memória, a partir do texto da especificação.
 
@@ -423,3 +423,93 @@ escritos antes do código e falham contra a implementação da 0.2.0.
 - Busca do registro e telas do aplicativo (inclusive a da pendência).
 - Qualquer mudança no guia de implementação, na especificação ou na
   publicação do pacote.
+
+### Situação da 0.2.1
+
+Implementado e verificado localmente em 2026-11-16. Os testes com
+identificador de requisito foram escritos antes do código e falharam contra a
+implementação da 0.2.0. Nenhum teste roda contra um laboratório real.
+
+| #   | Critério                     | Evidência                                                                                                                                                                                                                                            |
+| --- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Números de versão            | `package.test.ts` (`SPEC_VERSION` `0.2.1`, `PROTOCOL_VERSION` `0.2`). `registry.test.ts`: resumo SHA-256 da fixture nova e `schema_version` `1.0` recusado. `acesso/v1` só aparece no teste de recusa                                                |
+| 2   | Negociação de versão         | `registry.test.ts` (4 testes `REG-009`) e `provider-token.test.ts` (4 testes `RCP-037`)                                                                                                                                                              |
+| 3   | Verificação do registro      | `registry.test.ts`, 70 testes: 14 `REG-007`, um por passo ou condição, com `step` conferido no erro                                                                                                                                                  |
+| 4   | Registro expirado            | `expired-registry.test.ts` (5 testes `REG-008` e `RCP-033`), mais `journey.test.ts`, `provider-token.test.ts` e `patient-token.test.ts`                                                                                                              |
+| 5   | Revogação pendente           | `pending-revocation.test.ts`, 15 testes `RCP-028` e `RCP-029`, e os de `holder-check.test.ts` e `revocation.test.ts`                                                                                                                                 |
+| 6   | Conferência impossível       | `holder-check.test.ts`: 11 leituras que não permitem a conferência (5 delas de CPF ausente ou inválido), 500 depois de três tentativas e 404 na primeira, todas com `RECEIVER_TERMINATION`                                                           |
+| 7   | Metadados                    | `discovery.test.ts`: os 14 campos omitidos um por vez e 12 valores que contradizem a tabela (`RCP-031`)                                                                                                                                              |
+| 8   | Paginação e redirecionamento | `provider-api.test.ts`: 10 links fora da base, 3 dentro dela escritos de outro jeito, e 302 e 303 sem seguir (`RCP-030`)                                                                                                                             |
+| 9   | `If-None-Exist`              | `patient-api.test.ts`: forma literal, 16 identificadores recusados e os dois limites aceitos (`RCP-036`)                                                                                                                                             |
+| 10  | Link de pagamento            | `patient-api.test.ts` e `no-credentials.test.ts` (`RCP-035`, `RCP-022`)                                                                                                                                                                              |
+| 11  | Participantes e pedidos      | `patient-api.test.ts`: 30 casos de recusa antes do envio e o pedido com código próprio do laboratório aceito                                                                                                                                         |
+| 12  | Tokens de provedor           | `provider-token.test.ts` (`RCP-032`, `RCP-034`) e `revocation.test.ts` (RFC 7009 nunca chamado)                                                                                                                                                      |
+| 13  | Alcance do preço             | `provider-api.test.ts`, 4 testes de `chargeItemScope`                                                                                                                                                                                                |
+| 14  | Mapa de conformidade         | `conformance.test.ts`. 47 linhas: 30 cobertas, 9 parciais, 6 fora do alcance, 2 retiradas                                                                                                                                                            |
+| 15  | Verificações                 | `pnpm turbo run lint typecheck test build`: 25 tarefas, 25 certas. `pnpm format:check` e `pnpm packages:check` passam. Cobertura do pacote: 99,52% statements, 96,75% branches, 98,98% functions, 99,52% lines, acima da medição da 0.2.0 nas quatro |
+
+### O que a 0.2.1 resolveu da lista anterior
+
+Pontos 1 (registro expirado), 2 e 3 (versões e negociação), 4 (conferência
+impossível), 5 (repetição da revogação), 7 (metadados), 8 (regras fora dos
+passos), 9 (link `next`), 10 (link de pagamento), 11 (`If-None-Exist`), 13
+(token por escopo) e 15 (RFC 7009, que segue sem chamada) foram fixados pela
+especificação e implementados como ela diz. Os pontos 6, 12, 14 e 16 seguem
+como estavam.
+
+### Pontos em aberto da 0.2.1
+
+Leituras feitas onde o texto da 0.2.1 deixa dúvida. Cada uma pede confirmação
+na especificação.
+
+1. **Cabeçalho do JWS do registro.** A assinatura fixa o cabeçalho em `alg`,
+   `kid` e `typ` `JOSE`, mas a lista de verificação, que se declara completa,
+   só confere `alg`. Implementado: `typ` diferente ou membro extra não é motivo
+   de recusa.
+2. **REG-010 sem apoio no schema.** O schema aceita mais de uma versão em
+   `protocol_versions` mesmo com MAJOR 0. Implementado: o pacote não confere a
+   própria entrada nem a dos provedores, e a negociação funciona com qualquer
+   lista.
+3. **Quando gravar a pendência.** O texto manda gravar depois das três
+   tentativas. Um reinício durante elas perde a revogação, com os tokens já
+   descartados. Implementado como o texto diz. Gravar antes da primeira
+   tentativa fecharia essa janela.
+4. **404 sem código.** Só 404 `CONSENT_NOT_FOUND` encerra a pendência. Um 404
+   sem o código do protocolo (endereço errado, por exemplo) mantém a pendência.
+5. **Falha que não admite repetição.** A lista de falhas repetíveis inclui
+   "falha ao obter o token de provedor", sem distinguir `invalid_client` ou
+   registro expirado há mais de 7 dias. Implementado: falha que não admite
+   repetição (4xx, `invalid_client`, `RECEIVER_NOT_ALLOWED`, registro expirado)
+   encerra as tentativas e vai direto para a pendência.
+6. **Retry-After longo na revogação.** Uma espera indicada acima do teto do
+   cliente (60 segundos) encerra as tentativas e grava a pendência, em vez de
+   prender a chamada.
+7. **CPF de dígitos repetidos.** `00000000000` e afins passam no cálculo dos
+   dígitos verificadores. Implementado: contam como CPF inválido, e a
+   conferência é impossível. O CPF esperado, informado pelo aplicativo, passa
+   pela mesma conferência antes da troca do código.
+8. **Paginação.** As quatro condições não falam de usuário na URL nem de link
+   relativo. Implementado: os dois são recusados.
+9. **Domínio do link de pagamento.** O link deve estar em domínio do
+   provedor, mas o registro não lista esses domínios. Implementado: o pacote
+   confere a extensão, `valueUrl` e `https`, e não o domínio. Extensão
+   repetida não é lida.
+10. **Paciente só por CPF.** O perfil admite, mas a seção 5.5.5 diz que o
+    receptor usa `Patient/{fhir_id}`. Implementado: o pacote exige a
+    referência. `subject.type` do pedido é opcional, como no perfil, e quando
+    vem precisa ser `Patient`.
+11. **Versão que o pacote não implementa.** A seção 9.1 não trata do receptor
+    cuja biblioteca implementa menos versões do que a entrada dele declara.
+    Implementado: sem versão efetiva igual a `0.2`, o provedor não é
+    oferecido. O mesmo vale para `api_base_url` que não termina em
+    `/v{MAJOR}`.
+12. **Troca do código com o registro expirado.** O texto recusa PAR e criação
+    de consentimento, e não fala da troca de um código de jornada aberta antes
+    do vencimento. Implementado: recusada, como jornada nova.
+13. **Provedor suspenso com revogação pendente.** A seção 9.1 diz que a
+    revogação continua possível, e a 8.4 manda parar de chamar provedor
+    suspenso. Implementado: nenhuma chamada a provedor fora de `active`, e a
+    pendência segue mostrando a página do provedor.
+14. **Contexto de preço desconhecido.** O perfil tem fatiamento aberto em
+    `useContext`. Implementado: contexto de outro tipo é contado em
+    `unrecognizedContexts`, e o preço deixa de ser dado como geral.

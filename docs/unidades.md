@@ -54,22 +54,21 @@ laboratório, e por isso o catálogo fica com o SI. `mcg/dL` continua sendo lido
 Para estas unidades nenhuma norma decide. A escolha foi a grafia que as
 publicações brasileiras consultadas usam, em português.
 
-| Antes             | Agora             | Onde a grafia aparece                                             |
-| ----------------- | ----------------- | ----------------------------------------------------------------- |
-| `K/uL`            | `mil/mm³`         | Tabela de hemograma da Divisão de Laboratório Central do HC-FMUSP |
-| `M/uL`            | `milhões/mm³`     | Rosenfeld et al., 2019; HC-FMUSP                                  |
-| `uIU/mL` (TSH)    | `mUI/L`           | SBPC/ML, 2019 e 2020                                              |
-| `uIU/mL` (outros) | `µUI/mL`          | UI das linhas abaixo, com o µ do SI                               |
-| `IU/mL`, `IU/L`   | `UI/mL`, `UI/L`   | SBPC/ML, 2020                                                     |
-| `mIU/mL`, `mIU/L` | `mUI/mL`, `mUI/L` | SBPC/ML, 2020                                                     |
-| `titer`           | `título`          | tradução; a palavra é a usada nos livros da SBPC/ML               |
+| Antes              | Agora             | Onde a grafia aparece                                             |
+| ------------------ | ----------------- | ----------------------------------------------------------------- |
+| `K/uL`             | `mil/mm³`         | Tabela de hemograma da Divisão de Laboratório Central do HC-FMUSP |
+| `M/uL`             | `milhões/mm³`     | Rosenfeld et al., 2019; HC-FMUSP                                  |
+| `uIU/mL`, `µUI/mL` | `mUI/L`           | SBPC/ML, 2019 e 2020                                              |
+| `IU/mL`, `IU/L`    | `UI/mL`, `UI/L`   | SBPC/ML, 2020                                                     |
+| `mIU/mL`, `mIU/L`  | `mUI/mL`, `mUI/L` | SBPC/ML, 2020                                                     |
+| `titer`            | `título`          | tradução; a palavra é a usada nos livros da SBPC/ML               |
 
 `mil/mm³` e `10³/µL` são a mesma contagem, porque 1 mm³ é 1 µL, e o código
-UCUM continua `10*3/uL`. O TSH em `µUI/mL` e em `mUI/L` é o mesmo número.
+UCUM continua `10*3/uL`. `µUI/mL` e `mUI/L` são o mesmo número.
 
-A insulina fica em `µUI/mL`. As fontes consultadas não trazem a unidade da
-insulina, então a grafia vem das duas regras já adotadas (UI e µ) e não de uma
-publicação.
+A insulina usa a mesma unidade do TSH, `mUI/L`. As fontes consultadas não
+trazem a unidade da insulina; a escolha é ter uma grafia só para a mesma
+grandeza no catálogo.
 
 ## O que fica em inglês
 

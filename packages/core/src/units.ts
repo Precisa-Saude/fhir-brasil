@@ -869,13 +869,16 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
   },
   Insulin: {
     aliases: {
-      'mu/l': 'µUI/mL',
-      'uiu/ml': 'µUI/mL',
-      'µu/ml': 'µUI/mL',
-      'µui/ml': 'µUI/mL',
+      'miu/l': 'mUI/L',
+      'mu/l': 'mUI/L',
+      'mui/l': 'mUI/L',
+      'uiu/ml': 'mUI/L',
+      'µiu/ml': 'mUI/L',
+      'µu/ml': 'mUI/L',
+      'µui/ml': 'mUI/L',
     },
-    canonicalUcum: 'u[iU]/mL',
-    canonicalUnit: 'µUI/mL',
+    canonicalUcum: 'm[iU]/L',
+    canonicalUnit: 'mUI/L',
     siUcum: 'pmol/L',
     siUnit: 'pmol/L',
   },
@@ -1401,9 +1404,9 @@ const NAMED_SPELLINGS: Record<string, string> = {
   título: 'título',
   'ui/l': 'UI/L',
   'ui/ml': 'UI/mL',
-  'uiu/ml': 'µUI/mL',
-  'µiu/ml': 'µUI/mL',
-  'µui/ml': 'µUI/mL',
+  'uiu/ml': 'mUI/L',
+  'µiu/ml': 'mUI/L',
+  'µui/ml': 'mUI/L',
 };
 
 /**

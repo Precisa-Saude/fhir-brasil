@@ -1101,7 +1101,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Insulin', 'Fasting Insulin'],
       pt: ['Insulina', 'Insulina de Jejum'],
     },
-    unit: 'µUI/mL',
+    unit: 'mUI/L',
   },
   {
     code: 'CPeptide',

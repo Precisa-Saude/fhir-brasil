@@ -270,7 +270,8 @@ describe('standardUnitSpelling', () => {
     ['mIU/mL', 'mUI/mL'],
     ['IU/L', 'UI/L'],
     ['mIU/L', 'mUI/L'],
-    ['uIU/mL', 'µUI/mL'],
+    ['uIU/mL', 'mUI/L'],
+    ['µUI/mL', 'mUI/L'],
     ['titer', 'título'],
   ])('%s vira %s', (printed, standard) => {
     expect(standardUnitSpelling(printed)).toBe(standard);
@@ -304,7 +305,7 @@ describe('standardUnitSpelling', () => {
       value: 4.8,
     });
     expect(convertUnit(2.1, 'uIU/mL', 'mUI/L', 'TSH')).toEqual({ unit: 'mUI/L', value: 2.1 });
-    expect(convertUnit(7, 'uIU/mL', 'µUI/mL', 'Insulin')).toEqual({ unit: 'µUI/mL', value: 7 });
+    expect(convertUnit(7, 'uIU/mL', 'mUI/L', 'Insulin')).toEqual({ unit: 'mUI/L', value: 7 });
   });
 
   it('a faixa de reserva ainda alcança um valor gravado na grafia antiga', () => {

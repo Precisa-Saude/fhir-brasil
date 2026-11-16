@@ -92,7 +92,6 @@ const PROPERTIES_BY_UNIT: Record<string, string[]> = {
   'pg/mL': ['MCnc'],
   'U/L': ['CCnc'],
   'U/mL': ['ACnc'],
-  'µUI/mL': ['ACnc'],
   cm: ['Len'],
   deg: ['Angle'],
   fL: ['EntVol', 'EntMeanVol'],

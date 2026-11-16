@@ -1214,7 +1214,7 @@ export const biomarkerRangeDefinitions: Record<string, BiomarkerRangeDefinition>
       min: 2,
       optimalMax: 8,
       optimalMin: 3,
-      unit: 'µUI/mL',
+      unit: 'mUI/L',
     },
     kind: 'reference-interval',
     source: 'tietz-7ed-2015',

@@ -25,9 +25,10 @@ biomarker definitions, reference ranges, OCR utilities, and an RNDS client.
 packages/
   core/          — FHIR R4 types, biomarker catalogue (10 categorias), reference ranges, converters
   ocr-utils/     — OCR anchoring, extraction contract and validator
-  pdf/           — PDF text-layer extraction (the one package with an external dep)
+  pdf/           — PDF text-layer extraction (external dep: pdfjs-dist)
   rnds/          — HTTP client for RNDS (DATASUS), mTLS auth
   rnds-sandbox/  — Mock local da RNDS para dev/ensino (FHIR R4, cenários sintéticos)
+  lab-access/    — Receiver-side client for the Open Labs Brasil consent-based lab access protocol (draft, private, not published)
 ig/              — FHIR Implementation Guide (SUSHI), published on Simplifier
 site/            — Public site (Cloudflare Pages)
 ```
@@ -35,7 +36,7 @@ site/            — Public site (Cloudflare Pages)
 ## Commit scopes
 
 Valid scopes: `core`, `ocr-utils`, `pdf`, `rnds`, `rnds-sandbox`,
-`docs`, `ci`, `deps`, `lint`.
+`lab-access`, `docs`, `ci`, `deps`, `lint`.
 
 ## Dependency rules
 
@@ -43,9 +44,21 @@ Valid scopes: `core`, `ocr-utils`, `pdf`, `rnds`, `rnds-sandbox`,
 - `@precisa-saude/fhir-ocr-utils` depends only on `@precisa-saude/fhir`
 - `@precisa-saude/fhir-rnds` depends only on `@precisa-saude/fhir`
 - `@precisa-saude/fhir-rnds-sandbox` depends only on `@precisa-saude/fhir`
-- `@precisa-saude/fhir-pdf` is the one exception: it carries `pdfjs-dist`,
+- `@precisa-saude/fhir-pdf` is an approved exception: it carries `pdfjs-dist`,
   which is why PDF parsing lives in its own package instead of `ocr-utils`
+- `@precisa-saude/fhir-lab-access` is the other approved exception: it depends
+  on `@precisa-saude/fhir` and on `jose` (JWT, JWK and JWS), and on nothing
+  else. The protocol it implements recommends an established JOSE library
+  over hand-written signing and verification code
 - Any other external runtime dep requires explicit approval
+
+## Private packages
+
+`@precisa-saude/fhir-lab-access` is `"private": true` while the protocol
+specification it implements is an unpublished draft. `scripts/sync-versions.js`
+derives the publish list from `packages/*` minus private packages, so it must
+stay out of the `packages:` block in `.github/workflows/ci.yml` and out of
+`publishPackages` in `.precisa.json` until it is made public.
 
 ## Medical data guidelines
 

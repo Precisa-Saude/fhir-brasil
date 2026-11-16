@@ -38,6 +38,7 @@ Cada faixa carrega uma chave em `source`, e a citação por trás dela é resolv
 | [`@precisa-saude/fhir-pdf`](packages/pdf/)                   | Camada de texto de PDF de laudo, para alimentar a ancoragem                                          | `pdfjs-dist`          |
 | [`@precisa-saude/fhir-rnds`](packages/rnds/)                 | Cliente HTTP para a RNDS (DATASUS) — autenticação mTLS, FHIR R4                                      | `@precisa-saude/fhir` |
 | [`@precisa-saude/fhir-rnds-sandbox`](packages/rnds-sandbox/) | Mock local da RNDS — endpoints FHIR R4 e cenários sintéticos para dev/ensino                         | `@precisa-saude/fhir` |
+| [`@precisa-saude/fhir-lab-access`](packages/lab-access/)     | **Rascunho privado, fora do npm.** Cliente do receptor do protocolo Open Labs Brasil 0.2.0           | `jose`                |
 
 ---
 

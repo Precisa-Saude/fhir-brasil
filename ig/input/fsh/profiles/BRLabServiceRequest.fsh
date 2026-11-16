@@ -2,7 +2,7 @@ Profile: BRLabServiceRequest
 Parent: ServiceRequest
 Id: br-lab-service-request
 Title: "BR Lab Service Request"
-Description: "Perfil para o pedido de um exame que acompanha um agendamento em laboratório. Restringe ServiceRequest do FHIR R4 para exigir ao menos um código (LOINC no exame avulso, com TUSS opcional ao lado, ou o código próprio do laboratório num combo) e o paciente identificado. Um agendamento com vários exames leva um pedido por exame."
+Description: "Perfil para o pedido de um exame que acompanha um agendamento em laboratório. Restringe ServiceRequest do FHIR R4 para exigir ao menos um código (LOINC no exame avulso, com TUSS opcional ao lado, ou o código próprio do laboratório num combo) e o paciente identificado. Um agendamento com vários exames leva um pedido por exame. O pedido não circula sozinho: vai em `contained` do BRLabAppointment."
 
 // Item do catálogo que o pedido instancia
 * instantiatesCanonical only Canonical(BRLabActivityDefinition)

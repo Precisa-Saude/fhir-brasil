@@ -64,6 +64,7 @@ Description: "Agenda da coleta de sangue na unidade fictícia, para o mês de de
 
 * active = true
 * actor[location] = Reference(UnidadeCentroExemplo)
+* actor[location].type = "Location"
 * actor[1] = Reference(ColetaExemplo)
 * planningHorizon.start = "2026-12-01T00:00:00-03:00"
 * planningHorizon.end = "2026-12-31T23:59:59-03:00"

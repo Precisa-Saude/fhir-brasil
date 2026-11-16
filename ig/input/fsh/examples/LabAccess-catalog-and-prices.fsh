@@ -7,7 +7,8 @@ Description: "Item de catálogo de um laboratório fictício, com o código LOIN
 * url = "https://laboratorio.example/fhir/ActivityDefinition/glicose"
 * status = #active
 * title = "Glicose"
-* code.coding[loinc] = $LOINC#2345-7 "Glicose"
+* code.coding[loinc] = $LOINC#2345-7 "Glucose [Mass/volume] in Serum or Plasma"
+* code.text = "Glicose"
 * code.coding[1] = https://laboratorio.example/fhir/produtos#GLI "Glicose"
 
 Instance: ComboSemLoincCatalogoExemplo
@@ -29,7 +30,8 @@ Description: "Preço da glicose em uma unidade: `useContext` aponta a unidade. O
 
 * url = "https://laboratorio.example/fhir/ChargeItemDefinition/glicose-unidade-centro"
 * status = #active
-* code.coding[loinc] = $LOINC#2345-7 "Glicose"
+* code.coding[loinc] = $LOINC#2345-7 "Glucose [Mass/volume] in Serum or Plasma"
+* code.text = "Glicose"
 * useContext[venue].valueReference = Reference(UnidadeCentroExemplo)
 * propertyGroup.priceComponent[base].amount.value = 12.50
 
@@ -41,7 +43,8 @@ Description: "Preço da glicose em todas as unidades de uma cidade: `jurisdictio
 
 * url = "https://laboratorio.example/fhir/ChargeItemDefinition/glicose-porto-alegre"
 * status = #active
-* code.coding[loinc] = $LOINC#2345-7 "Glicose"
+* code.coding[loinc] = $LOINC#2345-7 "Glucose [Mass/volume] in Serum or Plasma"
+* code.text = "Glicose"
 * jurisdiction[municipio].coding = $IBGEMunicipio#4314902 "Porto Alegre"
 * propertyGroup.priceComponent[base].amount.value = 14.00
 
@@ -53,7 +56,8 @@ Description: "Preço da glicose em uma região de uma marca: um `useContext` apo
 
 * url = "https://laboratorio.example/fhir/ChargeItemDefinition/glicose-regiao-sul"
 * status = #active
-* code.coding[loinc] = $LOINC#2345-7 "Glicose"
+* code.coding[loinc] = $LOINC#2345-7 "Glucose [Mass/volume] in Serum or Plasma"
+* code.text = "Glicose"
 * useContext[brand].valueReference = Reference(Organization/laboratorio-exemplo)
 * useContext[brand].valueReference.display = "Laboratório Exemplo"
 * useContext[venue].valueReference = Reference(RegiaoSulExemplo)

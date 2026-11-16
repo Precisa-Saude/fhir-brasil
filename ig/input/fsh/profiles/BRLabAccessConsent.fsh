@@ -2,7 +2,12 @@ Profile: BRLabAccessConsent
 Parent: Consent
 Id: br-lab-access-consent
 Title: "BR Lab Access Consent"
-Description: "Perfil para o consentimento que o paciente dá a um aplicativo para acessar seus dados e serviços em um laboratório. Restringe Consent do FHIR R4 para exigir o paciente, o laboratório que guarda o consentimento, o aplicativo que recebe o acesso, os escopos concedidos e a data de expiração. A revogação é registrada em `status`."
+Description: "Perfil para o consentimento que o paciente dá a um aplicativo para acessar seus dados e serviços em um laboratório. Restringe Consent do FHIR R4 para exigir o paciente, o laboratório que guarda o consentimento, o aplicativo que recebe o acesso, os escopos concedidos e a data de expiração. Só entram os escopos que dependem do paciente (BRLabAccessPatientScopeVS). O identificador que o laboratório dá ao consentimento ao criá-lo vai em `identifier`. A revogação é registrada em `status`."
+
+// Identificador do consentimento no protocolo, dado pelo laboratório na
+// criação. Fica aberto, sem fatia e sem sistema fixo: cada laboratório
+// usa o seu.
+* identifier ^short = "Identificador do consentimento, dado pelo laboratório na criação"
 
 // Ciclo de vida em status, com os códigos do R4: proposed (criado pelo
 // aplicativo, à espera do paciente), active (autorizado pelo paciente no
@@ -41,9 +46,10 @@ Description: "Perfil para o consentimento que o paciente dá a um aplicativo par
 * provision.actor[receiver].reference only Reference(Organization or Device)
 * provision.actor[receiver].reference ^short = "Aplicativo do paciente que recebe o acesso"
 
-// Escopos concedidos
+// Escopos concedidos: só os que dependem do consentimento do paciente.
+// Catálogo, unidades e agenda são acesso do aplicativo ao laboratório.
 * provision.action 1..*
-* provision.action from BRLabAccessScopeVS (required)
+* provision.action from BRLabAccessPatientScopeVS (required)
 * provision.action ^short = "Escopo concedido, um por repetição"
 
 

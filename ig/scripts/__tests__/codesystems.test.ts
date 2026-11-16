@@ -241,10 +241,28 @@ describe('BRCID10MetabolicoVS', () => {
   });
 });
 
-describe('BRLabAccessScopeVS', () => {
-  const content = readFsh('valuesets', 'BRLabAccessScopeVS.fsh');
+describe('BRLabAccessPatientScopeVS', () => {
+  const content = readFsh('valuesets', 'BRLabAccessPatientScopeVS.fsh');
 
-  it('inclui todos os códigos do CodeSystem', () => {
-    expect(content).toContain('include codes from system $LabAccessScope');
+  it('contém exatamente 3 escopos', () => {
+    expect(countCodes(content)).toBe(3);
+  });
+
+  it('contém só os escopos que dependem do consentimento do paciente', () => {
+    for (const scope of ['appointment.write', 'results.read', 'consent.read']) {
+      expect(content).toContain(`* $LabAccessScope#${scope} `);
+    }
+    for (const scope of ['catalog.read', 'locations.read', 'schedule.read']) {
+      expect(content).not.toContain(`#${scope}`);
+    }
+    expect(content).not.toContain('include codes from system');
+  });
+});
+
+describe('BRLabAccessConsent', () => {
+  const content = readFsh('profiles', 'BRLabAccessConsent.fsh');
+
+  it('liga provision.action ao ValueSet de escopos de paciente', () => {
+    expect(content).toContain('* provision.action from BRLabAccessPatientScopeVS (required)');
   });
 });

@@ -1,13 +1,14 @@
 Instance: PedidoGlicoseExemplo
 InstanceOf: BRLabServiceRequest
-Usage: #example
-Title: "Pedido de exame de um agendamento"
-Description: "Pedido de glicose criado junto com o agendamento, com o paciente identificado por CPF fictício e o item do catálogo em `instantiatesCanonical`."
+Usage: #inline
+Title: "Pedido de exame contido em um agendamento"
+Description: "Pedido de glicose que vai dentro do agendamento de exemplo, em `contained`, com o paciente identificado por CPF fictício e o item do catálogo em `instantiatesCanonical`. Não existe como recurso à parte."
 
 * status = #active
 * intent = #order
 * instantiatesCanonical = "https://laboratorio.example/fhir/ActivityDefinition/glicose"
-* code.coding[loinc] = $LOINC#2345-7 "Glicose"
+* code.coding[loinc] = $LOINC#2345-7 "Glucose [Mass/volume] in Serum or Plasma"
+* code.text = "Glicose"
 * subject.type = "Patient"
 * subject.identifier.system = $CPF
 * subject.identifier.value = "52998224725"
@@ -15,9 +16,10 @@ Description: "Pedido de glicose criado junto com o agendamento, com o paciente i
 Instance: AgendamentoExemplo
 InstanceOf: BRLabAppointment
 Usage: #example
-Title: "Agendamento de coleta com link de pagamento"
-Description: "Agendamento confirmado em uma unidade fictícia, com o endereço em que o paciente conclui o pagamento no laboratório. A referência ao paciente leva o CPF fictício e `type`, que identifica o tipo do recurso quando não há referência literal."
+Title: "Agendamento de coleta com o pedido de exame contido"
+Description: "Agendamento confirmado em uma unidade fictícia. O pedido de glicose vai em `contained` e `basedOn` aponta para ele por referência local. O paciente aparece com o mesmo CPF fictício no participante e no `subject` do pedido, e `type` identifica o tipo do recurso quando não há referência literal. A extensão leva o endereço em que o paciente conclui o pagamento no laboratório."
 
+* contained[0] = PedidoGlicoseExemplo
 * extension[paymentLink].valueUrl = "https://laboratorio.example/pagamento/exemplo"
 * status = #booked
 * basedOn = Reference(PedidoGlicoseExemplo)
@@ -29,4 +31,5 @@ Description: "Agendamento confirmado em uma unidade fictícia, com o endereço e
 * participant[patient].actor.identifier.value = "52998224725"
 * participant[patient].status = #accepted
 * participant[location].actor = Reference(UnidadeCentroExemplo)
+* participant[location].actor.type = "Location"
 * participant[location].status = #accepted

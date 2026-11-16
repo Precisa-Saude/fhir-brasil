@@ -21,3 +21,10 @@ Alias: $ObsCat = http://terminology.hl7.org/CodeSystem/observation-category
 
 // Extensões fhir-brasil
 Alias: $DerivedFromOCR = https://fhir-brasil.dev.br/ig/StructureDefinition/derived-from-ocr
+
+// Acesso laboratorial por consentimento
+Alias: $LabAccessScope = https://fhir-brasil.dev.br/CodeSystem/lab-access-scope
+Alias: $ConsentScope = http://terminology.hl7.org/CodeSystem/consentscope
+Alias: $ActCode = http://terminology.hl7.org/CodeSystem/v3-ActCode
+Alias: $ParticipationType = http://terminology.hl7.org/CodeSystem/v3-ParticipationType
+Alias: $UsageContextType = http://terminology.hl7.org/CodeSystem/usage-context-type

@@ -118,6 +118,31 @@ describe('BRIBGEMunicipioCS (stub)', () => {
   });
 });
 
+describe('BRLabAccessScopeCS', () => {
+  const content = readFsh('codesystems', 'BRLabAccessScopeCS.fsh');
+
+  it('contém exatamente 6 escopos', () => {
+    expect(countCodes(content)).toBe(6);
+  });
+
+  it('contém os seis escopos do protocolo', () => {
+    for (const scope of [
+      'catalog.read',
+      'locations.read',
+      'schedule.read',
+      'appointment.write',
+      'results.read',
+      'consent.read',
+    ]) {
+      expect(content).toContain(`* #${scope} `);
+    }
+  });
+
+  it('declara content = #complete', () => {
+    expect(content).toContain('#complete');
+  });
+});
+
 describe('BRSUSRacaCorVS', () => {
   const content = readFsh('valuesets', 'BRSUSRacaCorVS.fsh');
 
@@ -196,5 +221,13 @@ describe('BRCID10MetabolicoVS', () => {
 
   it('contém deficiência de ferro', () => {
     expect(content).toContain('D50');
+  });
+});
+
+describe('BRLabAccessScopeVS', () => {
+  const content = readFsh('valuesets', 'BRLabAccessScopeVS.fsh');
+
+  it('inclui todos os códigos do CodeSystem', () => {
+    expect(content).toContain('include codes from system $LabAccessScope');
   });
 });

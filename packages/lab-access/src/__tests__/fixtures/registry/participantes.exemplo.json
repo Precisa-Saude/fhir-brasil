@@ -1,0 +1,104 @@
+{
+  "schema_version": "1.0",
+  "environment": "pilot",
+  "sequence": 7,
+  "issued_at": "2026-11-15T12:00:00Z",
+  "expires_at": "2026-12-15T12:00:00Z",
+  "registry_keys": {
+    "keys": [
+      {
+        "kty": "RSA",
+        "kid": "QYYlw79CiVBFA6HCDy5SxJVPQwIWlu1S82vgqyHRjZk",
+        "use": "sig",
+        "alg": "PS256",
+        "n": "skjznI_XU30UMsIJCdakOmlH0VqOKzbxlTyc4iyGIcaAW5VIzEkj35L-1IYhHXMuMA0oZW0wNh9q24kzNOZHrWsN0FGXoO2rsYRCT2NG5cOtnOAHmOBJznIRxVb6UYs87HCOKYUFYsj1gWtccb8YrP0gVG_cU7cXAGKRtNP_xzaBFGByVVqRlx_VkJ-e8NqbeobVNS3UvIvHZw1NZvgvvprXFpz1672NaSzZN4Dj2RNrsSy80XBHtWivFid_Z7Zg5a16K1vgEchwvnr6ThZehC1P8cT8ffEPQ27Sh2gpAWdt5jpdziaBJjI50uPq0wZx-EVZGKPsgYBuj9nEEdHl4w",
+        "e": "AQAB"
+      }
+    ]
+  },
+  "participants": [
+    {
+      "participant_id": "5f0c7c0e-3d1a-4b7e-9a51-2f6d8c1e4a10",
+      "role": "provider",
+      "status": "active",
+      "legal_name": "Laboratório Exemplo Ltda.",
+      "display_name": "Laboratório Exemplo",
+      "cnpj": "99999990000180",
+      "contacts": {
+        "technical_email": "integracao@laboratorio.example",
+        "security_email": "seguranca@laboratorio.example"
+      },
+      "protocol_versions": [
+        "1.0"
+      ],
+      "updated_at": "2026-11-10T09:30:00Z",
+      "provider": {
+        "issuer": "https://auth.laboratorio.example",
+        "fhir_base_url": "https://api.laboratorio.example/fhir/r4",
+        "api_base_url": "https://api.laboratorio.example/acesso/v1",
+        "scopes_supported": [
+          "catalog.read",
+          "locations.read",
+          "schedule.read",
+          "appointment.write",
+          "results.read",
+          "consent.read",
+          "consent.manage"
+        ],
+        "consent_management_uri": "https://www.laboratorio.example/minha-conta/compartilhamentos",
+        "logo_uri": "https://www.laboratorio.example/logo.png"
+      }
+    },
+    {
+      "participant_id": "c2b8f6a4-71de-4c0b-8f3a-9e5d2a7b6c31",
+      "role": "receiver",
+      "status": "active",
+      "legal_name": "Receptor Exemplo Tecnologia Ltda.",
+      "display_name": "App do Paciente Exemplo",
+      "cnpj": "99999991000125",
+      "contacts": {
+        "technical_email": "integracao@app-paciente.example",
+        "security_email": "seguranca@app-paciente.example"
+      },
+      "protocol_versions": [
+        "1.0"
+      ],
+      "updated_at": "2026-11-12T16:45:00Z",
+      "receiver": {
+        "client_id": "c2b8f6a4-71de-4c0b-8f3a-9e5d2a7b6c31",
+        "client_name": "App do Paciente Exemplo",
+        "redirect_uris": [
+          "https://app-paciente.example/conexoes/retorno"
+        ],
+        "jwks_uri": "https://app-paciente.example/.well-known/jwks.json",
+        "scopes_allowed": [
+          "catalog.read",
+          "locations.read",
+          "schedule.read",
+          "appointment.write",
+          "results.read",
+          "consent.read",
+          "consent.manage"
+        ],
+        "transport_certificates": [
+          {
+            "x5t#S256": "5dqIfHirlno9crnlNeEkswfSxPsW9-Rm1k8wgbBVcU8",
+            "x5c": [
+              "MIIDVjCCAj6gAwIBAgIUUGchFTBITb1XAkzIWk/k1kCkMo0wDQYJKoZIhvcNAQELBQAwSzEuMCwGA1UEAwwlcmVjZXB0b3ItZXhlbXBsby5hcHAtcGFjaWVudGUuZXhhbXBsZTEZMBcGA1UECgwQUmVjZXB0b3IgRXhlbXBsbzAeFw0yNjExMDEwMDAwMDBaFw0yNzExMDEwMDAwMDBaMEsxLjAsBgNVBAMMJXJlY2VwdG9yLWV4ZW1wbG8uYXBwLXBhY2llbnRlLmV4YW1wbGUxGTAXBgNVBAoMEFJlY2VwdG9yIEV4ZW1wbG8wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCOZOLmtIIqRfCVKoWqGCS5++jslykt2G0kI4zYor/EF0h4rBg2pmIngU1xYHzY41bZFPiPkFJwDhmVu7vTIZaxo2YexL5CHiLiX3pS+8QbXTZxp4RL2+6WhzalEjy5ZXyD9GJgyvIHAb+fZjvQaxjT/TToZ4Zy2ht05XvulScTgvt7GecqgPvKnCxiSLAy1C9Fxex4qL3o4GklOi9kHNzWq0S5BraGWUJPj4yrh39+TJoefXZfPjkZC7zzLh7YjdzSgGIy0BOAE8A2uXcX9T6ryVIulF0o8jdAQBhKYHLkjXXz1feNZrxf1knoolJwyBiG4fXzkBqOr9P+HB2eGja3AgMBAAGjMjAwMB0GA1UdDgQWBBSjdevIl/sQnm75KCNkBZR7hAithjAPBgNVHRMBAf8EBTADAQH/MA0GCSqGSIb3DQEBCwUAA4IBAQAN9c6RTQ3tqBrL9an/qHlc6d/+CWqpGLAJfmNT2lGnOckQqWmWw+kridB50b4JsM4U9aUD/DN4pBCFkKk4wlHehlNfh5CfwpIaDyudUZ5h6I9TA+GQhGT/k7nQL3oY7YN8nISTqVDZ0cePPuggL6Apblusdm6Vm/dmkprgQ6VQ5sgcwWNFYvEvdfHQ8antRxbDeRdw/1DGoNqxk/PJsgQl/rVSebZknpvunQ1ZyTuLwkJ01YxdnK2Tonn/EkeJ0ZKkcmgGE1iCnOE5eCUW3gQ3DIPzUnnR8FsDPCVw3gr7asUAJaofI1EkIUlUyY93n1OE8FnyOdlEtzpYPbAW7GMN"
+            ],
+            "not_before": "2026-11-01T00:00:00Z",
+            "not_after": "2027-11-01T00:00:00Z"
+          }
+        ],
+        "policy_uri": "https://app-paciente.example/privacidade",
+        "tos_uri": "https://app-paciente.example/termos",
+        "logo_uri": "https://app-paciente.example/logo.png",
+        "eligibility": {
+          "patient_facing": true,
+          "health_plan_operator": false,
+          "declared_at": "2026-11-01"
+        }
+      }
+    }
+  ]
+}

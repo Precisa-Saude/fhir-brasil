@@ -105,6 +105,25 @@ importers:
         specifier: ^2.1.8
         version: 2.1.9(@types/node@22.19.17)(lightningcss@1.32.0)(msw@2.13.0(@types/node@22.19.17)(typescript@5.7.3))
 
+  packages/lab-access:
+    dependencies:
+      '@precisa-saude/fhir':
+        specifier: workspace:^
+        version: link:../core
+      jose:
+        specifier: ^6.2.17
+        version: 6.2.17
+    devDependencies:
+      tsup:
+        specifier: ^8.3.5
+        version: 8.5.1(jiti@2.6.1)(postcss@8.5.10)(typescript@5.7.3)(yaml@2.8.3)
+      typescript:
+        specifier: ~5.7.3
+        version: 5.7.3
+      vitest:
+        specifier: ^2.1.8
+        version: 2.1.9(@types/node@22.19.17)(lightningcss@1.32.0)(msw@2.13.0(@types/node@22.19.17)(typescript@5.7.3))
+
   packages/ocr-utils:
     dependencies:
       '@precisa-saude/fhir':
@@ -3612,8 +3631,8 @@ packages:
     resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}
     hasBin: true
 
-  jose@6.2.2:
-    resolution: {integrity: sha512-d7kPDd34KO/YnzaDOlikGpOurfF0ByC2sEV4cANCtdqLlTfBlw2p14O/5d/zv40gJPbIQxfES3nSx1/oYNyuZQ==}
+  jose@6.2.17:
+    resolution: {integrity: sha512-wOuK9V1yujQFH5S0ZWmLcDZN7+IKh9bUCC2ZPCf2HDlol3WWHy+PPyNjEI75FXRLMp3vDKQcupP59xhVU95hcg==}
 
   joycon@3.1.1:
     resolution: {integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==}
@@ -6574,7 +6593,7 @@ snapshots:
       express: 5.2.1
       express-rate-limit: 8.3.2(express@5.2.1)
       hono: 4.12.11
-      jose: 6.2.2
+      jose: 6.2.17
       json-schema-typed: 8.0.2
       pkce-challenge: 5.0.1
       raw-body: 3.0.2
@@ -9330,7 +9349,7 @@ snapshots:
 
   jiti@2.6.1: {}
 
-  jose@6.2.2: {}
+  jose@6.2.17: {}
 
   joycon@3.1.1: {}
 

@@ -118,6 +118,48 @@ describe('BRIBGEMunicipioCS (stub)', () => {
   });
 });
 
+describe('BRLabAccessScopeCS', () => {
+  const content = readFsh('codesystems', 'BRLabAccessScopeCS.fsh');
+
+  it('contém exatamente 6 escopos', () => {
+    expect(countCodes(content)).toBe(6);
+  });
+
+  it('contém os seis escopos do protocolo', () => {
+    for (const scope of [
+      'catalog.read',
+      'locations.read',
+      'schedule.read',
+      'appointment.write',
+      'results.read',
+      'consent.read',
+    ]) {
+      expect(content).toContain(`* #${scope} `);
+    }
+  });
+
+  it('declara content = #complete', () => {
+    expect(content).toContain('#complete');
+  });
+});
+
+describe('BRLabPriceContextCS', () => {
+  const content = readFsh('codesystems', 'BRLabPriceContextCS.fsh');
+
+  it('contém exatamente 1 código', () => {
+    expect(countCodes(content)).toBe(1);
+  });
+
+  it('contém o código da marca', () => {
+    expect(content).toContain('* #brand "Marca"');
+  });
+
+  it('declara a URL canônica e content = #complete', () => {
+    expect(content).toContain('https://fhir-brasil.dev.br/CodeSystem/lab-price-context');
+    expect(content).toContain('#complete');
+  });
+});
+
 describe('BRSUSRacaCorVS', () => {
   const content = readFsh('valuesets', 'BRSUSRacaCorVS.fsh');
 
@@ -196,5 +238,31 @@ describe('BRCID10MetabolicoVS', () => {
 
   it('contém deficiência de ferro', () => {
     expect(content).toContain('D50');
+  });
+});
+
+describe('BRLabAccessPatientScopeVS', () => {
+  const content = readFsh('valuesets', 'BRLabAccessPatientScopeVS.fsh');
+
+  it('contém exatamente 3 escopos', () => {
+    expect(countCodes(content)).toBe(3);
+  });
+
+  it('contém só os escopos que dependem do consentimento do paciente', () => {
+    for (const scope of ['appointment.write', 'results.read', 'consent.read']) {
+      expect(content).toContain(`* $LabAccessScope#${scope} `);
+    }
+    for (const scope of ['catalog.read', 'locations.read', 'schedule.read']) {
+      expect(content).not.toContain(`#${scope}`);
+    }
+    expect(content).not.toContain('include codes from system');
+  });
+});
+
+describe('BRLabAccessConsent', () => {
+  const content = readFsh('profiles', 'BRLabAccessConsent.fsh');
+
+  it('liga provision.action ao ValueSet de escopos de paciente', () => {
+    expect(content).toContain('* provision.action from BRLabAccessPatientScopeVS (required)');
   });
 });

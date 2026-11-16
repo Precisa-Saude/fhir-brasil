@@ -27,6 +27,20 @@ node ig/scripts/build-package-tgz.js
 - **BRLabObservation** — Perfil para resultados de exames laboratoriais brasileiros. Restringe `Observation` com código LOINC obrigatório, valor numérico com unidade UCUM, resultado ordinal codificado (`valueCodeableConcept` com resposta LOINC e SNOMED CT, ligado ao BROrdinalResultVS) ou resultado em texto, faixa de referência e extensões para dado extraído de documento.
 - **BRDiagnosticReport** — Restringe `DiagnosticReport` para laudos laboratoriais: categoria `LAB` obrigatória, status limitado a `final`, `amended` ou `corrected`, sujeito em `BRPatient` e resultados em `BRLabObservation`.
 
+#### Acesso laboratorial por consentimento
+
+Perfis do protocolo em que um laboratório expõe catálogo, unidades e agenda a um aplicativo e, com o consentimento do paciente, agendamento e resultados. Os resultados usam BRDiagnosticReport e BRLabObservation.
+
+- **BRLabAccessConsent**: Restringe `Consent`: paciente, laboratório que guarda o consentimento, aplicativo que recebe o acesso, escopos de paciente em `provision.action` (BRLabAccessPatientScopeVS) e expiração obrigatória em `provision.period.end`. O identificador que o laboratório dá ao consentimento vai em `identifier`, sem sistema fixo. A revogação muda `status` para `inactive`.
+- **BRLabLocation**: Restringe `Location` para unidades de atendimento: identificador (CNES em fatia opcional), nome, endereço com cidade e UF e coordenadas obrigatórias.
+- **BRLabHealthcareService**: Restringe `HealthcareService` para os serviços de uma unidade: nome, laboratório que presta e unidades em `BRLabLocation`. Coleta domiciliar fica fora desta versão.
+- **BRLabSchedule**: Restringe `Schedule`: a agenda pertence a uma unidade `BRLabLocation` e, opcionalmente, a um `BRLabHealthcareService`. A referência à unidade leva `type` com `Location`.
+- **BRLabSlot**: Restringe `Slot`: o horário pertence a uma agenda `BRLabSchedule`.
+- **BRLabActivityDefinition**: Restringe `ActivityDefinition` para um exame do catálogo: URL canônica, título e ao menos um código. LOINC no exame avulso, TUSS opcional em fatia própria e sem binding, e código próprio do laboratório para combo sem LOINC.
+- **BRLabChargeItemDefinition**: Restringe `ChargeItemDefinition` para o preço de um exame: mesmo código do item de catálogo e preço base em BRL. O preço vale por unidade (`useContext` com a unidade), por cidade (`jurisdiction` com o município no IBGE) ou por marca e região (dois `useContext`: a `Organization` da marca, com o código `brand` do BRLabPriceContextCS, e o `Location` da região). A marca se lê no próprio preço, sem resolver o `Location`.
+- **BRLabServiceRequest**: Restringe `ServiceRequest` para o pedido de um exame agendado: ao menos um código (LOINC no exame avulso), TUSS opcional, paciente em `BRPatient` ou identificado por CPF. Vai sempre em `contained` de um BRLabAppointment.
+- **BRLabAppointment**: Restringe `Appointment`: um recurso só, com os pedidos `BRLabServiceRequest` em `contained` e `basedOn` por referência local (agregação `contained` e três invariantes: ao menos um pedido contido, todo `basedOn` aponta para um pedido contido, e o `subject` do pedido repete o paciente do agendamento), horários em `BRLabSlot`, paciente e unidade como participantes obrigatórios, distinguidos por `actor.type` (`Patient` e `Location`) sem resolver a referência, e a extensão PaymentLink.
+
 ### Extensões
 
 - **DerivedFromOCR** — Indica se uma Observation foi extraída de PDF via OCR. Permite que consumidores apliquem limiares de confiança diferentes.
@@ -36,6 +50,7 @@ node ig/scripts/build-package-tgz.js
 - **ReprintedIn** — Em `DiagnosticReport`: o laudo não foi emitido, e sim lido da tabela de histórico que outro laudo reimprime. Aponta para esse outro laudo.
 - **Superseded** — Em `Observation`: o valor foi lido do documento, mas o próprio laudo o substitui por outro, como a filtração glomerular por equação estratificada por etnia. Mostre o outro.
 - **TextValueUnit** — Em `Observation` com `valueString`: a unidade impressa ao lado do resultado em texto, como `/campo` em "Raras". O R4 não tem lugar para ela.
+- **PaymentLink**: Em `Appointment`: endereço em que o paciente conclui o pagamento no laboratório. Leva só o endereço, sem valor e sem situação do pagamento.
 
 ### CodeSystems
 
@@ -45,6 +60,8 @@ node ig/scripts/build-package-tgz.js
 - **BRTUSSCS** — Terminologia Unificada da Saúde Suplementar (ANS). Stub `#not-present` — códigos nos ValueSets.
 - **BRCID10CS** — CID-10 pt-BR (DATASUS/Edusp). Stub `#not-present` — códigos nos ValueSets.
 - **BRIBGEMunicipioCS** — Códigos de município IBGE. Stub `#not-present`.
+- **BRLabAccessScopeCS**: Os seis escopos do acesso laboratorial por consentimento: `catalog.read`, `locations.read`, `schedule.read`, `appointment.write`, `results.read` e `consent.read`. Os três primeiros não pedem consentimento do paciente.
+- **BRLabPriceContextCS**: Tipo de contexto de uso que falta no FHIR R4 para preço de exame. Um código, `brand`, usado em `useContext` do BRLabChargeItemDefinition para apontar a marca.
 
 ### ValueSets
 
@@ -55,6 +72,7 @@ node ig/scripts/build-package-tgz.js
 - **BRTISSGuiasVS** — Tipos de guia TISS.
 - **BRTUSSProcedimentosLabVS** — Subset TUSS para procedimentos laboratoriais. **Não cite este ValueSet.** A auditoria em `fhir-brasil-tuss-audit.md`, no `datasus-sdk`, achou 57 dos 59 códigos desalinhados em relação à tabela oficial da ANS. A correção é trabalho separado.
 - **BRCID10MetabolicoVS** — Subset CID-10 para diagnósticos metabólicos (diabetes, dislipidemias, obesidade, tireoide, deficiências nutricionais).
+- **BRLabAccessPatientScopeVS**: Os três escopos que dependem do consentimento do paciente: `appointment.write`, `results.read` e `consent.read`. Binding `required` em `Consent.provision.action` do BRLabAccessConsent.
 
 ### Exemplos
 
@@ -67,6 +85,11 @@ node ig/scripts/build-package-tgz.js
 - Corpos cetônicos na urina por fita, "Traços" codificado em LOINC e SNOMED CT
 - Células epiteliais na urina em texto, com a unidade em `text-value-unit`
 - Densidade da urina impressa sem unidade, com a unidade do catálogo e o `as-printed` sem `unit`
+- Consentimento de acesso laboratorial ativo e outro revogado
+- Unidade de laboratório com coordenadas e horário, serviço de coleta, agenda e horário reservado
+- Região de preço de uma marca, como `Location` sem perfil
+- Glicose no catálogo de um laboratório e seu preço nos três formatos: por unidade, por cidade e por marca e região
+- Agendamento com o pedido de exame em `contained` e link de pagamento
 
 ## Compilar localmente
 

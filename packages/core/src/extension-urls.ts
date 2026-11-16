@@ -29,6 +29,8 @@ export const FHIR_BRASIL_EXTENSIONS = {
   extractionConfidence: structureDefinition('extraction-confidence'),
   /** `Observation`: páginas, trecho citado e caixa do trecho no documento. */
   extractionSource: structureDefinition('extraction-source'),
+  /** `Appointment`: endereço em que o paciente conclui o pagamento no laboratório. */
+  paymentLink: structureDefinition('payment-link'),
   /** `DiagnosticReport`: lido da tabela de histórico de outro laudo. */
   reprintedIn: structureDefinition('reprinted-in'),
   /** `Observation`: lido do documento, mas substituído por outro valor do mesmo laudo. */

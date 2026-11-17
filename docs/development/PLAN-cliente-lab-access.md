@@ -607,7 +607,12 @@ argumento, `startAuthorization` recebe `expectedCpf`, `readPaymentLink` lança
 `PendingRevocation.lastAttemptAt` passa a opcional e ganha `notBefore`, e
 `RegistryRejectionReason` ganha `critical-header`.
 
-### Pontos da 0.2.2 que pedem atenção na especificação
+### Pontos da 0.2.2 levados à especificação
+
+Os quatro foram corrigidos no PR da 0.2.2 (commit `4c8cb76`), antes da
+publicação. Os pontos 1, 2 e 4 mudaram o cliente (seção seguinte). O 3 virou
+regra: `DELETE` concorrente é esperado e inofensivo, e o cliente não precisa
+de trava entre instâncias.
 
 1. **4xx que admite repetição.** A seção 4.4, item 4, diz que um 4xx do
    `DELETE` fora das conclusões do item 8 não admite repetição, mas o item 3
@@ -626,3 +631,31 @@ argumento, `startAuthorization` recebe `expectedCpf`, `readPaymentLink` lança
    então um provedor da 0.2.0 ou da 0.2.1 que emita link relativo tem a
    paginação interrompida com este cliente, embora o texto diga que a escolha
    não corta a comunicação.
+
+### Correções da 0.2.2 antes da publicação
+
+Critérios, escritos com os testes antes do código:
+
+1. **429 admite repetição (seção 4.4, itens 3 e 4, e seção 6.4, regra 5).**
+   429 com ou sem `OperationOutcome`, no `DELETE` e no pedido de token de
+   `consent.manage`, se repete depois do `Retry-After`. Vale para toda chamada,
+   porque a regra 5 trata assim o código desconhecido. 401 `TOKEN_INVALID` já
+   era repetível.
+   Verificação: `errors.test.ts` e `RCP-028: 429 sem código do protocolo, no
+DELETE e no token de consent.manage, admite repetição`.
+2. **`Retry-After` de no máximo 24 horas na revogação (RCP-041, RCP-050).**
+   Valor maior conta como 24 horas, e depois o calendário volta.
+   Verificação: `RCP-050`.
+3. **Link relativo resolvido (RCP-043, RCP-051).** O link relativo é
+   resolvido contra a URL da página que o trouxe (RFC 3986, seção 5.2), e a
+   URL resultante passa pelas mesmas conferências: esquema, host, porta,
+   prefixo de caminho e usuário. `//outro.host/x` continua recusado.
+   Verificação: `RCP-043`, `RCP-051` e a lista de `RCP-030`, de onde saíram
+   os dois relativos que agora resolvem dentro da base.
+
+Evidência: 444 testes no pacote, os 4 novos escritos antes do código e
+falhando contra ele. Mapa de conformidade com RCP-001 a RCP-051: 64 linhas, 42
+cobertas, 14 parciais, 6 fora do alcance, 2 retiradas.
+`pnpm turbo run lint typecheck test build` com 25 tarefas certas,
+`format:check` e `packages:check` passam. Cobertura de 99,60% statements,
+96,92% branches, 99,02% functions e 99,60% lines.

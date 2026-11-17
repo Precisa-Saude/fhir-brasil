@@ -6,23 +6,16 @@ Cliente do lado do receptor para o protocolo Open Labs Brasil: o backend de um a
 
 > **Rascunho. Não use em produção.**
 >
-> - Implementa a versão **0.2.2** de uma especificação que **ainda não foi publicada**, versão de protocolo `0.2`. Enquanto a versão começar com 0, qualquer mudança da especificação pode quebrar este pacote.
-> - **Nunca foi testado contra um laboratório real.** Todos os testes rodam contra um provedor simulado em memória, escrito a partir do texto da especificação.
-> - O pacote é **privado** (`"private": true`) e não está no npm. Ele só será publicado depois que a especificação for aberta.
-> - Os perfis FHIR que o protocolo referencia ainda estão sendo escritos. Os tipos locais deste pacote cobrem só os elementos que o cliente lê.
+> - Implementa a versão **0.2.2** da [especificação do Open Labs Brasil](https://github.com/Precisa-Saude/open-labs-brasil), versão de protocolo `0.2`, ainda em rascunho. Enquanto a versão da especificação começar com 0, qualquer mudança nela pode quebrar este pacote, mesmo numa versão menor do pacote.
+> - **Nunca foi testado contra um laboratório real.** Os testes deste pacote rodam contra um provedor simulado em memória, escrito a partir do texto da especificação. O repositório da especificação tem um [servidor de exemplo e uma suíte de conformidade](https://github.com/Precisa-Saude/open-labs-brasil/blob/main/docs/servidor-e-suite.md) para experimentar a jornada inteira.
+> - Os perfis FHIR que o protocolo referencia estão no [guia de implementação](https://fhir-brasil.dev.br/ig/) e ainda podem mudar. Os tipos locais deste pacote cobrem só os elementos que o cliente lê.
 
 ---
 
 ## Instalação
 
-O pacote não está publicado. Dentro deste monorepo, ele entra como dependência de workspace:
-
-```json
-{
-  "dependencies": {
-    "@precisa-saude/fhir-lab-access": "workspace:^"
-  }
-}
+```bash
+pnpm add @precisa-saude/fhir-lab-access
 ```
 
 Requer Node.js 22.12 ou superior. O pacote tem uma dependência externa de runtime, [`jose`](https://github.com/panva/jose), usada para assinar a asserção do cliente, verificar a assinatura do registro e calcular thumbprints de chave. A `jose` 6 é distribuída só como módulo ES: a saída CommonJS deste pacote depende de o Node carregar módulos ES com `require`, o que vale a partir da versão 22.12.

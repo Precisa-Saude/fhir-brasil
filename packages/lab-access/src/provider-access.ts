@@ -4,10 +4,11 @@
  */
 
 import type { ConsentRecord, CreateConsentInput, RevocationReason } from './consent-types';
-import { buildConsentBody, createConsent, deleteConsent, readConsent } from './consents';
+import { buildConsentBody, createConsent, readConsent } from './consents';
 import { type ProviderScope, SLOT_SEARCH_MAX_WINDOW_DAYS } from './constants';
 import type { ClientContext } from './context';
-import { IssuerMismatchError, LabAccessConfigError } from './errors';
+import { normalizeExpectedCpf } from './cpf';
+import { IssuerMismatchError, LabAccessConfigError, RevocationPendingError } from './errors';
 import {
   asResource,
   commonParams,
@@ -44,6 +45,7 @@ import {
   type PatientAccessState,
 } from './patient-access';
 import { resolveProvider, withProviderToken } from './resolve';
+import { revokeConsent } from './revocation';
 import { toReference } from './validation';
 
 export interface ActivityDefinitionSearch extends CommonSearchParams {
@@ -131,7 +133,7 @@ export class ProviderAccess {
   /** Conclui a jornada e devolve o acesso do paciente, já com o titular conferido. */
   async completeAuthorization(input: CompleteAuthorizationInput): Promise<PatientAccess> {
     const resolved = await resolveProvider(this.ctx, this.providerId);
-    const { patientFhirId, tokens } = await completeAuthorization(
+    const { consentExpiresAt, patientFhirId, tokens } = await completeAuthorization(
       this.ctx,
       resolved,
       input.journey,
@@ -143,6 +145,7 @@ export class ProviderAccess {
       {
         accessToken: tokens.accessToken,
         accessTokenExpiresAt: tokens.expiresAt,
+        consentExpiresAt,
         consentId: input.journey.consentId,
         issuer: input.journey.issuer,
         patientFhirId,
@@ -154,8 +157,16 @@ export class ProviderAccess {
     );
   }
 
-  /** Cria um consentimento. A criação não identifica o paciente. */
-  async createConsent(input: CreateConsentInput): Promise<ConsentRecord> {
+  /**
+   * Cria um consentimento, primeiro passo da jornada. A criação não identifica
+   * o paciente: `expectedCpf` só é conferido, para que a jornada não comece com
+   * um CPF inválido (seção 4.4), e não vai ao provedor.
+   */
+  async createConsent(
+    input: CreateConsentInput,
+    options: { expectedCpf: string },
+  ): Promise<ConsentRecord> {
+    normalizeExpectedCpf(options?.expectedCpf);
     const body = buildConsentBody(input, this.ctx.now());
     return createConsent(this.ctx, await resolveProvider(this.ctx, this.providerId), body);
   }
@@ -183,17 +194,30 @@ export class ProviderAccess {
     return new PatientAccess(this.ctx, state, options);
   }
 
-  /** Revoga um consentimento pelo lado do receptor. */
+  /**
+   * Revoga um consentimento pelo lado do receptor, com até três tentativas
+   * automáticas. 404 `CONSENT_NOT_FOUND` e 422 `CONSENT_INVALID_STATE` contam
+   * como revogação concluída. Sem confirmação, a revogação fica pendente e o
+   * método lança `RevocationPendingError` com a pendência.
+   *
+   * `consentExpiresAt`, quando informado, encerra a pendência ao passar.
+   */
   async revokeConsent(
     consentId: string,
     reason: RevocationReason = 'PATIENT_REQUEST',
+    options: { consentExpiresAt?: string } = {},
   ): Promise<void> {
-    await deleteConsent(
-      this.ctx,
-      await resolveProvider(this.ctx, this.providerId),
+    const result = await revokeConsent(this.ctx, {
+      consentExpiresAt: options.consentExpiresAt,
       consentId,
+      providerId: this.providerId,
       reason,
-    );
+    });
+    if (result.outcome === 'pending') {
+      throw new RevocationPendingError(consentId, this.providerId, result.pending, {
+        cause: result.error,
+      });
+    }
   }
 
   /** Abre a jornada: envia a requisição por PAR e devolve a URL de autorização. */

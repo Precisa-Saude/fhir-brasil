@@ -1,9 +1,18 @@
 /**
- * Constantes do protocolo Open Labs Brasil, versão 0.2.0 da especificação.
+ * Constantes do protocolo Open Labs Brasil, versão 0.2.2 da especificação.
  */
 
-/** Versão da especificação que este pacote implementa. */
-export const SPEC_VERSION = '0.2.0';
+/** Versão do documento da especificação que este pacote implementa. */
+export const SPEC_VERSION = '0.2.2';
+
+/**
+ * Versão de protocolo (`MAJOR.MINOR`) que este pacote implementa, a que vai em
+ * `protocol_versions` no registro (seção 9.1). O PATCH do documento não entra.
+ */
+export const PROTOCOL_VERSION = '0.2';
+
+/** Versões de protocolo com que o pacote sabe operar. */
+export const SUPPORTED_PROTOCOL_VERSIONS: readonly string[] = [PROTOCOL_VERSION];
 
 /** Escopos obtidos com `client_credentials`, sem paciente. */
 export const PROVIDER_SCOPES = [
@@ -34,6 +43,12 @@ export const CLOCK_TOLERANCE_MS = 60_000;
 /** Teto da validade de um token de acesso, em segundos (seção 7.4). */
 export const MAX_ACCESS_TOKEN_LIFETIME_SECONDS = 900;
 
+/**
+ * Antecedência com que o token de acesso deixa de ser usado, contada de
+ * `expires_in` (seção 5.3.4). A especificação pede ao menos 30 segundos.
+ */
+export const ACCESS_TOKEN_EXPIRY_MARGIN_MS = 60_000;
+
 /** Tempo máximo de cache do documento de metadados (seção 5.2). */
 export const METADATA_CACHE_MS = 24 * 60 * 60 * 1000;
 
@@ -46,8 +61,26 @@ export const REGISTRY_MIN_FETCH_INTERVAL_MS = 5 * 60 * 1000;
 /** Validade máxima de um documento do registro (seção 8.2). */
 export const REGISTRY_MAX_VALIDITY_MS = 30 * 24 * 60 * 60 * 1000;
 
-/** Por quanto tempo a renovação por refresh token segue com o registro expirado (seção 8.3). */
-export const REGISTRY_EXPIRED_REFRESH_GRACE_MS = 7 * 24 * 60 * 60 * 1000;
+/** Tamanho mínimo, em bits, de uma chave RSA de assinatura do registro (seção 8.3, V5). */
+export const REGISTRY_KEY_MIN_BITS = 2048;
+
+/**
+ * Janela depois de `expires_at` em que a renovação por refresh token e o
+ * token de `consent.manage` sozinho seguem permitidos (seção 8.3).
+ */
+export const REGISTRY_EXPIRED_GRACE_MS = 7 * 24 * 60 * 60 * 1000;
+
+/** Intervalo entre repetições de uma revogação pendente nas primeiras 24 horas (seção 4.4). */
+export const PENDING_REVOCATION_HOURLY_INTERVAL_MS = 60 * 60 * 1000;
+
+/** Por quanto tempo, desde o pedido, a revogação pendente é repetida de hora em hora. */
+export const PENDING_REVOCATION_HOURLY_PERIOD_MS = 24 * 60 * 60 * 1000;
+
+/** Por quanto tempo, no máximo, um `Retry-After` adia a revogação (seção 4.4, item 5). */
+export const REVOCATION_RETRY_AFTER_MAX_MS = 24 * 60 * 60 * 1000;
+
+/** Intervalo entre repetições de uma revogação pendente depois das primeiras 24 horas. */
+export const PENDING_REVOCATION_DAILY_INTERVAL_MS = 24 * 60 * 60 * 1000;
 
 /** Intervalo máximo entre consultas de estado de um consentimento autorizado (fluxo 2.7). */
 export const CONSENT_STATUS_CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000;

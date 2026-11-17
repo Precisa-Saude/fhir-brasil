@@ -6,11 +6,17 @@ import { describe, expect, it } from 'vitest';
 const HERE = new URL('./', import.meta.url);
 const README = readFileSync(fileURLToPath(new URL('../../README.md', HERE)), 'utf-8');
 
-/** Requisitos do receptor e os de registro, que valem para os dois papéis. */
+/**
+ * Requisitos do receptor e os de registro, que valem para os dois papéis, na
+ * versão 0.2.2 da especificação.
+ */
 const REQUIRED = [
-  ...Array.from({ length: 6 }, (_, i) => `REG-${String(i + 1).padStart(3, '0')}`),
-  ...Array.from({ length: 26 }, (_, i) => `RCP-${String(i + 1).padStart(3, '0')}`),
+  ...Array.from({ length: 13 }, (_, i) => `REG-${String(i + 1).padStart(3, '0')}`),
+  ...Array.from({ length: 51 }, (_, i) => `RCP-${String(i + 1).padStart(3, '0')}`),
 ];
+
+/** Retirados na 0.2.1: ficam na tabela, marcados, e sem teste. */
+const RETIRED = ['REG-006', 'RCP-014'];
 
 interface Row {
   id: string;
@@ -54,17 +60,21 @@ describe('mapa de conformidade do README', () => {
     expect(rows.map((row) => row.id).sort()).toEqual([...REQUIRED].sort());
   });
 
-  it('usa só as três situações previstas', () => {
+  it('usa só as situações previstas, e Retirado só para os requisitos retirados', () => {
     for (const row of rows) {
-      expect(['Coberto', 'Parcial', 'Fora do alcance'], row.id).toContain(row.status);
+      const allowed = RETIRED.includes(row.id)
+        ? ['Retirado']
+        : ['Coberto', 'Parcial', 'Fora do alcance'];
+      expect(allowed, row.id).toContain(row.status);
     }
   });
 
-  it('todo requisito coberto ou parcial aponta ao menos um teste', () => {
+  it('todo requisito coberto ou parcial aponta ao menos um teste, e nenhum retirado aponta', () => {
     for (const row of rows) {
-      if (row.status !== 'Fora do alcance') {
+      if (row.status === 'Coberto' || row.status === 'Parcial') {
         expect(row.tests.length, row.id).toBeGreaterThan(0);
       }
+      if (row.status === 'Retirado') expect(row.tests, row.id).toEqual([]);
     }
   });
 
@@ -77,10 +87,11 @@ describe('mapa de conformidade do README', () => {
     }
   });
 
-  it('todo teste com identificador de requisito é de um requisito da tabela', () => {
-    expect(titles.size).toBeGreaterThan(40);
+  it('todo teste com identificador de requisito é de um requisito em vigor da tabela', () => {
+    expect(titles.size).toBeGreaterThan(80);
     for (const title of titles) {
       expect(REQUIRED, title).toContain(title.slice(0, 7));
+      expect(RETIRED, title).not.toContain(title.slice(0, 7));
     }
   });
 });

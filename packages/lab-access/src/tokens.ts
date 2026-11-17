@@ -3,9 +3,9 @@
  */
 
 import {
-  CLOCK_TOLERANCE_MS,
+  ACCESS_TOKEN_EXPIRY_MARGIN_MS,
   MAX_ACCESS_TOKEN_LIFETIME_SECONDS,
-  REGISTRY_EXPIRED_REFRESH_GRACE_MS,
+  REGISTRY_EXPIRED_GRACE_MS,
 } from './constants';
 import type { ClientContext, ResolvedProvider } from './context';
 import { LabAccessProtocolError, RegistryExpiredError } from './errors';
@@ -19,22 +19,41 @@ export interface IssuedToken {
   scope?: string;
 }
 
+function graceEnd(ctx: ClientContext): number {
+  return ctx.registry().expiresAt.getTime() + REGISTRY_EXPIRED_GRACE_MS;
+}
+
 /**
- * Com o registro expirado, o participante deixa de abrir autorizações e de
- * pedir concessões `client_credentials` (seção 8.3).
+ * Com o registro expirado, o receptor não abre autorizações nem cria
+ * consentimentos (seção 8.3).
  */
 export function assertRegistryAllowsNewGrants(ctx: ClientContext): void {
   if (ctx.registry().isExpired(ctx.now())) {
     throw new RegistryExpiredError(
-      'O registro de participantes expirou: novas autorizações e novos tokens de provedor estão suspensos até um documento novo ser aceito.',
+      'O registro de participantes expirou: novas autorizações e novos consentimentos estão suspensos até um documento novo ser aceito.',
     );
   }
 }
 
+/**
+ * Concessão `client_credentials` com o registro expirado (seção 8.3): nos 7
+ * dias seguintes a `expires_at`, só `consent.manage` sozinho, para consultar e
+ * revogar consentimentos. Depois disso, nenhuma.
+ */
+export function assertRegistryAllowsProviderToken(ctx: ClientContext, scope: string): void {
+  const now = ctx.now();
+  if (!ctx.registry().isExpired(now)) return;
+  if (scope === 'consent.manage' && now.getTime() <= graceEnd(ctx)) return;
+  throw new RegistryExpiredError(
+    scope === 'consent.manage'
+      ? 'O registro de participantes expirou há mais de 7 dias: nem o token de consent.manage pode ser pedido.'
+      : `O registro de participantes expirou: o token de ${scope} está suspenso até um documento novo ser aceito.`,
+  );
+}
+
 /** A renovação por refresh token pode seguir por até 7 dias depois de `expires_at`. */
 export function assertRegistryAllowsRefresh(ctx: ClientContext): void {
-  const limit = ctx.registry().expiresAt.getTime() + REGISTRY_EXPIRED_REFRESH_GRACE_MS;
-  if (ctx.now().getTime() > limit) {
+  if (ctx.now().getTime() > graceEnd(ctx)) {
     throw new RegistryExpiredError(
       'O registro de participantes expirou há mais de 7 dias: a renovação de tokens está suspensa.',
     );
@@ -79,13 +98,18 @@ export async function requestToken(
   };
 }
 
-/** `true` enquanto o token ainda tem mais de 60 segundos de validade. */
+/**
+ * `true` enquanto o token ainda tem mais de 60 segundos de validade, contada
+ * do recebimento da resposta pelo relógio do receptor. Um token nunca é usado
+ * depois de `expires_in` (seção 5.3.4).
+ */
 export function isFresh(expiresAt: number, now: Date): boolean {
-  return now.getTime() < expiresAt - CLOCK_TOLERANCE_MS;
+  return now.getTime() < expiresAt - ACCESS_TOKEN_EXPIRY_MARGIN_MS;
 }
 
 /**
- * Cache dos tokens de provedor, um por provedor e por escopo.
+ * Cache dos tokens de provedor, um por provedor e por escopo. Fica só em
+ * memória: tokens de provedor não vão para armazenamento durável.
  *
  * Chamadas concorrentes que precisam do mesmo token compartilham um único
  * pedido ao endpoint de token.
@@ -96,14 +120,19 @@ export class ProviderTokenCache {
 
   constructor(private readonly ctx: ClientContext) {}
 
-  async get(resolved: ResolvedProvider, scope: string): Promise<string> {
+  /**
+   * Token de provedor para um único escopo. `repeat` igual a `false` faz um só
+   * pedido ao endpoint de token, para quem conta as tentativas por fora (a
+   * revogação de consentimento).
+   */
+  async get(resolved: ResolvedProvider, scope: string, repeat = true): Promise<string> {
     const key = `${resolved.endpoints.issuer} ${scope}`;
     const cached = this.tokens.get(key);
     if (cached && isFresh(cached.expiresAt, this.ctx.now())) return cached.accessToken;
 
     let pending = this.pending.get(key);
     if (!pending) {
-      pending = this.fetch(resolved, scope, key).finally(() => this.pending.delete(key));
+      pending = this.fetch(resolved, scope, key, repeat).finally(() => this.pending.delete(key));
       this.pending.set(key, pending);
     }
     return pending;
@@ -115,13 +144,19 @@ export class ProviderTokenCache {
     if (this.tokens.get(key)?.accessToken === token) this.tokens.delete(key);
   }
 
-  private async fetch(resolved: ResolvedProvider, scope: string, key: string): Promise<string> {
-    assertRegistryAllowsNewGrants(this.ctx);
+  private async fetch(
+    resolved: ResolvedProvider,
+    scope: string,
+    key: string,
+    repeat: boolean,
+  ): Promise<string> {
+    assertRegistryAllowsProviderToken(this.ctx, scope);
+    // Um escopo por token: consent.manage vai sempre sozinho (seção 5.3.4).
     const issued = await requestToken(
       this.ctx,
       resolved,
       { grant_type: 'client_credentials', scope },
-      true,
+      repeat,
     );
     // Um refresh_token aqui seria indevido (RFC 6749, 4.4.3) e não é guardado.
     this.tokens.set(key, { accessToken: issued.accessToken, expiresAt: issued.expiresAt });

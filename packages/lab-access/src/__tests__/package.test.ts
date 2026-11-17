@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { SPEC_VERSION } from '../constants';
+import { PROTOCOL_VERSION, SPEC_VERSION } from '../constants';
 
 const read = (path: string) =>
   JSON.parse(readFileSync(fileURLToPath(new URL(path, import.meta.url)), 'utf-8')) as Record<
@@ -33,7 +33,8 @@ describe('package.json', () => {
     expect(pkg.devDependencies).toEqual(rnds.devDependencies);
   });
 
-  it('declara a versão da especificação que implementa', () => {
-    expect(SPEC_VERSION).toBe('0.2.0');
+  it('declara a versão da especificação e a versão de protocolo que implementa', () => {
+    expect(SPEC_VERSION).toBe('0.2.2');
+    expect(PROTOCOL_VERSION).toBe('0.2');
   });
 });

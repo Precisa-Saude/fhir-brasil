@@ -6,6 +6,7 @@
 
 import type { ConsentEndedVia, ConsentStatus, ConsentStatusReasonCode } from './consent-types';
 import type { FHIROperationOutcome } from './fhir-types';
+import type { PendingRevocation } from './revocation';
 
 /**
  * O que precisa acontecer para a mesma requisição ter chance de sucesso.
@@ -68,6 +69,8 @@ export class LabAccessProtocolError extends LabAccessError {
 }
 
 export type RegistryRejectionReason =
+  | 'critical-header'
+  | 'duplicate-participant'
   | 'expired'
   | 'invalid-key-id'
   | 'invalid-schema'
@@ -77,17 +80,43 @@ export type RegistryRejectionReason =
   | 'malformed-signature'
   | 'sequence-conflict'
   | 'stale-sequence'
-  | 'unknown-key';
+  | 'unknown-key'
+  | 'unsupported-algorithm'
+  | 'weak-key'
+  | 'wrong-environment';
+
+/**
+ * Passo da verificação do registro em que o candidato foi recusado (seção
+ * 8.3). V1, baixar os arquivos por HTTPS, é do aplicativo: o pacote recebe os
+ * bytes já baixados.
+ */
+export type RegistryVerificationStep =
+  | 'V2'
+  | 'V3'
+  | 'V4'
+  | 'V5'
+  | 'V6'
+  | 'V7'
+  | 'V8'
+  | 'V9'
+  | 'V10'
+  | 'V11'
+  | 'V12'
+  | 'V13'
+  | 'V14';
 
 /** O candidato a registro foi recusado. O documento atual continua valendo. */
 export class RegistryVerificationError extends LabAccessError {
+  readonly step?: RegistryVerificationStep;
+
   constructor(
     readonly reason: RegistryRejectionReason,
     message: string,
-    options?: LabAccessErrorOptions,
+    options: LabAccessErrorOptions & { step?: RegistryVerificationStep } = {},
   ) {
     super(message, options);
     this.name = 'RegistryVerificationError';
+    this.step = options.step;
   }
 }
 
@@ -100,12 +129,18 @@ export class RegistryExpiredError extends LabAccessError {
 }
 
 export type ProviderUnavailableReason =
+  | 'api-version-mismatch'
   | 'no-common-version'
   | 'not-active'
   | 'not-a-provider'
-  | 'not-found';
+  | 'not-found'
+  | 'unsupported-version';
 
-/** O provedor não pode ser usado: ausente, inativo ou sem versão em comum. */
+/**
+ * O provedor não pode ser usado: ausente, inativo, sem versão efetiva com o
+ * receptor, com versão efetiva que o pacote não implementa, ou com
+ * `api_base_url` que não termina no MAJOR dessa versão.
+ */
 export class ProviderUnavailableError extends LabAccessError {
   constructor(
     readonly reason: ProviderUnavailableReason,
@@ -284,8 +319,9 @@ export class TokensDiscardedError extends LabAccessError {
 /**
  * Situação da revogação enviada pelo receptor.
  *
- * `pending` quer dizer que o `DELETE` não foi confirmado: o aplicativo trata o
- * consentimento como encerrado e repete a revogação até conseguir.
+ * `pending` quer dizer que o `DELETE` não foi confirmado depois das
+ * tentativas automáticas: a revogação foi gravada como pendente e segue o
+ * calendário de repetição (`LabAccessClient.retryPendingRevocations`).
  */
 export type RevocationOutcome = 'confirmed' | 'pending';
 
@@ -302,6 +338,8 @@ export class PatientMismatchError extends LabAccessError {
     readonly providerId: string,
     readonly interactionId: string | undefined,
     readonly revocation: RevocationOutcome,
+    /** A pendência gravada, quando `revocation` é `pending`. */
+    readonly pendingRevocation?: PendingRevocation,
   ) {
     super(
       'Quem se autenticou no laboratório não é o paciente desta jornada. O vínculo não foi concluído.',
@@ -317,6 +355,8 @@ export class HolderVerificationError extends LabAccessError {
     readonly providerId: string,
     readonly revocation: RevocationOutcome,
     options?: LabAccessErrorOptions,
+    /** A pendência gravada, quando `revocation` é `pending`. */
+    readonly pendingRevocation?: PendingRevocation,
   ) {
     super('Não foi possível conferir o titular do consentimento. O vínculo não foi concluído.', {
       cause: options?.cause,
@@ -349,15 +389,22 @@ export class RefreshTokenRevokedError extends LabAccessError {
   }
 }
 
-/** A revogação não foi confirmada pelo provedor. Os tokens já foram descartados. */
+/**
+ * A revogação não foi confirmada pelo provedor depois das tentativas
+ * automáticas. Os tokens já foram descartados, e a revogação ficou pendente.
+ *
+ * `pending` traz o que o aplicativo mostra ao paciente, inclusive o endereço
+ * da página de consentimentos do provedor, onde ele pode revogar direto.
+ */
 export class RevocationPendingError extends LabAccessError {
   constructor(
     readonly consentId: string,
     readonly providerId: string,
+    readonly pending: PendingRevocation,
     options?: LabAccessErrorOptions,
   ) {
     super(
-      'A revogação não foi confirmada pelo provedor. Os tokens foram descartados e a revogação precisa ser repetida.',
+      'A revogação não foi confirmada pelo provedor. Os tokens foram descartados e a revogação ficou pendente.',
       { cause: options?.cause, retry: 'backoff' },
     );
     this.name = 'RevocationPendingError';

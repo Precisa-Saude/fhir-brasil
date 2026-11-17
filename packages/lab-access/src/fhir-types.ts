@@ -9,12 +9,35 @@
 import type {
   FHIRAddress,
   FHIRCodeableConcept,
+  FHIRCoding,
   FHIRContactPoint,
   FHIRIdentifier,
   FHIRMeta,
   FHIRPeriod,
   FHIRReference,
 } from '@precisa-saude/fhir';
+
+/** Reference do FHIR R4 com `type` e `identifier`, que o `FHIRReference` do core não tem. */
+export interface FHIRTypedReference extends FHIRReference {
+  identifier?: FHIRIdentifier;
+  type?: string;
+}
+
+/** Extensão do FHIR R4. Só `valueUrl` está tipado: é o que o cliente lê. */
+export interface FHIRExtension {
+  [element: string]: unknown;
+  url: string;
+  valueUrl?: string;
+}
+
+/** UsageContext do FHIR R4. */
+export interface FHIRUsageContext {
+  code: FHIRCoding;
+  valueCodeableConcept?: FHIRCodeableConcept;
+  valueQuantity?: unknown;
+  valueRange?: unknown;
+  valueReference?: FHIRReference;
+}
 
 export interface FHIROperationOutcomeIssue {
   code: string;
@@ -46,9 +69,13 @@ export interface FHIRActivityDefinition extends FHIRResourceBase {
 
 export interface FHIRChargeItemDefinition extends FHIRResourceBase {
   code?: FHIRCodeableConcept;
+  /** Municípios em que o preço vale. */
+  jurisdiction?: FHIRCodeableConcept[];
   resourceType: 'ChargeItemDefinition';
   status: 'active' | 'draft' | 'retired' | 'unknown';
   url?: string;
+  /** Unidade ou região (`venue`) e marca (`brand`) em que o preço vale. */
+  useContext?: FHIRUsageContext[];
 }
 
 export interface FHIRLocation extends FHIRResourceBase {
@@ -88,12 +115,12 @@ export interface FHIRServiceRequest extends FHIRResourceBase {
   intent: string;
   resourceType: 'ServiceRequest';
   status: string;
-  subject: FHIRReference;
+  subject: FHIRTypedReference;
 }
 
 export interface FHIRAppointmentParticipant {
   [element: string]: unknown;
-  actor?: FHIRReference;
+  actor?: FHIRTypedReference;
   status: 'accepted' | 'declined' | 'needs-action' | 'tentative';
 }
 
@@ -114,6 +141,8 @@ export interface FHIRAppointment extends FHIRResourceBase {
   cancelationReason?: FHIRCodeableConcept;
   contained?: (FHIRResourceBase & { resourceType: string })[];
   end?: string;
+  /** Na leitura, pode trazer o link de pagamento: use `readPaymentLink`. */
+  extension?: FHIRExtension[];
   identifier?: FHIRIdentifier[];
   participant: FHIRAppointmentParticipant[];
   resourceType: 'Appointment';

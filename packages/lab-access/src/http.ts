@@ -54,16 +54,24 @@ export async function withRetry<T>(
         (error.retry === 'backoff' || error.retry === 'after-retry-after');
       if (!repeatable || !automatic || tries >= ctx.retry.maxAttempts) throw error;
 
-      const backoff = ctx.retry.baseDelayMs * 2 ** (tries - 1);
-      const indicated =
-        error instanceof LabAccessApiError || error instanceof OAuthError
-          ? (error.retryAfterSeconds ?? 0) * 1000
-          : 0;
-      const delay = error.retry === 'after-retry-after' ? Math.max(indicated, backoff) : backoff;
+      const delay = retryDelay(ctx, error, tries);
       if (delay > ctx.retry.maxDelayMs) throw error;
       await ctx.sleep(delay);
     }
   }
+}
+
+/**
+ * Espera antes da tentativa seguinte: recuo exponencial a partir de
+ * `baseDelayMs`, ou ao menos o `Retry-After` indicado.
+ */
+export function retryDelay(ctx: ClientContext, error: LabAccessError, tries: number): number {
+  const backoff = ctx.retry.baseDelayMs * 2 ** (tries - 1);
+  const indicated =
+    error instanceof LabAccessApiError || error instanceof OAuthError
+      ? (error.retryAfterSeconds ?? 0) * 1000
+      : 0;
+  return error.retry === 'after-retry-after' ? Math.max(indicated, backoff) : backoff;
 }
 
 export interface ApiRequest {
@@ -129,6 +137,13 @@ export async function apiRequest(ctx: ClientContext, request: ApiRequest): Promi
   }
   ctx.onInteraction?.({ ...event, status: response.status });
 
+  // Redirecionamento nunca é seguido (seção 5.1): o token e o certificado só
+  // vão a endereços que vieram do registro.
+  if (response.status >= 300 && response.status < 400) {
+    throw new LabAccessProtocolError(
+      `O provedor respondeu ${response.status} com redirecionamento, que o protocolo não admite e o cliente não segue.`,
+    );
+  }
   if (!request.okStatuses.includes(response.status)) throw toApiError(response, interactionId);
 
   let json: unknown;

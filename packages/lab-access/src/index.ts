@@ -1,4 +1,16 @@
-export type { AppointmentIdentifier, CancelInput, RescheduleInput } from './appointment';
+export {
+  type AppointmentIdentifier,
+  type CancelInput,
+  PAYMENT_LINK_URL,
+  readPaymentLink,
+  type RescheduleInput,
+} from './appointment';
+export {
+  type ChargeItemScope,
+  chargeItemScope,
+  LAB_PRICE_CONTEXT_SYSTEM,
+  USAGE_CONTEXT_TYPE_SYSTEM,
+} from './catalog';
 export { certificateThumbprint } from './certificate';
 export { LabAccessClient, type LabAccessClientConfig } from './client';
 export type { SigningKey } from './client-assertion';
@@ -13,16 +25,23 @@ export type {
   RevocationReason,
 } from './consent-types';
 export {
+  ACCESS_TOKEN_EXPIRY_MARGIN_MS,
   CONSENT_STATUS_CHECK_INTERVAL_MS,
   ERROR_CODE_SYSTEM,
   PATIENT_SCOPES,
   type PatientScope,
+  PENDING_REVOCATION_DAILY_INTERVAL_MS,
+  PENDING_REVOCATION_HOURLY_INTERVAL_MS,
+  PENDING_REVOCATION_HOURLY_PERIOD_MS,
+  PROTOCOL_VERSION,
   PROVIDER_SCOPES,
   type ProviderScope,
+  REGISTRY_EXPIRED_GRACE_MS,
   REGISTRY_MAX_FETCH_INTERVAL_MS,
   REGISTRY_MIN_FETCH_INTERVAL_MS,
   type Scope,
   SPEC_VERSION,
+  SUPPORTED_PROTOCOL_VERSIONS,
 } from './constants';
 export type { InteractionEvent, RetryPolicy } from './context';
 export { PROTOCOL_ERROR_CODES } from './error-codes';
@@ -53,6 +72,7 @@ export {
   RegistryExpiredError,
   type RegistryRejectionReason,
   RegistryVerificationError,
+  type RegistryVerificationStep,
   type RetryStrategy,
   type RevocationOutcome,
   RevocationPendingError,
@@ -69,6 +89,7 @@ export type {
   FHIRBundleLink,
   FHIRCapabilityStatement,
   FHIRChargeItemDefinition,
+  FHIRExtension,
   FHIRHealthcareService,
   FHIRLocation,
   FHIROperationOutcome,
@@ -79,6 +100,8 @@ export type {
   FHIRSearchBundleEntry,
   FHIRServiceRequest,
   FHIRSlot,
+  FHIRTypedReference,
+  FHIRUsageContext,
 } from './fhir-types';
 export type {
   AuthorizationCallback,
@@ -107,6 +130,7 @@ export {
 export {
   negotiateProtocolVersion,
   ParticipantRegistry,
+  type RegistryEnvironment,
   type RegistryVerification,
   verifyRegistry,
   type VerifyRegistryInput,
@@ -122,6 +146,13 @@ export type {
   RegistryReceiverBlock,
   RegistryTransportCertificate,
 } from './registry-types';
+export {
+  InMemoryRevocationStore,
+  nextRevocationAttemptAt,
+  type PendingRevocation,
+  type RevocationRetryResult,
+  type RevocationStore,
+} from './revocation';
 export {
   createMtlsTransport,
   type LabAccessRequest,

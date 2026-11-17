@@ -2,7 +2,7 @@
  * Validação do registro de participantes contra o schema da especificação.
  *
  * É uma transcrição à mão do JSON Schema publicado com o protocolo
- * (`participantes.schema.json`, formato 1.x), para não trazer um validador de
+ * (`participantes.schema.json`, formato 0.x), para não trazer um validador de
  * schema como dependência. Como no schema, campo desconhecido é erro em todos
  * os níveis.
  */
@@ -136,6 +136,18 @@ const receiverBlock = object(
   { logo_uri: httpsUrl },
 );
 
+/** Com uma versão `0.x` na lista, ela é a única (fase 0: uma versão por participante). */
+const protocolVersions: Check = (value, path, errors) => {
+  list(text(/^[0-9]+\.[0-9]+$/), { min: 1, unique: true })(value, path, errors);
+  if (
+    Array.isArray(value) &&
+    value.length > 1 &&
+    value.some((item) => typeof item === 'string' && item.startsWith('0.'))
+  ) {
+    errors.push(`${path}: com uma versão 0.x, a lista deveria ter só ela`);
+  }
+};
+
 const participantFields = object(
   {
     cnpj: text(/^[0-9A-Z]{12}[0-9]{2}$/),
@@ -146,7 +158,7 @@ const participantFields = object(
     display_name: anyText(1, 80),
     legal_name: anyText(1, 200),
     participant_id: text(UUID),
-    protocol_versions: list(text(/^[0-9]+\.[0-9]+$/), { min: 1, unique: true }),
+    protocol_versions: protocolVersions,
     role: oneOf('provider', 'receiver'),
     status: oneOf('active', 'suspended', 'withdrawn'),
     updated_at: utcDateTime,
@@ -180,7 +192,7 @@ const document = object({
   issued_at: utcDateTime,
   participants: list(participant),
   registry_keys: object({ keys: list(registryKey, { max: 4, min: 1 }) }),
-  schema_version: text(/^1\.[0-9]+$/),
+  schema_version: text(/^0\.[0-9]+$/),
   sequence,
 });
 

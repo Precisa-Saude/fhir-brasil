@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { InteractionEvent } from '../context';
+import { isValidCpf } from '../cpf';
 import { HolderVerificationError, LabAccessConfigError, PatientMismatchError } from '../errors';
 import { createHarness, type Harness, openJourney } from './fake-lab';
 import { API_BASE, CPF_OTHER, CPF_PATIENT, jsonResponse, operationOutcome } from './helpers';
@@ -71,7 +72,7 @@ describe('conferência do titular', () => {
     );
   });
 
-  it('RCP-014: a revogação por divergência é reenviada depois de falha, sem tocar nos tokens de paciente', async () => {
+  it('RCP-028: a revogação por divergência faz até três tentativas, respeitando Retry-After, sem tocar nos tokens de paciente', async () => {
     const harness = await createHarness();
     harness.lab.failNext(isDelete, 'network');
     harness.lab.failNext(
@@ -93,20 +94,28 @@ describe('conferência do titular', () => {
     expect(patientTokenUses).toHaveLength(1);
   });
 
-  it('RCP-014: se o DELETE não é confirmado, avisa que a revogação está pendente', async () => {
+  it('RCP-028: se o DELETE não é confirmado, a revogação por divergência fica pendente', async () => {
     const harness = await createHarness();
     for (let i = 0; i < 3; i += 1) harness.lab.failNext(isDelete, 'network');
-    const { consent, error, provider } = await attempt(harness);
+    const { consent, error } = await attempt(harness);
 
     expect(error).toMatchObject({ name: 'PatientMismatchError', revocation: 'pending' });
+    expect((error as PatientMismatchError).pendingRevocation).toMatchObject({
+      consentId: consent.consentId,
+      reason: 'PATIENT_MISMATCH',
+    });
     expect(deletes(harness)).toHaveLength(3);
+    expect(await harness.client.pendingRevocations()).toHaveLength(1);
 
-    // O aplicativo repete a revogação com o mesmo motivo, mais tarde.
-    await provider.revokeConsent(consent.consentId, 'PATIENT_MISMATCH');
+    // Uma hora depois, a repetição do calendário usa o mesmo motivo.
+    harness.lab.now = new Date(harness.lab.now.getTime() + 60 * 60 * 1000);
+    await harness.client.retryPendingRevocations();
+    expect(deletes(harness).at(-1)!.url).toContain('reason=PATIENT_MISMATCH');
     expect(harness.lab.consents.get(consent.consentId)!.body.status).toBe('REVOKED');
+    expect(await harness.client.pendingRevocations()).toEqual([]);
   });
 
-  it('considera a revogação confirmada quando o consentimento já está em estado final', async () => {
+  it('RCP-029: considera a revogação concluída quando o consentimento já está em estado final', async () => {
     const harness = await createHarness();
     harness.lab.failNext(
       isDelete,
@@ -138,7 +147,14 @@ describe('conferência do titular', () => {
     const callback = harness.lab.authorize(journey.authorizationUrl, OTHER);
     const before = harness.lab.calls.length;
 
-    for (const expectedCpf of ['', '1234567890', '529982247251', 'abcdefghijk']) {
+    for (const expectedCpf of [
+      '',
+      '1234567890',
+      '529982247251',
+      'abcdefghijk',
+      '52998224724',
+      '11111111111',
+    ]) {
       await expect(
         provider.completeAuthorization({ callback, expectedCpf, journey }),
       ).rejects.toBeInstanceOf(LabAccessConfigError);
@@ -159,10 +175,27 @@ describe('conferência do titular', () => {
     ],
     ['fora de AUTHORISED', (body) => ({ ...body, status: 'AWAITING_AUTHORISATION' })],
     ['de outro consentimento', (body) => ({ ...body, consent_id: 'outro' })],
+    [
+      'com CPF de dígito verificador inválido',
+      (body) => ({ ...body, patient: { cpf: '11144477734', fhir_id: 'pac-outro' } }),
+    ],
+    [
+      'com CPF de 10 dígitos',
+      (body) => ({ ...body, patient: { cpf: '1114447773', fhir_id: 'pac-outro' } }),
+    ],
+    [
+      'com CPF de dígitos repetidos',
+      (body) => ({ ...body, patient: { cpf: '00000000000', fhir_id: 'pac-outro' } }),
+    ],
+    [
+      'com CPF numérico em vez de texto',
+      (body) => ({ ...body, patient: { cpf: 11144477735, fhir_id: 'pac-outro' } }),
+    ],
+    ['sem patient.cpf', (body) => ({ ...body, patient: { fhir_id: 'pac-outro' } })],
   ];
 
   it.each(unverifiable)(
-    'leitura %s: não conclui o vínculo e encerra o consentimento',
+    'RCP-027: leitura %s: não conclui o vínculo e revoga com RECEIVER_TERMINATION',
     async (_name, change) => {
       const harness = await createHarness();
       const { consent, journey, provider } = await openJourney(harness);
@@ -181,12 +214,42 @@ describe('conferência do titular', () => {
         .catch((err: unknown) => err);
       expect(error).toBeInstanceOf(HolderVerificationError);
       expect(error).toMatchObject({ consentId: consent.consentId, revocation: 'confirmed' });
+      expect(deletes(harness)).toHaveLength(1);
       expect(deletes(harness)[0]!.url).toContain('reason=RECEIVER_TERMINATION');
+      expect(harness.lab.consents.get(consent.consentId)!.body).toMatchObject({
+        status_reason: { code: 'RECEIVER_TERMINATION' },
+      });
       expect(harness.lab.fhirCalls).toHaveLength(0);
     },
   );
 
-  it('se a leitura do consentimento falha, não libera os tokens', async () => {
+  it('RCP-027: leitura que falha com 500 depois de três tentativas revoga com RECEIVER_TERMINATION', async () => {
+    const harness = await createHarness();
+    const { journey, provider } = await openJourney(harness);
+    const callback = harness.lab.authorize(journey.authorizationUrl, {
+      cpf: CPF_PATIENT,
+      fhirId: 'pac-teste-1',
+    });
+    const isRead = (call: { method: string; url: string }) =>
+      call.method === 'GET' && call.url.includes('/consents/');
+    for (let i = 0; i < 3; i += 1) {
+      harness.lab.failNext(
+        isRead,
+        jsonResponse(500, operationOutcome('INTERNAL_ERROR', 'exception')),
+      );
+    }
+
+    const error = await provider
+      .completeAuthorization({ callback, expectedCpf: CPF_PATIENT, journey })
+      .catch((err: unknown) => err);
+    expect(error).toBeInstanceOf(HolderVerificationError);
+    expect(harness.lab.calls.filter(isRead)).toHaveLength(3);
+    expect(deletes(harness)).toHaveLength(1);
+    expect(deletes(harness)[0]!.url).toContain('reason=RECEIVER_TERMINATION');
+    expect(deletes(harness)[0]!.url).not.toContain('PATIENT_MISMATCH');
+  });
+
+  it('RCP-027: leitura que falha com 404 na primeira resposta não libera os tokens', async () => {
     const harness = await createHarness();
     const { journey, provider } = await openJourney(harness);
     const callback = harness.lab.authorize(journey.authorizationUrl, {
@@ -204,6 +267,7 @@ describe('conferência do titular', () => {
     expect(error).toBeInstanceOf(HolderVerificationError);
     expect((error as Error).cause).toMatchObject({ code: 'CONSENT_NOT_FOUND' });
     expect(deletes(harness)).toHaveLength(1);
+    expect(deletes(harness)[0]!.url).toContain('reason=RECEIVER_TERMINATION');
     expect(harness.lab.fhirCalls).toHaveLength(0);
   });
 
@@ -241,5 +305,16 @@ describe('conferência do titular', () => {
     expect(JSON.stringify(access.exportState())).not.toContain(CPF_PATIENT);
     expect(JSON.stringify(await access.getConsentRecord())).not.toContain(CPF_PATIENT);
     expect(JSON.stringify(Object.entries(access))).not.toContain(CPF_PATIENT);
+  });
+});
+
+describe('isValidCpf', () => {
+  it('confere os dois dígitos verificadores, inclusive quando o resto é 10', () => {
+    for (const cpf of [CPF_PATIENT, CPF_OTHER, '10000000108', '10000002810']) {
+      expect(isValidCpf(cpf), cpf).toBe(true);
+    }
+    for (const cpf of ['10000000107', '10000002811', '99999999999', 52998224725, '5299822472']) {
+      expect(isValidCpf(cpf), String(cpf)).toBe(false);
+    }
   });
 });

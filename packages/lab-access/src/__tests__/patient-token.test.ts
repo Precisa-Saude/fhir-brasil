@@ -199,6 +199,7 @@ describe('token de paciente', () => {
     expect(Object.keys(state).sort()).toEqual([
       'accessToken',
       'accessTokenExpiresAt',
+      'consentExpiresAt',
       'consentId',
       'issuer',
       'patientFhirId',
@@ -235,14 +236,14 @@ describe('token de paciente', () => {
     ).toThrowError(LabAccessConfigError);
   });
 
-  it('REG-006: com o registro expirado, a renovação segue por até 7 dias e depois para', async () => {
+  it('REG-008: com o registro expirado, a renovação por refresh token segue por até 7 dias e depois para', async () => {
     const { access, harness } = await connected();
 
-    harness.lab.now = new Date('2026-12-22T11:59:00Z');
+    harness.lab.now = new Date('2026-12-23T11:59:00Z');
     await access.searchDiagnosticReports();
     expect(refreshes(harness)).toHaveLength(1);
 
-    harness.lab.now = new Date('2026-12-22T12:10:01Z');
+    harness.lab.now = new Date('2026-12-23T12:10:01Z');
     await expect(access.searchDiagnosticReports()).rejects.toBeInstanceOf(RegistryExpiredError);
     expect(refreshes(harness)).toHaveLength(1);
   });

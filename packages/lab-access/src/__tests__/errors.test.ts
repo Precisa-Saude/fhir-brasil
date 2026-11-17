@@ -30,6 +30,7 @@ const TAXONOMY: [string, number, string, unknown, string][] = [
   ['SCOPE_INSUFFICIENT', 403, 'forbidden', LabAccessAuthorizationError, 'never'],
   ['PATIENT_NOT_IN_CONSENT', 403, 'forbidden', LabAccessAuthorizationError, 'never'],
   ['RECEIVER_NOT_ALLOWED', 403, 'forbidden', LabAccessAuthorizationError, 'never'],
+  ['REGISTRY_EXPIRED', 403, 'forbidden', LabAccessAuthorizationError, 'never'],
   ['CLIENT_CERTIFICATE_REQUIRED', 401, 'security', LabAccessAuthorizationError, 'never'],
   ['INVALID_REQUEST', 400, 'invalid', LabAccessRequestError, 'never'],
   ['INTERACTION_ID_MISSING', 400, 'required', LabAccessRequestError, 'never'],
@@ -90,6 +91,18 @@ describe('toApiError', () => {
 
     const unknown5xx = toApiError(jsonResponse(502, operationOutcome('CODIGO_NOVO')));
     expect(unknown5xx).toMatchObject({ retry: 'backoff', retryable: true });
+  });
+
+  it('429 sem código do protocolo se repete depois de Retry-After, nos endpoints de API e no de token', () => {
+    const bare = { body: '', headers: { 'retry-after': '5' }, status: 429 };
+    expect(toApiError(bare)).toMatchObject({ retry: 'after-retry-after', retryAfterSeconds: 5 });
+    expect(toApiError(jsonResponse(429, operationOutcome('CODIGO_NOVO')))).toMatchObject({
+      retry: 'after-retry-after',
+    });
+    expect(toOAuthError(bare)).toMatchObject({ retry: 'after-retry-after', status: 429 });
+    expect(toOAuthError(jsonResponse(429, { error: 'slow_down' }))).toMatchObject({
+      retry: 'after-retry-after',
+    });
   });
 
   it('aceita corpo que não é OperationOutcome ou não tem código do protocolo', () => {
@@ -223,8 +236,23 @@ describe('classes de erro', () => {
       name: 'LabAccessConfigError',
       retryable: false,
     });
-    expect(new RegistryVerificationError('expired', 'x')).toMatchObject({ reason: 'expired' });
-    expect(new RevocationPendingError('c', 'p')).toMatchObject({ retry: 'backoff' });
+    expect(new RegistryVerificationError('expired', 'x', { step: 'V12' })).toMatchObject({
+      reason: 'expired',
+      step: 'V12',
+    });
+    const pending = {
+      attempts: 3,
+      consentId: 'c',
+      lastAttemptAt: '2026-11-16T12:00:00.000Z',
+      nextAttemptAt: '2026-11-16T13:00:00.000Z',
+      providerId: 'p',
+      reason: 'PATIENT_REQUEST' as const,
+      requestedAt: '2026-11-16T12:00:00.000Z',
+    };
+    expect(new RevocationPendingError('c', 'p', pending)).toMatchObject({
+      pending,
+      retry: 'backoff',
+    });
     expect(new ConsentEndedError('c', 'EXPIRED', 'MAX_DATE_REACHED', 'SYSTEM').message).toContain(
       'EXPIRED',
     );

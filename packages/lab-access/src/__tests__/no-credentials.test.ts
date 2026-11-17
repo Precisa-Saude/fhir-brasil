@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
+import { PAYMENT_LINK_URL, readPaymentLink } from '../appointment';
 import { CONSENT_STATUS_CHECK_INTERVAL_MS } from '../constants';
 import * as api from '../index';
 import { AUTHORIZATION_ENDPOINT, bundle, connect, createHarness } from './fake-lab';
@@ -82,8 +83,14 @@ describe('nenhuma credencial de paciente', () => {
 
   it('RCP-002: o código do pacote não tem identificador de senha ou credencial de paciente', () => {
     const forbidden = /password|passwd|senha|username|login_hint|\botp\b|(?<!client_)credential/i;
+    // Única exceção: a lista de concessões que os metadados não podem anunciar,
+    // que precisa nomear a concessão de senha para recusá-la.
+    const refusedGrants =
+      /^const FORBIDDEN_GRANT_TYPES: readonly string\[\] = \['password', 'implicit'\];$/m;
     for (const file of sourceFiles()) {
-      const code = withoutComments(readFileSync(fileURLToPath(new URL(file, SRC)), 'utf-8'));
+      const code = withoutComments(
+        readFileSync(fileURLToPath(new URL(file, SRC)), 'utf-8'),
+      ).replace(refusedGrants, '');
       expect(code, file).not.toMatch(forbidden);
     }
     expect(sourceFiles().length).toBeGreaterThan(15);
@@ -99,10 +106,7 @@ describe('nenhuma credencial de paciente', () => {
   it('RCP-022: o pacote não busca nem altera o link de pagamento do agendamento', async () => {
     const harness = await createHarness();
     const paymentUrl = 'https://pagamentos.laboratorio.example/p/abc?x=1';
-    // A URL da extensão ainda não foi fixada pelo guia: esta é só de teste.
-    const extension = [
-      { url: 'https://laboratorio.example/extensao-de-teste', valueUrl: paymentUrl },
-    ];
+    const extension = [{ url: PAYMENT_LINK_URL, valueUrl: paymentUrl }];
     harness.lab.fhir = (call) =>
       jsonResponse(201, { ...(call.json as object), extension, id: 'ag-1', status: 'pending' });
     const { access } = await connect(harness);
@@ -111,6 +115,7 @@ describe('nenhuma credencial de paciente', () => {
       basedOn: [{ reference: '#e1' }],
       contained: [
         {
+          code: { coding: [{ code: '718-7', system: 'http://loinc.org' }] },
           id: 'e1',
           intent: 'order',
           resourceType: 'ServiceRequest',
@@ -119,12 +124,20 @@ describe('nenhuma credencial de paciente', () => {
         },
       ],
       identifier: [{ system: 'https://app-paciente.example/agendamentos', value: 'a-1' }],
-      participant: [{ actor: { reference: 'Patient/pac-teste-1' }, status: 'accepted' }],
+      participant: [
+        { actor: { reference: 'Patient/pac-teste-1', type: 'Patient' }, status: 'accepted' },
+        {
+          actor: { reference: 'Location/unidade-norte', type: 'Location' },
+          status: 'needs-action',
+        },
+      ],
       resourceType: 'Appointment',
       status: 'proposed',
     });
 
     expect(created.resource.extension).toEqual(extension);
+    // O link sai exatamente como veio, para o aplicativo abrir no navegador do sistema.
+    expect(readPaymentLink(created.resource)).toBe(paymentUrl);
     expect(harness.lab.calls.some((call) => call.url.startsWith('https://pagamentos.'))).toBe(
       false,
     );

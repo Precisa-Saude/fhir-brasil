@@ -19,7 +19,7 @@ import {
   type RescheduleInput,
 } from './appointment';
 import type { ConsentRecord, RevocationReason } from './consent-types';
-import { readConsent, readConsentAsPatient, revokeAndReport } from './consents';
+import { readConsent, readConsentAsPatient } from './consents';
 import { PATIENT_SCOPES, type PatientScope } from './constants';
 import type { ClientContext, ResolvedProvider } from './context';
 import {
@@ -51,6 +51,7 @@ import {
 import type { FHIRAppointment } from './fhir-types';
 import { header } from './http';
 import { resolveProvider, shouldRenewToken } from './resolve';
+import { revokeConsent } from './revocation';
 import { assertRegistryAllowsRefresh, isFresh, requestToken } from './tokens';
 import { isConsentId, isFhirId } from './validation';
 
@@ -62,6 +63,8 @@ export interface PatientAccessState {
   accessToken: string;
   /** Instante, em milissegundos, em que o token de acesso deixa de ser usado. */
   accessTokenExpiresAt: number;
+  /** `expiration_date_time` do consentimento, quando conhecido. */
+  consentExpiresAt?: string;
   consentId: string;
   issuer: string;
   /** Id lógico do recurso Patient no provedor. */
@@ -112,6 +115,7 @@ export class PatientAccess {
   readonly providerId: string;
   readonly scopes: readonly PatientScope[];
 
+  readonly #consentExpiresAt: string | undefined;
   readonly #ctx: ClientContext;
   readonly #issuer: string;
   readonly #options: PatientAccessOptions;
@@ -137,6 +141,8 @@ export class PatientAccess {
     this.#ctx = ctx;
     this.#options = options;
     this.#issuer = state.issuer;
+    this.#consentExpiresAt =
+      typeof state.consentExpiresAt === 'string' ? state.consentExpiresAt : undefined;
     this.consentId = state.consentId;
     this.patientFhirId = state.patientFhirId;
     this.providerId = state.providerId;
@@ -158,7 +164,7 @@ export class PatientAccess {
   /** Estado a guardar para retomar o acesso. */
   exportState(): PatientAccessState {
     if (!this.#tokens) throw new TokensDiscardedError(this.consentId);
-    return {
+    const state: PatientAccessState = {
       accessToken: this.#tokens.accessToken,
       accessTokenExpiresAt: this.#tokens.expiresAt,
       consentId: this.consentId,
@@ -168,6 +174,8 @@ export class PatientAccess {
       refreshToken: this.#tokens.refreshToken,
       scopes: [...this.scopes],
     };
+    if (this.#consentExpiresAt !== undefined) state.consentExpiresAt = this.#consentExpiresAt;
+    return state;
   }
 
   /** Lê o próprio consentimento pelo endpoint do protocolo. Qualquer token de paciente pode. */
@@ -182,19 +190,26 @@ export class PatientAccess {
   /**
    * Revoga o consentimento pelo lado do receptor.
    *
-   * Os tokens são descartados antes da chamada, e continuam descartados se
-   * ela falhar. Nesse caso lança `RevocationPendingError`, e o aplicativo
-   * repete com `ProviderAccess.revokeConsent` até conseguir.
+   * Os tokens são descartados antes de qualquer chamada, e continuam
+   * descartados se ela falhar. A revogação usa um token de provedor só com
+   * `consent.manage`, com até três tentativas automáticas. Sem confirmação,
+   * ela fica pendente e o método lança `RevocationPendingError` com a
+   * pendência: as repetições seguintes vêm de
+   * `LabAccessClient.retryPendingRevocations`.
    */
   async revoke(reason: RevocationReason = 'PATIENT_REQUEST'): Promise<void> {
     if (!this.#tokens) return;
     this.discard();
-    const resolved = await resolveProvider(this.#ctx, this.providerId).catch((cause: unknown) => {
-      throw new RevocationPendingError(this.consentId, this.providerId, { cause });
+    const result = await revokeConsent(this.#ctx, {
+      consentExpiresAt: this.#consentExpiresAt,
+      consentId: this.consentId,
+      providerId: this.providerId,
+      reason,
     });
-    const { error, outcome } = await revokeAndReport(this.#ctx, resolved, this.consentId, reason);
-    if (outcome === 'pending') {
-      throw new RevocationPendingError(this.consentId, this.providerId, { cause: error });
+    if (result.outcome === 'pending') {
+      throw new RevocationPendingError(this.consentId, this.providerId, result.pending, {
+        cause: result.error,
+      });
     }
   }
 

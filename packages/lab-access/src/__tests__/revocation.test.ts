@@ -1,11 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  LabAccessConfigError,
-  LabAccessConsentError,
-  RevocationPendingError,
-  TokensDiscardedError,
-} from '../errors';
+import { LabAccessConfigError, RevocationPendingError, TokensDiscardedError } from '../errors';
 import { bundle, connect, createHarness, openJourney } from './fake-lab';
 import { API_BASE, CPF_PATIENT, jsonResponse, PROVIDER_ID } from './helpers';
 
@@ -44,9 +39,20 @@ describe('revogação pelo lado do receptor', () => {
     expect(() => access.exportState()).toThrowError(TokensDiscardedError);
     expect(harness.lab.fhirCalls).toHaveLength(0);
 
-    // Mais tarde, o aplicativo repete a revogação até conseguir.
-    await provider.revokeConsent(consent.consentId);
+    // Mais tarde, a repetição do calendário conclui a revogação.
+    harness.lab.now = new Date(harness.lab.now.getTime() + 60 * 60 * 1000);
+    await harness.client.retryPendingRevocations();
     expect(harness.lab.consents.get(consent.consentId)!.body.status).toBe('REVOKED');
+    expect(provider.providerId).toBe(PROVIDER_ID);
+  });
+
+  it('RCP-017: o endpoint de revogação de token do RFC 7009 nunca substitui o DELETE do consentimento', async () => {
+    const harness = await createHarness();
+    harness.lab.metadata.revocation_endpoint = 'https://mtls.auth.laboratorio.example/revoke';
+    const { access } = await connect(harness);
+    await access.revoke();
+    expect(harness.lab.calls.some((call) => call.url.endsWith('/revoke'))).toBe(false);
+    expect(harness.lab.calls.filter(isDelete)).toHaveLength(1);
   });
 
   it('aceita RECEIVER_TERMINATION e recusa motivo desconhecido', async () => {
@@ -60,14 +66,15 @@ describe('revogação pelo lado do receptor', () => {
     expect(harness.lab.calls.find(isDelete)!.url).toContain('reason=RECEIVER_TERMINATION');
   });
 
-  it('revogar consentimento em estado final devolve CONSENT_INVALID_STATE', async () => {
+  it('RCP-029: revogar consentimento em estado final conta como revogação concluída', async () => {
     const harness = await createHarness();
     const { access, consent, provider } = await connect(harness);
     await access.revoke();
 
-    const error = await provider.revokeConsent(consent.consentId).catch((err: unknown) => err);
-    expect(error).toBeInstanceOf(LabAccessConsentError);
-    expect(error).toMatchObject({ code: 'CONSENT_INVALID_STATE', retryable: false, status: 422 });
+    await expect(provider.revokeConsent(consent.consentId)).resolves.toBeUndefined();
+    const last = harness.lab.calls.filter(isDelete).at(-1)!;
+    expect(last.url).toContain(consent.consentId);
+    expect(await harness.client.pendingRevocations()).toEqual([]);
     // Revogar de novo pelo acesso já descartado não chama o provedor outra vez.
     const before = harness.lab.calls.length;
     await access.revoke();

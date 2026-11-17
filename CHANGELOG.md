@@ -1,3 +1,13 @@
+## [3.3.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.2.0...v3.3.0) (2026-11-17)
+
+### Features
+
+* **lab-access:** publica o pacote no npm ([#180](https://github.com/Precisa-Saude/fhir-brasil/issues/180)) ([f2543fb](https://github.com/Precisa-Saude/fhir-brasil/commit/f2543fb37544237c6d608d0bc6babf6c18614c32))
+
+### Build
+
+* publicar os artefatos do IG pelo site, nas URLs canônicas ([#179](https://github.com/Precisa-Saude/fhir-brasil/issues/179)) ([7c64d46](https://github.com/Precisa-Saude/fhir-brasil/commit/7c64d46ca3a13592401a471ca7d274492aa4a630))
+
 ## [3.2.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.1.3...v3.2.0) (2026-11-17)
 
 ### Features

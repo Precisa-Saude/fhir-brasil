@@ -5,6 +5,20 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
+    "@fhir-brasil/site#build": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/ig/input/**",
+        "$TURBO_ROOT$/ig/scripts/*.js",
+        "$TURBO_ROOT$/ig/sushi-config.yaml"
+      ],
+      "outputs": ["dist/**"]
+    },
+    "@fhir-brasil/site#test": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
     "clean": {
       "cache": false
     },

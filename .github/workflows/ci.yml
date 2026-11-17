@@ -114,5 +114,7 @@ jobs:
     with:
       project_name: 'fhir-brasil'
       site_filter: '@fhir-brasil/site'
-      site_source_path: 'site/'
+      # `ig/` entra porque o build do site compila o IG e publica os
+      # artefatos: sem isso, um PR que só muda o FSH não republicaria o site.
+      site_source_path: 'site/,ig/'
     secrets: inherit

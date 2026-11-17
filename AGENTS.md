@@ -29,7 +29,7 @@ packages/
   rnds/          — HTTP client for RNDS (DATASUS), mTLS auth
   rnds-sandbox/  — Mock local da RNDS para dev/ensino (FHIR R4, cenários sintéticos)
   lab-access/    — Receiver-side client for the Open Labs Brasil consent-based lab access protocol (draft, private, not published)
-ig/              — FHIR Implementation Guide (SUSHI), published on Simplifier
+ig/              — FHIR Implementation Guide (SUSHI), compiled by the site build and served at its canonical URLs (in no package registry)
 site/            — Public site (Cloudflare Pages)
 ```
 

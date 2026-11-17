@@ -61,6 +61,11 @@ export const URINALYSIS_SECTION_NAMES: ReadonlyMap<string, string> = new Map([
   ['color', 'Color_Urine'],
   ['corpos cetonicos', 'Ketones_Urine'],
   ['cor', 'Color_Urine'],
+  // A Dasa imprime "Células Epiteliais" na fita, sem o tipo e sem "na urina"
+  // (PRE-585). A grafia com "Escamosas" entra junto para o nome mais longo
+  // ganhar e a escamosa não virar a contagem sem tipo.
+  ['celulas epiteliais', 'EpithelialCells_Urine'],
+  ['celulas epiteliais escamosas', 'SquamousEpithelial_Urine'],
   ['densidade', 'SpecificGravity_Urine'],
   ['eritrocitos', 'RBC_Urine'],
   ['erythrocytes', 'RBC_Urine'],

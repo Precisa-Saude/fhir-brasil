@@ -64,6 +64,8 @@ const PROPERTIES_BY_UNIT: Record<string, string[]> = {
   '/100 WBC': ['Ratio'],
   '/HPF': ['Naric'],
   '/LPF': ['Naric'],
+  // Contagem por volume do sedimento automatizado (células epiteliais da Dasa).
+  '/mL': ['NCnc'],
   Angstrom: ['EntLen'],
   // Unidades arbitrárias por volume, dos imunoensaios.
   'UI/mL': ['ACnc'],

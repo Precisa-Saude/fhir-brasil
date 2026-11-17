@@ -1,7 +1,7 @@
 ValueSet: BRLabTestVS
 Id: br-lab-test-vs
 Title: "BR Lab Test ValueSet"
-Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-brasil. Gerado automaticamente a partir de 225 biomarcadores com código LOINC no pacote core."
+Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-brasil. Gerado automaticamente a partir de 226 biomarcadores com código LOINC no pacote core."
 
 * $LOINC#90909-3 "Razão Ácido Araquidônico/EPA"
 * $LOINC#883-9 "Grupo ABO"
@@ -84,6 +84,7 @@ Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-bras
 * $LOINC#713-8 "Eosinófilos"
 * $LOINC#711-2 "Eosinófilos Absolutos"
 * $LOINC#90911-9 "Ômega-3: EPA+DPA+DHA"
+* $LOINC#30383-4 "Células Epiteliais na Urina"
 * $LOINC#30341-2 "Velocidade de Hemossedimentação"
 * $LOINC#2243-4 "Estradiol"
 * $LOINC#2258-2 "Estrona"

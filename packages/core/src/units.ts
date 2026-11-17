@@ -37,6 +37,7 @@ export const UNIT_TO_UCUM: Record<string, string> = {
   titer: '{titer}',
   título: '{titer}',
   '/LPF': '/[LPF]',
+  '/mL': '/mL',
   '/µL': '/uL',
   // Percentage
   '%': '%',

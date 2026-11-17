@@ -1,6 +1,6 @@
 {
-  "acceptedLoincCodes": 231,
-  "biomarkers": 272,
+  "acceptedLoincCodes": 232,
+  "biomarkers": 273,
   "bySection": [
     {
       "count": 126,
@@ -38,7 +38,7 @@
       "withLoinc": 18
     },
     {
-      "count": 17,
+      "count": 18,
       "examples": [
         "Appearance_Urine",
         "Bacteria_Urine",
@@ -48,7 +48,7 @@
       ],
       "pt": "Urinálise",
       "section": "URN",
-      "withLoinc": 17
+      "withLoinc": 18
     },
     {
       "count": 10,
@@ -80,12 +80,12 @@
     },
     { "count": 1, "examples": ["APOE_Genotype"], "pt": "Genética", "section": "GE", "withLoinc": 1 }
   ],
-  "decisions": { "nameOnly": 176, "reviewed": 0, "withEvidence": 49 },
-  "loincCoveragePct": 82.7,
+  "decisions": { "nameOnly": 176, "reviewed": 0, "withEvidence": 50 },
+  "loincCoveragePct": 82.8,
   "referenceRanges": 198,
   "sections": 11,
   "version": "3.1.3",
-  "withLoinc": 225,
+  "withLoinc": 226,
   "withoutLoinc": 47,
   "withoutLoincByReason": { "ambiguous": 4, "no-concept": 31, "pending-review": 12 }
 }

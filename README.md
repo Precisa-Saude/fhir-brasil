@@ -150,11 +150,11 @@ echo "Hemoglobina 14.5 g/dL Glicose 99 mg/dL" | fhir-ocr codes --json
 
 Medido no `@precisa-saude/fhir@3.1.3`, gerado por `pnpm catalog:counts`.
 
-- **272 biomarcadores** definidos, dos quais **225 têm código LOINC** (82,7%) e 47 não têm.
-- **231 códigos LOINC aceitos** na busca por código: os 225 canônicos, as variantes por método e os aliases de códigos que o LOINC aposentou.
+- **273 biomarcadores** definidos, dos quais **226 têm código LOINC** (82,8%) e 47 não têm.
+- **232 códigos LOINC aceitos** na busca por código: os 226 canônicos, as variantes por método e os aliases de códigos que o LOINC aposentou.
 - **198 faixas de referência**, com variantes por sexo e idade.
 - **11 seções de serviço** (HL7 v2-0074), a categoria que sai no `DiagnosticReport`: da classe do LOINC, ou declarada no exame sem LOINC.
-- **Registro de decisão** dos 225 mapeamentos: 49 com evidência além do nome (unidade, material, método ou bula), 176 escolhidos só pelo nome, 0 com revisão independente. A ficha de cada um sai em `fhir-bio decision <código>`.
+- **Registro de decisão** dos 226 mapeamentos: 50 com evidência além do nome (unidade, material, método ou bula), 176 escolhidos só pelo nome, 0 com revisão independente. A ficha de cada um sai em `fhir-bio decision <código>`.
 
 | Seção                              | Biomarcadores | Com LOINC | Exemplos                                                                    |
 | ---------------------------------- | ------------: | --------: | --------------------------------------------------------------------------- |
@@ -163,13 +163,13 @@ Medido no `@precisa-saude/fhir@3.1.3`, gerado por `pnpm catalog:counts`.
 | Radiologia (densitometria) (`RAD`) |            31 |         8 | BMC, VATVolume, VATMass, AndroidGynoidRatio, AndroidFatPct                  |
 | Outros (medida corporal) (`OTH`)   |            28 |        14 | BMI, BodyFatPct, FatMass, LeanMass, FatFreeMass                             |
 | Sorologia (`SR`)                   |            18 |        18 | AntiThyroglobulin, AntiTPO, ANA_Screen, RheumatoidFactor, AntiCCP           |
-| Urinálise (`URN`)                  |            17 |        17 | Appearance_Urine, Bacteria_Urine, Bilirubin_Urine, Blood_Urine, Color_Urine |
+| Urinálise (`URN`)                  |            18 |        18 | Appearance_Urine, Bacteria_Urine, Bilirubin_Urine, Blood_Urine, Color_Urine |
 | Tomografia (`CT`)                  |            10 |         0 | CAC, CAC_LMA, CAC_LAD, CAC_LCX, CAC_RCA                                     |
 | Toxicologia (`TX`)                 |             4 |         4 | Lead, Mercury, Zinc, Selenium                                               |
 | Banco de sangue (`BLB`)            |             2 |         2 | ABO_Group, Rh_Type                                                          |
 | Imunologia (`IMM`)                 |             2 |         2 | IgE_E1_CatDander, IgE_GX1_Grasses                                           |
 | Genética (`GE`)                    |             1 |         1 | APOE_Genotype                                                               |
-| **Total**                          |       **272** |   **225** |                                                                             |
+| **Total**                          |       **273** |   **226** |                                                                             |
 
 ### Os 47 sem LOINC, e por quê
 

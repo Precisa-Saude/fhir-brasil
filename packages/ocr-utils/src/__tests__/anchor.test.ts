@@ -1015,6 +1015,8 @@ describe('findBiomarkersInText: grafias de produção (PRE-486)', () => {
     ['CK 120 U/L', 'CK'],
     // Grafia da Dasa (PRE-579).
     ['Cloro 104 mmol/L 98 a 107 mmol/L', 'Chloride'],
+    // Grafia da Dasa (PRE-585): "Relação", e não "Razão".
+    ['Relação Albumina/Globulina 2,0 1,2 a 2,2', 'Albumin_Globulin_Ratio'],
   ])('%s → %s', (line, code) => {
     expect(codesOf(line)).toEqual([code]);
   });
@@ -1165,9 +1167,27 @@ describe('findBiomarkersInText: urinálise em português e sedimento (PRE-486)',
       'SpecificGravity_Urine',
       'Nitrite_Urine',
       'Blood_Urine',
+      'EpithelialCells_Urine',
       'Leukocytes_Urine',
       'RBC_Urine',
     ]);
+  });
+
+  // A Dasa imprime "Células Epiteliais" sem dizer o tipo, contadas por mL. O
+  // catálogo só tinha as escamosas (11277-1, /HPF), e a linha ficava sem
+  // âncora (PRE-585).
+  it('"Células Epiteliais" na urina tipo I ancora as células epiteliais da urina', () => {
+    const text = [
+      'Urina Tipo I RESULTADO INTERVALO DE REFERÊNCIA',
+      'Células Epiteliais 200 /mL Inferior a 31.000 /mL',
+    ].join('\n');
+    const { matches } = findBiomarkersInText(text);
+    expect(matches.map((m) => [m.code, m.loinc])).toEqual([['EpithelialCells_Urine', '30383-4']]);
+  });
+
+  it('"Células Epiteliais Escamosas" na seção não vira a contagem genérica', () => {
+    const text = ['URINA TIPO I', 'Células Epiteliais Escamosas 2 /HPF'].join('\n');
+    expect(codesOf(text)).toEqual(['SquamousEpithelial_Urine']);
   });
 
   it('"Hemoglobina" fora da seção continua sendo a do sangue', () => {

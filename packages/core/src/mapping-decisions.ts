@@ -357,6 +357,18 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
       },
     ],
   },
+  EpithelialCells_Urine: {
+    evidence: ['name', 'unit'],
+    loinc: '30383-4',
+    note: 'A Dasa imprime "Células Epiteliais 200 /mL", sem o tipo e sem o método. Epithelial cells:NCnc:Pt:Urine:Qn, sem método. Fonte: $lookup do tx.fhir.org e busca LOINC da NLM, LOINC 2.83, consulta em 17/11/2026 (PRE-585). A consulta terminológica não constitui revisão independente.',
+    settledBy: 'unit',
+    siblingsRejected: [
+      { loinc: '5787-7', reason: 'o mesmo analito por campo (/HPF), e o laudo conta por mL' },
+      { loinc: '11277-1', reason: 'só a célula escamosa, e o laudo não diz o tipo' },
+      { loinc: '87926-2', reason: 'afirma contagem automatizada, que o laudo não diz' },
+      { loinc: '24123-2', reason: 'afirma contagem manual, que o laudo não diz' },
+    ],
+  },
   ESR: nameOnly('30341-2'),
   Estradiol: nameOnly('2243-4'),
   Estrone: {

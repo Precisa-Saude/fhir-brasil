@@ -1639,10 +1639,15 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
   {
     code: 'Albumin_Globulin_Ratio',
     codeAliases: ['AG_Ratio'],
+    // 1759-0 é "Albumin/Globulin [Mass Ratio] in Serum or Plasma":
+    // Albumin/Globulin:MRto:Pt:Ser/Plas:Qn, unidade de exemplo {ratio}.
+    // Conferido no $lookup do tx.fhir.org (LOINC 2.83) em 17/11/2026. A Dasa
+    // imprime "Relação Albumina/Globulina", e sem essa grafia a linha casava a
+    // albumina e a globulina soltas (PRE-585).
     loinc: '1759-0',
     names: {
       en: ['Albumin/Globulin Ratio', 'A/G Ratio'],
-      pt: ['Razão Albumina / Globulina', 'Razão A/G'],
+      pt: ['Razão Albumina / Globulina', 'Razão A/G', 'Relação Albumina/Globulina'],
     },
     unit: 'razão',
   },
@@ -2241,6 +2246,25 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       en: ['Urine Color', 'Color'],
       pt: ['Cor da Urina', 'Cor'],
     },
+  },
+  {
+    code: 'EpithelialCells_Urine',
+    // 30383-4 é "Epithelial cells [#/volume] in Urine": Epithelial
+    // cells:NCnc:Pt:Urine:Qn, sem método, unidade de exemplo /uL. Conferido no
+    // $lookup do tx.fhir.org (LOINC 2.83) e na busca LOINC da NLM (Clinical
+    // Tables) em 17/11/2026. A Dasa imprime "Células Epiteliais 200 /mL" na
+    // urina tipo I, sem dizer o tipo da célula e contando por volume: o
+    // 11277-1 de `SquamousEpithelial_Urine` é só a escamosa e por campo (/HPF),
+    // e o 5787-7 é o tipo não especificado, mas também por campo. O laudo não
+    // diz se a contagem é automatizada ou manual, então fica o código sem
+    // método, e não o 87926-2 (Automated) nem o 24123-2 (Manual count). O nome
+    // nu "Células Epiteliais" ancora pela seção da urinálise (PRE-585).
+    loinc: '30383-4',
+    names: {
+      en: ['Urine Epithelial Cells', 'Epithelial Cells Urine', 'Epithelial Cells, Urine'],
+      pt: ['Células Epiteliais na Urina'],
+    },
+    unit: '/mL',
   },
   {
     code: 'Glucose_Urine',

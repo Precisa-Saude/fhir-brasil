@@ -1276,6 +1276,17 @@
       "system": "Ser/Plas",
       "time": "Pt"
     },
+    "24123-2": {
+      "class": "UA",
+      "component": "Epithelial cells",
+      "display": "Epithelial cells [#/volume] in Urine by Manual count",
+      "method": "Manual count",
+      "property": "NCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Urine",
+      "time": "Pt"
+    },
     "2458-8": {
       "class": "CHEM",
       "component": "IgA",
@@ -1805,6 +1816,17 @@
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Bld",
+      "time": "Pt"
+    },
+    "30383-4": {
+      "class": "UA",
+      "component": "Epithelial cells",
+      "display": "Epithelial cells [#/volume] in Urine",
+      "method": null,
+      "property": "NCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Urine",
       "time": "Pt"
     },
     "30392-5": {
@@ -2782,6 +2804,17 @@
       "system": "Urine",
       "time": "Pt"
     },
+    "5787-7": {
+      "class": "UA",
+      "component": "Epithelial cells",
+      "display": "Epithelial cells [#/area] in Urine sediment by Microscopy high power field",
+      "method": "Microscopy.light.HPF",
+      "property": "Naric",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Urine sed",
+      "time": "Pt"
+    },
     "5792-7": {
       "class": "UA",
       "component": "Glucose",
@@ -3712,6 +3745,17 @@
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Upper extremity>Humerus",
+      "time": "Pt"
+    },
+    "87926-2": {
+      "class": "UA",
+      "component": "Epithelial cells",
+      "display": "Epithelial cells [#/volume] in Urine by Automated",
+      "method": "Automated",
+      "property": "NCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Urine",
       "time": "Pt"
     },
     "883-9": {

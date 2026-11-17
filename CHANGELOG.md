@@ -1,3 +1,9 @@
+## [3.2.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.1.3...v3.2.0) (2026-11-17)
+
+### Features
+
+* **core:** células epiteliais da urina e "Relação Albumina/Globulina" da Dasa ([#178](https://github.com/Precisa-Saude/fhir-brasil/issues/178)) ([fbc1497](https://github.com/Precisa-Saude/fhir-brasil/commit/fbc1497401d7df120f9199ac3e47e96904a6d5f6))
+
 ## [3.1.3](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.1.2...v3.1.3) (2026-11-17)
 
 ### Bug Fixes

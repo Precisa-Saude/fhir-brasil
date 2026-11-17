@@ -4,15 +4,45 @@ Este diretório contém o Implementation Guide (IG) do fhir-brasil, escrito em [
 
 ## Publicação
 
-**O pacote ainda não está publicado em registro nenhum.** `br.dev.fhir-brasil.core`
+**O pacote não está publicado em registro nenhum.** `br.dev.fhir-brasil.core`
 não resolve no [FHIR Package Registry](https://packages.fhir.org/catalog?name=br.dev.fhir-brasil.core)
 nem no [Simplifier](https://simplifier.net/packages/br.dev.fhir-brasil.core): as
-duas consultas voltam vazias. Não cite o pacote como instalável.
+duas consultas voltam vazias. Não cite o pacote como instalável por nome.
 
-O workflow `_publish-ig.yml` existe e está pronto, mas nada o chama e o
-`SIMPLIFIER_API_KEY` não está configurado no repositório.
+A publicação é pelo site. O build do site compila o IG e, depois do deploy,
+serve:
 
-Até lá, compile localmente:
+- **cada recurso de conformidade na própria URL canônica**, em JSON
+  (`application/fhir+json`). Vale para todo recurso cuja `url` fica em
+  `https://fhir-brasil.dev.br/`: os perfis e as extensões em
+  `/ig/StructureDefinition/<id>`, os ValueSets em `/ig/ValueSet/<id>`, o
+  ImplementationGuide em `/ig/ImplementationGuide/<id>` e os CodeSystems em
+  `/CodeSystem/<id>`, fora de `/ig/`, porque é essa a `url` deles;
+- **o pacote FHIR NPM** em <https://fhir-brasil.dev.br/ig/package.tgz>, com
+  todos os recursos e os exemplos;
+- **um índice** em <https://fhir-brasil.dev.br/ig/>, com link para cada
+  artefato.
+
+```bash
+curl https://fhir-brasil.dev.br/ig/StructureDefinition/br-lab-observation
+curl -O https://fhir-brasil.dev.br/ig/package.tgz
+```
+
+Só JSON, sem negociação de conteúdo e sem caminho por versão. Endereço
+desconhecido em `/ig/` e nos diretórios de recurso responde 404. O
+`CodeSystem-cid-10` e os exemplos não têm `url` no domínio do site e vão só no
+pacote.
+
+Nada gerado é versionado: `ig/scripts/build-site-artifacts.js` roda no fim do
+`build` do site (`pnpm turbo run build --filter=@fhir-brasil/site`), e o deploy
+dispara quando `ig/` ou `site/` mudam. Os tipos de conteúdo ficam em
+`site/public/_headers`, uma regra por diretório de recurso; o teste do site
+reprova se o SUSHI passar a emitir recurso em diretório sem regra.
+
+O workflow `_publish-ig.yml`, que publicaria no Simplifier, existe, mas nada o
+chama e o `SIMPLIFIER_API_KEY` não está configurado no repositório.
+
+Para compilar só o pacote, sem o site:
 
 ```bash
 pnpm exec sushi ig/ -o ig/output

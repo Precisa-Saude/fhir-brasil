@@ -6,6 +6,21 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 
+/ig/StructureDefinition/*
+  Content-Type: application/fhir+json; charset=utf-8
+
+/ig/ValueSet/*
+  Content-Type: application/fhir+json; charset=utf-8
+
+/ig/ImplementationGuide/*
+  Content-Type: application/fhir+json; charset=utf-8
+
+/CodeSystem/*
+  Content-Type: application/fhir+json; charset=utf-8
+
+/ig/package.tgz
+  Content-Type: application/gzip
+
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 

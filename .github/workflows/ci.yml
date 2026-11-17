@@ -92,6 +92,7 @@ jobs:
       # Newline-separated list of package directories. One per line.
       packages: |
         packages/core
+        packages/lab-access
         packages/ocr-utils
         packages/pdf
         packages/rnds

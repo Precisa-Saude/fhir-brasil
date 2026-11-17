@@ -15,10 +15,20 @@ describe('package.json', () => {
   const pkg = read('../../package.json');
   const rnds = read('../../../rnds/package.json');
 
-  it('é privado enquanto a especificação não é pública', () => {
+  it('é público no npm, com o publishConfig do pacote rnds e a versão do monorepo', () => {
     expect(pkg.name).toBe('@precisa-saude/fhir-lab-access');
-    expect(pkg.private).toBe(true);
-    expect(pkg.publishConfig).toBeUndefined();
+    expect(pkg.private).toBeUndefined();
+    expect(pkg.publishConfig).toEqual(rnds.publishConfig);
+    expect(pkg.version).toBe(read('../../../../package.json').version);
+  });
+
+  it('está nas duas listas de publicação, a do CI e a do .precisa.json', () => {
+    const ci = readFileSync(
+      fileURLToPath(new URL('../../../../.github/workflows/ci.yml', import.meta.url)),
+      'utf-8',
+    );
+    expect(ci).toMatch(/^\s+packages\/lab-access$/m);
+    expect(read('../../../../.precisa.json').publishPackages).toContain('packages/lab-access');
   });
 
   it('só depende de @precisa-saude/fhir e de jose em runtime', () => {

@@ -28,7 +28,7 @@ packages/
   pdf/           — PDF text-layer extraction (external dep: pdfjs-dist)
   rnds/          — HTTP client for RNDS (DATASUS), mTLS auth
   rnds-sandbox/  — Mock local da RNDS para dev/ensino (FHIR R4, cenários sintéticos)
-  lab-access/    — Receiver-side client for the Open Labs Brasil consent-based lab access protocol (draft, private, not published)
+  lab-access/    — Receiver-side client for the Open Labs Brasil consent-based lab access protocol (draft spec, published on npm)
 ig/              — FHIR Implementation Guide (SUSHI), compiled by the site build and served at its canonical URLs (in no package registry)
 site/            — Public site (Cloudflare Pages)
 ```
@@ -52,13 +52,21 @@ Valid scopes: `core`, `ocr-utils`, `pdf`, `rnds`, `rnds-sandbox`,
   over hand-written signing and verification code
 - Any other external runtime dep requires explicit approval
 
-## Private packages
+## Publishing a package
 
-`@precisa-saude/fhir-lab-access` is `"private": true` while the protocol
-specification it implements is an unpublished draft. `scripts/sync-versions.js`
-derives the publish list from `packages/*` minus private packages, so it must
-stay out of the `packages:` block in `.github/workflows/ci.yml` and out of
-`publishPackages` in `.precisa.json` until it is made public.
+`scripts/sync-versions.js` derives the publish list from `packages/*` minus
+packages with `"private": true`, and `--check` (the "Lista de publish" CI job)
+fails when the `packages:` block in `.github/workflows/ci.yml` differs from it.
+A new public package therefore needs three edits together: drop `"private"`
+and add `"publishConfig": { "access": "public" }` in its `package.json`, add
+it to that `packages:` block, and add it to `publishPackages` in
+`.precisa.json`. Every package carries the monorepo version.
+
+`@precisa-saude/fhir-lab-access` implements a draft (Open Labs Brasil 0.x)
+and was published while the spec is still 0.x. Its README keeps the draft
+warning. A protocol change that breaks the client is a breaking change for
+the package, and with the shared version that means a major release of every
+package in this monorepo: say so in the PR before it merges.
 
 ## Medical data guidelines
 

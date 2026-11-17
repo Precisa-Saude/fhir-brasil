@@ -25,6 +25,7 @@
   "pnpmVersion": "9.15.9",
   "publishPackages": [
     "packages/core",
+    "packages/lab-access",
     "packages/ocr-utils",
     "packages/pdf",
     "packages/rnds",

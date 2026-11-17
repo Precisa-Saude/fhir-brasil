@@ -32,8 +32,12 @@ export interface SearchPage<T> {
   bundle: FHIRSearchBundle<T>;
   /** Recursos trazidos por `_include`. */
   included: unknown[];
-  /** Busca a próxima página pelo link `next`, sem alterá-lo. */
+  /**
+   * Busca a próxima página pelo link `next`: o absoluto como veio, o relativo
+   * resolvido contra a URL desta página, e os dois só dentro da base FHIR.
+   */
   next(): Promise<SearchPage<T> | undefined>;
+  /** Endereço da próxima página, já resolvido quando o link era relativo. */
   nextUrl?: string;
   /** Entradas `OperationOutcome` informativas do Bundle. */
   outcomes: FHIROperationOutcome[];
@@ -100,7 +104,27 @@ export function repeated(
   return (typeof value === 'string' ? [value] : value).map((item) => [name, item]);
 }
 
-function toPage<T>(env: FhirEnv, resourceType: string, json: unknown): SearchPage<T> {
+/**
+ * Endereço da próxima página. Link absoluto segue como veio. Link relativo, que
+ * o FHIR R4 admite, é resolvido contra a URL da requisição que devolveu o
+ * Bundle (RFC 3986, seção 5.2). Nos dois casos a conferência da base vem
+ * depois, sobre a URL resultante.
+ */
+function nextPageUrl(link: string, requestUrl: string): string {
+  if (/^[A-Za-z][A-Za-z0-9+.-]*:/.test(link)) return link;
+  try {
+    return new URL(link, requestUrl).toString();
+  } catch {
+    return link;
+  }
+}
+
+function toPage<T>(
+  env: FhirEnv,
+  resourceType: string,
+  json: unknown,
+  requestUrl: string,
+): SearchPage<T> {
   const bundle = json as FHIRSearchBundle<T> | undefined;
   if (bundle?.resourceType !== 'Bundle' || bundle.type !== 'searchset') {
     throw new LabAccessProtocolError('A busca não devolveu um Bundle do tipo searchset.');
@@ -118,7 +142,8 @@ function toPage<T>(env: FhirEnv, resourceType: string, json: unknown): SearchPag
     } else if (resource !== undefined) included.push(resource);
   }
 
-  const nextUrl = bundle.link?.find((link) => link.relation === 'next')?.url;
+  const nextLink = bundle.link?.find((link) => link.relation === 'next')?.url;
+  const nextUrl = nextLink === undefined ? undefined : nextPageUrl(nextLink, requestUrl);
   return {
     bundle,
     included,
@@ -171,7 +196,7 @@ async function searchUrl<T>(
 ): Promise<SearchPage<T>> {
   assertInsideFhirBase(env, url);
   const { json } = await fhirCall(env, { method: 'GET', okStatuses: [200], url }, true);
-  return toPage<T>(env, resourceType, json);
+  return toPage<T>(env, resourceType, json, url);
 }
 
 /** Busca (`search-type`). Parâmetros sem valor são omitidos. */

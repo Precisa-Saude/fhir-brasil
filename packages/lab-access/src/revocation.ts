@@ -14,6 +14,7 @@ import {
   PENDING_REVOCATION_DAILY_INTERVAL_MS,
   PENDING_REVOCATION_HOURLY_INTERVAL_MS,
   PENDING_REVOCATION_HOURLY_PERIOD_MS,
+  REVOCATION_RETRY_AFTER_MAX_MS,
 } from './constants';
 import type { ClientContext } from './context';
 import {
@@ -58,7 +59,10 @@ export interface PendingRevocation {
    * por dia depois, e nunca antes de `notBefore`.
    */
   nextAttemptAt: string;
-  /** Instante indicado pelo último `Retry-After`. Nenhuma tentativa acontece antes dele. */
+  /**
+   * Instante indicado pelo último `Retry-After`, limitado a 24 horas depois da
+   * tentativa. Nenhuma tentativa acontece antes dele.
+   */
   notBefore?: string;
   providerId: string;
   reason: RevocationReason;
@@ -146,13 +150,18 @@ function pendingKey(providerId: string, consentId: string): string {
   return `${providerId} ${consentId}`;
 }
 
-/** Instante indicado por `Retry-After` na falha, se houver. */
+/**
+ * Instante indicado por `Retry-After` na falha, se houver. Na revogação ele
+ * vale por no máximo 24 horas: um valor maior conta como 24 horas, e depois
+ * disso o calendário volta (seção 4.4, item 5).
+ */
 function retryAfterInstant(error: unknown, now: Date): number | undefined {
   const seconds =
     error instanceof LabAccessApiError || error instanceof OAuthError
       ? error.retryAfterSeconds
       : undefined;
-  return seconds === undefined ? undefined : now.getTime() + seconds * 1000;
+  if (seconds === undefined) return undefined;
+  return now.getTime() + Math.min(seconds * 1000, REVOCATION_RETRY_AFTER_MAX_MS);
 }
 
 /**

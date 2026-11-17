@@ -93,6 +93,18 @@ describe('toApiError', () => {
     expect(unknown5xx).toMatchObject({ retry: 'backoff', retryable: true });
   });
 
+  it('429 sem código do protocolo se repete depois de Retry-After, nos endpoints de API e no de token', () => {
+    const bare = { body: '', headers: { 'retry-after': '5' }, status: 429 };
+    expect(toApiError(bare)).toMatchObject({ retry: 'after-retry-after', retryAfterSeconds: 5 });
+    expect(toApiError(jsonResponse(429, operationOutcome('CODIGO_NOVO')))).toMatchObject({
+      retry: 'after-retry-after',
+    });
+    expect(toOAuthError(bare)).toMatchObject({ retry: 'after-retry-after', status: 429 });
+    expect(toOAuthError(jsonResponse(429, { error: 'slow_down' }))).toMatchObject({
+      retry: 'after-retry-after',
+    });
+  });
+
   it('aceita corpo que não é OperationOutcome ou não tem código do protocolo', () => {
     expect(toApiError({ body: '<html>', headers: {}, status: 502 })).toMatchObject({
       code: undefined,

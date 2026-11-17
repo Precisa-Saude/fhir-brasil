@@ -116,10 +116,12 @@ export function retryAfterSeconds(response: LabAccessResponse): number | undefin
 }
 
 /**
- * Código desconhecido é tratado pelo status HTTP: 4xx não se repete, 5xx se
- * repete com recuo (seção 6.4, regra 5).
+ * Código desconhecido é tratado pelo status HTTP (seção 6.4, regra 5): 429 se
+ * repete depois de `Retry-After`, mesmo sem código do protocolo, os demais 4xx
+ * não se repetem, e 5xx se repete com recuo.
  */
 function retryByStatus(status: number): RetryStrategy {
+  if (status === 429) return 'after-retry-after';
   return status >= 500 ? 'backoff' : 'never';
 }
 

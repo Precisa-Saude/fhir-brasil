@@ -297,6 +297,49 @@ describe('revogação pendente', () => {
     expect(Date.parse(retried!.pending!.nextAttemptAt)).toBe(harness.lab.now.getTime() + 2 * HOUR);
   });
 
+  it('RCP-028: 429 sem código do protocolo, no DELETE e no token de consent.manage, admite repetição', async () => {
+    const harness = await createHarness();
+    const { access, consent } = await connect(harness);
+    advance(harness, 11 * 60 * 1000);
+    harness.lab.failNext(isClientCredentials, {
+      body: '',
+      headers: { 'Retry-After': '2' },
+      status: 429,
+    });
+    harness.lab.failNext(isDelete, { body: '', headers: {}, status: 429 });
+
+    await expect(access.revoke()).resolves.toBeUndefined();
+    expect(harness.sleeps).toEqual([2000, 2000]);
+    expect(deletes(harness)).toHaveLength(2);
+    expect(harness.lab.consents.get(consent.consentId)!.body.status).toBe('REVOKED');
+  });
+
+  it('RCP-050: Retry-After acima de 24 horas vale por 24 horas, e depois o calendário volta', async () => {
+    const harness = await createHarness();
+    const { access, consent } = await connect(harness);
+    harness.lab.failNext(
+      isDelete,
+      jsonResponse(503, operationOutcome('PROVIDER_UNAVAILABLE', 'transient'), {
+        'Retry-After': '172800',
+      }),
+    );
+    const start = harness.lab.now.getTime();
+
+    await expect(access.revoke()).rejects.toBeInstanceOf(RevocationPendingError);
+    const [pending] = await harness.client.pendingRevocations();
+    expect(Date.parse(pending!.notBefore!)).toBe(start + 24 * HOUR);
+    expect(Date.parse(pending!.nextAttemptAt)).toBe(start + 24 * HOUR);
+
+    advance(harness, 24 * HOUR - 1000);
+    expect(await harness.client.retryPendingRevocations()).toEqual([]);
+    advance(harness, 1000);
+    expect(await harness.client.retryPendingRevocations()).toMatchObject([
+      { outcome: 'confirmed' },
+    ]);
+    expect(deletes(harness)).toHaveLength(2);
+    expect(harness.lab.consents.get(consent.consentId)!.body.status).toBe('REVOKED');
+  });
+
   it('RCP-048: provedor suspenso não é chamado nem para revogar, e o calendário volta quando ele é reativado', async () => {
     const harness = await createHarness();
     const { access, consent } = await connect(harness);

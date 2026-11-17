@@ -12,7 +12,7 @@ const README = readFileSync(fileURLToPath(new URL('../../README.md', HERE)), 'ut
  */
 const REQUIRED = [
   ...Array.from({ length: 13 }, (_, i) => `REG-${String(i + 1).padStart(3, '0')}`),
-  ...Array.from({ length: 49 }, (_, i) => `RCP-${String(i + 1).padStart(3, '0')}`),
+  ...Array.from({ length: 51 }, (_, i) => `RCP-${String(i + 1).padStart(3, '0')}`),
 ];
 
 /** Retirados na 0.2.1: ficam na tabela, marcados, e sem teste. */

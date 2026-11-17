@@ -336,8 +336,7 @@ describe('paginação', () => {
       'https://api.laboratorio.example/fhir/r4/../../admin/Location?page=2',
       'https://api.laboratorio.example/fhir/r4/%2e%2e/%2e%2e/admin?page=2',
       'https://api.laboratorio.example@atacante.example/fhir/r4/Location?page=2',
-      '/fhir/r4/Location?page=2',
-      'nada',
+      'https://[nada',
     ]) {
       harness.lab.fhir = () => jsonResponse(200, bundle([], next));
       const page = await provider.searchLocations();
@@ -347,20 +346,38 @@ describe('paginação', () => {
     }
   });
 
-  it('RCP-043: não segue link com componente de usuário nem link relativo, dentro ou fora da base', async () => {
+  it('RCP-043: não segue link com componente de usuário, nem link relativo que resolve fora da base', async () => {
     const { harness, provider } = await setup();
     for (const next of [
       'https://usuario@api.laboratorio.example/fhir/r4/Location?page=2',
       'https://usuario:senha@api.laboratorio.example/fhir/r4/Location?page=2',
-      'Location?page=2',
       '../../outro/Location?page=2',
+      '/outro/Location?page=2',
       '//atacante.example/fhir/r4/Location?page=2',
+      '//usuario@api.laboratorio.example/fhir/r4/Location?page=2',
+      '//[nada',
     ]) {
       harness.lab.fhir = () => jsonResponse(200, bundle([], next));
       const page = await provider.searchLocations();
       const before = harness.lab.calls.length;
       await expect(page.next(), next).rejects.toBeInstanceOf(LabAccessProtocolError);
       expect(harness.lab.calls).toHaveLength(before);
+    }
+  });
+
+  it('RCP-051: resolve link relativo contra a URL da requisição e segue o que fica dentro da base', async () => {
+    const { harness, provider } = await setup();
+    for (const [next, expected] of [
+      ['?page=2', `${FHIR_BASE}/Location?page=2`],
+      ['/fhir/r4/Location?page=3', `${FHIR_BASE}/Location?page=3`],
+      ['Location?page=4', `${FHIR_BASE}/Location?page=4`],
+      ['./?_getpages=abc', `${FHIR_BASE}/?_getpages=abc`],
+    ] as const) {
+      harness.lab.fhir = () => jsonResponse(200, bundle([], next));
+      const page = await provider.searchLocations({ status: 'active' });
+      expect(page.nextUrl, next).toBe(expected);
+      await page.next();
+      expect(harness.lab.calls.at(-1)!.url).toBe(expected);
     }
   });
 

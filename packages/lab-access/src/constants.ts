@@ -76,6 +76,9 @@ export const PENDING_REVOCATION_HOURLY_INTERVAL_MS = 60 * 60 * 1000;
 /** Por quanto tempo, desde o pedido, a revogação pendente é repetida de hora em hora. */
 export const PENDING_REVOCATION_HOURLY_PERIOD_MS = 24 * 60 * 60 * 1000;
 
+/** Por quanto tempo, no máximo, um `Retry-After` adia a revogação (seção 4.4, item 5). */
+export const REVOCATION_RETRY_AFTER_MAX_MS = 24 * 60 * 60 * 1000;
+
 /** Intervalo entre repetições de uma revogação pendente depois das primeiras 24 horas. */
 export const PENDING_REVOCATION_DAILY_INTERVAL_MS = 24 * 60 * 60 * 1000;
 

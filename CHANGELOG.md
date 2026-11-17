@@ -1,3 +1,9 @@
+## [3.1.3](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.1.2...v3.1.3) (2026-11-17)
+
+### Bug Fixes
+
+* **lab-access:** cliente do receptor conforme a especificação 0.2.2 ([#177](https://github.com/Precisa-Saude/fhir-brasil/issues/177)) ([d93fe2b](https://github.com/Precisa-Saude/fhir-brasil/commit/d93fe2bacfd582f981354ed2feda4ad38915b6de))
+
 ## [3.1.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.1.1...v3.1.2) (2026-11-16)
 
 ### Bug Fixes

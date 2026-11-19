@@ -1,3 +1,13 @@
+## [3.3.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.3.1...v3.3.2) (2026-11-19)
+
+### Bug Fixes
+
+* **core:** grafias do SIGTAP ancoram o exame certo ([#182](https://github.com/Precisa-Saude/fhir-brasil/issues/182)) ([971599e](https://github.com/Precisa-Saude/fhir-brasil/commit/971599e98b4fcad3b829503d2b4cb8c66b2e41b4))
+
+### CI/CD
+
+* ativa a revisão automática dos PRs ([#183](https://github.com/Precisa-Saude/fhir-brasil/issues/183)) ([44bc58c](https://github.com/Precisa-Saude/fhir-brasil/commit/44bc58cc7c8626bbbd5999a1c904c71b8dfb125c))
+
 ## [3.3.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.3.0...v3.3.1) (2026-11-19)
 
 ### Bug Fixes

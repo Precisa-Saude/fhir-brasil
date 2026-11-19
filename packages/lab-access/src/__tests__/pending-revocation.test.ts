@@ -465,3 +465,28 @@ describe('fim da pendência pela resposta do provedor', () => {
     }
   });
 });
+
+describe('revogação sem tokens', () => {
+  it('revoke() depois de discard() envia o DELETE ao provedor', async () => {
+    const harness = await createHarness();
+    const { access, consent } = await connect(harness);
+    access.discard();
+
+    await expect(access.revoke()).resolves.toBeUndefined();
+    expect(deletes(harness)).toHaveLength(1);
+    expect(harness.lab.consents.get(consent.consentId)!.body.status).toBe('REVOKED');
+  });
+
+  it('um segundo revoke() depois de RevocationPendingError tenta de novo e continua pendente', async () => {
+    const harness = await createHarness();
+    const { access, consent } = await pendingAfterOutage(harness);
+    expect(deletes(harness)).toHaveLength(3);
+
+    const error = await access.revoke().catch((err: unknown) => err);
+    expect(error).toBeInstanceOf(RevocationPendingError);
+    expect(deletes(harness)).toHaveLength(6);
+    expect(await harness.client.pendingRevocations()).toMatchObject([
+      { consentId: consent.consentId },
+    ]);
+  });
+});

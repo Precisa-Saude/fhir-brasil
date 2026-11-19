@@ -1777,7 +1777,14 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     loinc: '786-4',
     names: {
       en: ['Mean Corpuscular Hemoglobin Concentration', 'MCHC'],
-      pt: ['Concentração de Hemoglobina Corpuscular Média', 'CHCM'],
+      // Sem "Média" na tabela de evolução do hemograma da Weinmann
+      // ("Concentração de Hemoglobina Corpuscular 33,0 33,2 …"): o nome não
+      // ancorava e a leitura saía como desconhecida (18/11/2026).
+      pt: [
+        'Concentração de Hemoglobina Corpuscular Média',
+        'Concentração de Hemoglobina Corpuscular',
+        'CHCM',
+      ],
     },
     unit: 'g/dL',
   },

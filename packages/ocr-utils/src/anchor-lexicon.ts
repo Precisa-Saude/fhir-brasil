@@ -161,8 +161,9 @@ export const GENETIC_CONTEXT_PATTERNS: RegExp[] = [
 /**
  * Subtipo que vem logo depois do nome e muda o exame. "CK" sozinho é a
  * creatina quinase total, e "CK-MB" é a fração MB, que o catálogo não tem: sem
- * esta trava, a sigla curta ancorava `CK` dentro de "CK-MB" (PRE-486).
+ * esta trava, a sigla curta ancorava `CK` dentro de "CK-MB" (PRE-486). O SIGTAP
+ * escreve "creatinofosfoquinase fração MB", com a palavra no meio.
  */
 export const SUBTYPE_AFTER: Record<string, RegExp> = {
-  CK: /^[\s-]*mb\b/i,
+  CK: /^[\s-]*(?:fra[cç][aã]o\s+)?mb\b/i,
 };

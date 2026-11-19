@@ -120,6 +120,8 @@ export class PatientAccess {
   readonly #issuer: string;
   readonly #options: PatientAccessOptions;
   #refreshing: Promise<string> | undefined;
+  /** A revogação feita por este objeto foi confirmada pelo provedor. */
+  #revoked = false;
   #tokens: { accessToken: string; expiresAt: number; refreshToken?: string } | undefined;
 
   /** @internal Use `completeAuthorization` ou `resumePatientAccess`. */
@@ -196,9 +198,14 @@ export class PatientAccess {
    * ela fica pendente e o método lança `RevocationPendingError` com a
    * pendência: as repetições seguintes vêm de
    * `LabAccessClient.retryPendingRevocations`.
+   *
+   * Depois que a revogação foi confirmada, chamar de novo não faz nada. Em
+   * qualquer outro caso, inclusive depois de `discard()` ou de uma revogação
+   * pendente, o pedido vai ao provedor: a revogação não depende dos tokens,
+   * e `DELETE` repetido é esperado.
    */
   async revoke(reason: RevocationReason = 'PATIENT_REQUEST'): Promise<void> {
-    if (!this.#tokens) return;
+    if (this.#revoked) return;
     this.discard();
     const result = await revokeConsent(this.#ctx, {
       consentExpiresAt: this.#consentExpiresAt,
@@ -211,6 +218,7 @@ export class PatientAccess {
         cause: result.error,
       });
     }
+    this.#revoked = true;
   }
 
   // ── appointment.write ──────────────────────────────────────────

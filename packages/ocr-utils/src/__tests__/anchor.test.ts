@@ -1218,3 +1218,19 @@ describe('findBiomarkersInText: diferencial abreviado do laudo em colunas (Labco
     expect(codesOf(line)).toContain(code);
   });
 });
+
+// Tabela de evolução do hemograma que imprime o nome sem "Média". Sem o alias,
+// a leitura não ancorava e saía como exame desconhecido (18/11/2026).
+describe('CHCM impressa sem "Média"', () => {
+  const codes = (line: string) => findBiomarkersInText(line).matches.map((m) => m.code);
+
+  it('ancora em MCHC, e não em MCH', () => {
+    const line = 'Concentração de Hemoglobina Corpuscular 33,0 33,2 ---- 32,0 a 35,2 g/dL';
+    expect(codes(line)).toContain('MCHC');
+    expect(codes(line)).not.toContain('MCH');
+  });
+
+  it('a HCM continua em MCH', () => {
+    expect(codes('HEMOGLOBINA CORPUSCULAR MÉDIA: 30,1 pg 26,0 a 34,0')).toEqual(['MCH']);
+  });
+});

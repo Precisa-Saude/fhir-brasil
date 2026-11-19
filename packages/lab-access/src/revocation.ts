@@ -104,7 +104,13 @@ export class InMemoryRevocationStore implements RevocationStore {
 
 export interface RevocationRetryResult {
   consentId: string;
-  /** Falha da tentativa, quando a pendência continua. */
+  /**
+   * Falha da tentativa, quando a pendência continua. Se o `RevocationStore`
+   * falhou ao gravar ou apagar a pendência, é a falha dele, em qualquer
+   * `outcome`: o armazenamento ficou desatualizado, e com `pending` a
+   * pendência reagendada vem neste resultado para o aplicativo gravá-la de
+   * outro jeito.
+   */
   error?: unknown;
   /**
    * `confirmed`: o provedor respondeu 204, 404 `CONSENT_NOT_FOUND` ou 422
@@ -234,6 +240,11 @@ async function quietly(action: () => Promise<void> | void): Promise<unknown> {
   }
 }
 
+/** `{ error }` quando houve falha, e nada quando não houve. */
+function failed(error: unknown): { error?: unknown } {
+  return error === undefined ? {} : { error };
+}
+
 export interface RevocationRequest {
   consentExpiresAt?: string;
   consentId: string;
@@ -358,8 +369,8 @@ export async function retryPendingRevocations(
       pending.consentExpiresAt !== undefined &&
       now.getTime() > Date.parse(pending.consentExpiresAt)
     ) {
-      await ctx.revocations.remove(providerId, consentId);
-      results.push({ consentId, outcome: 'expired', providerId });
+      const storeError = await quietly(() => ctx.revocations.remove(providerId, consentId));
+      results.push({ consentId, outcome: 'expired', providerId, ...failed(storeError) });
       continue;
     }
     // `nextAttemptAt` nunca fica antes de `notBefore`: o Retry-After já entrou nele.
@@ -375,12 +386,20 @@ export async function retryPendingRevocations(
     ctx.revocationsInFlight.add(key);
     try {
       await attemptRevocation(ctx, providerId, consentId, pending.reason);
-      await ctx.revocations.remove(providerId, consentId);
-      results.push({ consentId, outcome: 'confirmed', providerId });
+      const storeError = await quietly(() => ctx.revocations.remove(providerId, consentId));
+      results.push({ consentId, outcome: 'confirmed', providerId, ...failed(storeError) });
     } catch (error) {
       afterFailure(record, error, ctx.now());
-      await ctx.revocations.save(record);
-      results.push({ consentId, error, outcome: 'pending', pending: record, providerId });
+      // Como em `revokeConsent`: a falha do armazenamento vai no resultado,
+      // com a pendência reagendada, e a varredura segue para as próximas.
+      const storeError = await quietly(() => ctx.revocations.save(record));
+      results.push({
+        consentId,
+        error: storeError ?? error,
+        outcome: 'pending',
+        pending: record,
+        providerId,
+      });
     } finally {
       ctx.revocationsInFlight.delete(key);
     }

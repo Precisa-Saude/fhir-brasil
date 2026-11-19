@@ -103,6 +103,26 @@ describe('discoverAuthorizationServer', () => {
     expect(endpoints.parEndpoint).toBe('https://mtls.auth.laboratorio.example/par');
   });
 
+  it('revocation_endpoint malformado não recusa o provedor: o campo está fora da tabela da seção 5.2 e o receptor não o usa', async () => {
+    const changes: Record<string, unknown>[] = [
+      { revocation_endpoint: '/oauth/revoke' },
+      { revocation_endpoint: 'http://auth.laboratorio.example/revoke' },
+      { revocation_endpoint: 42 },
+      { mtls_endpoint_aliases: { revocation_endpoint: 'http://mtls.laboratorio.example/revoke' } },
+    ];
+    for (const change of changes) {
+      const transport = fakeTransport(() => jsonResponse(200, { ...METADATA, ...change }));
+      const endpoints = await discoverAuthorizationServer(transport, ISSUER, SCOPES);
+      expect(endpoints, JSON.stringify(change)).toEqual({
+        authorizationEndpoint: `${ISSUER}/authorize`,
+        issuer: ISSUER,
+        parEndpoint: 'https://mtls.auth.laboratorio.example/par',
+        revocationEndpoint: undefined,
+        tokenEndpoint: 'https://mtls.auth.laboratorio.example/token',
+      });
+    }
+  });
+
   const invalid: [string, Record<string, unknown>][] = [
     ['sem token_endpoint', { token_endpoint: undefined }],
     ['sem endpoint de PAR', { pushed_authorization_request_endpoint: undefined }],

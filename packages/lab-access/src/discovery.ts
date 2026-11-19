@@ -177,6 +177,8 @@ export async function discoverAuthorizationServer(
   const alias = (aliases ?? {}) as Record<string, unknown>;
   const mtls = (name: string, fallback: unknown): unknown => alias[name] ?? fallback;
 
+  // `revocation_endpoint` está fora da tabela da seção 5.2 e o cliente não o
+  // chama: fica guardado só quando é URL `https`, e nunca recusa o provedor.
   const revocation = mtls('revocation_endpoint', fields.revocation_endpoint);
   return {
     authorizationEndpoint,
@@ -185,8 +187,7 @@ export async function discoverAuthorizationServer(
       mtls('pushed_authorization_request_endpoint', parEndpoint),
       'pushed_authorization_request_endpoint',
     ),
-    revocationEndpoint:
-      revocation === undefined ? undefined : httpsEndpoint(revocation, 'revocation_endpoint'),
+    revocationEndpoint: isHttpsUrl(revocation) ? revocation : undefined,
     tokenEndpoint: httpsEndpoint(mtls('token_endpoint', tokenEndpoint), 'token_endpoint'),
   };
 }

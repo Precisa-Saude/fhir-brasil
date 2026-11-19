@@ -442,15 +442,16 @@ export class PatientAccess {
     try {
       return await call(token);
     } catch (error) {
-      if (
-        error instanceof LabAccessApiError &&
-        error.status === 401 &&
-        CONSENT_ENDED_CODES.includes(error.code ?? '')
-      ) {
-        return this.#consentEnded(resolved, error);
-      }
+      if (isConsentEnded(error)) return this.#consentEnded(resolved, error);
       if (!shouldRenewToken(error)) throw error;
-      return call(await this.#accessToken(resolved, true));
+    }
+    // O consentimento pode acabar entre a renovação e a chamada repetida.
+    const renewed = await this.#accessToken(resolved, true);
+    try {
+      return await call(renewed);
+    } catch (error) {
+      if (isConsentEnded(error)) return this.#consentEnded(resolved, error);
+      throw error;
     }
   }
 
@@ -475,6 +476,15 @@ export class PatientAccess {
     );
     return asResource<FHIRAppointment>(response, 'Appointment');
   }
+}
+
+/** 401 em que o provedor diz que o consentimento expirou ou foi revogado. */
+function isConsentEnded(error: unknown): boolean {
+  return (
+    error instanceof LabAccessApiError &&
+    error.status === 401 &&
+    CONSENT_ENDED_CODES.includes(error.code ?? '')
+  );
 }
 
 /** Separa `_lastUpdated` de `_count`, para manter a ordem dos parâmetros da especificação. */

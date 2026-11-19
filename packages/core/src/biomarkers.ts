@@ -446,12 +446,21 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     code: 'AntiTPO',
     loinc: '8099-4',
     names: {
-      en: ['Thyroid Peroxidase Antibodies', 'TPO Antibodies', 'Anti-TPO'],
+      en: [
+        'Thyroid Peroxidase Antibodies',
+        'TPO Antibodies',
+        'Anti-TPO',
+        'Antimicrosomal Antibodies',
+        'Thyroid Microsomal Antibodies',
+      ],
       pt: [
         'Anticorpos Anti-Peroxidase Tireoidiana',
         'Anticorpos Anti-Peroxidase Tiroidiana',
         'Anti-TPO',
         'TPO',
+        // Nome antigo: o antígeno microssomal da tireoide é a peroxidase (TPO).
+        'Anticorpos Antimicrossomas',
+        'Anticorpos Antimicrossomais',
       ],
     },
     unit: 'UI/mL',

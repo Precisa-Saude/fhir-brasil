@@ -1256,6 +1256,8 @@ describe('findBiomarkersInText — grafias do SIGTAP', () => {
     ['Anticorpo antitransglutaminase IgA: 2,1 U/mL', 'tTG_IgA'],
     ['Gonadotrofina coriônica humana: 1.250 mUI/mL', 'BetaHCG'],
     ['Antígeno CA 125: 12 U/mL', 'CA125'],
+    ['Pesquisa de anticorpos antimicrossomas: 12 UI/mL', 'AntiTPO'],
+    ['Anticorpos antimicrossomais: 12 UI/mL', 'AntiTPO'],
   ])('ancora %s como %s', (text, code) => {
     expect(codes(text)).toContain(code);
   });

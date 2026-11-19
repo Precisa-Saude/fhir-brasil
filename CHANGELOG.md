@@ -1,3 +1,9 @@
+## [3.3.5](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.3.4...v3.3.5) (2026-11-19)
+
+### Bug Fixes
+
+* **lab-access:** revogação pendente resiste a falha do store e a metadados malformados ([#186](https://github.com/Precisa-Saude/fhir-brasil/issues/186)) ([24ac455](https://github.com/Precisa-Saude/fhir-brasil/commit/24ac455bc8bbaa4163911e340ce7ac97d9277c76)), closes [#177](https://github.com/Precisa-Saude/fhir-brasil/issues/177)
+
 ## [3.3.4](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.3.3...v3.3.4) (2026-11-19)
 
 ### Bug Fixes

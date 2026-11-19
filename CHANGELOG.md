@@ -1,3 +1,9 @@
+## [3.3.3](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.3.2...v3.3.3) (2026-11-19)
+
+### Bug Fixes
+
+* **lab-access:** revogação no 401 após a renovação encerra o acesso ([#184](https://github.com/Precisa-Saude/fhir-brasil/issues/184)) ([42fe83d](https://github.com/Precisa-Saude/fhir-brasil/commit/42fe83deb12f27bf99daab16a74e779722ce5d79)), closes [#174](https://github.com/Precisa-Saude/fhir-brasil/issues/174)
+
 ## [3.3.2](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.3.1...v3.3.2) (2026-11-19)
 
 ### Bug Fixes

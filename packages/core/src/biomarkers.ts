@@ -2451,7 +2451,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     loinc: '10334-1',
     names: {
       en: ['CA-125', 'CA 125', 'Cancer Antigen 125'],
-      pt: ['CA-125', 'CA 125', 'Antígeno CA-125'],
+      pt: ['CA-125', 'CA 125', 'Antígeno CA-125', 'Antígeno CA 125'],
     },
     sex: 'female',
     unit: 'U/mL',
@@ -3859,6 +3859,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'β-hCG Quantitativo',
         'hCG',
         'Gonadotrofina Coriônica',
+        'Gonadotrofina Coriônica Humana',
       ],
     },
     unit: 'mUI/mL',

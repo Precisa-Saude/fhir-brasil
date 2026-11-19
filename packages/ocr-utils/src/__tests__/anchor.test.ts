@@ -1254,6 +1254,8 @@ describe('findBiomarkersInText — grafias do SIGTAP', () => {
     ['Dihidrotestosterona: 45 ng/dL', 'DHT'],
     ['Di-hidrotestosterona: 45 ng/dL', 'DHT'],
     ['Anticorpo antitransglutaminase IgA: 2,1 U/mL', 'tTG_IgA'],
+    ['Gonadotrofina coriônica humana: 1.250 mUI/mL', 'BetaHCG'],
+    ['Antígeno CA 125: 12 U/mL', 'CA125'],
   ])('ancora %s como %s', (text, code) => {
     expect(codes(text)).toContain(code);
   });

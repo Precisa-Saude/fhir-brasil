@@ -1,9 +1,16 @@
 {
-  "enabled": false,
-  "provider": "github-models",
-  "fallbackProviders": [],
-  "includePaths": ["packages/**/src/**"],
-  "excludePaths": ["**/fixtures/**"],
+  "enabled": true,
+  "provider": "openrouter",
+  "fallbackProviders": ["anthropic"],
+  "includePaths": [
+    "packages/**",
+    "ig/input/**",
+    "scripts/**",
+    ".github/**",
+    "docs/**",
+    "README.md"
+  ],
+  "excludePaths": ["**/fixtures/**", "**/*.generated.ts", "**/dist/**", "**/__snapshots__/**"],
   "scanForSecretsBeforeSending": true,
   "onSensitiveContent": "block"
 }

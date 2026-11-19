@@ -1,3 +1,9 @@
+## [3.3.4](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.3.3...v3.3.4) (2026-11-19)
+
+### Bug Fixes
+
+* **lab-access:** revoke() sem tokens ainda revoga no provedor ([#185](https://github.com/Precisa-Saude/fhir-brasil/issues/185)) ([e11c457](https://github.com/Precisa-Saude/fhir-brasil/commit/e11c457f06340f407890a741357994d99d020ceb)), closes [#177](https://github.com/Precisa-Saude/fhir-brasil/issues/177)
+
 ## [3.3.3](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.3.2...v3.3.3) (2026-11-19)
 
 ### Bug Fixes

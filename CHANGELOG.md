@@ -1,3 +1,9 @@
+## [3.3.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.3.0...v3.3.1) (2026-11-19)
+
+### Bug Fixes
+
+* **core:** CHCM impressa sem "Média" ancora em MCHC ([#181](https://github.com/Precisa-Saude/fhir-brasil/issues/181)) ([dafced8](https://github.com/Precisa-Saude/fhir-brasil/commit/dafced810ce334cff94de167275a90216c71404b))
+
 ## [3.3.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.2.0...v3.3.0) (2026-11-17)
 
 ### Features

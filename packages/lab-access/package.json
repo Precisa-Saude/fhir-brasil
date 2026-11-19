@@ -1,6 +1,6 @@
 {
   "name": "@precisa-saude/fhir-lab-access",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "description": "Cliente do receptor para o protocolo Open Labs Brasil (rascunho): acesso a catálogo, agenda, agendamento e resultados de laboratório com consentimento do paciente",
   "keywords": [
     "fhir",

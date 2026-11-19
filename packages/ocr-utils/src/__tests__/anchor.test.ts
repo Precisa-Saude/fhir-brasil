@@ -1234,3 +1234,54 @@ describe('CHCM impressa sem "Média"', () => {
     expect(codes('HEMOGLOBINA CORPUSCULAR MÉDIA: 30,1 pg 26,0 a 34,0')).toEqual(['MCH']);
   });
 });
+
+/**
+ * Grafias do SIGTAP e dos laudos brasileiros que não ancoravam ou ancoravam
+ * o exame errado. Vieram da cobertura do catálogo contra o SIA-SUS de 2008 a
+ * 2026 (platform, docs/business/cobertura-catalogo-sus.md).
+ */
+describe('findBiomarkersInText — grafias do SIGTAP', () => {
+  const codes = (text: string) => getMatchedCodes(findBiomarkersInText(text));
+
+  it.each([
+    ['25 Hidroxivitamina D: 32,4 ng/mL', 'VitaminD'],
+    ['Tempo e atividade da protrombina: 12,8 s', 'ProthrombinTime'],
+    ['Creatinofosfoquinase: 140 U/L', 'CK'],
+    ['Pesquisa de anticorpos antinúcleo: não reagente', 'ANA_Screen'],
+    ['Fator antinuclear: não reagente', 'ANA_Screen'],
+    ['Sulfato de deidroepiandrosterona: 210 µg/dL', 'DHEAS'],
+    ['Sulfato de hidroepiandrosterona: 210 µg/dL', 'DHEAS'],
+    ['Dihidrotestosterona: 45 ng/dL', 'DHT'],
+    ['Di-hidrotestosterona: 45 ng/dL', 'DHT'],
+    ['Anticorpo antitransglutaminase IgA: 2,1 U/mL', 'tTG_IgA'],
+  ])('ancora %s como %s', (text, code) => {
+    expect(codes(text)).toContain(code);
+  });
+
+  it('ancora cálcio ionizável como cálcio iônico, e não como cálcio total', () => {
+    const found = codes('Cálcio ionizável: 1,22 mmol/L');
+    expect(found).toContain('IonizedCalcium');
+    expect(found).not.toContain('Calcium');
+  });
+
+  it('ancora a capacidade de fixação do ferro como TIBC, e não como ferro sérico', () => {
+    for (const text of [
+      'Capacidade de fixação do ferro: 310 µg/dL',
+      'Capacidade total de fixação do ferro: 310 µg/dL',
+    ]) {
+      const found = codes(text);
+      expect(found).toContain('TIBC');
+      expect(found).not.toContain('Iron');
+    }
+  });
+
+  it('não ancora a fração MB como CK total', () => {
+    for (const text of [
+      'Creatinofosfoquinase fração MB: 18 U/L',
+      'CPK fração MB: 18 U/L',
+      'CK-MB: 18 U/L',
+    ]) {
+      expect(codes(text)).not.toContain('CK');
+    }
+  });
+});

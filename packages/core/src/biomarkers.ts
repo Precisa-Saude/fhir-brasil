@@ -536,7 +536,12 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     loinc: '8061-4',
     names: {
       en: ['Antinuclear Antibodies Screen', 'ANA Screen'],
-      pt: ['Triagem de Anticorpos Antinucleares', 'FAN Triagem'],
+      pt: [
+        'Triagem de Anticorpos Antinucleares',
+        'FAN Triagem',
+        'Anticorpos Antinúcleo',
+        'Fator Antinuclear',
+      ],
     },
   },
   {
@@ -900,7 +905,15 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     loinc: '2191-5',
     names: {
       en: ['DHEA-Sulfate', 'DHEAS', 'DHEA-S', 'DHEA Sulfate'],
-      pt: ['DHEA-Sulfato', 'DHEAS', 'Sulfato de DHEA'],
+      pt: [
+        'DHEA-Sulfato',
+        'DHEAS',
+        'Sulfato de DHEA',
+        'Sulfato de Deidroepiandrosterona',
+        'Sulfato de Dehidroepiandrosterona',
+        // Grafia da tabela SIGTAP (0202060330).
+        'Sulfato de Hidroepiandrosterona',
+      ],
     },
     unit: 'µg/dL',
   },
@@ -1036,7 +1049,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     loinc: '1848-1',
     names: {
       en: ['Dihydrotestosterone', 'DHT', 'Androstanolone'],
-      pt: ['Diidrotestosterona', 'DHT'],
+      pt: ['Diidrotestosterona', 'DHT', 'Dihidrotestosterona', 'Di-hidrotestosterona'],
     },
     unit: 'ng/dL',
   },
@@ -1152,7 +1165,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     loinc: '2157-6',
     names: {
       en: ['Creatine Kinase', 'CK', 'CPK', 'CK Total', 'Creatine Phosphokinase'],
-      pt: ['Creatina Quinase', 'CK', 'CPK', 'Creatinoquinase', 'CK Total'],
+      pt: ['Creatina Quinase', 'CK', 'CPK', 'Creatinoquinase', 'CK Total', 'Creatinofosfoquinase'],
     },
     unit: 'U/L',
   },
@@ -1218,7 +1231,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     loinc: '1995-0',
     names: {
       en: ['Ionized Calcium', 'Calcium, Ionized', 'Calcium Ionized', 'iCa'],
-      pt: ['Cálcio Iônico', 'Cálcio Ionizado', 'Cálcio Livre'],
+      pt: ['Cálcio Iônico', 'Cálcio Ionizado', 'Cálcio Livre', 'Cálcio Ionizável'],
     },
     unit: 'mmol/L',
   },
@@ -1294,6 +1307,8 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'CTLFe',
         'Capacidade Total de Ligação do Ferro',
         'Ferro - Capac Total ligação',
+        'Capacidade de Fixação do Ferro',
+        'Capacidade Total de Fixação do Ferro',
       ],
     },
     unit: 'µg/dL',
@@ -1538,6 +1553,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         '25-OH Vitamina D',
         'Vitamina D, 25-Hidroxi',
         '25-Hidroxi Vitamina D',
+        '25 Hidroxivitamina D',
       ],
     },
     unit: 'ng/mL',
@@ -1881,7 +1897,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     loinc: '5902-2',
     names: {
       en: ['Prothrombin Time', 'PT', 'Pro Time'],
-      pt: ['Tempo de Protrombina', 'TP', 'TAP'],
+      pt: ['Tempo de Protrombina', 'TP', 'TAP', 'Tempo e Atividade da Protrombina'],
     },
     unit: 's',
   },
@@ -2510,7 +2526,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
         'T-Transglutaminase IgA',
         'Transglutaminase IgA',
       ],
-      pt: ['Transglutaminase Tecidual IgA', 'tTG IgA', 'Anti-tTG IgA'],
+      pt: ['Transglutaminase Tecidual IgA', 'tTG IgA', 'Anti-tTG IgA', 'Antitransglutaminase IgA'],
     },
     unit: 'U/mL',
   },

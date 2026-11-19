@@ -103,6 +103,26 @@ describe('token de paciente', () => {
     expect(refreshes(harness)).toHaveLength(1);
   });
 
+  it('encerra o acesso se a revogação aparecer no 401 depois da renovação', async () => {
+    const { access, consent, harness } = await connected();
+    harness.lab.failNext(
+      (call) => call.url.startsWith(FHIR_BASE),
+      jsonResponse(401, operationOutcome('TOKEN_INVALID', 'login')),
+    );
+    // A revogação acontece depois da renovação, antes da chamada repetida.
+    harness.lab.fhir = () => {
+      harness.lab.endConsent(consent.consentId, 'REVOKED', 'PATIENT_REQUEST', 'PROVIDER');
+      return jsonResponse(401, operationOutcome('CONSENT_REVOKED', 'security'));
+    };
+
+    await expect(access.searchDiagnosticReports()).rejects.toMatchObject({
+      name: 'ConsentEndedError',
+      status: 'REVOKED',
+    });
+    expect(refreshes(harness)).toHaveLength(1);
+    expect(() => access.exportState()).toThrowError(TokensDiscardedError);
+  });
+
   it('RCP-018: renovação recusada com invalid_grant leva à leitura do consentimento e a um erro com o estado atual', async () => {
     const { access, consent, harness } = await connected();
     harness.lab.endConsent(consent.consentId, 'REVOKED', 'PATIENT_REQUEST', 'PROVIDER');

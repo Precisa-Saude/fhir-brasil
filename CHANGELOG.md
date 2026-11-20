@@ -1,3 +1,9 @@
+## [3.5.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.4.0...v3.5.0) (2026-11-20)
+
+### Features
+
+* **core:** Lp(a) por massa em código próprio (10835-7, mg/dL) ([#189](https://github.com/Precisa-Saude/fhir-brasil/issues/189)) ([7d78f34](https://github.com/Precisa-Saude/fhir-brasil/commit/7d78f34d718bc356d305a1cd1faf9f2c6f2c69a6))
+
 ## [3.4.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.3.5...v3.4.0) (2026-11-20)
 
 ### Features

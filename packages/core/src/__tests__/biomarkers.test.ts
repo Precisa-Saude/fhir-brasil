@@ -392,7 +392,10 @@ describe('getDefinitionByCode', () => {
     expect(loincToCode('48371-9')).toBe('Omega3_DPA');
     expect(loincToCode('75110-7')).toBe('Omega6_AA');
     expect(loincToCode('75117-2')).toBe('Omega6_LA');
+    // 5808-1 é #/volume, mas o que foi gravado sob ele até out/2026 é /HPF:
+    // fica com o código por campo, e não com `RBCPerVolume_Urine` (PRE-608).
     expect(loincToCode('5808-1')).toBe('RBC_Urine');
+    expect(loincToCode('30391-7')).toBe('RBCPerVolume_Urine');
   });
 
   it('código errado de analito não vira alias', () => {
@@ -1183,4 +1186,29 @@ describe('colunas regionais da densitometria e diâmetros do escore de cálcio',
       expect(findCodeByName(name)).toBeUndefined();
     },
   );
+});
+
+describe('sedimento da urina contado por volume (PRE-608)', () => {
+  // O analisador automático imprime a contagem por mL ("100 /mL, inferior a
+  // 25.000 /mL"). /mL não converte em /HPF, então a leitura por volume tem
+  // código próprio, separado do campo de grande aumento.
+  it.each([
+    ['LeukocytesPerVolume_Urine', '30405-5', 'Leukocytes_Urine', '5821-4'],
+    ['RBCPerVolume_Urine', '30391-7', 'RBC_Urine', '13945-1'],
+  ])('%s usa %s em /mL, e %s segue em %s por /HPF', (code, loinc, hpfCode, hpfLoinc) => {
+    expect(getDefinitionByCode(code)?.unit).toBe('/mL');
+    expect(codeToLoinc(code)).toBe(loinc);
+    expect(loincToCode(loinc)).toBe(code);
+    expect(diagnosticSectionOf(code)).toBe('URN');
+
+    expect(getDefinitionByCode(hpfCode)?.unit).toBe('/HPF');
+    expect(codeToLoinc(hpfCode)).toBe(hpfLoinc);
+  });
+
+  it('o nome do exame continua chegando no código por /HPF', () => {
+    expect(findCodeByName('Leucócitos na Urina')).toBe('Leukocytes_Urine');
+    expect(findCodeByName('Hemácias na Urina')).toBe('RBC_Urine');
+    expect(findCodeByName('Leucócitos na Urina (por volume)')).toBe('LeukocytesPerVolume_Urine');
+    expect(findCodeByName('Hemácias na Urina (por volume)')).toBe('RBCPerVolume_Urine');
+  });
 });

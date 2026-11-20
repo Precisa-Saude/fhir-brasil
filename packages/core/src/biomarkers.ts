@@ -2356,6 +2356,20 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: '/HPF',
   },
   {
+    code: 'LeukocytesPerVolume_Urine',
+    // 30405-5 é "Leukocytes [#/volume] in Urine": a contagem por mL que o
+    // analisador automático imprime ("100 /mL, inferior a 25.000 /mL"). Não há
+    // fator que leve /mL a /HPF, então a leitura por volume tem código próprio
+    // e guarda o número do laudo. Os nomes não repetem os de `Leukocytes_Urine`
+    // para não disputar a ancoragem do rótulo (PRE-608).
+    loinc: '30405-5',
+    names: {
+      en: ['Urine Leukocytes (per volume)'],
+      pt: ['Leucócitos na Urina (por volume)'],
+    },
+    unit: '/mL',
+  },
+  {
     code: 'Nitrite_Urine',
     codeAliases: ['UrineNitrite'],
     loinc: '5802-4',
@@ -2389,10 +2403,12 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     code: 'RBC_Urine',
     // 13945-1 é "Erythrocytes [#/area] in Urine sediment by Microscopy high
     // power field", o /HPF que o laudo imprime e que `Leukocytes_Urine` já usa
-    // em 5821-4. Até out/2026 apontava para 5808-1, o mesmo exame em #/volume
-    // (por mL): analito e material certos, propriedade errada. Fica como alias
-    // porque o analito é o mesmo, e laudo de analisador automático que conte
-    // por mL continua resolvendo em RBC_Urine.
+    // em 5821-4. Até out/2026 apontava para 5808-1 ("Erythrocytes [#/volume]
+    // in Urine sediment by Microscopy high power field"): analito certo,
+    // propriedade errada. Fica como alias aqui, e não em `RBCPerVolume_Urine`,
+    // porque o que foi gravado sob 5808-1 até out/2026 é valor por campo
+    // (/HPF); levar o alias para o código por volume trocaria a unidade desse
+    // histórico. A contagem por mL do analisador tem código próprio, 30391-7.
     loinc: '13945-1',
     loincAliases: ['5808-1'],
     names: {
@@ -2400,6 +2416,18 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       pt: ['Hemácias na Urina'],
     },
     unit: '/HPF',
+  },
+  {
+    code: 'RBCPerVolume_Urine',
+    // 30391-7 é "Erythrocytes [#/volume] in Urine": a contagem por mL do
+    // analisador automático ("1.100 /mL, inferior a 23.000 /mL"). Mesmo motivo
+    // de `LeukocytesPerVolume_Urine`: /mL não converte em /HPF (PRE-608).
+    loinc: '30391-7',
+    names: {
+      en: ['Urine Erythrocytes (per volume)'],
+      pt: ['Hemácias na Urina (por volume)'],
+    },
+    unit: '/mL',
   },
   {
     code: 'SpecificGravity_Urine',

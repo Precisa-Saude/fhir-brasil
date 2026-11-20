@@ -433,6 +433,28 @@ const URINE_SEDIMENT: Omit<BiomarkerUnitConfig, 'aliases'> = {
   siUnit: '/HPF',
 };
 
+/**
+ * Contagem de células na urina por volume, como o analisador automático
+ * imprime. A unidade do catálogo é /mL; /µL é o mesmo número de células em
+ * um volume mil vezes menor, e converte pelo fator exato do UCUM. Não existe
+ * conversão para /HPF.
+ *
+ * O mu grego (U+03BC, "/μL") não precisa de alias próprio: o
+ * `standardUnitSpelling` troca pelo sinal de micro (U+00B5) antes da segunda
+ * consulta do `normalizeUnit`, e o teste de /μL em `units.test.ts` cobre isso.
+ */
+const URINE_COUNT_PER_VOLUME_ALIASES: Record<string, string> = {
+  '/ml': '/mL',
+  '/ul': '/µL',
+  '/µl': '/µL',
+};
+const URINE_COUNT_PER_VOLUME: Omit<BiomarkerUnitConfig, 'aliases'> = {
+  canonicalUcum: '/mL',
+  canonicalUnit: '/mL',
+  siUcum: '/mL',
+  siUnit: '/mL',
+};
+
 /** Percentage biomarkers — canonical and SI both use %. */
 const PERCENTAGE_ALIASES: Record<string, string> = { '%': '%', pct: '%', percent: '%' };
 const PERCENTAGE: Omit<BiomarkerUnitConfig, 'aliases'> = {
@@ -943,6 +965,7 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUnit: 'ng/mL',
   },
   Leukocytes_Urine: { aliases: URINE_SEDIMENT_ALIASES, ...URINE_SEDIMENT },
+  LeukocytesPerVolume_Urine: { aliases: URINE_COUNT_PER_VOLUME_ALIASES, ...URINE_COUNT_PER_VOLUME },
   LH: {
     aliases: {
       'iu/l': 'mUI/mL',
@@ -1145,6 +1168,7 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUnit: 'milhões/mm³',
   },
   RBC_Urine: { aliases: URINE_SEDIMENT_ALIASES, ...URINE_SEDIMENT },
+  RBCPerVolume_Urine: { aliases: URINE_COUNT_PER_VOLUME_ALIASES, ...URINE_COUNT_PER_VOLUME },
   RDW: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   ResidualMass: { aliases: DEXA_KG_ALIASES, ...DEXA_KG },
   Reticulocytes: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
@@ -1453,6 +1477,11 @@ function normalizeUnit(unit: string, config: BiomarkerUnitConfig): string {
  * Both directions must be listed explicitly — there is no auto-inversion.
  */
 const FIXED_FACTORS: Record<string, number> = {
+  // Contagem por volume: só troca o prefixo do volume, então vale para qualquer
+  // contagem. Hoje só as contagens da urina por volume normalizam para "/µL"
+  // (as do hemograma normalizam para "/uL") e têm /mL como unidade.
+  '/mL -> /µL': 0.001,
+  '/µL -> /mL': 1000,
   'g/dL -> g/L': 10,
   'g/L -> g/dL': 0.1,
   'g/L -> mg/dL': 100,

@@ -1,3 +1,13 @@
+## [3.4.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.3.5...v3.4.0) (2026-11-20)
+
+### Features
+
+* **core:** leucócitos e hemácias da urina por volume (30405-5, 30391-7) ([#188](https://github.com/Precisa-Saude/fhir-brasil/issues/188)) ([fef1b4a](https://github.com/Precisa-Saude/fhir-brasil/commit/fef1b4a81a5b932446e5bb0594c0c83b00b4fc7b))
+
+### Chores
+
+* **deps:** atualiza @precisa-saude/worktree-cli para 3.5.2 ([#187](https://github.com/Precisa-Saude/fhir-brasil/issues/187)) ([9d0e542](https://github.com/Precisa-Saude/fhir-brasil/commit/9d0e542d06520a912662d5dfadcf104405317c82)), closes [#77](https://github.com/Precisa-Saude/fhir-brasil/issues/77) [#71](https://github.com/Precisa-Saude/fhir-brasil/issues/71) [#73](https://github.com/Precisa-Saude/fhir-brasil/issues/73) [#74](https://github.com/Precisa-Saude/fhir-brasil/issues/74) [#76](https://github.com/Precisa-Saude/fhir-brasil/issues/76) [#57](https://github.com/Precisa-Saude/fhir-brasil/issues/57) [#33](https://github.com/Precisa-Saude/fhir-brasil/issues/33)
+
 ## [3.3.5](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.3.4...v3.3.5) (2026-11-19)
 
 ### Bug Fixes

@@ -1212,3 +1212,25 @@ describe('sedimento da urina contado por volume (PRE-608)', () => {
     expect(findCodeByName('Hemácias na Urina (por volume)')).toBe('RBCPerVolume_Urine');
   });
 });
+
+describe('Lp(a) por massa e por quantidade de substância (PRE-609)', () => {
+  // A razão entre massa e mol da Lp(a) muda com a isoforma da apo(a), então
+  // mg/dL não converte em nmol/L. A leitura em mg/dL tem código próprio, com o
+  // LOINC de massa/volume, e o código de sempre segue em nmol/L.
+  it('Lipoprotein_a_Mass usa 10835-7 em mg/dL, e Lipoprotein_a segue em 43583-4 por nmol/L', () => {
+    expect(getDefinitionByCode('Lipoprotein_a_Mass')?.unit).toBe('mg/dL');
+    expect(codeToLoinc('Lipoprotein_a_Mass')).toBe('10835-7');
+    expect(loincToCode('10835-7')).toBe('Lipoprotein_a_Mass');
+    expect(diagnosticSectionOf('Lipoprotein_a_Mass')).toBe('CH');
+
+    expect(getDefinitionByCode('Lipoprotein_a')?.unit).toBe('nmol/L');
+    expect(codeToLoinc('Lipoprotein_a')).toBe('43583-4');
+    expect(loincToCode('43583-4')).toBe('Lipoprotein_a');
+  });
+
+  it('o nome do exame continua chegando no código por quantidade de substância', () => {
+    expect(findCodeByName('Lp(a)')).toBe('Lipoprotein_a');
+    expect(findCodeByName('Lipoproteína (a)')).toBe('Lipoprotein_a');
+    expect(findCodeByName('Lipoproteína (a) (massa)')).toBe('Lipoprotein_a_Mass');
+  });
+});

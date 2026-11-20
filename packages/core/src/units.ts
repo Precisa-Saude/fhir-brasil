@@ -985,6 +985,15 @@ export const BIOMARKER_UNITS: Record<string, BiomarkerUnitConfig> = {
     siUcum: 'nmol/L',
     siUnit: 'nmol/L',
   },
+  // Lp(a) por massa. Sem massa molar de propósito: a da partícula muda com a
+  // isoforma da apo(a), e mg/dL não converte em nmol/L (PRE-609).
+  Lipoprotein_a_Mass: {
+    aliases: { 'mg/dl': 'mg/dL' },
+    canonicalUcum: 'mg/dL',
+    canonicalUnit: 'mg/dL',
+    siUcum: 'mg/dL',
+    siUnit: 'mg/dL',
+  },
   Lymphocytes: { aliases: PERCENTAGE_ALIASES, ...PERCENTAGE },
   Lymphocytes_Abs: { aliases: CBC_DIFF_ALIASES, ...CBC_DIFF },
   MCH: {

@@ -207,7 +207,8 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     // LOINC 43583-4 = "Lipoprotein a [Moles/volume] in Serum or Plasma" (nmol/L).
     // Anteriormente 10835-7 ("Lipoprotein a [Mass/volume]", mg/dL),
     // incompatível com a unidade nmol/L declarada. SBC 2025 recomenda
-    // ensaio independente de isoforma reportado em nmol/L.
+    // ensaio independente de isoforma reportado em nmol/L. A Lp(a) impressa
+    // em mg/dL tem código próprio, `Lipoprotein_a_Mass` (PRE-609).
     code: 'Lipoprotein_a',
     loinc: '43583-4',
     names: {
@@ -215,6 +216,21 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
       pt: ['Lipoproteína (a)', 'Lipoproteína(a)', 'Lp(a)'],
     },
     unit: 'nmol/L',
+  },
+  {
+    // 10835-7 é "Lipoprotein a [Mass/volume] in Serum or Plasma": a Lp(a)
+    // dosada por massa e impressa em mg/dL. Não há fator que leve mg/dL a
+    // nmol/L, porque a massa da partícula muda com o tamanho da apo(a) de cada
+    // pessoa; a leitura por massa tem código próprio e guarda o número do
+    // laudo. Os nomes não repetem os de `Lipoprotein_a` para não disputar a
+    // ancoragem do rótulo (PRE-609).
+    code: 'Lipoprotein_a_Mass',
+    loinc: '10835-7',
+    names: {
+      en: ['Lipoprotein (a) (mass)'],
+      pt: ['Lipoproteína (a) (massa)'],
+    },
+    unit: 'mg/dL',
   },
   {
     code: 'NonHDL_Cholesterol',

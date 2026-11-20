@@ -572,3 +572,19 @@ describe('sedimento da urina contado por volume', () => {
     expect(convertUnit(100, '/mL', '/HPF', 'Leukocytes_Urine')).toBeNull();
   });
 });
+
+describe('Lp(a) por massa (PRE-609)', () => {
+  it('Lipoprotein_a_Mass tem mg/dL como unidade canônica, sem massa molar', () => {
+    expect(getCanonicalUnit('Lipoprotein_a_Mass')).toBe('mg/dL');
+    expect(BIOMARKER_UNITS.Lipoprotein_a_Mass?.canonicalUcum).toBe('mg/dL');
+    expect(BIOMARKER_UNITS.Lipoprotein_a_Mass?.molecularWeight).toBeUndefined();
+    expect(resolveUcum('mg/dl', 'Lipoprotein_a_Mass')).toBe('mg/dL');
+  });
+
+  // Não existe fator único: a massa da partícula depende do tamanho da apo(a).
+  it('não converte mg/dL em nmol/L, em nenhum dos dois códigos', () => {
+    expect(convertUnit(30, 'mg/dL', 'nmol/L', 'Lipoprotein_a_Mass')).toBeNull();
+    expect(convertUnit(30, 'mg/dL', 'nmol/L', 'Lipoprotein_a')).toBeNull();
+    expect(convertUnit(75, 'nmol/L', 'mg/dL', 'Lipoprotein_a')).toBeNull();
+  });
+});

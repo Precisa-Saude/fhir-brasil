@@ -715,7 +715,7 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
       {
         loinc: '5808-1',
         reason:
-          'sedimento por microscopia em campo de grande aumento; a contagem vem do analisador',
+          'também #/volume, mas o sistema é o sedimento e o método é a microscopia; a contagem do analisador é da urina, sem método',
       },
     ],
   },

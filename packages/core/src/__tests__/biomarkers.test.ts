@@ -392,7 +392,10 @@ describe('getDefinitionByCode', () => {
     expect(loincToCode('48371-9')).toBe('Omega3_DPA');
     expect(loincToCode('75110-7')).toBe('Omega6_AA');
     expect(loincToCode('75117-2')).toBe('Omega6_LA');
+    // 5808-1 é #/volume, mas o que foi gravado sob ele até out/2026 é /HPF:
+    // fica com o código por campo, e não com `RBCPerVolume_Urine` (PRE-608).
     expect(loincToCode('5808-1')).toBe('RBC_Urine');
+    expect(loincToCode('30391-7')).toBe('RBCPerVolume_Urine');
   });
 
   it('código errado de analito não vira alias', () => {

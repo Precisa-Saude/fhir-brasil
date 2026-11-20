@@ -2403,10 +2403,12 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     code: 'RBC_Urine',
     // 13945-1 é "Erythrocytes [#/area] in Urine sediment by Microscopy high
     // power field", o /HPF que o laudo imprime e que `Leukocytes_Urine` já usa
-    // em 5821-4. Até out/2026 apontava para 5808-1, o mesmo exame em #/volume
-    // (por mL): analito e material certos, propriedade errada. Fica como alias
-    // porque o analito é o mesmo. A contagem por mL do analisador automático
-    // tem código próprio, `RBCPerVolume_Urine`.
+    // em 5821-4. Até out/2026 apontava para 5808-1 ("Erythrocytes [#/volume]
+    // in Urine sediment by Microscopy high power field"): analito certo,
+    // propriedade errada. Fica como alias aqui, e não em `RBCPerVolume_Urine`,
+    // porque o que foi gravado sob 5808-1 até out/2026 é valor por campo
+    // (/HPF); levar o alias para o código por volume trocaria a unidade desse
+    // histórico. A contagem por mL do analisador tem código próprio, 30391-7.
     loinc: '13945-1',
     loincAliases: ['5808-1'],
     names: {

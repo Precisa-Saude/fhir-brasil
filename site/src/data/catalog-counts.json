@@ -1,13 +1,13 @@
 {
-  "acceptedLoincCodes": 234,
-  "biomarkers": 275,
+  "acceptedLoincCodes": 235,
+  "biomarkers": 276,
   "bySection": [
     {
-      "count": 126,
+      "count": 127,
       "examples": ["ApoB", "HDL", "HDL_Large", "CRP", "LDL"],
       "pt": "Bioquímica",
       "section": "CH",
-      "withLoinc": 126
+      "withLoinc": 127
     },
     {
       "count": 33,
@@ -80,12 +80,12 @@
     },
     { "count": 1, "examples": ["APOE_Genotype"], "pt": "Genética", "section": "GE", "withLoinc": 1 }
   ],
-  "decisions": { "nameOnly": 176, "reviewed": 0, "withEvidence": 52 },
-  "loincCoveragePct": 82.9,
+  "decisions": { "nameOnly": 176, "reviewed": 0, "withEvidence": 53 },
+  "loincCoveragePct": 83,
   "referenceRanges": 198,
   "sections": 11,
   "version": "3.4.0",
-  "withLoinc": 228,
+  "withLoinc": 229,
   "withoutLoinc": 47,
   "withoutLoincByReason": { "ambiguous": 4, "no-concept": 31, "pending-review": 12 }
 }

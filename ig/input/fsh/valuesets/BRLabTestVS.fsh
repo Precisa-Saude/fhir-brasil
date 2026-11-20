@@ -1,7 +1,7 @@
 ValueSet: BRLabTestVS
 Id: br-lab-test-vs
 Title: "BR Lab Test ValueSet"
-Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-brasil. Gerado automaticamente a partir de 228 biomarcadores com código LOINC no pacote core."
+Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-brasil. Gerado automaticamente a partir de 229 biomarcadores com código LOINC no pacote core."
 
 * $LOINC#90909-3 "Razão Ácido Araquidônico/EPA"
 * $LOINC#883-9 "Grupo ABO"
@@ -141,6 +141,7 @@ Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-bras
 * $LOINC#10501-5 "Hormônio Luteinizante"
 * $LOINC#3040-3 "Lipase"
 * $LOINC#43583-4 "Lipoproteína (a)"
+* $LOINC#10835-7 "Lipoproteína (a) (massa)"
 * $LOINC#736-9 "Linfócitos"
 * $LOINC#731-0 "Linfócitos Absolutos"
 * $LOINC#19123-9 "Magnésio"

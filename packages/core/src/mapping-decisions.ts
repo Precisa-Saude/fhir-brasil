@@ -537,6 +537,18 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
       },
     ],
   },
+  Lipoprotein_a_Mass: {
+    loinc: '10835-7',
+    evidence: ['name', 'unit'],
+    note: 'Lp(a) dosada por massa e impressa em mg/dL; a razão entre massa e mol muda com a isoforma da apo(a), então mg/dL não converte em nmol/L (PRE-609).',
+    settledBy: 'unit',
+    siblingsRejected: [
+      {
+        loinc: '43583-4',
+        reason: 'quantidade de substância/volume (nmol/L), e o laudo imprime mg/dL',
+      },
+    ],
+  },
   Lymphocytes: nameOnly('736-9'),
   Lymphocytes_Abs: nameOnly('731-0'),
   Magnesium: nameOnly('19123-9'),

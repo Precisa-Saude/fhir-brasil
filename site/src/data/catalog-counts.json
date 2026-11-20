@@ -1,6 +1,6 @@
 {
-  "acceptedLoincCodes": 232,
-  "biomarkers": 273,
+  "acceptedLoincCodes": 234,
+  "biomarkers": 275,
   "bySection": [
     {
       "count": 126,
@@ -31,14 +31,7 @@
       "withLoinc": 14
     },
     {
-      "count": 18,
-      "examples": ["AntiThyroglobulin", "AntiTPO", "ANA_Screen", "RheumatoidFactor", "AntiCCP"],
-      "pt": "Sorologia",
-      "section": "SR",
-      "withLoinc": 18
-    },
-    {
-      "count": 18,
+      "count": 20,
       "examples": [
         "Appearance_Urine",
         "Bacteria_Urine",
@@ -48,6 +41,13 @@
       ],
       "pt": "Urinálise",
       "section": "URN",
+      "withLoinc": 20
+    },
+    {
+      "count": 18,
+      "examples": ["AntiThyroglobulin", "AntiTPO", "ANA_Screen", "RheumatoidFactor", "AntiCCP"],
+      "pt": "Sorologia",
+      "section": "SR",
       "withLoinc": 18
     },
     {
@@ -80,12 +80,12 @@
     },
     { "count": 1, "examples": ["APOE_Genotype"], "pt": "Genética", "section": "GE", "withLoinc": 1 }
   ],
-  "decisions": { "nameOnly": 176, "reviewed": 0, "withEvidence": 50 },
-  "loincCoveragePct": 82.8,
+  "decisions": { "nameOnly": 176, "reviewed": 0, "withEvidence": 52 },
+  "loincCoveragePct": 82.9,
   "referenceRanges": 198,
   "sections": 11,
   "version": "3.3.5",
-  "withLoinc": 226,
+  "withLoinc": 228,
   "withoutLoinc": 47,
   "withoutLoincByReason": { "ambiguous": 4, "no-concept": 31, "pending-review": 12 }
 }

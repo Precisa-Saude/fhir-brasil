@@ -514,6 +514,15 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
   Leptin: nameOnly('21365-2'),
   LeukocyteEsterase_Urine: nameOnly('5799-2'),
   Leukocytes_Urine: nameOnly('5821-4'),
+  LeukocytesPerVolume_Urine: {
+    loinc: '30405-5',
+    evidence: ['name', 'unit'],
+    note: 'contagem por mL do analisador automático; não há fator que leve /mL a /HPF (PRE-608).',
+    settledBy: 'unit',
+    siblingsRejected: [
+      { loinc: '5821-4', reason: 'número por área (/HPF) da microscopia, e o laudo imprime /mL' },
+    ],
+  },
   LH: nameOnly('10501-5'),
   Lipase: nameOnly('3040-3'),
   Lipoprotein_a: {
@@ -694,6 +703,20 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
     settledBy: 'unit',
     siblingsRejected: [
       { loinc: '5808-1', reason: 'o mesmo exame em #/volume (por mL), e o laudo imprime /HPF' },
+    ],
+  },
+  RBCPerVolume_Urine: {
+    loinc: '30391-7',
+    evidence: ['name', 'unit'],
+    note: 'contagem por mL do analisador automático; não há fator que leve /mL a /HPF (PRE-608).',
+    settledBy: 'unit',
+    siblingsRejected: [
+      { loinc: '13945-1', reason: 'número por área (/HPF) da microscopia, e o laudo imprime /mL' },
+      {
+        loinc: '5808-1',
+        reason:
+          'sedimento por microscopia em campo de grande aumento; a contagem vem do analisador',
+      },
     ],
   },
   RDW: nameOnly('788-0'),

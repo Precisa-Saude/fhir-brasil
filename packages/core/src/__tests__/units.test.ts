@@ -541,3 +541,34 @@ describe('isUcumCode: colunas de mercúrio e de água', () => {
     expect(isUcumCode('mm[IU]')).toBe(false);
   });
 });
+
+describe('sedimento da urina contado por volume', () => {
+  it.each(['LeukocytesPerVolume_Urine', 'RBCPerVolume_Urine'])(
+    '%s tem /mL como unidade canônica, sem massa molar',
+    (code) => {
+      expect(getCanonicalUnit(code)).toBe('/mL');
+      expect(BIOMARKER_UNITS[code]?.canonicalUcum).toBe('/mL');
+      expect(BIOMARKER_UNITS[code]?.molecularWeight).toBeUndefined();
+      expect(resolveUcum('/mL', code)).toBe('/mL');
+      expect(resolveUcum('/ml', code)).toBe('/mL');
+    },
+  );
+
+  // 1 µL é um milésimo de mL: 1,1 células por µL são 1.100 por mL.
+  it.each(['/µL', '/uL', '/ul', '/μL'])('%s converte para /mL multiplicando por mil', (unit) => {
+    expect(convertUnit(1.1, unit, '/mL', 'RBCPerVolume_Urine')?.value).toBeCloseTo(1100);
+    expect(convertUnit(25, unit, '/mL', 'LeukocytesPerVolume_Urine')).toEqual({
+      unit: '/mL',
+      value: 25_000,
+    });
+  });
+
+  it('/mL volta para /µL dividindo por mil', () => {
+    expect(convertUnit(1100, '/mL', '/µL', 'RBCPerVolume_Urine')?.value).toBeCloseTo(1.1);
+  });
+
+  it('não converte /mL para /HPF, nem no código por volume nem no por campo', () => {
+    expect(convertUnit(100, '/mL', '/HPF', 'LeukocytesPerVolume_Urine')).toBeNull();
+    expect(convertUnit(100, '/mL', '/HPF', 'Leukocytes_Urine')).toBeNull();
+  });
+});

@@ -1184,3 +1184,28 @@ describe('colunas regionais da densitometria e diâmetros do escore de cálcio',
     },
   );
 });
+
+describe('sedimento da urina contado por volume (PRE-608)', () => {
+  // O analisador automático imprime a contagem por mL ("100 /mL, inferior a
+  // 25.000 /mL"). /mL não converte em /HPF, então a leitura por volume tem
+  // código próprio, separado do campo de grande aumento.
+  it.each([
+    ['LeukocytesPerVolume_Urine', '30405-5', 'Leukocytes_Urine', '5821-4'],
+    ['RBCPerVolume_Urine', '30391-7', 'RBC_Urine', '13945-1'],
+  ])('%s usa %s em /mL, e %s segue em %s por /HPF', (code, loinc, hpfCode, hpfLoinc) => {
+    expect(getDefinitionByCode(code)?.unit).toBe('/mL');
+    expect(codeToLoinc(code)).toBe(loinc);
+    expect(loincToCode(loinc)).toBe(code);
+    expect(diagnosticSectionOf(code)).toBe('URN');
+
+    expect(getDefinitionByCode(hpfCode)?.unit).toBe('/HPF');
+    expect(codeToLoinc(hpfCode)).toBe(hpfLoinc);
+  });
+
+  it('o nome do exame continua chegando no código por /HPF', () => {
+    expect(findCodeByName('Leucócitos na Urina')).toBe('Leukocytes_Urine');
+    expect(findCodeByName('Hemácias na Urina')).toBe('RBC_Urine');
+    expect(findCodeByName('Leucócitos na Urina (por volume)')).toBe('LeukocytesPerVolume_Urine');
+    expect(findCodeByName('Hemácias na Urina (por volume)')).toBe('RBCPerVolume_Urine');
+  });
+});

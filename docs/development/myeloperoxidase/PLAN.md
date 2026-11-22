@@ -28,6 +28,15 @@ Uma execução de cobertura a partir da raiz incluiu os outros pacotes e falhou 
 
 Aguardar aprovação de commit e revisão. Após merge e publicação pelo fluxo normal, consumir a versão publicada na plataforma, executar freeze com `--stale` e revisar as diferenças sem regravar baselines automaticamente. A avaliação nova em dev continua dependendo de autorização explícita para chamadas de modelo. Nenhum pacote instalado na plataforma foi substituído.
 
+## Revisão do PR #190
+
+As duas sugestões da primeira rodada foram implementadas localmente, sem novo commit:
+
+- Removido o alias isolado `MPO`. Os nomes completos da enzima continuam resolvendo. `MPO`, `mpo`, `MPO IgG`, `ANCA MPO` e `ANCA-MPO` ficam sem resolução por nome, em vez de receber identidade clínica por inferência.
+- A evidência do mapeamento passou a `['name']`, com `settledBy: 'name'`. A nota distingue a unidade herdada do catálogo de uma evidência independente de laudo. As contagens regeneradas agora mostram 53 mapeamentos com evidência adicional e 177 apenas pelo nome.
+
+A regressão atualizada falhou primeiro em três casos, antes da correção. Depois, os 12 testes de identidade e os 2.359 testes do core passaram com cobertura, sem mudança de limiares. Lint, typecheck, build e Prettier também passaram. Os números anteriores neste plano registram as execuções iniciais.
+
 ## Fora de escopo
 
 Não alterar limites clínicos ou converter massa em quantidade de substância. Não afirmar equivalência com soro. Não modificar `MPO_Antibody`, publicar pacote, criar commits, chamar modelos ou reprocessar contas. A plataforma só consumirá uma versão publicada após aprovação.

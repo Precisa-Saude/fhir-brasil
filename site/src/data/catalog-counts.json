@@ -80,7 +80,7 @@
     },
     { "count": 1, "examples": ["APOE_Genotype"], "pt": "Genética", "section": "GE", "withLoinc": 1 }
   ],
-  "decisions": { "nameOnly": 176, "reviewed": 0, "withEvidence": 54 },
+  "decisions": { "nameOnly": 177, "reviewed": 0, "withEvidence": 53 },
   "loincCoveragePct": 83,
   "referenceRanges": 198,
   "sections": 11,

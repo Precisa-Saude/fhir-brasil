@@ -7,11 +7,18 @@ import { getReferenceRange } from '../reference-ranges';
 import { resolveUcum } from '../units';
 
 describe('identidade da mieloperoxidase', () => {
-  it.each(['Myeloperoxidase', 'Mieloperoxidase', 'MPO'])(
+  it.each(['Myeloperoxidase', 'Mieloperoxidase'])(
     'resolve a enzima "%s" sem usar o anticorpo',
     (name) => {
       expect(findCodeByName(name)).toBe('Myeloperoxidase');
       expect(codeToLoinc('Myeloperoxidase')).toBe('66853-3');
+    },
+  );
+
+  it.each(['MPO', 'mpo', 'MPO IgG', 'ANCA MPO', 'ANCA-MPO'])(
+    'não atribui o nome ambíguo "%s" à enzima',
+    (name) => {
+      expect(findCodeByName(name)).toBeUndefined();
     },
   );
 
@@ -34,9 +41,9 @@ describe('identidade da mieloperoxidase', () => {
 
   it('registra a restrição a plasma sem inventar revisão independente', () => {
     expect(MAPPING_DECISIONS.Myeloperoxidase).toMatchObject({
-      evidence: ['name', 'unit'],
+      evidence: ['name'],
       loinc: '66853-3',
-      settledBy: 'unit',
+      settledBy: 'name',
     });
     expect(MAPPING_DECISIONS.Myeloperoxidase?.note).toContain('plasma');
     expect(MAPPING_DECISIONS.Myeloperoxidase?.reviewer).toBeUndefined();

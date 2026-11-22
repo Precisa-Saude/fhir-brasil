@@ -1284,7 +1284,7 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     // Não representa massa/volume em soro (99407-9) nem atividade (48146-5).
     loinc: '66853-3',
     names: {
-      en: ['Myeloperoxidase', 'MPO'],
+      en: ['Myeloperoxidase'],
       pt: ['Mieloperoxidase'],
     },
     unit: 'pmol/L',

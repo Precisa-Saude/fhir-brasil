@@ -154,7 +154,7 @@ Medido no `@precisa-saude/fhir@3.5.0`, gerado por `pnpm catalog:counts`.
 - **236 códigos LOINC aceitos** na busca por código: os 230 canônicos, as variantes por método e os aliases de códigos que o LOINC aposentou.
 - **198 faixas de referência**, com variantes por sexo e idade.
 - **11 seções de serviço** (HL7 v2-0074), a categoria que sai no `DiagnosticReport`: da classe do LOINC, ou declarada no exame sem LOINC.
-- **Registro de decisão** dos 230 mapeamentos: 54 com evidência além do nome (unidade, material, método ou bula), 176 escolhidos só pelo nome, 0 com revisão independente. A ficha de cada um sai em `fhir-bio decision <código>`.
+- **Registro de decisão** dos 230 mapeamentos: 53 com evidência além do nome (unidade, material, método ou bula), 177 escolhidos só pelo nome, 0 com revisão independente. A ficha de cada um sai em `fhir-bio decision <código>`.
 
 | Seção                              | Biomarcadores | Com LOINC | Exemplos                                                                    |
 | ---------------------------------- | ------------: | --------: | --------------------------------------------------------------------------- |

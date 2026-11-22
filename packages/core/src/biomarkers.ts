@@ -1279,6 +1279,17 @@ export const BIOMARKER_DEFINITIONS: BiomarkerDefinition[] = [
     unit: 'ng/mL',
   },
   {
+    code: 'Myeloperoxidase',
+    // Concentração molar em plasma (66853-3), não anticorpo anti-MPO.
+    // Não representa massa/volume em soro (99407-9) nem atividade (48146-5).
+    loinc: '66853-3',
+    names: {
+      en: ['Myeloperoxidase', 'MPO'],
+      pt: ['Mieloperoxidase'],
+    },
+    unit: 'pmol/L',
+  },
+  {
     code: 'Homocysteine',
     loinc: '13965-9',
     names: {

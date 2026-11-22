@@ -570,6 +570,17 @@ export const MAPPING_DECISIONS: Record<string, MappingDecision> = {
   },
   MPV: nameOnly('32623-1'),
   MuscleMass: nameOnly('73964-9'),
+  Myeloperoxidase: {
+    evidence: ['name', 'unit'],
+    loinc: '66853-3',
+    note: 'Search API oficial, LOINC 2.83, consultada em 22/11/2026: concentração molar em plasma, SCnc, Pt, Qn, sem método. A unidade pmol/L já existia no catálogo; não há evidência de material de um laudo específico. O código não estabelece equivalência com soro. Revisão independente pendente.',
+    settledBy: 'unit',
+    siblingsRejected: [
+      { loinc: '6969-0', reason: 'anticorpo anti-MPO, não a enzima' },
+      { loinc: '48146-5', reason: 'unidades/volume em soro, não concentração molar' },
+      { loinc: '99407-9', reason: 'massa/volume em soro por imunoensaio, não concentração molar' },
+    ],
+  },
   Neutrophils: nameOnly('770-8'),
   Neutrophils_Abs: nameOnly('751-8'),
   Nitrite_Urine: nameOnly('5802-4'),

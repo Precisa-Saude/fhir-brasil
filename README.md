@@ -150,15 +150,15 @@ echo "Hemoglobina 14.5 g/dL Glicose 99 mg/dL" | fhir-ocr codes --json
 
 Medido no `@precisa-saude/fhir@3.5.0`, gerado por `pnpm catalog:counts`.
 
-- **276 biomarcadores** definidos, dos quais **229 têm código LOINC** (83,0%) e 47 não têm.
-- **235 códigos LOINC aceitos** na busca por código: os 229 canônicos, as variantes por método e os aliases de códigos que o LOINC aposentou.
+- **277 biomarcadores** definidos, dos quais **230 têm código LOINC** (83,0%) e 47 não têm.
+- **236 códigos LOINC aceitos** na busca por código: os 230 canônicos, as variantes por método e os aliases de códigos que o LOINC aposentou.
 - **198 faixas de referência**, com variantes por sexo e idade.
 - **11 seções de serviço** (HL7 v2-0074), a categoria que sai no `DiagnosticReport`: da classe do LOINC, ou declarada no exame sem LOINC.
-- **Registro de decisão** dos 229 mapeamentos: 53 com evidência além do nome (unidade, material, método ou bula), 176 escolhidos só pelo nome, 0 com revisão independente. A ficha de cada um sai em `fhir-bio decision <código>`.
+- **Registro de decisão** dos 230 mapeamentos: 53 com evidência além do nome (unidade, material, método ou bula), 177 escolhidos só pelo nome, 0 com revisão independente. A ficha de cada um sai em `fhir-bio decision <código>`.
 
 | Seção                              | Biomarcadores | Com LOINC | Exemplos                                                                    |
 | ---------------------------------- | ------------: | --------: | --------------------------------------------------------------------------- |
-| Bioquímica (`CH`)                  |           127 |       127 | ApoB, HDL, HDL_Large, CRP, LDL                                              |
+| Bioquímica (`CH`)                  |           128 |       128 | ApoB, HDL, HDL_Large, CRP, LDL                                              |
 | Hematologia (`HM`)                 |            33 |        33 | Basophils, Basophils_Abs, Eosinophils, Eosinophils_Abs, Lymphocytes         |
 | Radiologia (densitometria) (`RAD`) |            31 |         8 | BMC, VATVolume, VATMass, AndroidGynoidRatio, AndroidFatPct                  |
 | Outros (medida corporal) (`OTH`)   |            28 |        14 | BMI, BodyFatPct, FatMass, LeanMass, FatFreeMass                             |
@@ -169,7 +169,7 @@ Medido no `@precisa-saude/fhir@3.5.0`, gerado por `pnpm catalog:counts`.
 | Banco de sangue (`BLB`)            |             2 |         2 | ABO_Group, Rh_Type                                                          |
 | Imunologia (`IMM`)                 |             2 |         2 | IgE_E1_CatDander, IgE_GX1_Grasses                                           |
 | Genética (`GE`)                    |             1 |         1 | APOE_Genotype                                                               |
-| **Total**                          |       **276** |   **229** |                                                                             |
+| **Total**                          |       **277** |   **230** |                                                                             |
 
 ### Os 47 sem LOINC, e por quê
 

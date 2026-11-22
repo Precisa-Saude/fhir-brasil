@@ -92,6 +92,7 @@ const PROPERTIES_BY_UNIT: Record<string, string[]> = {
   'ng/mL': ['MCnc'],
   'nmol/L': ['SCnc'],
   'pg/mL': ['MCnc'],
+  'pmol/L': ['SCnc'],
   'U/L': ['CCnc'],
   'U/mL': ['ACnc'],
   cm: ['Len'],

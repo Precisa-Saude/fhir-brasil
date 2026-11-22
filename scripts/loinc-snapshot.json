@@ -2593,6 +2593,17 @@
       "system": "PPP",
       "time": "Pt"
     },
+    "48146-5": {
+      "class": "CHEM",
+      "component": "Myeloperoxidase",
+      "display": "Myeloperoxidase [Units/volume] in Serum",
+      "method": null,
+      "property": "ACnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser",
+      "time": "Pt"
+    },
     "49054-0": {
       "class": "CHEM",
       "component": "Ercalcidiol",
@@ -3126,6 +3137,17 @@
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Ser/Plas",
+      "time": "Pt"
+    },
+    "66853-3": {
+      "class": "CHEM",
+      "component": "Myeloperoxidase",
+      "display": "Myeloperoxidase [Moles/volume] in Plasma",
+      "method": null,
+      "property": "SCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Plas",
       "time": "Pt"
     },
     "6690-2": {
@@ -3987,6 +4009,17 @@
       "scale": "Qn",
       "status": "ACTIVE",
       "system": "Ser/Plas/Bld",
+      "time": "Pt"
+    },
+    "99407-9": {
+      "class": "CHEM",
+      "component": "Myeloperoxidase",
+      "display": "Myeloperoxidase [Mass/volume] in Serum by Immunoassay",
+      "method": "IA",
+      "property": "MCnc",
+      "scale": "Qn",
+      "status": "ACTIVE",
+      "system": "Ser",
       "time": "Pt"
     },
     "99620-7": {

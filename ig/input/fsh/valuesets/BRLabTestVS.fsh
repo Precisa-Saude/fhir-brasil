@@ -1,7 +1,7 @@
 ValueSet: BRLabTestVS
 Id: br-lab-test-vs
 Title: "BR Lab Test ValueSet"
-Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-brasil. Gerado automaticamente a partir de 229 biomarcadores com código LOINC no pacote core."
+Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-brasil. Gerado automaticamente a partir de 230 biomarcadores com código LOINC no pacote core."
 
 * $LOINC#90909-3 "Razão Ácido Araquidônico/EPA"
 * $LOINC#883-9 "Grupo ABO"
@@ -157,6 +157,7 @@ Description: "Códigos LOINC para exames laboratoriais suportados pelo fhir-bras
 * $LOINC#6969-0 "Anticorpo Antimieloperoxidase"
 * $LOINC#32623-1 "Volume Plaquetário Médio"
 * $LOINC#73964-9 "Massa Muscular"
+* $LOINC#66853-3 "Mieloperoxidase"
 * $LOINC#770-8 "Neutrófilos"
 * $LOINC#751-8 "Neutrófilos Absolutos"
 * $LOINC#5802-4 "Nitrito na Urina"

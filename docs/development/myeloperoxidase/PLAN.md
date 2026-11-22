@@ -1,42 +1,36 @@
 # Identidade de mieloperoxidase no catálogo
 
-## Objetivo
+## Decisão
 
-Completar a identidade de `Myeloperoxidase`, que já possui unidade e referência, sem confundir a enzima com o anticorpo anti-MPO.
+`Myeloperoxidase` identifica a concentração molar da enzima em plasma, com LOINC `66853-3` e unidade `pmol/L`. A unidade e a referência preexistentes são preservadas. O anticorpo anti-MPO continua sendo `MPO_Antibody`, LOINC `6969-0`.
 
-## Critérios de aceitação
+## Fonte e limites do mapeamento
 
-- [x] `myeloperoxidase-identity.test.ts` demonstra primeiro a ausência da identidade e depois resolve os nomes da enzima para `Myeloperoxidase`, com LOINC `66853-3` e unidade `pmol/L`. Execução inicial: cinco falhas e três testes passando. Execução final: oito passando.
-- [x] Os nomes de anti-MPO continuam resolvendo para `MPO_Antibody`, LOINC `6969-0`, nos três casos da regressão.
-- [x] Os eixos oficiais são `Myeloperoxidase:SCnc:Pt:Plas:Qn`, sem método. O teste de eixos e o registro de decisão preservam a restrição a plasma.
-- [x] Unidade e referência existentes permanecem inalteradas. `pnpm --filter @precisa-saude/fhir test:coverage --maxWorkers=1 --minWorkers=1`: 2.355 testes passando, cobertura de linhas 99,36%, branches 93,94%, funções 97,14%. `pnpm turbo run lint typecheck build --filter=@precisa-saude/fhir` passou.
-- [x] Contagens derivadas e documentação acompanham a entrada nova. `pnpm catalog:counts` gerou 277 biomarcadores, 230 com LOINC. Prettier e `git diff --check` passaram.
-
-## Estado atual
-
-A Search API oficial do LOINC 2.83 retornou os 32 resultados de `Myeloperoxidase` em 22/11/2026. O código ativo `66853-3` representa concentração molar em plasma, com unidade de exemplo `pmol/L`. `48146-5` mede unidades/volume em soro; `99407-9` mede massa/volume em soro por imunoensaio; `6969-0` mede o anticorpo. Nenhum deles é substituto dimensionalmente equivalente.
+A Search API oficial do LOINC 2.83 retornou os 32 resultados de `Myeloperoxidase` em 22/11/2026. O código ativo `66853-3` possui os eixos `Myeloperoxidase:SCnc:Pt:Plas:Qn`, sem método específico, e unidade de exemplo `pmol/L`.
 
 Consulta: https://loinc.regenstrief.org/searchapi/loincs?query=Myeloperoxidase&rows=100
 
-## Próximos passos
+Os candidatos descartados são:
 
-A correção está implementada na branch `fix/myeloperoxidase-catalog-identity`, sem commit. O build ESM também passou no contrato de identidade, LOINC, referência e separação de anti-MPO usado pela plataforma.
+- `6969-0`: anticorpo anti-MPO, não a enzima.
+- `48146-5`: unidades/volume em soro, não concentração molar.
+- `99407-9`: massa/volume em soro por imunoensaio, não concentração molar.
 
-A primeira suíte completa apontou a necessidade de regenerar o módulo de terminologia e registrar também os irmãos rejeitados no snapshot. O campo `loincVersion` pertence ao conjunto de metadados de revisão independente; a versão consultada ficou na nota, sem inventar revisor. Depois dessas correções, todos os testes passaram.
+A unidade herdada do catálogo não constitui evidência independente de laudo. O registro usa `evidence: ['name']` e `settledBy: 'name'`; não afirma material de um laudo específico nem equivalência com soro. A consulta à terminologia não equivale a revisão independente, por isso não preenche os campos de revisor.
 
-Uma execução de cobertura a partir da raiz incluiu os outros pacotes e falhou no limiar global, embora os 2.355 testes passassem. A execução canônica via filtro do pacote passou sem alterar configuração ou limiares.
+## Resolução de nomes
 
-Aguardar aprovação de commit e revisão. Após merge e publicação pelo fluxo normal, consumir a versão publicada na plataforma, executar freeze com `--stale` e revisar as diferenças sem regravar baselines automaticamente. A avaliação nova em dev continua dependendo de autorização explícita para chamadas de modelo. Nenhum pacote instalado na plataforma foi substituído.
+Os nomes completos `Myeloperoxidase` e `Mieloperoxidase` resolvem para a enzima. `MPO`, `mpo`, `MPO IgG`, `ANCA MPO` e `ANCA-MPO` ficam sem resolução por nome, pois não oferecem identidade suficiente. Os aliases explícitos de anticorpo permanecem separados.
 
-## Revisão do PR #190
+## Critérios de aceitação e verificação
 
-As duas sugestões da primeira rodada foram implementadas localmente, sem novo commit:
-
-- Removido o alias isolado `MPO`. Os nomes completos da enzima continuam resolvendo. `MPO`, `mpo`, `MPO IgG`, `ANCA MPO` e `ANCA-MPO` ficam sem resolução por nome, em vez de receber identidade clínica por inferência.
-- A evidência do mapeamento passou a `['name']`, com `settledBy: 'name'`. A nota distingue a unidade herdada do catálogo de uma evidência independente de laudo. As contagens regeneradas agora mostram 53 mapeamentos com evidência adicional e 177 apenas pelo nome.
-
-A regressão atualizada falhou primeiro em três casos, antes da correção. Depois, os 12 testes de identidade e os 2.359 testes do core passaram com cobertura, sem mudança de limiares. Lint, typecheck, build e Prettier também passaram. Os números anteriores neste plano registram as execuções iniciais.
+- [x] Os 12 casos de `myeloperoxidase-identity.test.ts` cobrem nomes completos, nomes ambíguos, anticorpo, unidade, referência e eixos oficiais.
+- [x] `pnpm --filter @precisa-saude/fhir test:coverage --maxWorkers=1 --minWorkers=1` passou com 2.359 testes na validação do PR #190, sem alterar limiares.
+- [x] `pnpm turbo run lint typecheck build --filter=@precisa-saude/fhir`, Prettier e `git diff --check` passaram.
+- [x] Contagens derivadas e ValueSet foram regenerados pelos scripts do repositório. A geração do ValueSet foi conferida como idempotente.
 
 ## Fora de escopo
 
-Não alterar limites clínicos ou converter massa em quantidade de substância. Não afirmar equivalência com soro. Não modificar `MPO_Antibody`, publicar pacote, criar commits, chamar modelos ou reprocessar contas. A plataforma só consumirá uma versão publicada após aprovação.
+Esta alteração não modifica limites clínicos, converte massa em quantidade de substância ou altera `MPO_Antibody`. Não altera dependências da plataforma nem reprocessa contas.
+
+A adoção pela plataforma exige uma versão publicada e freeze com `--stale`, com revisão das diferenças antes de qualquer atualização de baseline. Chamadas novas de modelo e alterações em registros clínicos dependem de autorização separada.

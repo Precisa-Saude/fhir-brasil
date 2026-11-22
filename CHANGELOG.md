@@ -1,3 +1,9 @@
+## [3.5.1](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.5.0...v3.5.1) (2026-11-22)
+
+### Bug Fixes
+
+* **core:** completa identidade da mieloperoxidase no catálogo ([#190](https://github.com/Precisa-Saude/fhir-brasil/issues/190)) ([d57a72e](https://github.com/Precisa-Saude/fhir-brasil/commit/d57a72ecb91d7afc88dedd34c8a6ae949c4cff6e))
+
 ## [3.5.0](https://github.com/Precisa-Saude/fhir-brasil/compare/v3.4.0...v3.5.0) (2026-11-20)
 
 ### Features
